@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es6"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,10 +21,53 @@
         "name": "next"
       }
     ],
+"strictNullChecks": true,
+"strictFunctionTypes": true,
+"strictBindCallApply": true,
+"strictPropertyInitialization": true,
+"noImplicitThis": true,
+"noImplicitReturns": true,
+"noFallthroughCasesInSwitch": true,
+"noUncheckedIndexedAccess": true,
+"exactOptionalPropertyTypes": true,
+"noPropertyAccessFromIndexSignature": true,
+"noUnusedLocals": true,
+"noUnusedParameters": true,
+"allowUnreachableCode": false,
+"allowUnusedLabels": false,
+"baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/data/*": [
+        "./src/data/*"
+      ],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+"include": [
+  "next-env.d.ts",
+  "**/*.ts",
+  "**/*.tsx",
+  ".next/types/**/*.ts",
+],
   "exclude": ["node_modules"]
 }
