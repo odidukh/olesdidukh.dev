@@ -6,7 +6,27 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "lint:fix": "next lint --fix",
+    "lint:strict": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run type-check && npm run lint:strict && npm run format:check",
+    "fix": "npm run lint:fix && npm run format",
+    "analyze": "ANALYZE=true npm run build",
+    "clean": "rm -rf .next out dist coverage",
+    "prebuild": "npm run clean",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "*.{json,md,mdx,css,scss,yaml,yml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -40,7 +60,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
     "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
