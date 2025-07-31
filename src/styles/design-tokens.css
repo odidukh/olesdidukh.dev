@@ -1,0 +1,310 @@
+/* src/styles/design-tokens.css */
+/* Elite Developer Portfolio - Design System v1.0 */
+/* Mocha Mousse 2025 Professional Color Palette */
+
+:root {
+  /* ==========================================
+     MOCHA MOUSSE 2025 - PRIMARY BRAND PALETTE
+     ========================================== */
+  --mocha-50: #faf9f7;
+  /* Lightest - backgrounds, subtle accents */
+  --mocha-100: #f3f0eb;
+  /* Light - hover states, cards */
+  --mocha-200: #e7ddd2;
+  /* Light-medium - borders, dividers */
+  --mocha-300: #d4c4b0;
+  /* Medium-light - muted text, placeholders */
+  --mocha-400: #bfa58a;
+  /* Medium - secondary text */
+  --mocha-500: #a47864;
+  /* PRIMARY - main brand color */
+  --mocha-600: #8f6451;
+  /* Medium-dark - hover states */
+  --mocha-700: #755143;
+  /* Dark - active states */
+  --mocha-800: #614439;
+  /* Darker - emphasis text */
+  --mocha-900: #523a32;
+  /* Darkest - headings, high contrast */
+
+  /* ==========================================
+     PROFESSIONAL NEUTRAL PALETTE
+     ========================================== */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+
+  /* ==========================================
+     NAVY ACCENT SYSTEM
+     ========================================== */
+  --navy-50: #f0f4f8;
+  --navy-100: #d9e2ec;
+  --navy-200: #bcccdc;
+  --navy-300: #9fb3c8;
+  --navy-400: #829ab1;
+  --navy-500: #627d98;
+  /* Secondary brand color */
+  --navy-600: #486581;
+  --navy-700: #334e68;
+  --navy-800: #243b53;
+  --navy-900: #102a43;
+  --navy-950: #0a192f;
+  /* Deep navy for backgrounds */
+
+  /* ==========================================
+     SEMANTIC COLOR SYSTEM
+     ========================================== */
+  --success-50: #ecfdf5;
+  --success-100: #d1fae5;
+  --success-500: #10b981;
+  /* Success primary */
+  --success-600: #059669;
+  --success-900: #064e3b;
+
+  --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-500: #f59e0b;
+  /* Warning primary */
+  --warning-600: #d97706;
+  --warning-900: #78350f;
+
+  --error-50: #fef2f2;
+  --error-100: #fee2e2;
+  --error-500: #ef4444;
+  /* Error primary */
+  --error-600: #dc2626;
+  --error-900: #7f1d1d;
+
+  --info-50: #eff6ff;
+  --info-100: #dbeafe;
+  --info-500: #3b82f6;
+  /* Info primary */
+  --info-600: #2563eb;
+  --info-900: #1e3a8a;
+
+  /* ==========================================
+     DYNAMIC GRADIENT SYSTEM
+     ========================================== */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--mocha-500) 0%,
+    var(--navy-600) 100%
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--mocha-400) 0%,
+    var(--mocha-600) 100%
+  );
+  --gradient-accent: linear-gradient(
+    135deg,
+    var(--success-500) 0%,
+    var(--info-500) 100%
+  );
+  --gradient-warm: linear-gradient(
+    135deg,
+    var(--mocha-300) 0%,
+    var(--warning-400) 100%
+  );
+  --gradient-cool: linear-gradient(
+    135deg,
+    var(--navy-400) 0%,
+    var(--info-500) 100%
+  );
+
+  /* Subtle background gradients */
+  --gradient-glow: linear-gradient(
+    135deg,
+    rgba(164, 120, 100, 0.05) 0%,
+    rgba(10, 25, 47, 0.05) 100%
+  );
+  --gradient-mesh:
+    radial-gradient(at 40% 20%, rgba(164, 120, 100, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(10, 25, 47, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+
+  /* ==========================================
+     SURFACE & ELEVATION COLORS
+     ========================================== */
+  --surface-primary: #ffffff;
+  --surface-secondary: var(--gray-50);
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(15, 23, 42, 0.8);
+
+  /* ==========================================
+     TEXT COLOR HIERARCHY
+     ========================================== */
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+  --text-disabled: var(--gray-400);
+  --text-inverse: #ffffff;
+  --text-brand: var(--mocha-700);
+  --text-accent: var(--navy-700);
+
+  /* ==========================================
+     BORDER & DIVIDER COLORS
+     ========================================== */
+  --border-primary: var(--gray-200);
+  --border-secondary: var(--gray-100);
+  --border-focus: var(--mocha-500);
+  --border-error: var(--error-500);
+  --border-success: var(--success-500);
+
+  /* ==========================================
+     SHADOW COLOR SYSTEM
+     ========================================== */
+  --shadow-color: 0, 0, 0;
+  --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgba(var(--shadow-color), 0.1),
+    0 2px 4px -1px rgba(var(--shadow-color), 0.06);
+  --shadow-lg:
+    0 10px 15px -3px rgba(var(--shadow-color), 0.1),
+    0 4px 6px -2px rgba(var(--shadow-color), 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgba(var(--shadow-color), 0.1),
+    0 10px 10px -5px rgba(var(--shadow-color), 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.25);
+
+  /* Brand-colored shadows for premium effects */
+  --shadow-mocha:
+    0 10px 15px -3px rgba(164, 120, 100, 0.1),
+    0 4px 6px -2px rgba(164, 120, 100, 0.05);
+  --shadow-navy:
+    0 10px 15px -3px rgba(10, 25, 47, 0.1),
+    0 4px 6px -2px rgba(10, 25, 47, 0.05);
+}
+
+/* ==========================================
+   DARK MODE COLOR OVERRIDES
+   ========================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surface colors for dark mode */
+    --surface-primary: var(--gray-900);
+    --surface-secondary: var(--gray-800);
+    --surface-elevated: var(--gray-800);
+    --surface-overlay: rgba(0, 0, 0, 0.8);
+
+    /* Text colors for dark mode */
+    --text-primary: var(--gray-50);
+    --text-secondary: var(--gray-300);
+    --text-tertiary: var(--gray-400);
+    --text-disabled: var(--gray-600);
+    --text-brand: var(--mocha-300);
+    --text-accent: var(--navy-300);
+
+    /* Border colors for dark mode */
+    --border-primary: var(--gray-700);
+    --border-secondary: var(--gray-800);
+
+    /* Adjusted gradients for dark mode */
+    --gradient-glow: linear-gradient(
+      135deg,
+      rgba(164, 120, 100, 0.1) 0%,
+      rgba(10, 25, 47, 0.1) 100%
+    );
+    --gradient-mesh:
+      radial-gradient(
+        at 40% 20%,
+        rgba(164, 120, 100, 0.15) 0px,
+        transparent 50%
+      ),
+      radial-gradient(at 80% 0%, rgba(10, 25, 47, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+
+    /* Shadow adjustments for dark mode */
+    --shadow-color: 0, 0, 0;
+    --shadow-sm: 0 1px 2px 0 rgba(var(--shadow-color), 0.3);
+    --shadow-md:
+      0 4px 6px -1px rgba(var(--shadow-color), 0.3),
+      0 2px 4px -1px rgba(var(--shadow-color), 0.2);
+    --shadow-lg:
+      0 10px 15px -3px rgba(var(--shadow-color), 0.3),
+      0 4px 6px -2px rgba(var(--shadow-color), 0.2);
+    --shadow-xl:
+      0 20px 25px -5px rgba(var(--shadow-color), 0.4),
+      0 10px 10px -5px rgba(var(--shadow-color), 0.2);
+    --shadow-2xl: 0 25px 50px -12px rgba(var(--shadow-color), 0.5);
+  }
+}
+
+/* ==========================================
+   FORCED DARK MODE CLASS
+   ========================================== */
+.dark {
+  /* Surface colors */
+  --surface-primary: var(--gray-900);
+  --surface-secondary: var(--gray-800);
+  --surface-elevated: var(--gray-800);
+  --surface-overlay: rgba(0, 0, 0, 0.8);
+
+  /* Text colors */
+  --text-primary: var(--gray-50);
+  --text-secondary: var(--gray-300);
+  --text-tertiary: var(--gray-400);
+  --text-disabled: var(--gray-600);
+  --text-brand: var(--mocha-300);
+  --text-accent: var(--navy-300);
+
+  /* Border colors */
+  --border-primary: var(--gray-700);
+  --border-secondary: var(--gray-800);
+
+  /* Adjusted gradients */
+  --gradient-glow: linear-gradient(
+    135deg,
+    rgba(164, 120, 100, 0.1) 0%,
+    rgba(10, 25, 47, 0.1) 100%
+  );
+  --gradient-mesh:
+    radial-gradient(at 40% 20%, rgba(164, 120, 100, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(10, 25, 47, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+}
+
+/* ==========================================
+   UTILITY CLASSES FOR QUICK ACCESS
+   ========================================== */
+.bg-gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.bg-gradient-secondary {
+  background: var(--gradient-secondary);
+}
+
+.bg-gradient-accent {
+  background: var(--gradient-accent);
+}
+
+.bg-gradient-glow {
+  background: var(--gradient-glow);
+}
+
+.bg-gradient-mesh {
+  background: var(--gradient-mesh);
+}
+
+.text-brand {
+  color: var(--text-brand);
+}
+
+.text-accent {
+  color: var(--text-accent);
+}
+
+.border-brand {
+  border-color: var(--mocha-500);
+}
+
+.shadow-brand {
+  box-shadow: var(--shadow-mocha);
+}
