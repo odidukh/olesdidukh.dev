@@ -12,6 +12,7 @@ import {
   Plus,
   ExternalLink,
 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
@@ -25,6 +26,18 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-8 md:p-24">
+      {/* Navigation */}
+      <div className="max-w-6xl mx-auto mb-8">
+        <div className="flex gap-4 p-4 bg-muted rounded-lg">
+          <Button variant="secondary" size="sm" asChild>
+            <Link href="/">Button Components</Link>
+          </Button>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href="/layout-demo">Layout Components</Link>
+          </Button>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Header */}
         <div className="text-center space-y-4">
