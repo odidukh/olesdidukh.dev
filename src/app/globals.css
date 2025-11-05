@@ -1,137 +1,6 @@
 /* src/app/globals.css - Tailwind CSS v4 */
 @import 'tailwindcss';
-
-@theme {
-  /* ==========================================
-     MOCHA MOUSSE 2025 - PRIMARY BRAND PALETTE
-     ========================================== */
-  --color-mocha-50: #faf9f7;
-  --color-mocha-100: #f3f0eb;
-  --color-mocha-200: #e7ddd2;
-  --color-mocha-300: #d4c4b0;
-  --color-mocha-400: #bfa58a;
-  --color-mocha-500: #a47864;
-  /* Primary brand color */
-  --color-mocha-600: #8f6451;
-  --color-mocha-700: #755143;
-  --color-mocha-800: #614439;
-  --color-mocha-900: #523a32;
-
-  /* ==========================================
-     NAVY PROFESSIONAL PALETTE
-     ========================================== */
-  --color-navy-50: #f0f4f8;
-  --color-navy-100: #d9e2ec;
-  --color-navy-200: #bcccdc;
-  --color-navy-300: #9fb3c8;
-  --color-navy-400: #829ab1;
-  --color-navy-500: #627d98;
-  /* Secondary brand color */
-  --color-navy-600: #486581;
-  --color-navy-700: #334e68;
-  --color-navy-800: #243b53;
-  --color-navy-900: #102a43;
-  --color-navy-950: #0a192f;
-
-  /* ==========================================
-     SEMANTIC COLORS
-     ========================================== */
-  --color-success-50: #ecfdf5;
-  --color-success-100: #d1fae5;
-  --color-success-200: #a7f3d0;
-  --color-success-300: #6ee7b7;
-  --color-success-400: #34d399;
-  --color-success-500: #10b981;
-  /* Success primary */
-  --color-success-600: #059669;
-  --color-success-700: #047857;
-  --color-success-800: #065f46;
-  --color-success-900: #064e3b;
-
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-200: #fde68a;
-  --color-warning-300: #fcd34d;
-  --color-warning-400: #fbbf24;
-  --color-warning-500: #f59e0b;
-  /* Warning primary */
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
-  --color-warning-800: #92400e;
-  --color-warning-900: #78350f;
-
-  --color-error-50: #fef2f2;
-  --color-error-100: #fee2e2;
-  --color-error-200: #fecaca;
-  --color-error-300: #fca5a5;
-  --color-error-400: #f87171;
-  --color-error-500: #ef4444;
-  /* Error primary */
-  --color-error-600: #dc2626;
-  --color-error-700: #b91c1c;
-  --color-error-800: #991b1b;
-  --color-error-900: #7f1d1d;
-
-  --color-info-50: #eff6ff;
-  --color-info-100: #dbeafe;
-  --color-info-200: #bfdbfe;
-  --color-info-300: #93c5fd;
-  --color-info-400: #60a5fa;
-  --color-info-500: #3b82f6;
-  /* Info primary */
-  --color-info-600: #2563eb;
-  --color-info-700: #1d4ed8;
-  --color-info-800: #1e40af;
-  --color-info-900: #1e3a8a;
-
-  /* ==========================================
-     SEMANTIC COLOR MAPPINGS FOR COMPONENTS
-     ========================================== */
-
-  /* Primary - Maps to Mocha Mousse */
-  --color-primary: var(--color-mocha-600);
-  --color-primary-foreground: #ffffff;
-
-  /* Secondary - Maps to Navy */
-  --color-secondary: var(--color-navy-100);
-  --color-secondary-foreground: var(--color-navy-900);
-
-  /* Destructive - Maps to Error */
-  --color-destructive: var(--color-error-600);
-  --color-destructive-foreground: #ffffff;
-
-  /* Muted backgrounds */
-  --color-muted: var(--color-mocha-100);
-  --color-muted-foreground: var(--color-mocha-700);
-
-  /* Accent for hover states */
-  --color-accent: var(--color-mocha-200);
-  --color-accent-foreground: var(--color-mocha-900);
-
-  /* Background and foreground */
-  --color-background: #ffffff;
-  --color-foreground: var(--color-navy-900);
-
-  /* Borders and inputs */
-  --color-border: var(--color-mocha-300);
-  --color-input: var(--color-mocha-300);
-  --color-ring: var(--color-mocha-600);
-}
-
-/* ==========================================
-   CUSTOM SHADOW UTILITIES
-   ========================================== */
-.shadow-glow {
-  box-shadow:
-    0 0 20px rgba(164, 120, 100, 0.4),
-    0 0 40px rgba(164, 120, 100, 0.2);
-}
-
-.shadow-glow-strong {
-  box-shadow:
-    0 0 30px rgba(164, 120, 100, 0.6),
-    0 0 60px rgba(164, 120, 100, 0.3);
-}
+@import '../styles/design-tokens.css';
 
 /* ==========================================
    BASE STYLES
@@ -144,4 +13,17 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--gray-50);
+  color: var(--gray-900);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark body {
+  background-color: var(--gray-900);
+  color: var(--gray-50);
 }

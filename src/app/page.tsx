@@ -35,6 +35,9 @@ export default function Home() {
           <Button variant="secondary" size="sm" asChild>
             <Link href="/layout-demo">Layout Components</Link>
           </Button>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href="/design-system">Design System</Link>
+          </Button>
         </div>
       </div>
 
