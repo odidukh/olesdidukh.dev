@@ -64,8 +64,9 @@
     "husky": "^8.0.0",
     "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
+    "postcss-loader": "^8.2.0",
     "prettier": "^3.6.2",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.16",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
   }
