@@ -47,6 +47,7 @@
   --navy-700: #334e68;
   --navy-800: #243b53;
   --navy-900: #102a43;
+  --navy-950: #0a192f;
 
   /* ==========================================
      SEMANTIC COLORS
@@ -54,27 +55,35 @@
      ========================================== */
   --success-50: #f0fdf4;
   --success-100: #dcfce7;
+  --success-200: #bbf7d0;
   --success-500: #10b981;
   --success-600: #059669;
   --success-700: #047857;
+  --success-800: #065f46;
 
   --warning-50: #fffbeb;
   --warning-100: #fef3c7;
+  --warning-200: #fde68a;
   --warning-500: #f59e0b;
   --warning-600: #d97706;
   --warning-700: #b45309;
+  --warning-800: #92400e;
 
   --error-50: #fef2f2;
   --error-100: #fee2e2;
+  --error-200: #fecaca;
   --error-500: #ef4444;
   --error-600: #dc2626;
   --error-700: #b91c1c;
+  --error-800: #991b1b;
 
   --info-50: #eff6ff;
   --info-100: #dbeafe;
+  --info-200: #bfdbfe;
   --info-500: #3b82f6;
   --info-600: #2563eb;
   --info-700: #1d4ed8;
+  --info-800: #1e40af;
 
   /* ==========================================
      GRADIENTS
@@ -264,82 +273,10 @@
 }
 
 /* ==========================================
-   DARK MODE TOKENS
-   Automatically adapts to user preference
-   ========================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark mode color overrides */
-    --mocha-50: #523a32;
-    --mocha-100: #614439;
-    --mocha-200: #755143;
-    --mocha-300: #8f6451;
-    --mocha-400: #a47864;
-    --mocha-500: #bfa58a;
-    --mocha-600: #d4c4b0;
-    --mocha-700: #e7ddd2;
-    --mocha-800: #f3f0eb;
-    --mocha-900: #faf9f7;
-
-    --gray-50: #0f172a;
-    --gray-100: #1e293b;
-    --gray-200: #334155;
-    --gray-300: #475569;
-    --gray-400: #64748b;
-    --gray-500: #94a3b8;
-    --gray-600: #cbd5e1;
-    --gray-700: #e2e8f0;
-    --gray-800: #f1f5f9;
-    --gray-900: #f8fafc;
-
-    --navy-50: #102a43;
-    --navy-100: #243b53;
-    --navy-200: #334e68;
-    --navy-300: #486581;
-    --navy-400: #627d98;
-    --navy-500: #829ab1;
-    --navy-600: #9fb3c8;
-    --navy-700: #bcccdc;
-    --navy-800: #d9e2ec;
-    --navy-900: #f0f4f8;
-  }
-}
-
-/* ==========================================
-   EXPLICIT DARK MODE CLASS
-   For manual theme switching
+   DARK MODE CLASS
+   Manual theme switching
    ========================================== */
 .dark {
-  --mocha-50: #523a32;
-  --mocha-100: #614439;
-  --mocha-200: #755143;
-  --mocha-300: #8f6451;
-  --mocha-400: #a47864;
-  --mocha-500: #bfa58a;
-  --mocha-600: #d4c4b0;
-  --mocha-700: #e7ddd2;
-  --mocha-800: #f3f0eb;
-  --mocha-900: #faf9f7;
-
-  --gray-50: #0f172a;
-  --gray-100: #1e293b;
-  --gray-200: #334155;
-  --gray-300: #475569;
-  --gray-400: #64748b;
-  --gray-500: #94a3b8;
-  --gray-600: #cbd5e1;
-  --gray-700: #e2e8f0;
-  --gray-800: #f1f5f9;
-  --gray-900: #f8fafc;
-
-  --navy-50: #102a43;
-  --navy-100: #243b53;
-  --navy-200: #334e68;
-  --navy-300: #486581;
-  --navy-400: #627d98;
-  --navy-500: #829ab1;
-  --navy-600: #9fb3c8;
-  --navy-700: #bcccdc;
-  --navy-800: #d9e2ec;
-  --navy-900: #f0f4f8;
+  /* No color inversions here - all dark mode colors are handled
+     via Tailwind's dark: variant utilities in globals.css */
 }

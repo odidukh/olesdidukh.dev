@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import Link from 'next/link';
@@ -8,13 +8,19 @@ import Link from 'next/link';
 export default function DesignSystemPage() {
   const [isDark, setIsDark] = useState(false);
 
+  // Sync state with actual dark mode on mount
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
   const toggleDarkMode = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
+    const newDarkState = !isDark;
+    setIsDark(newDarkState);
+    document.documentElement.classList.toggle('dark', newDarkState);
   };
 
   return (
-    <div className={isDark ? 'dark' : ''}>
+    <>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* Header */}
@@ -375,6 +381,6 @@ export default function DesignSystemPage() {
           </section>
         </div>
       </div>
-    </div>
+    </>
   );
 }
