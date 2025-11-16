@@ -3,6 +3,103 @@
 @import '../styles/design-tokens.css';
 
 /* ==========================================
+   TAILWIND V4 THEME CONFIGURATION
+   Define custom utilities using @theme
+   ========================================== */
+@theme {
+  /* Custom Colors */
+  --color-mocha-50: var(--mocha-50);
+  --color-mocha-100: var(--mocha-100);
+  --color-mocha-200: var(--mocha-200);
+  --color-mocha-300: var(--mocha-300);
+  --color-mocha-400: var(--mocha-400);
+  --color-mocha-500: var(--mocha-500);
+  --color-mocha-600: var(--mocha-600);
+  --color-mocha-700: var(--mocha-700);
+  --color-mocha-800: var(--mocha-800);
+  --color-mocha-900: var(--mocha-900);
+
+  --color-navy-50: var(--navy-50);
+  --color-navy-100: var(--navy-100);
+  --color-navy-200: var(--navy-200);
+  --color-navy-300: var(--navy-300);
+  --color-navy-400: var(--navy-400);
+  --color-navy-500: var(--navy-500);
+  --color-navy-600: var(--navy-600);
+  --color-navy-700: var(--navy-700);
+  --color-navy-800: var(--navy-800);
+  --color-navy-900: var(--navy-900);
+
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+
+  --color-error-50: var(--error-50);
+  --color-error-100: var(--error-100);
+  --color-error-500: var(--error-500);
+  --color-error-600: var(--error-600);
+  --color-error-700: var(--error-700);
+
+  --color-info-50: var(--info-50);
+  --color-info-100: var(--info-100);
+  --color-info-500: var(--info-500);
+  --color-info-600: var(--info-600);
+  --color-info-700: var(--info-700);
+
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+
+  /* Custom Background Images */
+  --background-image-gradient-primary: var(--gradient-primary);
+  --background-image-gradient-warm: var(--gradient-warm);
+  --background-image-gradient-cool: var(--gradient-cool);
+  --background-image-gradient-accent: var(--gradient-accent);
+  --background-image-gradient-glow: var(--gradient-glow);
+  --background-image-gradient-hero: var(--gradient-hero);
+
+  /* Custom Font Sizes */
+  --font-size-xs: var(--text-xs);
+  --font-size-sm: var(--text-sm);
+  --font-size-base: var(--text-base);
+  --font-size-lg: var(--text-lg);
+  --font-size-xl: var(--text-xl);
+  --font-size-2xl: var(--text-2xl);
+  --font-size-3xl: var(--text-3xl);
+  --font-size-4xl: var(--text-4xl);
+  --font-size-5xl: var(--text-5xl);
+  --font-size-6xl: var(--text-6xl);
+  --font-size-7xl: var(--text-7xl);
+
+  /* Custom Shadows */
+  --box-shadow-xs: var(--shadow-xs);
+  --box-shadow-sm: var(--shadow-sm);
+  --box-shadow: var(--shadow-base);
+  --box-shadow-md: var(--shadow-md);
+  --box-shadow-lg: var(--shadow-lg);
+  --box-shadow-xl: var(--shadow-xl);
+  --box-shadow-2xl: var(--shadow-2xl);
+  --box-shadow-inner: var(--shadow-inner);
+  --box-shadow-mocha: var(--shadow-mocha);
+  --box-shadow-navy: var(--shadow-navy);
+}
+
+/* ==========================================
    BASE STYLES
    ========================================== */
 body {
