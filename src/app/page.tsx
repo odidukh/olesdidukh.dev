@@ -1,5 +1,5 @@
-import { HeroSimple } from '@/sections/HeroSimple';
-import { AboutSection } from '@/sections/AboutSection';
+import { HeroSimple } from '@/components/sections/HeroSimple';
+import { AboutSection } from '@/components/sections/AboutSection';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { Container } from '@/components/ui/Container';

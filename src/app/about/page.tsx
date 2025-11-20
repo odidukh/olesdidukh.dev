@@ -1,4 +1,4 @@
-import { AboutSection } from '@/sections/AboutSection';
+import { AboutSection } from '@/components/sections/AboutSection';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 

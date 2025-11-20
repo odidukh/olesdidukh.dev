@@ -1,4 +1,4 @@
-import { HeroSection } from '@/sections/HeroSection';
+import { HeroSection } from '@/components/sections/HeroSection';
 import { Navigation } from '@/components/ui/Navigation';
 
 export default function HeroPage() {

@@ -12,9 +12,9 @@ import {
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { TypeAnimation } from '../components/ui/TypeAnimation';
-import { ParticleField } from '../components/ui/ParticleField';
-import { FloatingIcons } from '../components/ui/FloatingIcons';
+import { TypeAnimation } from '../ui/TypeAnimation';
+import { ParticleField } from '../ui/ParticleField';
+import { FloatingIcons } from '../ui/FloatingIcons';
 import {
   ArrowRight,
   Download,

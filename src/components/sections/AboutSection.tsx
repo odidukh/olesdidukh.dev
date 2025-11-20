@@ -6,9 +6,9 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Timeline } from '@/sections/Timeline';
-import { SkillsGrid } from '@/sections/SkillsGrid';
-import { InterestsSection } from '@/sections/InterestsSection';
+import { Timeline } from '@/components/sections/Timeline';
+import { SkillsGrid } from '@/components/sections/SkillsGrid';
+import { InterestsSection } from '@/components/sections/InterestsSection';
 import {
   User,
   MapPin,
