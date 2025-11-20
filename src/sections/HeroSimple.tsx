@@ -1,0 +1,260 @@
+'use client';
+
+import * as React from 'react';
+import { motion, Variants } from 'framer-motion';
+import { Container } from '@/components/ui/Container';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import {
+  ArrowRight,
+  Download,
+  Github,
+  Linkedin,
+  Mail,
+  Sparkles,
+} from 'lucide-react';
+import Link from 'next/link';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  },
+};
+
+const texts = [
+  'exceptional web apps',
+  'scalable solutions',
+  'beautiful interfaces',
+  'digital experiences',
+];
+
+export function HeroSimple() {
+  const [text, setText] = React.useState('exceptional web apps');
+
+  React.useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      index = (index + 1) % texts.length;
+      setText(texts[index] || '');
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex items-center">
+      {/* Simple Gradient Background */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-mocha-50 via-background to-navy-50 dark:from-navy-950 dark:via-background dark:to-mocha-950" />
+
+        {/* Simple animated blobs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-mocha-200/30 dark:bg-mocha-800/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-navy-200/30 dark:bg-navy-800/30 rounded-full blur-3xl animate-pulse" />
+      </div>
+
+      <Container size="wide" padding="lg">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-5xl mx-auto text-center space-y-8"
+        >
+          {/* Badge */}
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <Badge
+              variant="outline"
+              className="px-4 py-2 border-mocha-500/50 bg-mocha-50/50 dark:bg-mocha-900/20"
+            >
+              <Sparkles className="mr-2 h-3 w-3 text-mocha-600" />
+              Available for new opportunities
+            </Badge>
+          </motion.div>
+
+          {/* Main Heading */}
+          <motion.div variants={itemVariants} className="space-y-4">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
+              Hi, I&apos;m{' '}
+              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent inline-block">
+                Oles Didukh
+              </span>
+            </h1>
+
+            {/* Animated Text with Simple Fade */}
+            <div className="text-2xl md:text-3xl lg:text-4xl text-muted-foreground font-medium">
+              I build{' '}
+              <motion.span
+                key={text}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="text-foreground inline-block"
+              >
+                {text}
+              </motion.span>
+            </div>
+          </motion.div>
+
+          {/* Description */}
+          <motion.p
+            variants={itemVariants}
+            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto"
+          >
+            Senior Front-End Engineer with{' '}
+            <span className="text-mocha-600 dark:text-mocha-400 font-semibold">
+              7+ years of experience
+            </span>{' '}
+            crafting high-performance web applications using{' '}
+            <span className="text-navy-600 dark:text-navy-400 font-semibold">
+              React, TypeScript, Next.js,
+            </span>{' '}
+            and modern web technologies. Passionate about creating{' '}
+            <span className="text-accent-green font-semibold">
+              exceptional user experiences
+            </span>{' '}
+            that make a difference.
+          </motion.p>
+
+          {/* Stats Grid */}
+          <motion.div
+            variants={itemVariants}
+            className="grid grid-cols-3 gap-8 max-w-2xl mx-auto py-8"
+          >
+            {[
+              { label: 'Years Experience', value: '7+' },
+              { label: 'Projects Completed', value: '50+' },
+              { label: 'Happy Clients', value: '30+' },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-mocha-600 dark:text-mocha-400">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-4 justify-center"
+          >
+            <Button size="lg" className="group" asChild>
+              <Link href="/projects">
+                View My Work
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <a href="/resume.pdf" download>
+                <Download className="mr-2 h-4 w-4" />
+                Download Resume
+              </a>
+            </Button>
+          </motion.div>
+
+          {/* Social Links */}
+          <motion.div
+            variants={itemVariants}
+            className="flex items-center justify-center gap-4"
+          >
+            <span className="text-sm text-muted-foreground">
+              Connect with me:
+            </span>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
+                asChild
+              >
+                <a
+                  href="https://github.com/odidukh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
+                asChild
+              >
+                <a
+                  href="https://linkedin.com/in/oles-didukh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
+                asChild
+              >
+                <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
+                  <Mail className="h-5 w-5" />
+                </a>
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Scroll Indicator */}
+          <motion.div variants={itemVariants} className="pt-12">
+            <motion.div
+              animate={{
+                y: [0, 10, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="flex flex-col items-center gap-2 text-muted-foreground"
+            >
+              <span className="text-xs uppercase tracking-wider">
+                Scroll to explore
+              </span>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </Container>
+    </section>
+  );
+}
