@@ -1,5 +1,6 @@
 import { HeroSimple } from '@/components/sections/HeroSimple';
 import { AboutSection } from '@/components/sections/AboutSection';
+import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { Container } from '@/components/ui/Container';
@@ -12,6 +13,7 @@ export default function HomePage() {
       <Navigation />
       <HeroSimple />
       <AboutSection />
+      <ProjectsSection />
 
       {/* Quick Links for Development */}
       <section className="py-20 bg-muted/50">
