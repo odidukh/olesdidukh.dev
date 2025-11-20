@@ -29,8 +29,8 @@ const labelVariants = cva(
 export interface LabelProps
   extends React.LabelHTMLAttributes<HTMLLabelElement>,
     VariantProps<typeof labelVariants> {
-  required?: boolean;
-  optional?: boolean;
+  required?: boolean | undefined;
+  optional?: boolean | undefined;
 }
 
 const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
