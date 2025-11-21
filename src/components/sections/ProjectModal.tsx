@@ -77,7 +77,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: 'spring', duration: 0.5 }}
-        className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl rounded-xl shadow-2xl border border-border/50"
+        className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-border"
         onClick={e => e.stopPropagation()}
       >
         {/* Close Button */}
