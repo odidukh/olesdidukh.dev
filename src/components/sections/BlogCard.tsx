@@ -1,0 +1,175 @@
+'use client';
+
+import * as React from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardFooter } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import type { BlogPost } from '@/data/blog';
+import { Clock, Eye, Heart, ArrowRight, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+interface BlogCardProps {
+  post: BlogPost;
+  index: number;
+}
+
+export function BlogCard({ post, index }: BlogCardProps) {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [liked, setLiked] = React.useState(false);
+
+  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -5 }}
+      className="h-full"
+    >
+      <Link href={`/blog/${post.slug}`}>
+        <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
+          {/* Cover Image */}
+          <div className="relative h-48 bg-muted overflow-hidden">
+            {!imageLoaded && (
+              <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-muted to-muted-foreground/10" />
+            )}
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              className={`object-cover transition-all duration-500 group-hover:scale-110 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={() => setImageLoaded(true)}
+            />
+
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Category Badge */}
+            <div className="absolute top-3 left-3">
+              <Badge
+                variant="secondary"
+                className="bg-white/90 dark:bg-black/90"
+              >
+                {post.category}
+              </Badge>
+            </div>
+
+            {/* Series Badge */}
+            {post.series && (
+              <div className="absolute top-3 right-3">
+                <Badge
+                  variant="outline"
+                  className="bg-white/90 dark:bg-black/90"
+                >
+                  Part {post.series.part}/{post.series.total}
+                </Badge>
+              </div>
+            )}
+
+            {/* Reading Time */}
+            <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="flex items-center gap-1 text-white text-sm bg-black/50 backdrop-blur-sm px-2 py-1 rounded">
+                <BookOpen className="h-3 w-3" />
+                {post.readingTime} min read
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <CardContent className="flex-1 pt-4 space-y-3">
+            {/* Title */}
+            <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+              {post.title}
+            </h3>
+
+            {/* Excerpt */}
+            <p className="text-sm text-muted-foreground line-clamp-3">
+              {post.excerpt}
+            </p>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-1">
+              {post.tags.slice(0, 3).map(tag => (
+                <Badge key={tag} variant="outline" size="sm">
+                  {tag}
+                </Badge>
+              ))}
+              {post.tags.length > 3 && (
+                <Badge variant="outline" size="sm">
+                  +{post.tags.length - 3}
+                </Badge>
+              )}
+            </div>
+          </CardContent>
+
+          {/* Footer */}
+          <CardFooter className="pt-0">
+            <div className="w-full">
+              {/* Author */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                  <Image
+                    src={post.author.avatar}
+                    alt={post.author.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">{post.author.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formattedDate}
+                  </p>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center gap-3">
+                  {post.views && (
+                    <span className="flex items-center gap-1">
+                      <Eye className="h-3 w-3" />
+                      {post.views > 1000
+                        ? `${(post.views / 1000).toFixed(1)}k`
+                        : post.views}
+                    </span>
+                  )}
+                  {post.likes && (
+                    <button
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setLiked(!liked);
+                      }}
+                      className={`flex items-center gap-1 hover:text-red-500 transition-colors ${
+                        liked ? 'text-red-500' : ''
+                      }`}
+                    >
+                      <Heart
+                        className={`h-3 w-3 ${liked ? 'fill-current' : ''}`}
+                      />
+                      {post.likes + (liked ? 1 : 0)}
+                    </button>
+                  )}
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {post.readingTime} min
+                  </span>
+                </div>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </CardFooter>
+        </Card>
+      </Link>
+    </motion.div>
+  );
+}
