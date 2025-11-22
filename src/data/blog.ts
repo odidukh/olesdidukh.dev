@@ -330,11 +330,10 @@ By following these best practices, you can build React applications that are not
 - [Web Vitals](https://web.dev/vitals/)
 - [React Performance Checklist](https://github.com/performance-checklist)
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/3b82f6/ffffff?text=React+Performance',
+    coverImage: '/images/blog/react-perf.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-03-15',
@@ -446,11 +445,10 @@ type PartialConfig = DeepPartial<Config>;
 
 The article continues with more advanced patterns...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/8b5cf6/ffffff?text=TypeScript+Patterns',
+    coverImage: '/images/blog/typescript.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-03-10',
@@ -514,11 +512,10 @@ function AddToCartButton({ productId }) {
 
 More content continues...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/10b981/ffffff?text=Server+Components',
+    coverImage: '/images/blog/nextjs.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-03-05',
@@ -572,11 +569,10 @@ Measures visual stability. Should maintain a score of less than 0.1.
 
 More optimization techniques...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/f59e0b/ffffff?text=Web+Performance',
+    coverImage: '/images/blog/modern-css.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-02-28',
@@ -649,11 +645,10 @@ const useBearStore = create<BearState>((set) => ({
 
 Detailed comparison continues...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/ef4444/ffffff?text=State+Management',
+    coverImage: '/images/blog/react-perf.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-02-20',
@@ -703,11 +698,10 @@ describe('Counter', () => {
 
 More testing patterns and examples...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/22c55e/ffffff?text=Testing+Strategies',
+    coverImage: '/images/blog/typescript.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-02-15',
@@ -763,11 +757,10 @@ CSS has evolved significantly. Let's explore modern features that make styling m
 
 More modern CSS techniques...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/a855f7/ffffff?text=Modern+CSS',
+    coverImage: '/images/blog/modern-css.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-02-10',
@@ -806,11 +799,10 @@ Both having mentors and mentoring others accelerated my learning.
 
 Personal stories and advice continue...
     `,
-    coverImage:
-      'https://via.placeholder.com/800x400/6366f1/ffffff?text=Career+Journey',
+    coverImage: '/images/blog/career-journey.png',
     author: {
       name: 'Oles Didukh',
-      avatar: 'https://via.placeholder.com/100x100/A47864/ffffff?text=OD',
+      avatar: '/images/avatar.png',
       role: 'Senior Front-End Engineer',
     },
     publishedAt: '2024-02-01',
