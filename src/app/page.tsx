@@ -23,12 +23,11 @@ import {
   Brain,
   Heart,
   BookOpen,
-  Cloud,
-  Monitor,
   School,
   Server,
   Smartphone,
-  User,
+  Cloud,
+  Monitor,
 } from 'lucide-react';
 
 // Import your components
@@ -70,16 +69,6 @@ const stats = [
   },
 ];
 
-// Navigation Items for Quick Access
-const quickNav = [
-  { label: 'About', href: '#about', icon: User },
-  { label: 'Experience', href: '/experience', icon: Briefcase },
-  { label: 'Skills', href: '/skills', icon: Code2 },
-  { label: 'Projects', href: '#projects', icon: Rocket },
-  { label: 'Blog', href: '#blog', icon: BookOpen },
-  { label: 'Contact', href: '#contact', icon: Mail },
-];
-
 // Featured Skills for Hero
 const featuredSkills = [
   'React',
@@ -96,7 +85,6 @@ const featuredSkills = [
 
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [activeSection, setActiveSection] = useState('hero');
   const heroRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
 
@@ -134,60 +122,10 @@ export default function HomePage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Section observer for active nav highlighting
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    const sections = document.querySelectorAll('section[id]');
-    sections.forEach(section => observer.observe(section));
-
-    return () => {
-      sections.forEach(section => observer.unobserve(section));
-    };
-  }, []);
-
   return (
     <>
-      {/* Enhanced Navigation with Quick Links */}
+      {/* Main Navigation */}
       <Navigation />
-
-      {/* Floating Quick Access Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="fixed top-20 left-1/2 -translate-x-1/2 z-40 hidden lg:block"
-      >
-        <div className="bg-background/80 backdrop-blur-lg border border-border rounded-full px-2 py-2 shadow-lg">
-          <div className="flex items-center gap-1">
-            {quickNav.map(item => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`
-                  px-4 py-2 rounded-full text-sm font-medium transition-all
-                  ${
-                    activeSection === item.href.slice(1)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }
-                `}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </motion.div>
 
       {/* Hero Section - Redesigned */}
       <section
@@ -392,6 +330,7 @@ export default function HomePage() {
         </Container>
       </section>
 
+      {/* About Section - Using Redesigned Component */}
       <AboutSection />
 
       {/* Featured Journey Teaser */}
@@ -772,33 +711,6 @@ export default function HomePage() {
       </section>
 
       <Footer />
-
-      {/* Floating Action Buttons */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2 }}
-        className="fixed bottom-8 right-8 z-40 flex flex-col gap-3"
-      >
-        <motion.a
-          href="https://github.com/odidukh"
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-12 h-12 bg-card border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-primary hover:text-primary-foreground transition-colors"
-        >
-          <GitBranch className="w-5 h-5" />
-        </motion.a>
-        <motion.a
-          href="mailto:oles.didukh@example.com"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg hover:bg-primary/90 transition-colors"
-        >
-          <Mail className="w-5 h-5" />
-        </motion.a>
-      </motion.div>
     </>
   );
 }
