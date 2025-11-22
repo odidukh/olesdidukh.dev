@@ -1,0 +1,604 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Container } from '@/components/ui/Container';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Navigation } from '@/components/ui/Navigation';
+import { Footer } from '@/components/ui/Footer';
+import {
+  Calendar,
+  MapPin,
+  Building2,
+  Users,
+  Trophy,
+  ArrowRight,
+  ExternalLink,
+  Briefcase,
+  Code2,
+  Rocket,
+  Target,
+  TrendingUp,
+  Award,
+} from 'lucide-react';
+
+interface Experience {
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  duration: string;
+  startDate: string;
+  endDate: string | 'Present';
+  type: 'Full-time' | 'Contract' | 'Part-time';
+  logo?: string;
+  companyUrl?: string;
+  description: string;
+  achievements: string[];
+  technologies: string[];
+  teamSize?: string;
+  highlights?: {
+    metric: string;
+    value: string;
+    icon?: React.ElementType;
+  }[];
+}
+
+const experiences: Experience[] = [
+  {
+    id: 'safebooks',
+    company: 'Safebooks AI',
+    position: 'Senior Front-End Engineer',
+    location: 'Remote',
+    duration: 'Jan 2023 - Present',
+    startDate: '2023-01',
+    endDate: 'Present',
+    type: 'Full-time',
+    companyUrl: 'https://safebooks.ai',
+    description:
+      'Leading front-end development for an AI-powered accounting platform, architecting scalable React applications and implementing complex data visualization systems.',
+    achievements: [
+      'Architected and implemented a real-time dashboard processing 1M+ transactions daily',
+      'Reduced application load time by 60% through code splitting and lazy loading',
+      'Led a team of 4 developers in migrating legacy jQuery codebase to React/TypeScript',
+      'Implemented comprehensive testing strategy achieving 85% code coverage',
+      'Designed and built a component library used across 5 different products',
+    ],
+    technologies: [
+      'React',
+      'TypeScript',
+      'Next.js',
+      'GraphQL',
+      'AWS',
+      'Jest',
+      'Tailwind CSS',
+      'D3.js',
+    ],
+    teamSize: '15+ people',
+    highlights: [
+      { metric: 'Performance Boost', value: '60%', icon: Rocket },
+      { metric: 'Code Coverage', value: '85%', icon: Target },
+      { metric: 'Team Size', value: '15+', icon: Users },
+      { metric: 'Daily Transactions', value: '1M+', icon: TrendingUp },
+    ],
+  },
+  {
+    id: 'emerline',
+    company: 'Emerline',
+    position: 'Front-End Developer',
+    location: 'Vinnytsia, Ukraine',
+    duration: 'Jun 2020 - Dec 2022',
+    startDate: '2020-06',
+    endDate: '2022-12',
+    type: 'Full-time',
+    companyUrl: 'https://emerline.com',
+    description:
+      'Developed high-performance web applications for international clients, focusing on React-based solutions and modern JavaScript frameworks.',
+    achievements: [
+      'Built a multi-tenant SaaS platform serving 10,000+ users',
+      'Improved SEO scores by 40% through SSR implementation with Next.js',
+      'Mentored 3 junior developers and conducted code reviews',
+      'Collaborated with clients from USA, Germany, and UK on requirement gathering',
+      'Reduced bug rate by 35% through implementation of automated testing',
+    ],
+    technologies: [
+      'React',
+      'JavaScript',
+      'Redux',
+      'Node.js',
+      'MongoDB',
+      'Docker',
+      'Material-UI',
+      'Webpack',
+    ],
+    teamSize: '8-10 people',
+    highlights: [
+      { metric: 'Users Served', value: '10K+', icon: Users },
+      { metric: 'SEO Improvement', value: '40%', icon: TrendingUp },
+      { metric: 'Bug Reduction', value: '35%', icon: Award },
+    ],
+  },
+  {
+    id: 'inango',
+    company: 'Inango Systems',
+    position: 'Junior Front-End Developer',
+    location: 'Vinnytsia, Ukraine',
+    duration: 'Mar 2018 - May 2020',
+    startDate: '2018-03',
+    endDate: '2020-05',
+    type: 'Full-time',
+    companyUrl: 'https://inango.com',
+    description:
+      'Developed embedded web interfaces for network management systems, working with IoT devices and real-time data visualization.',
+    achievements: [
+      'Created responsive web interfaces for 5 different network management products',
+      'Optimized rendering performance for real-time data updates (60fps)',
+      'Implemented WebSocket connections for live network monitoring',
+      'Reduced bundle size by 45% through webpack optimization',
+      'Participated in Agile ceremonies and sprint planning',
+    ],
+    technologies: [
+      'JavaScript',
+      'React',
+      'Vue.js',
+      'WebSockets',
+      'Chart.js',
+      'SASS',
+      'Git',
+      'Linux',
+    ],
+    teamSize: '5-7 people',
+    highlights: [
+      { metric: 'Products Shipped', value: '5', icon: Rocket },
+      { metric: 'Bundle Size', value: '-45%', icon: Target },
+      { metric: 'Performance', value: '60fps', icon: TrendingUp },
+    ],
+  },
+  {
+    id: 'helios',
+    company: 'Helios Technologies',
+    position: 'Front-End Developer Intern',
+    location: 'Vinnytsia, Ukraine',
+    duration: 'Sep 2017 - Feb 2018',
+    startDate: '2017-09',
+    endDate: '2018-02',
+    type: 'Contract',
+    description:
+      'Started my professional journey in web development, working on various client projects and learning industry best practices.',
+    achievements: [
+      'Developed 3 responsive websites for local businesses',
+      'Learned React and modern JavaScript ecosystem',
+      'Implemented pixel-perfect designs from Figma/Sketch',
+      'Collaborated with senior developers on code reviews',
+    ],
+    technologies: [
+      'HTML5',
+      'CSS3',
+      'JavaScript',
+      'jQuery',
+      'Bootstrap',
+      'PHP',
+      'MySQL',
+    ],
+    teamSize: '3-4 people',
+  },
+];
+
+export default function ExperiencePage() {
+  const [selectedExperience, setSelectedExperience] = useState<string | null>(
+    null
+  );
+  const [viewMode, setViewMode] = useState<'timeline' | 'cards'>('timeline');
+
+  const totalYears = new Date().getFullYear() - 2017;
+  const companiesCount = experiences.length;
+  const projectsCompleted = 50; // You can calculate this dynamically
+
+  const stats = [
+    { label: 'Years Experience', value: `${totalYears}+`, icon: Calendar },
+    { label: 'Companies', value: companiesCount.toString(), icon: Building2 },
+    {
+      label: 'Projects Completed',
+      value: `${projectsCompleted}+`,
+      icon: Briefcase,
+    },
+    { label: 'Technologies Used', value: '25+', icon: Code2 },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
+  return (
+    <>
+      <Navigation />
+
+      {/* Hero Section */}
+      <section className="relative min-h-[40vh] flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, currentColor 1px, transparent 1px)`,
+              backgroundSize: '40px 40px',
+            }}
+          />
+        </div>
+
+        <Container size="lg" className="relative z-10 text-center py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Professional <span className="text-primary">Experience</span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
+              {totalYears}+ years of crafting exceptional digital experiences,
+              from startups to enterprise solutions
+            </p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-card border border-border rounded-xl p-6"
+                >
+                  <stat.icon className="w-8 h-8 text-primary mx-auto mb-3" />
+                  <div className="text-3xl font-bold mb-1">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </Container>
+      </section>
+
+      {/* View Mode Toggle */}
+      <section className="py-8 border-b">
+        <Container size="lg">
+          <div className="flex justify-center gap-2">
+            <Button
+              variant={viewMode === 'timeline' ? 'default' : 'outline'}
+              onClick={() => setViewMode('timeline')}
+            >
+              Timeline View
+            </Button>
+            <Button
+              variant={viewMode === 'cards' ? 'default' : 'outline'}
+              onClick={() => setViewMode('cards')}
+            >
+              Card View
+            </Button>
+          </div>
+        </Container>
+      </section>
+
+      {/* Experience Timeline */}
+      <section className="py-20">
+        <Container size="lg">
+          {viewMode === 'timeline' ? (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="relative"
+            >
+              {/* Timeline Line */}
+              <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-border" />
+
+              {experiences.map((exp, index) => (
+                <motion.div
+                  key={exp.id}
+                  variants={itemVariants}
+                  className={`relative flex items-center mb-16 ${
+                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  }`}
+                >
+                  {/* Timeline Dot */}
+                  <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-primary rounded-full -translate-x-1/2 ring-4 ring-background" />
+
+                  {/* Content */}
+                  <div
+                    className={`ml-20 md:ml-0 md:w-1/2 ${
+                      index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'
+                    }`}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      className="bg-card border border-border rounded-xl p-6 cursor-pointer"
+                      onClick={() =>
+                        setSelectedExperience(
+                          selectedExperience === exp.id ? null : exp.id
+                        )
+                      }
+                    >
+                      {/* Header */}
+                      <div
+                        className={`flex items-start gap-4 ${
+                          index % 2 === 0 ? 'md:flex-row-reverse' : ''
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold mb-1">
+                            {exp.position}
+                          </h3>
+                          <div
+                            className={`flex items-center gap-2 mb-3 flex-wrap ${
+                              index % 2 === 0 ? 'md:justify-end' : ''
+                            }`}
+                          >
+                            <span className="text-primary font-semibold">
+                              {exp.company}
+                            </span>
+                            {exp.companyUrl && (
+                              <a
+                                href={exp.companyUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted-foreground hover:text-primary"
+                                onClick={e => e.stopPropagation()}
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                          <div
+                            className={`flex items-center gap-4 text-sm text-muted-foreground flex-wrap ${
+                              index % 2 === 0 ? 'md:justify-end' : ''
+                            }`}
+                          >
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {exp.duration}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              {exp.location}
+                            </span>
+                            <Badge variant="secondary">{exp.type}</Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Description */}
+                      <p className="mt-4 text-muted-foreground">
+                        {exp.description}
+                      </p>
+
+                      {/* Technologies */}
+                      <div
+                        className={`mt-4 flex gap-2 flex-wrap ${
+                          index % 2 === 0 ? 'md:justify-end' : ''
+                        }`}
+                      >
+                        {exp.technologies.slice(0, 5).map(tech => (
+                          <Badge key={tech} variant="outline">
+                            {tech}
+                          </Badge>
+                        ))}
+                        {exp.technologies.length > 5 && (
+                          <Badge variant="outline">
+                            +{exp.technologies.length - 5} more
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Expanded Content */}
+                      {selectedExperience === exp.id && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="mt-6 pt-6 border-t"
+                        >
+                          {/* Highlights */}
+                          {exp.highlights && (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                              {exp.highlights.map(highlight => (
+                                <div
+                                  key={highlight.metric}
+                                  className="text-center"
+                                >
+                                  {highlight.icon && (
+                                    <highlight.icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                                  )}
+                                  <div className="text-xl font-bold">
+                                    {highlight.value}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {highlight.metric}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Achievements */}
+                          <div>
+                            <h4 className="font-semibold mb-3 flex items-center gap-2">
+                              <Trophy className="w-5 h-5 text-primary" />
+                              Key Achievements
+                            </h4>
+                            <ul
+                              className={`space-y-2 ${
+                                index % 2 === 0 ? 'md:text-left' : ''
+                              }`}
+                            >
+                              {exp.achievements.map((achievement, i) => (
+                                <li key={i} className="flex items-start gap-2">
+                                  <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                                  <span className="text-sm text-muted-foreground">
+                                    {achievement}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Team Size */}
+                          {exp.teamSize && (
+                            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                              <Users className="w-4 h-4" />
+                              Team size: {exp.teamSize}
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            /* Card View */
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {experiences.map(exp => (
+                <motion.div
+                  key={exp.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -5 }}
+                  className="bg-card border border-border rounded-xl p-8"
+                >
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-2xl font-bold mb-1">
+                        {exp.position}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className="text-primary font-semibold">
+                          {exp.company}
+                        </span>
+                        {exp.companyUrl && (
+                          <a
+                            href={exp.companyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <Badge variant="secondary">{exp.type}</Badge>
+                  </div>
+
+                  {/* Meta Info */}
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {exp.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      {exp.location}
+                    </span>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-muted-foreground mb-6">
+                    {exp.description}
+                  </p>
+
+                  {/* Highlights */}
+                  {exp.highlights && (
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      {exp.highlights.slice(0, 2).map(highlight => (
+                        <div
+                          key={highlight.metric}
+                          className="bg-background rounded-lg p-3 text-center"
+                        >
+                          <div className="text-xl font-bold text-primary">
+                            {highlight.value}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {highlight.metric}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Technologies */}
+                  <div className="flex gap-2 flex-wrap">
+                    {exp.technologies.slice(0, 6).map(tech => (
+                      <Badge key={tech} variant="outline">
+                        {tech}
+                      </Badge>
+                    ))}
+                    {exp.technologies.length > 6 && (
+                      <Badge variant="outline">
+                        +{exp.technologies.length - 6}
+                      </Badge>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </Container>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-20 bg-muted/30">
+        <Container size="md">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Work Together?
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Let&apos;s discuss how I can contribute to your team&apos;s
+              success
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button size="lg" asChild>
+                <a href="/contact">Get In Touch</a>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <a href="/Oles_Didukh_Resume.pdf" download>
+                  Download Resume
+                </a>
+              </Button>
+            </div>
+          </motion.div>
+        </Container>
+      </section>
+
+      <Footer />
+    </>
+  );
+}
