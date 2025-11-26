@@ -3,6 +3,10 @@ import { blogPosts, getRelatedPosts } from '@/data/blog';
 import { BlogPostContent } from '@/components/sections/BlogPostContent';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import {
+  generateBreadcrumbSchema,
+  getBlogPostBreadcrumbs,
+} from '@/lib/breadcrumbs';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -89,11 +93,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     timeRequired: `PT${post.readingTime}M`,
   };
 
+  // Breadcrumb structured data for navigation
+  const breadcrumbJsonLd = generateBreadcrumbSchema(
+    getBlogPostBreadcrumbs(post.title, post.slug)
+  );
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Navigation />
       <main className="pt-20">

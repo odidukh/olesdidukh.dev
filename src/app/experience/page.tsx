@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import {
   Calendar,
   MapPin,
@@ -229,6 +230,7 @@ export default function ExperiencePage() {
 
   return (
     <>
+      <BreadcrumbSchema page="experience" />
       <Navigation />
 
       {/* Hero Section */}

@@ -47,7 +47,7 @@ CONTACT_EMAIL=your-email@example.com
 
 - [x] Add Person schema to layout
 - [x] Add Article schema to blog posts
-- [ ] Add BreadcrumbList schema for navigation
+- [x] Add BreadcrumbList schema for navigation
 
 **Implementation:**
 
