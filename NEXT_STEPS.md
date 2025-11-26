@@ -1,314 +1,286 @@
-# Next Steps - Personal Website Improvements
+# Next Steps - Portfolio Website
 
-This document tracks recommended improvements and remaining work for the portfolio website.
-
----
-
-## Priority 1: Backend Integrations (High Impact)
-
-### Contact Form Backend
-
-**Status:** Completed
-
-**Implementation:** Vercel serverless function with Resend API
-
-- [x] API route at `src/app/api/contact/route.ts`
-- [x] Zod validation for all form fields
-- [x] HTML and plain text email formatting
-- [x] Environment variables in `.env.example`
-
-**Setup Required:**
-
-Create `.env.local` with:
-
-```bash
-RESEND_API_KEY=re_your_api_key_here
-CONTACT_EMAIL=your-email@example.com
-```
-
-**Production Note:** Update the `from` address in the API route after verifying your domain in Resend.
-
-### Newsletter Signup
-
-**Status:** Form UI exists but needs backend
-
-**Options:**
-
-- [ ] ConvertKit API integration
-- [ ] Mailchimp API integration
-- [ ] Buttondown (developer-friendly)
-- [ ] Store in database for manual management
+Remaining improvements and enhancements for olesdidukh.dev
 
 ---
 
-## Priority 2: SEO & Discoverability
+## ✅ Completed (December 2025)
 
-### Structured Data (JSON-LD)
+**Backend & Infrastructure:**
 
-- [x] Add Person schema to layout
-- [x] Add Article schema to blog posts
-- [x] Add BreadcrumbList schema for navigation
+- ✅ Contact form with Resend API integration
+- ✅ Form validation with Zod
+- ✅ Toast notifications (Sonner)
+- ✅ Sitemap & Robots.txt
 
-**Implementation:**
+**SEO & Structured Data:**
 
-```typescript
-// src/app/layout.tsx
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Oles Didukh',
-  jobTitle: 'Senior Front-End Engineer',
-  url: 'https://olesdidukh.dev',
-  sameAs: ['https://linkedin.com/in/oles-didukh', 'https://github.com/odidukh'],
-};
-```
-
-### Sitemap & Robots
-
-- [x] Add `src/app/sitemap.ts` for auto-generated sitemap
-- [x] Add `src/app/robots.ts` for crawler instructions
-
-### Open Graph Images
-
-- [ ] Create `/og-image.png` (1200x630)
-- [ ] Create page-specific OG images for blog posts
-- [ ] Consider dynamic OG image generation with `@vercel/og`
-
-### Page-specific Meta
-
-- [x] Review all page metadata
-- [x] Add unique descriptions to each route
-- [x] Ensure proper canonical URLs
+- ✅ Person schema (homepage)
+- ✅ Article schema (blog posts)
+- ✅ BreadcrumbList schema (navigation)
+- ✅ Page-specific metadata (all main routes)
+- ✅ Canonical URLs
+- ✅ Open Graph & Twitter Card tags
 
 ---
 
-## Priority 3: Content Enhancements
+## 🎯 Current Priorities
 
-### Case Study Detail Pages
+### Priority 1: Content & Visual Polish
 
-**Current:** Projects shown in modal only
-**Goal:** Full `/projects/[slug]` pages for SEO and detailed content
+#### Newsletter Signup Backend
+
+- [ ] Choose provider (ConvertKit, Mailchimp, or Buttondown)
+- [ ] Implement API integration
+- [ ] Add to footer/blog sections
+- [ ] Test subscription flow
+
+#### Resume PDF
+
+- [ ] Create professional PDF resume
+- [ ] Add to `/public/resume.pdf`
+- [ ] Verify download links work
+- [ ] Add analytics tracking for downloads
+
+#### Open Graph Images
+
+- [ ] Design default OG image (1200x630)
+- [ ] Create page-specific OG images
+- [ ] Optional: Dynamic OG generation with `@vercel/og`
+
+### Priority 2: Enhanced Content Presentation
+
+#### Project Detail Pages
+
+**Goal:** Full `/projects/[slug]` pages instead of modals
 
 - [ ] Create `src/app/projects/[slug]/page.tsx`
-- [ ] Add rich project detail template with:
-  - Problem/Challenge section
-  - Solution walkthrough
-  - Technical architecture diagrams
-  - Before/after comparisons
-  - Results with metrics
-  - Testimonials
+- [ ] Design rich project template:
+  - Challenge/Problem statement
+  - Solution architecture
+  - Tech stack deep-dive
+  - Before/after metrics
+  - Testimonials & outcomes
   - Related projects
+- [ ] Add project schema structured data
+- [ ] Implement navigation between projects
 
-### MDX for Blog Posts
+#### MDX Blog Migration
 
-**Current:** Blog content stored as strings in TypeScript
-**Goal:** MDX files for richer formatting
+**Goal:** Richer content formatting with code highlighting
 
-- [ ] Install `@next/mdx` and configure
+- [ ] Install `@next/mdx` and `rehype-pretty-code`
 - [ ] Create `src/content/blog/` directory
-- [ ] Migrate blog posts to `.mdx` files
-- [ ] Add syntax highlighting with `rehype-pretty-code`
-- [ ] Support custom components in posts
+- [ ] Migrate existing blog posts to `.mdx`
+- [ ] Add custom MDX components
+- [ ] Implement syntax highlighting themes
 
-### Resume PDF
+### Priority 3: Analytics & Performance
 
-- [ ] Create/update resume PDF
-- [ ] Add to `/public/resume.pdf`
-- [ ] Verify download link works
-- [ ] Track downloads in analytics
+#### Vercel Analytics Enhancement
 
----
+- [ ] Verify analytics tracking is active
+- [ ] Add custom events:
+  - Resume downloads
+  - Contact form submissions
+  - Project modal/page views
+  - External link clicks
+  - Newsletter signups
+- [ ] Set up conversion tracking
 
-## Priority 4: Visual Enhancements
+#### Performance Optimization
 
-### 3D Hero Element
+- [ ] Run `npm run analyze` and review bundle size
+- [ ] Implement code splitting for large components
+- [ ] Optimize images (if not already done)
+- [ ] Set up Lighthouse CI in GitHub Actions
+- [ ] Define performance budgets
 
-**Spec mentions:** Three.js scene for hero section
+### Priority 4: Visual Enhancements (Optional)
 
-- [ ] Install Three.js and @react-three/fiber
-- [ ] Create abstract geometric scene
-- [ ] Add mouse-follow interaction
-- [ ] Implement performance fallback for low-end devices
+#### 3D Hero Element
+
+- [ ] Install Three.js / @react-three/fiber
+- [ ] Create subtle 3D background scene
+- [ ] Add mouse interaction
+- [ ] Performance fallback for mobile
 - [ ] Respect `prefers-reduced-motion`
 
-### Testimonials Section
+#### Testimonials Showcase
 
-**Current:** Testimonials exist in project data but not prominently featured
-
-- [ ] Create dedicated testimonials carousel/section
+- [ ] Extract testimonials from project data
+- [ ] Create carousel component
 - [ ] Add to homepage or about page
 - [ ] Include client photos (with permission)
 
-### Video Content
+#### Video Content
 
-- [ ] Record short project demo videos
-- [ ] Add video thumbnails with play overlay
-- [ ] Implement lazy loading for videos
+- [ ] Record project demo videos
+- [ ] Add video player with lazy loading
+- [ ] Create video thumbnails
+- [ ] Optimize for web delivery
 
----
+### Priority 5: Testing Infrastructure
 
-## Priority 5: Performance & Analytics
+#### Unit & Integration Tests
 
-### Vercel Analytics Setup
-
-- [ ] Verify Vercel Analytics is tracking
-- [ ] Set up custom events:
-  - Resume downloads
-  - Contact form submissions
-  - Project modal opens
-  - External link clicks
-- [ ] Create dashboard for monitoring
-
-### Lighthouse CI
-
-- [ ] Add Lighthouse CI to GitHub Actions
-- [ ] Set performance budgets
-- [ ] Block PRs that regress performance
-
-**GitHub Action:**
-
-```yaml
-- name: Lighthouse CI
-  uses: treosh/lighthouse-ci-action@v10
-  with:
-    urls: |
-      https://olesdidukh.dev
-      https://olesdidukh.dev/projects
-      https://olesdidukh.dev/blog
-    budgetPath: ./lighthouse-budget.json
-```
-
-### Bundle Analysis
-
-- [ ] Run `npm run analyze`
-- [ ] Identify large dependencies
-- [ ] Implement code splitting if needed
-- [ ] Set bundle size budgets
-
----
-
-## Priority 6: Testing Infrastructure
-
-### Unit Tests
-
-- [ ] Install Vitest or Jest
-- [ ] Add tests for utility functions
+- [ ] Install Vitest
+- [ ] Test utility functions (`breadcrumbs.ts`, etc.)
 - [ ] Test form validation logic
-- [ ] Test data helper functions
+- [ ] Test data helpers
 
-### Component Tests
+#### Component Tests
 
 - [ ] Install React Testing Library
 - [ ] Test critical UI components
 - [ ] Test form interactions
-- [ ] Test modal open/close
+- [ ] Test modal behavior
 
-### E2E Tests
+#### E2E Tests
 
 - [ ] Install Playwright
-- [ ] Test contact form flow
-- [ ] Test navigation
-- [ ] Test dark mode toggle
-- [ ] Test project filtering
+- [ ] Test user flows:
+  - Contact form submission
+  - Navigation
+  - Dark mode toggle
+  - Project filtering
+  - Blog search
 
----
+### Priority 6: Accessibility & Quality
 
-## Priority 7: Accessibility Audit
+#### WCAG 2.2 Audit
 
-### WCAG 2.2 Compliance
-
-- [ ] Run axe-core audit
-- [ ] Fix any critical issues
-- [ ] Test keyboard navigation end-to-end
+- [ ] Run axe-core DevTools audit
+- [ ] Fix critical accessibility issues
+- [ ] Test keyboard navigation
 - [ ] Test with screen reader (VoiceOver/NVDA)
 - [ ] Verify color contrast ratios
-- [ ] Test focus indicators
-
-### Improvements
-
 - [ ] Add skip links
+
+#### Accessibility Enhancements
+
 - [ ] Improve focus trap in modals
 - [ ] Add aria-live regions for dynamic content
-- [ ] Test reduced motion preferences
+- [ ] Test all interactive elements with keyboard
+- [ ] Add focus indicators where missing
+
+### Priority 7: DevOps
+
+#### CI/CD Pipeline
+
+- [ ] GitHub Actions for PR quality checks
+- [ ] Automated type checking
+- [ ] Lint and format checks
+- [ ] Bundle size monitoring
+
+#### Dependency Management
+
+- [ ] Configure Dependabot
+- [ ] Set up automated security updates
+- [ ] Define update strategy
+
+#### Error Monitoring
+
+- [ ] Set up Sentry
+- [ ] Configure source maps
+- [ ] Define error alerts
+- [ ] Create error dashboard
 
 ---
 
-## Priority 8: DevOps & Maintenance
+## 🚀 Quick Wins
 
-### GitHub Actions CI/CD
+**Can be done in < 30 minutes:**
 
-- [ ] Add workflow for quality checks on PR
-- [ ] Add Dependabot configuration
-- [ ] Add automated dependency updates
+1. **Run quality check**
 
-**Dependabot config:**
+   ```bash
+   npm run check
+   ```
 
-```yaml
-# .github/dependabot.yml
-version: 2
-updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-    open-pull-requests-limit: 5
+2. **Verify all links**
+   - Social media links
+   - Navigation links
+   - Footer links
+   - External project links
+
+3. **Bundle analysis**
+
+   ```bash
+   npm run analyze
+   ```
+
+4. **Test contact form**
+   - Submit test message
+   - Verify email delivery
+   - Check toast notifications
+
+5. **Accessibility quick scan**
+   - Run axe DevTools
+   - Fix critical issues
+
+---
+
+## 📊 Success Metrics
+
+**Technical Targets:**
+
+- Lighthouse Performance > 95
+- Lighthouse Accessibility > 95
+- LCP < 1.5s
+- INP < 100ms
+- CLS < 0.05
+- Bundle size < 200KB (initial)
+
+**Business Metrics:**
+
+- Contact form submissions/month
+- Resume downloads/month
+- Average session duration > 2min
+- Bounce rate < 40%
+- Blog post engagement
+
+---
+
+## 🛠️ Implementation Order
+
+| Priority | Focus Area                               | Impact | Effort     |
+| -------- | ---------------------------------------- | ------ | ---------- |
+| **P1**   | Newsletter signup, Resume PDF, OG images | High   | Low        |
+| **P2**   | Project detail pages, MDX blog           | High   | Medium     |
+| **P3**   | Analytics, Performance optimization      | Medium | Low        |
+| **P4**   | 3D elements, Visual polish               | Low    | High       |
+| **P5**   | Testing infrastructure                   | Medium | Medium     |
+| **P6**   | Accessibility audit & fixes              | High   | Low-Medium |
+| **P7**   | DevOps & monitoring                      | Medium | Low        |
+
+---
+
+## 📝 Notes
+
+**Environment Setup:**
+
+```bash
+# Required environment variables
+RESEND_API_KEY=re_your_key_here
+CONTACT_EMAIL=your-email@example.com
+
+# Optional (add when implementing)
+# NEWSLETTER_API_KEY=
+# SENTRY_DSN=
+# VERCEL_ANALYTICS_ID=
 ```
 
-### Error Monitoring
+**Production Checklist:**
 
-- [ ] Set up Sentry for error tracking
-- [ ] Configure source maps upload
-- [ ] Set up alerts for critical errors
-
----
-
-## Quick Wins (Can Do Today)
-
-These can be implemented quickly with minimal effort:
-
-1. ~~**Sitemap**~~ - ✅ Completed
-
-2. ~~**Robots.txt**~~ - ✅ Completed
-
-3. ~~**Toast notifications**~~ - ✅ Completed (using Sonner library)
-
-4. **Run quality check** - `npm run check` to ensure everything passes
-
-5. **Verify all links** - Check social links, navigation, footer links work
+- [ ] Verify all API keys are in production env
+- [ ] Test contact form end-to-end
+- [ ] Verify DNS and domain settings
+- [ ] Test all page loads
+- [ ] Run Lighthouse on production URL
+- [ ] Set up monitoring alerts
 
 ---
 
-## Implementation Order Recommendation
-
-| Phase       | Tasks                                            | Impact                               |
-| ----------- | ------------------------------------------------ | ------------------------------------ |
-| **Phase 1** | ~~Contact backend~~, ~~Sitemap~~, ~~Robots.txt~~ | High - Enables core functionality    |
-| **Phase 2** | SEO metadata, Structured data, OG images         | High - Improves discoverability      |
-| **Phase 3** | Project detail pages, MDX blog                   | Medium - Better content presentation |
-| **Phase 4** | Analytics events, Lighthouse CI                  | Medium - Data-driven improvements    |
-| **Phase 5** | Testing infrastructure                           | Medium - Code confidence             |
-| **Phase 6** | 3D hero, Visual polish                           | Low - Nice to have                   |
-
----
-
-## Success Metrics
-
-Track these after implementing improvements:
-
-**Technical:**
-
-- [ ] Lighthouse scores > 95 (all categories)
-- [ ] Core Web Vitals all "Good"
-- [ ] Zero accessibility violations
-- [ ] < 200KB initial bundle
-
-**Business:**
-
-- [ ] Contact form submissions per month
-- [ ] Resume downloads per month
-- [ ] Average session duration > 2 min
-- [ ] Bounce rate < 40%
-
----
-
-_Last updated: November 2025_
+_Last updated: December 2025_
+_Portfolio: https://olesdidukh.dev_
