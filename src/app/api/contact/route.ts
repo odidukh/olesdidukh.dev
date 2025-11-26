@@ -110,8 +110,8 @@ ${message}
     `.trim();
 
     await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: process.env['CONTACT_EMAIL'] ?? 'contact@olesdidukh.dev',
+      from: 'Portfolio Contact <contact@olesdidukh.dev>',
+      to: process.env['CONTACT_EMAIL'] ?? 'oles.didukh@gmail.com',
       subject: `New contact from ${name}${company ? ` (${company})` : ''}`,
       text: emailText,
       html: emailHtml,
