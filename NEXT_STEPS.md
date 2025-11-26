@@ -266,30 +266,11 @@ updates:
 
 These can be implemented quickly with minimal effort:
 
-1. **Sitemap** - Add `src/app/sitemap.ts`:
+1. ~~**Sitemap**~~ - ✅ Completed
 
-   ```typescript
-   export default function sitemap() {
-     return [
-       { url: 'https://olesdidukh.dev', lastModified: new Date() },
-       { url: 'https://olesdidukh.dev/about', lastModified: new Date() },
-       // ... other routes
-     ];
-   }
-   ```
+2. ~~**Robots.txt**~~ - ✅ Completed
 
-2. **Robots.txt** - Add `src/app/robots.ts`:
-
-   ```typescript
-   export default function robots() {
-     return {
-       rules: { userAgent: '*', allow: '/' },
-       sitemap: 'https://olesdidukh.dev/sitemap.xml',
-     };
-   }
-   ```
-
-3. **Toast notifications** - Add success feedback after form "submission"
+3. ~~**Toast notifications**~~ - ✅ Completed (using Sonner library)
 
 4. **Run quality check** - `npm run check` to ensure everything passes
 

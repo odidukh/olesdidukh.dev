@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
@@ -140,6 +141,7 @@ export function ContactForm() {
     e.preventDefault();
 
     if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
       return;
     }
 
@@ -160,6 +162,9 @@ export function ContactForm() {
       }
 
       setSubmitStatus('success');
+      toast.success('Message sent successfully!', {
+        description: "I'll get back to you within 24 hours.",
+      });
 
       // Reset form after successful submission
       setTimeout(() => {
@@ -178,6 +183,10 @@ export function ContactForm() {
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');
+      toast.error('Failed to send message', {
+        description:
+          'Please try again or email me directly at oles.didukh@gmail.com',
+      });
     } finally {
       setIsSubmitting(false);
     }
