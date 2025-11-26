@@ -45,7 +45,7 @@ CONTACT_EMAIL=your-email@example.com
 
 ### Structured Data (JSON-LD)
 
-- [ ] Add Person schema to layout
+- [x] Add Person schema to layout
 - [ ] Add Article schema to blog posts
 - [ ] Add BreadcrumbList schema for navigation
 
@@ -65,8 +65,8 @@ const jsonLd = {
 
 ### Sitemap & Robots
 
-- [ ] Add `src/app/sitemap.ts` for auto-generated sitemap
-- [ ] Add `src/app/robots.ts` for crawler instructions
+- [x] Add `src/app/sitemap.ts` for auto-generated sitemap
+- [x] Add `src/app/robots.ts` for crawler instructions
 
 ### Open Graph Images
 
@@ -299,14 +299,14 @@ These can be implemented quickly with minimal effort:
 
 ## Implementation Order Recommendation
 
-| Phase       | Tasks                                    | Impact                               |
-| ----------- | ---------------------------------------- | ------------------------------------ |
-| **Phase 1** | ~~Contact backend~~, Sitemap, Robots.txt | High - Enables core functionality    |
-| **Phase 2** | SEO metadata, Structured data, OG images | High - Improves discoverability      |
-| **Phase 3** | Project detail pages, MDX blog           | Medium - Better content presentation |
-| **Phase 4** | Analytics events, Lighthouse CI          | Medium - Data-driven improvements    |
-| **Phase 5** | Testing infrastructure                   | Medium - Code confidence             |
-| **Phase 6** | 3D hero, Visual polish                   | Low - Nice to have                   |
+| Phase       | Tasks                                            | Impact                               |
+| ----------- | ------------------------------------------------ | ------------------------------------ |
+| **Phase 1** | ~~Contact backend~~, ~~Sitemap~~, ~~Robots.txt~~ | High - Enables core functionality    |
+| **Phase 2** | SEO metadata, Structured data, OG images         | High - Improves discoverability      |
+| **Phase 3** | Project detail pages, MDX blog                   | Medium - Better content presentation |
+| **Phase 4** | Analytics events, Lighthouse CI                  | Medium - Data-driven improvements    |
+| **Phase 5** | Testing infrastructure                           | Medium - Code confidence             |
+| **Phase 6** | 3D hero, Visual polish                           | Low - Nice to have                   |
 
 ---
 
