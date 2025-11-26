@@ -76,9 +76,9 @@ const jsonLd = {
 
 ### Page-specific Meta
 
-- [ ] Review all page metadata
-- [ ] Add unique descriptions to each route
-- [ ] Ensure proper canonical URLs
+- [x] Review all page metadata
+- [x] Add unique descriptions to each route
+- [x] Ensure proper canonical URLs
 
 ---
 
