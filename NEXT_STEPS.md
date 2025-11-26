@@ -8,37 +8,25 @@ This document tracks recommended improvements and remaining work for the portfol
 
 ### Contact Form Backend
 
-**Status:** Form validates locally but doesn't send emails
+**Status:** Completed
 
-**Options:**
+**Implementation:** Vercel serverless function with Resend API
 
-- [ ] Vercel serverless function with Resend API
-- [ ] Vercel serverless function with SendGrid
-- [ ] Formspree integration (no-code option)
-- [ ] Netlify Forms (if migrating hosting)
+- [x] API route at `src/app/api/contact/route.ts`
+- [x] Zod validation for all form fields
+- [x] HTML and plain text email formatting
+- [x] Environment variables in `.env.example`
 
-**Implementation:**
+**Setup Required:**
 
-```typescript
-// Example: src/app/api/contact/route.ts
-import { Resend } from 'resend';
+Create `.env.local` with:
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function POST(request: Request) {
-  const { name, email, message } = await request.json();
-
-  await resend.emails.send({
-    from: 'portfolio@olesdidukh.dev',
-    to: 'contact@olesdidukh.dev',
-    subject: `New contact from ${name}`,
-    text: message,
-    reply_to: email,
-  });
-
-  return Response.json({ success: true });
-}
+```bash
+RESEND_API_KEY=re_your_api_key_here
+CONTACT_EMAIL=your-email@example.com
 ```
+
+**Production Note:** Update the `from` address in the API route after verifying your domain in Resend.
 
 ### Newsletter Signup
 
@@ -313,7 +301,7 @@ These can be implemented quickly with minimal effort:
 
 | Phase       | Tasks                                    | Impact                               |
 | ----------- | ---------------------------------------- | ------------------------------------ |
-| **Phase 1** | Contact backend, Sitemap, Robots.txt     | High - Enables core functionality    |
+| **Phase 1** | ~~Contact backend~~, Sitemap, Robots.txt | High - Enables core functionality    |
 | **Phase 2** | SEO metadata, Structured data, OG images | High - Improves discoverability      |
 | **Phase 3** | Project detail pages, MDX blog           | Medium - Better content presentation |
 | **Phase 4** | Analytics events, Lighthouse CI          | Medium - Data-driven improvements    |
@@ -342,4 +330,4 @@ Track these after implementing improvements:
 
 ---
 
-_Last updated: November 2024_
+_Last updated: November 2025_
