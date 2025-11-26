@@ -59,8 +59,42 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const relatedPosts = getRelatedPosts(post.id);
 
+  // Article structured data for SEO
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt,
+    image: post.coverImage,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt ?? post.publishedAt,
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      url: 'https://olesdidukh.dev',
+      jobTitle: post.author.role,
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Oles Didukh',
+      url: 'https://olesdidukh.dev',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://olesdidukh.dev/blog/${post.slug}`,
+    },
+    keywords: post.tags.join(', '),
+    articleSection: post.category,
+    wordCount: post.content.split(/\s+/).length,
+    timeRequired: `PT${post.readingTime}M`,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Navigation />
       <main className="pt-20">
         <BlogPostContent post={post} relatedPosts={relatedPosts} />

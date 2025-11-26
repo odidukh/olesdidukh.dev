@@ -46,7 +46,7 @@ CONTACT_EMAIL=your-email@example.com
 ### Structured Data (JSON-LD)
 
 - [x] Add Person schema to layout
-- [ ] Add Article schema to blog posts
+- [x] Add Article schema to blog posts
 - [ ] Add BreadcrumbList schema for navigation
 
 **Implementation:**
