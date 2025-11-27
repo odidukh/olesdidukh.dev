@@ -5,14 +5,8 @@ import { motion, Variants } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import {
-  ArrowRight,
-  Download,
-  Github,
-  Linkedin,
-  Mail,
-  Sparkles,
-} from 'lucide-react';
+import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
+import { ArrowRight, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 const containerVariants: Variants = {
@@ -162,12 +156,7 @@ export function HeroSimple() {
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="/resume.pdf" download>
-                <Download className="mr-2 h-4 w-4" />
-                Download Resume
-              </a>
-            </Button>
+            <ResumeDownloadButton size="lg" variant="outline" />
           </motion.div>
 
           {/* Social Links */}

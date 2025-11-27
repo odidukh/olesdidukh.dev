@@ -6,6 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { ContactForm } from './ContactForm';
 import { ContactInfo } from './ContactInfo';
 import { FAQ } from './FAQ';
@@ -211,11 +212,13 @@ export function ContactSection() {
                     Quick Actions
                   </h4>
                   <div className="space-y-3">
-                    <Button className="w-full" variant="outline" asChild>
-                      <a href="/resume.pdf" download>
-                        Download My Resume
-                      </a>
-                    </Button>
+                    <ResumeDownloadButton
+                      className="w-full"
+                      variant="outline"
+                      showIcon={false}
+                    >
+                      Download My Resume
+                    </ResumeDownloadButton>
                     <Button className="w-full" variant="outline" asChild>
                       <Link href="/projects">View My Projects</Link>
                     </Button>

@@ -2,7 +2,13 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { track } from '@vercel/analytics';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/components/ui/Button';
+import {
+  RESUME_COMPACT_PATH,
+  RESUME_EXTENDED_PATH,
+} from '@/components/ui/ResumeDownloadButton';
 import {
   Github,
   Linkedin,
@@ -13,6 +19,7 @@ import {
   Youtube,
   Instagram,
   ExternalLink,
+  ChevronDown,
 } from 'lucide-react';
 
 interface SocialLink {
@@ -58,14 +65,6 @@ const socialLinks: SocialLink[] = [
     description: 'Direct contact',
   },
   {
-    name: 'Resume',
-    icon: FileText,
-    url: '/resume.pdf',
-    username: 'Download PDF',
-    color: 'hover:text-green-600',
-    description: 'Professional experience',
-  },
-  {
     name: 'Portfolio',
     icon: Globe,
     url: 'https://olesdidukh.com',
@@ -75,13 +74,88 @@ const socialLinks: SocialLink[] = [
   },
 ];
 
+const resumeVersions = [
+  {
+    version: 'compact' as const,
+    label: 'Compact (1 page)',
+    path: RESUME_COMPACT_PATH,
+    filename: 'Oles_Didukh_Resume_Compact.pdf',
+  },
+  {
+    version: 'extended' as const,
+    label: 'Extended (2+ pages)',
+    path: RESUME_EXTENDED_PATH,
+    filename: 'Oles_Didukh_Resume_Extended.pdf',
+  },
+];
+
+function ResumeDropdownItem({ index }: { index: number }) {
+  const handleDownload = (version: 'compact' | 'extended') => {
+    track('resume_download', {
+      version,
+      location: window.location.pathname,
+    });
+  };
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <motion.button
+          type="button"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: index * 0.05 }}
+          className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-all duration-200 group text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="transition-colors hover:text-green-600">
+              <FileText className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Resume</p>
+              <p className="text-xs text-muted-foreground">
+                Professional experience
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="hidden sm:inline">Download PDF</span>
+            <ChevronDown className="h-3 w-3" />
+          </div>
+        </motion.button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          className="z-50 min-w-[180px] rounded-lg border border-border bg-white p-1 shadow-lg dark:bg-gray-900"
+          sideOffset={5}
+          align="end"
+        >
+          {resumeVersions.map(({ version, label, path, filename }) => (
+            <DropdownMenu.Item key={version} asChild>
+              <a
+                href={path}
+                download={filename}
+                onClick={() => handleDownload(version)}
+                className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-900 outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800 data-[highlighted]:!bg-gray-100 data-[highlighted]:!text-gray-900 dark:data-[highlighted]:!bg-gray-800 dark:data-[highlighted]:!text-gray-100"
+              >
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                {label}
+              </a>
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+
 export function SocialLinks() {
   return (
     <div className="space-y-3">
       {socialLinks.map((link, index) => {
         const Icon = link.icon;
         const isExternal = link.url.startsWith('http');
-        const isDownload = link.name === 'Resume';
 
         return (
           <motion.a
@@ -89,7 +163,6 @@ export function SocialLinks() {
             href={link.url}
             target={isExternal ? '_blank' : undefined}
             rel={isExternal ? 'noopener noreferrer' : undefined}
-            download={isDownload ? true : undefined}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -114,6 +187,9 @@ export function SocialLinks() {
           </motion.a>
         );
       })}
+
+      {/* Resume with dropdown */}
+      <ResumeDropdownItem index={socialLinks.length} />
 
       {/* Additional Platforms */}
       <div className="pt-4 border-t">

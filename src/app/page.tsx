@@ -16,7 +16,6 @@ import {
   Globe,
   Calendar,
   ExternalLink,
-  Download,
   Mail,
   MousePointer2,
   Rocket,
@@ -36,6 +35,7 @@ import { Footer } from '@/components/ui/Footer';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { AboutSection } from '@/components/sections/AboutSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { ContactSection } from '@/components/sections/ContactSection';
@@ -275,12 +275,9 @@ export default function HomePage() {
                   <Mail className="ml-2 w-4 h-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="ghost" asChild>
-                <a href="/Oles_Didukh_Resume.pdf" download>
-                  <Download className="mr-2 w-4 h-4" />
-                  Resume
-                </a>
-              </Button>
+              <ResumeDownloadButton size="lg" variant="ghost">
+                Resume
+              </ResumeDownloadButton>
             </motion.div>
 
             {/* Quick Stats */}

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -590,11 +591,7 @@ export default function ExperiencePage() {
               <Button size="lg" asChild>
                 <a href="/contact">Get In Touch</a>
               </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="/Oles_Didukh_Resume.pdf" download>
-                  Download Resume
-                </a>
-              </Button>
+              <ResumeDownloadButton size="lg" variant="outline" />
             </div>
           </motion.div>
         </Container>

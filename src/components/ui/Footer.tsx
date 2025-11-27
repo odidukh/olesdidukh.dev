@@ -3,6 +3,7 @@ import { Container } from './Container';
 import { Button } from './Button';
 import { Badge } from './Badge';
 import { NewsletterForm } from './NewsletterForm';
+import { ResumeDownloadLink } from './ResumeDownloadButton';
 import {
   Github,
   Linkedin,
@@ -30,7 +31,6 @@ const navigationLinks: FooterLink[] = [
 ];
 
 const resourceLinks: FooterLink[] = [
-  { label: 'Resume', href: '/resume.pdf', external: true },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Testimonials', href: '/testimonials' },
   { label: 'Privacy Policy', href: '/privacy' },
@@ -120,6 +120,11 @@ export function Footer({ className }: FooterProps) {
                 Resources
               </h4>
               <ul className="space-y-2">
+                <li>
+                  <ResumeDownloadLink className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                    Resume
+                  </ResumeDownloadLink>
+                </li>
                 {resourceLinks.map(link => (
                   <li key={link.href}>
                     <Link

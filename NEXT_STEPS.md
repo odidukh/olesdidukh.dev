@@ -37,10 +37,14 @@ Remaining improvements and enhancements for olesdidukh.dev
 
 #### Resume PDF
 
-- [ ] Create professional PDF resume
-- [ ] Add to `/public/resume.pdf`
-- [ ] Verify download links work
-- [ ] Add analytics tracking for downloads
+- [ ] Create professional PDF resume (compact version - 1 page)
+- [ ] Create professional PDF resume (extended version - 2+ pages)
+- [ ] Add to `/public/Oles_Didukh_Resume_Compact.pdf`
+- [ ] Add to `/public/Oles_Didukh_Resume_Extended.pdf`
+- [x] Created dropdown UI for choosing between compact/extended versions
+- [x] Added Vercel Analytics integration (`@vercel/analytics`)
+- [x] Created `ResumeDownloadButton` component with version selection
+- [x] All downloads tracked with `resume_download` event + version info
 
 #### Open Graph Images
 
