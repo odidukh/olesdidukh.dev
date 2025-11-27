@@ -84,16 +84,16 @@ Remaining improvements and enhancements for olesdidukh.dev
 
 ### Priority 3: Analytics & Performance
 
-#### Vercel Analytics Enhancement
+#### ~~Vercel Analytics Enhancement~~ ✅
 
-- [ ] Verify analytics tracking is active
-- [ ] Add custom events:
-  - Resume downloads
-  - Contact form submissions
-  - Project modal/page views
-  - External link clicks
-  - Newsletter signups
-- [ ] Set up conversion tracking
+- [x] Verify analytics tracking is active (via `@vercel/analytics` in Providers)
+- [x] Add custom events:
+  - Resume downloads (`resume_download`)
+  - Contact form submissions (`contact_form_submission`)
+  - Project page views (`project_view`)
+  - External link clicks (`external_link_click`, `social_link_click`)
+  - Newsletter signups (`newsletter_signup`)
+- [x] Created reusable analytics components (`TrackPageView`, `TrackedExternalLink`)
 
 #### Performance Optimization
 

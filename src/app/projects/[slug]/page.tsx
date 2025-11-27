@@ -7,6 +7,7 @@ import { Footer } from '@/components/ui/Footer';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { TrackPageView, TrackedExternalLink } from '@/components/analytics';
 import {
   getProjectBySlug,
   getAllProjectSlugs,
@@ -121,6 +122,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <>
+      <TrackPageView
+        eventName="project_view"
+        properties={{
+          projectId: project.id,
+          projectTitle: project.title,
+          category: project.category,
+        }}
+      />
       <BreadcrumbSchema
         page="projects"
         projectTitle={project.title}
@@ -185,38 +194,41 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <div className="flex flex-wrap gap-3">
                   {project.liveUrl && (
                     <Button asChild>
-                      <a
+                      <TrackedExternalLink
                         href={project.liveUrl}
+                        linkType="project_live_site"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <ExternalLink className="mr-2 h-4 w-4" />
                         View Live Site
-                      </a>
+                      </TrackedExternalLink>
                     </Button>
                   )}
                   {project.demoUrl && (
                     <Button variant="outline" asChild>
-                      <a
+                      <TrackedExternalLink
                         href={project.demoUrl}
+                        linkType="project_demo"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <ExternalLink className="mr-2 h-4 w-4" />
                         View Demo
-                      </a>
+                      </TrackedExternalLink>
                     </Button>
                   )}
                   {project.githubUrl && (
                     <Button variant="outline" asChild>
-                      <a
+                      <TrackedExternalLink
                         href={project.githubUrl}
+                        linkType="project_github"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <Github className="mr-2 h-4 w-4" />
                         Source Code
-                      </a>
+                      </TrackedExternalLink>
                     </Button>
                   )}
                 </div>

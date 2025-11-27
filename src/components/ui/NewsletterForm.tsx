@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { track } from '@vercel/analytics';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
@@ -52,6 +53,11 @@ export function NewsletterForm() {
 
       setStatus('success');
       setEmail('');
+
+      // Track successful newsletter signup
+      track('newsletter_signup', {
+        location: window.location.pathname,
+      });
 
       setTimeout(() => {
         setStatus('idle');

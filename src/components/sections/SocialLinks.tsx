@@ -151,6 +151,14 @@ function ResumeDropdownItem({ index }: { index: number }) {
 }
 
 export function SocialLinks() {
+  const handleSocialClick = (name: string, url: string) => {
+    track('social_link_click', {
+      platform: name.toLowerCase(),
+      url,
+      location: window.location.pathname,
+    });
+  };
+
   return (
     <div className="space-y-3">
       {socialLinks.map((link, index) => {
@@ -163,6 +171,7 @@ export function SocialLinks() {
             href={link.url}
             target={isExternal ? '_blank' : undefined}
             rel={isExternal ? 'noopener noreferrer' : undefined}
+            onClick={() => handleSocialClick(link.name, link.url)}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -201,6 +210,9 @@ export function SocialLinks() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube"
+              onClick={() =>
+                handleSocialClick('YouTube', 'https://youtube.com/@olesdidukh')
+              }
             >
               <Youtube className="h-4 w-4" />
             </a>
@@ -211,6 +223,12 @@ export function SocialLinks() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
+              onClick={() =>
+                handleSocialClick(
+                  'Instagram',
+                  'https://instagram.com/olesdidukh'
+                )
+              }
             >
               <Instagram className="h-4 w-4" />
             </a>
@@ -221,6 +239,9 @@ export function SocialLinks() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Dev.to"
+              onClick={() =>
+                handleSocialClick('Dev.to', 'https://dev.to/olesdidukh')
+              }
             >
               <span className="text-xs font-bold">DEV</span>
             </a>
