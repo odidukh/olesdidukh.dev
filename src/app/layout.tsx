@@ -26,12 +26,23 @@ export const metadata: Metadata = {
     title: 'Oles Didukh - Senior Front-End Engineer',
     description:
       'Portfolio of Oles Didukh, a Senior Front-End Engineer specializing in React, TypeScript, and Next.js.',
+    images: [
+      {
+        url: '/api/og?title=Oles%20Didukh&subtitle=Senior%20Front-End%20Engineer',
+        width: 1200,
+        height: 630,
+        alt: 'Oles Didukh - Senior Front-End Engineer',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Oles Didukh - Senior Front-End Engineer',
     description:
       'Portfolio of Oles Didukh, a Senior Front-End Engineer specializing in React, TypeScript, and Next.js.',
+    images: [
+      '/api/og?title=Oles%20Didukh&subtitle=Senior%20Front-End%20Engineer',
+    ],
   },
 };
 

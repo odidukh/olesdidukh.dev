@@ -46,11 +46,14 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [x] Created `ResumeDownloadButton` component with version selection
 - [x] All downloads tracked with `resume_download` event + version info
 
-#### Open Graph Images
+#### ~~Open Graph Images~~ ✅
 
-- [ ] Design default OG image (1200x630)
-- [ ] Create page-specific OG images
-- [ ] Optional: Dynamic OG generation with `@vercel/og`
+- [x] Installed `@vercel/og` package
+- [x] Created dynamic OG image API route (`/api/og`)
+- [x] Default OG image with branded design (1200x630)
+- [x] Page-specific OG images for: Homepage, About, Blog, Contact
+- [x] Blog post OG images with dynamic title/description
+- [x] Supports `title`, `subtitle`, `description`, and `type` parameters
 
 ### Priority 2: Enhanced Content Presentation
 

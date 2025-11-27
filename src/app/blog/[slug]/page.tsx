@@ -32,13 +32,22 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     };
   }
 
+  const ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&type=blog&description=${encodeURIComponent(post.excerpt.slice(0, 100))}`;
+
   return {
     title: `${post.title} | Oles Didukh Blog`,
     description: post.excerpt,
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImage],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
       type: 'article',
       publishedTime: post.publishedAt,
       authors: [post.author.name],
@@ -48,7 +57,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: [post.coverImage],
+      images: [ogImageUrl],
     },
   };
 }
