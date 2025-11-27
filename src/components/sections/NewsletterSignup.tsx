@@ -44,11 +44,21 @@ export function NewsletterSignup() {
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      // In production, send to your newsletter service
-      console.log('Newsletter signup:', email);
+      const data: { success?: boolean; error?: string } = await response.json();
+
+      if (!response.ok) {
+        setStatus('error');
+        setError(data.error ?? 'Something went wrong. Please try again.');
+        return;
+      }
 
       setStatus('success');
       setEmail('');

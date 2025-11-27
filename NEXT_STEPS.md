@@ -28,12 +28,12 @@ Remaining improvements and enhancements for olesdidukh.dev
 
 ### Priority 1: Content & Visual Polish
 
-#### Newsletter Signup Backend
+#### ~~Newsletter Signup Backend~~ ✅
 
-- [ ] Choose provider (ConvertKit, Mailchimp, or Buttondown)
-- [ ] Implement API integration
-- [ ] Add to footer/blog sections
-- [ ] Test subscription flow
+- [x] Choose provider (Buttondown)
+- [x] Implement API integration (`/api/newsletter`)
+- [x] Add to footer and blog sections
+- [ ] Test subscription flow (requires `BUTTONDOWN_API_KEY`)
 
 #### Resume PDF
 
@@ -264,9 +264,9 @@ Remaining improvements and enhancements for olesdidukh.dev
 # Required environment variables
 RESEND_API_KEY=re_your_key_here
 CONTACT_EMAIL=your-email@example.com
+BUTTONDOWN_API_KEY=your_buttondown_api_key_here
 
 # Optional (add when implementing)
-# NEWSLETTER_API_KEY=
 # SENTRY_DSN=
 # VERCEL_ANALYTICS_ID=
 ```
@@ -275,6 +275,7 @@ CONTACT_EMAIL=your-email@example.com
 
 - [ ] Verify all API keys are in production env
 - [ ] Test contact form end-to-end
+- [ ] Test newsletter signup end-to-end
 - [ ] Verify DNS and domain settings
 - [ ] Test all page loads
 - [ ] Run Lighthouse on production URL

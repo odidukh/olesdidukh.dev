@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Container } from './Container';
 import { Button } from './Button';
 import { Badge } from './Badge';
+import { NewsletterForm } from './NewsletterForm';
 import {
   Github,
   Linkedin,
@@ -58,6 +59,15 @@ export function Footer({ className }: FooterProps) {
                   Senior Front-End Engineer crafting exceptional digital
                   experiences
                 </p>
+              </div>
+
+              {/* Newsletter */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">Stay Updated</h4>
+                <p className="text-xs text-muted-foreground">
+                  Get weekly insights on web development.
+                </p>
+                <NewsletterForm />
               </div>
 
               {/* Location & Contact */}
