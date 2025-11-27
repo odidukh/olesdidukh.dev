@@ -1,0 +1,175 @@
+---
+title: 'Modern CSS Techniques: Container Queries, Layers, and More'
+excerpt: 'Explore the latest CSS features including container queries, cascade layers, and modern layout techniques that are changing how we style web applications.'
+coverImage: '/images/blog/modern-css.png'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-02-10'
+readingTime: 9
+category: 'Web Development'
+tags:
+  - CSS
+  - Container Queries
+  - Cascade Layers
+  - Modern CSS
+featured: false
+---
+
+# Modern CSS Techniques: Container Queries, Layers, and More
+
+CSS has evolved significantly. Let's explore modern features that make styling more powerful and maintainable.
+
+## Container Queries
+
+Container queries allow components to adapt based on their container's size, not just the viewport.
+
+```css
+.card-container {
+  container-type: inline-size;
+}
+
+@container (min-width: 400px) {
+  .card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+@container (min-width: 600px) {
+  .card {
+    grid-template-columns: 200px 1fr 100px;
+  }
+}
+```
+
+## Cascade Layers
+
+Cascade layers give you explicit control over specificity and ordering.
+
+```css
+@layer reset, base, components, utilities;
+
+@layer reset {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+  }
+}
+
+@layer utilities {
+  .mt-4 {
+    margin-top: 1rem;
+  }
+  .flex {
+    display: flex;
+  }
+}
+```
+
+## CSS Nesting
+
+Native CSS nesting reduces repetition and improves readability.
+
+```css
+.card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+
+  & .title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  & .content {
+    color: #666;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+}
+```
+
+## The :has() Selector
+
+The parent selector allows styling based on children.
+
+```css
+/* Style form with invalid inputs */
+form:has(input:invalid) {
+  border-color: red;
+}
+
+/* Style card with image */
+.card:has(img) {
+  grid-template-rows: auto 1fr;
+}
+
+/* Style label when checkbox is checked */
+label:has(input:checked) {
+  color: green;
+  font-weight: bold;
+}
+```
+
+## View Transitions
+
+Smooth page transitions with the View Transitions API.
+
+```css
+::view-transition-old(root) {
+  animation: fade-out 0.3s ease-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 0.3s ease-in;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+```
+
+## Subgrid
+
+Subgrid allows nested grids to align with their parent.
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+}
+```
+
+## Conclusion
+
+Modern CSS provides powerful features that reduce the need for JavaScript and improve maintainability. Embrace these new capabilities to write cleaner, more efficient stylesheets.

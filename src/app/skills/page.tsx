@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
@@ -807,10 +808,10 @@ export default function SkillsPage() {
             </p>
             <div className="flex gap-4 justify-center">
               <Button size="lg" asChild>
-                <a href="/projects">View My Work</a>
+                <Link href="/projects">View My Work</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="/contact">Start a Conversation</a>
+                <Link href="/contact">Start a Conversation</Link>
               </Button>
             </div>
           </motion.div>

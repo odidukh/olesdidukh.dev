@@ -6,6 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { BlogCard } from '@/components/sections/BlogCard';
 import { blogPosts, type BlogPost } from '@/data/blog';
+import type { BlogPostMeta } from '@/lib/mdx';
 import {
   Calendar,
   Clock,
@@ -24,12 +25,22 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 
+// Support both legacy BlogPost and new BlogPostMeta
+type PostData =
+  | BlogPost
+  | (BlogPostMeta & { views?: number; likes?: number; id?: string });
+
 interface BlogPostContentProps {
-  post: BlogPost;
-  relatedPosts: BlogPost[];
+  post: PostData;
+  relatedPosts: (BlogPost | BlogPostMeta)[];
+  mdxContent?: React.ReactNode;
 }
 
-export function BlogPostContent({ post, relatedPosts }: BlogPostContentProps) {
+export function BlogPostContent({
+  post,
+  relatedPosts,
+  mdxContent,
+}: BlogPostContentProps) {
   const [liked, setLiked] = React.useState(false);
   const [bookmarked, setBookmarked] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
@@ -55,8 +66,13 @@ export function BlogPostContent({ post, relatedPosts }: BlogPostContentProps) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`,
   };
 
+  // Get post identifier (id for legacy, slug for MDX)
+  const postId = 'id' in post ? post.id : post.slug;
+
   // Find previous and next posts
-  const currentIndex = blogPosts.findIndex(p => p.id === post.id);
+  const currentIndex = blogPosts.findIndex(
+    p => p.id === postId || p.slug === postId
+  );
   const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
   const nextPost =
     currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
@@ -302,10 +318,13 @@ export function BlogPostContent({ post, relatedPosts }: BlogPostContentProps) {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="lg:col-span-8"
             >
-              <div
-                className="prose prose-lg dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
+              <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-pre:p-0 prose-pre:bg-transparent">
+                {mdxContent ? (
+                  mdxContent
+                ) : 'content' in post ? (
+                  <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                ) : null}
+              </div>
             </motion.div>
 
             {/* Right Sidebar - TOC */}
@@ -397,8 +416,8 @@ export function BlogPostContent({ post, relatedPosts }: BlogPostContentProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost, index) => (
                 <BlogCard
-                  key={relatedPost.id}
-                  post={relatedPost}
+                  key={'id' in relatedPost ? relatedPost.id : relatedPost.slug}
+                  post={relatedPost as BlogPost}
                   index={index}
                 />
               ))}

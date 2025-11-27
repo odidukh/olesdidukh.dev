@@ -72,15 +72,15 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [x] Add project schema structured data
 - [x] Implement navigation between projects
 
-#### MDX Blog Migration
+#### ~~MDX Blog Migration~~ ✅
 
 **Goal:** Richer content formatting with code highlighting
 
-- [ ] Install `@next/mdx` and `rehype-pretty-code`
-- [ ] Create `src/content/blog/` directory
-- [ ] Migrate existing blog posts to `.mdx`
-- [ ] Add custom MDX components
-- [ ] Implement syntax highlighting themes
+- [x] Install `next-mdx-remote`, `rehype-pretty-code`, `shiki`, `gray-matter`
+- [x] Create `src/content/blog/` directory
+- [x] Migrate existing blog posts to `.mdx` (8 posts)
+- [x] Add custom MDX components (`src/mdx-components.tsx`)
+- [x] Implement syntax highlighting themes (github-dark/github-light)
 
 ### Priority 3: Analytics & Performance
 

@@ -1,0 +1,133 @@
+---
+title: 'Advanced TypeScript Patterns: Generics, Utility Types, and More'
+excerpt: "Dive deep into TypeScript's advanced features including conditional types, mapped types, template literals, and practical patterns for building type-safe applications."
+coverImage: '/images/blog/typescript.png'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-03-10'
+readingTime: 15
+category: 'TypeScript'
+tags:
+  - TypeScript
+  - JavaScript
+  - Type Safety
+  - Programming Patterns
+featured: true
+---
+
+# Advanced TypeScript Patterns: Generics, Utility Types, and More
+
+TypeScript has evolved far beyond simple type annotations. In this article, we'll explore advanced patterns that will level up your TypeScript game.
+
+## Generic Constraints and Conditional Types
+
+### Advanced Generic Patterns
+
+```typescript
+// Generic with constraints
+interface Lengthwise {
+  length: number;
+}
+
+function logLength<T extends Lengthwise>(arg: T): T {
+  console.log(arg.length);
+  return arg;
+}
+
+// Generic utility function
+function pluck<T, K extends keyof T>(objects: T[], key: K): T[K][] {
+  return objects.map(obj => obj[key]);
+}
+```
+
+### Conditional Types
+
+```typescript
+type IsArray<T> = T extends any[] ? true : false;
+type IsString<T> = T extends string ? true : false;
+
+// Practical example: Extract promise type
+type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
+
+type Result = UnwrapPromise<Promise<string>>; // string
+type Direct = UnwrapPromise<number>; // number
+```
+
+## Mapped Types and Template Literal Types
+
+### Creating Flexible APIs
+
+```typescript
+// Mapped type for readonly
+type Readonly<T> = {
+  readonly [P in keyof T]: T[P];
+};
+
+// Template literal types
+type EventName<T extends string> = `on${Capitalize<T>}`;
+type ClickEvent = EventName<'click'>; // 'onClick'
+
+// Combining with mapped types
+type Handlers<T> = {
+  [K in keyof T as EventName<K & string>]: (value: T[K]) => void;
+};
+```
+
+## Utility Types in Practice
+
+```typescript
+// Custom utility types
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+
+type DeepRequired<T> = T extends object
+  ? {
+      [P in keyof T]-?: DeepRequired<T[P]>;
+    }
+  : T;
+
+// Practical application
+interface Config {
+  api: {
+    endpoint: string;
+    timeout: number;
+    retry: {
+      attempts: number;
+      delay: number;
+    };
+  };
+}
+
+type PartialConfig = DeepPartial<Config>;
+```
+
+## Type Guards and Narrowing
+
+```typescript
+// Custom type guard
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+// Discriminated unions
+type Result<T> = { success: true; data: T } | { success: false; error: Error };
+
+function handleResult<T>(result: Result<T>) {
+  if (result.success) {
+    // TypeScript knows result.data exists
+    console.log(result.data);
+  } else {
+    // TypeScript knows result.error exists
+    console.error(result.error);
+  }
+}
+```
+
+## Conclusion
+
+These advanced TypeScript patterns help you build more type-safe and maintainable applications. Practice using them in your projects to become more proficient with TypeScript's powerful type system.

@@ -1,0 +1,131 @@
+---
+title: 'State Management in React: Comparing Redux, Zustand, and Jotai'
+excerpt: 'An in-depth comparison of popular React state management solutions, their pros and cons, and when to use each.'
+coverImage: '/images/blog/react-perf.png'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-02-20'
+readingTime: 14
+category: 'React'
+tags:
+  - React
+  - State Management
+  - Redux
+  - Zustand
+  - Jotai
+featured: false
+---
+
+# State Management in React: Comparing Redux, Zustand, and Jotai
+
+Choosing the right state management solution can make or break your React application. Let's compare the most popular options in 2024.
+
+## Redux Toolkit
+
+### Pros
+
+- Mature ecosystem
+- Excellent DevTools
+- Predictable state updates
+- Time-travel debugging
+
+### Implementation
+
+```typescript
+import { createSlice, configureStore } from '@reduxjs/toolkit';
+
+const counterSlice = createSlice({
+  name: 'counter',
+  initialState: { value: 0 },
+  reducers: {
+    increment: state => {
+      state.value += 1;
+    },
+    decrement: state => {
+      state.value -= 1;
+    },
+  },
+});
+
+export const store = configureStore({
+  reducer: { counter: counterSlice.reducer },
+});
+```
+
+## Zustand
+
+### Pros
+
+- Minimal boilerplate
+- TypeScript friendly
+- No providers needed
+- Small bundle size (8KB)
+
+### Implementation
+
+```typescript
+import { create } from 'zustand';
+
+interface BearState {
+  bears: number;
+  increase: () => void;
+}
+
+const useBearStore = create<BearState>(set => ({
+  bears: 0,
+  increase: () => set(state => ({ bears: state.bears + 1 })),
+}));
+```
+
+## Jotai
+
+### Pros
+
+- Atomic state management
+- Minimal boilerplate
+- Suspense support
+- Small bundle size
+
+### Implementation
+
+```typescript
+import { atom, useAtom } from 'jotai';
+
+const countAtom = atom(0);
+const doubleCountAtom = atom((get) => get(countAtom) * 2);
+
+function Counter() {
+  const [count, setCount] = useAtom(countAtom);
+  const [doubleCount] = useAtom(doubleCountAtom);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <p>Double: {doubleCount}</p>
+      <button onClick={() => setCount(c => c + 1)}>+</button>
+    </div>
+  );
+}
+```
+
+## Comparison Table
+
+| Feature        | Redux Toolkit | Zustand   | Jotai     |
+| -------------- | ------------- | --------- | --------- |
+| Bundle Size    | ~30KB         | ~8KB      | ~8KB      |
+| Boilerplate    | Medium        | Low       | Low       |
+| DevTools       | Excellent     | Good      | Good      |
+| Learning Curve | High          | Low       | Low       |
+| TypeScript     | Good          | Excellent | Excellent |
+
+## When to Use Each
+
+- **Redux Toolkit**: Large apps with complex state logic
+- **Zustand**: Medium apps needing simplicity
+- **Jotai**: Apps with granular, atomic state needs
+
+## Conclusion
+
+There's no one-size-fits-all solution. Consider your team's experience, app complexity, and specific requirements when choosing a state management library.

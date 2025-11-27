@@ -1,0 +1,108 @@
+---
+title: 'Mastering Web Performance: Core Web Vitals and Beyond'
+excerpt: "Learn how to measure, monitor, and improve your website's performance using Core Web Vitals and other essential metrics."
+coverImage: '/images/blog/modern-css.png'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-02-28'
+readingTime: 8
+category: 'Performance'
+tags:
+  - Performance
+  - Core Web Vitals
+  - SEO
+  - Optimization
+featured: false
+---
+
+# Mastering Web Performance: Core Web Vitals and Beyond
+
+Performance directly impacts user experience and SEO. Let's dive deep into Core Web Vitals and optimization strategies.
+
+## Understanding Core Web Vitals
+
+### LCP (Largest Contentful Paint)
+
+Measures loading performance. Should occur within 2.5 seconds.
+
+### FID (First Input Delay)
+
+Measures interactivity. Should be less than 100 milliseconds.
+
+### CLS (Cumulative Layout Shift)
+
+Measures visual stability. Should maintain a score of less than 0.1.
+
+## Optimization Strategies
+
+### Improving LCP
+
+```html
+<!-- Preload critical resources -->
+<link rel="preload" as="image" href="hero-image.webp" />
+
+<!-- Use responsive images -->
+<picture>
+  <source srcset="image.webp" type="image/webp" />
+  <img src="image.jpg" alt="Description" loading="lazy" />
+</picture>
+```
+
+### Reducing CLS
+
+```css
+/* Reserve space for images */
+img {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+}
+
+/* Prevent layout shifts from fonts */
+@font-face {
+  font-family: 'MyFont';
+  src: url('font.woff2') format('woff2');
+  font-display: swap;
+}
+```
+
+### Improving INP (Interaction to Next Paint)
+
+```javascript
+// Break up long tasks
+function processLargeArray(items) {
+  const chunk = 100;
+  let index = 0;
+
+  function processChunk() {
+    const end = Math.min(index + chunk, items.length);
+    for (let i = index; i < end; i++) {
+      processItem(items[i]);
+    }
+    index = end;
+    if (index < items.length) {
+      requestIdleCallback(processChunk);
+    }
+  }
+
+  requestIdleCallback(processChunk);
+}
+```
+
+## Measuring Performance
+
+```javascript
+// Web Vitals library
+import { onCLS, onFID, onLCP, onINP } from 'web-vitals';
+
+onCLS(console.log);
+onFID(console.log);
+onLCP(console.log);
+onINP(console.log);
+```
+
+## Conclusion
+
+Optimizing for Core Web Vitals improves both user experience and search rankings. Regular monitoring and iterative improvements are key to maintaining excellent performance.
