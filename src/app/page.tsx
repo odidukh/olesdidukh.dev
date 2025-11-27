@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import {
@@ -29,7 +30,7 @@ import {
   Monitor,
 } from 'lucide-react';
 
-// Import your components
+// Import critical above-the-fold components
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { Container } from '@/components/ui/Container';
@@ -37,9 +38,29 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { AboutSection } from '@/components/sections/AboutSection';
-import { ProjectsSection } from '@/components/sections/ProjectsSection';
-import { ContactSection } from '@/components/sections/ContactSection';
-import { BlogSection } from '@/components/sections/BlogSection';
+
+// Lazy load below-the-fold heavy components
+const ProjectsSection = dynamic(
+  () =>
+    import('@/components/sections/ProjectsSection').then(
+      mod => mod.ProjectsSection
+    ),
+  { ssr: true }
+);
+
+const BlogSection = dynamic(
+  () =>
+    import('@/components/sections/BlogSection').then(mod => mod.BlogSection),
+  { ssr: true }
+);
+
+const ContactSection = dynamic(
+  () =>
+    import('@/components/sections/ContactSection').then(
+      mod => mod.ContactSection
+    ),
+  { ssr: true }
+);
 
 // Quick Stats Data
 const stats = [

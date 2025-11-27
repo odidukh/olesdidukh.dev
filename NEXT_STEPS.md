@@ -95,13 +95,14 @@ Remaining improvements and enhancements for olesdidukh.dev
   - Newsletter signups (`newsletter_signup`)
 - [x] Created reusable analytics components (`TrackPageView`, `TrackedExternalLink`)
 
-#### Performance Optimization
+#### ~~Performance Optimization~~ ✅
 
-- [ ] Run `npm run analyze` and review bundle size
-- [ ] Implement code splitting for large components
-- [ ] Optimize images (if not already done)
-- [ ] Set up Lighthouse CI in GitHub Actions
-- [ ] Define performance budgets
+- [x] Run `npm run analyze` and review bundle size (1.6MB total chunks)
+- [x] Implement code splitting for large components (dynamic imports for ProjectsSection, BlogSection, ContactSection)
+- [x] Optimize images (Next.js Image with AVIF/WebP, proper deviceSizes)
+- [x] Added more packages to `optimizePackageImports` (@radix-ui, sonner)
+- [ ] Set up Lighthouse CI in GitHub Actions (optional - future)
+- [ ] Define performance budgets (optional - future)
 
 ### Priority 4: Visual Enhancements (Optional)
 
