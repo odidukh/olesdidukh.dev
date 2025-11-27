@@ -69,3 +69,20 @@ export function getBlogPostBreadcrumbs(postTitle: string, postSlug: string) {
     { name: postTitle, url: `https://olesdidukh.dev/blog/${postSlug}` },
   ];
 }
+
+/**
+ * Generate breadcrumb schema for a project page
+ */
+export function getProjectBreadcrumbs(
+  projectTitle: string,
+  projectSlug: string
+) {
+  return [
+    { name: 'Home', url: 'https://olesdidukh.dev' },
+    { name: 'Projects', url: 'https://olesdidukh.dev/projects' },
+    {
+      name: projectTitle,
+      url: `https://olesdidukh.dev/projects/${projectSlug}`,
+    },
+  ];
+}

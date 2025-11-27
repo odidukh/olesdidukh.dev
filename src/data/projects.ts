@@ -395,3 +395,42 @@ export const projectsData: Project[] = [
     ],
   },
 ];
+
+// Helper functions
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projectsData.find(project => project.id === slug);
+}
+
+export function getFeaturedProjects(): Project[] {
+  return projectsData.filter(project => project.featured);
+}
+
+export function getRelatedProjects(projectId: string, limit = 3): Project[] {
+  const currentProject = getProjectBySlug(projectId);
+  if (!currentProject) return [];
+
+  return projectsData
+    .filter(project => project.id !== projectId)
+    .filter(
+      project =>
+        project.category === currentProject.category ||
+        project.technologies.some(tech =>
+          currentProject.technologies.includes(tech)
+        )
+    )
+    .slice(0, limit);
+}
+
+export function getAllProjectSlugs(): string[] {
+  return projectsData.map(project => project.id);
+}
+
+export function getProjectsByCategory(category: string): Project[] {
+  if (category === 'All') return projectsData;
+  return projectsData.filter(project => project.category === category);
+}
+
+export const projectCategories = [
+  'All',
+  ...new Set(projectsData.map(project => project.category)),
+];

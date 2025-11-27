@@ -7,8 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ProjectCard } from './ProjectCard';
-import { ProjectModal } from './ProjectModal';
-import { projectsData, type Project } from '@/data/projects';
+import { projectsData } from '@/data/projects';
 import { Search, Filter, Grid3x3, List, Sparkles, X } from 'lucide-react';
 
 const categories = [
@@ -43,9 +42,6 @@ export function ProjectsSection() {
   >([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
-  const [selectedProject, setSelectedProject] = React.useState<Project | null>(
-    null
-  );
   const [showFilters, setShowFilters] = React.useState(false);
 
   // Filter projects based on category, technologies, and search
@@ -316,7 +312,6 @@ export function ProjectsSection() {
                     project={project}
                     index={index}
                     viewMode={viewMode}
-                    onClick={() => setSelectedProject(project)}
                   />
                 ))}
               </motion.div>
@@ -341,16 +336,6 @@ export function ProjectsSection() {
           </AnimatePresence>
         </div>
       </Container>
-
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   );
 }
