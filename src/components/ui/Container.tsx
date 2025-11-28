@@ -60,7 +60,8 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : Component;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Comp: any = asChild ? Slot : Component;
 
     return (
       <Comp

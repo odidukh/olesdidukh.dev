@@ -106,13 +106,13 @@ Remaining improvements and enhancements for olesdidukh.dev
 
 ### Priority 4: Visual Enhancements (Optional)
 
-#### 3D Hero Element
+#### ~~3D Hero Element~~ ✅
 
-- [ ] Install Three.js / @react-three/fiber
-- [ ] Create subtle 3D background scene
-- [ ] Add mouse interaction
-- [ ] Performance fallback for mobile
-- [ ] Respect `prefers-reduced-motion`
+- [x] Install Three.js / @react-three/fiber / @react-three/drei
+- [x] Create subtle 3D background scene (`HeroBackground3D` component)
+- [x] Add mouse interaction (mouse-following light)
+- [x] Performance fallback for mobile (skips 3D on mobile devices)
+- [x] Respect `prefers-reduced-motion` (static shapes when enabled)
 
 #### Testimonials Showcase
 

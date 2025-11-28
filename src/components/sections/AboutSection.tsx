@@ -27,25 +27,26 @@ import {
   Monitor,
   ChevronRight,
   Quote,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface Stat {
   label: string;
   value: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
 }
 
 interface Value {
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
 }
 
 interface SkillCategory {
   name: string;
   skills: string[];
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
 }
 

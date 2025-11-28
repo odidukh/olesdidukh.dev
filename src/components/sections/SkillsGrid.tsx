@@ -12,6 +12,7 @@ import {
   Users,
   Sparkles,
   TrendingUp,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface Skill {
@@ -24,7 +25,7 @@ interface Skill {
 interface SkillCategory {
   id: string;
   title: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
   skills: Skill[];
 }
@@ -256,7 +257,7 @@ function StatCard({
   value,
   color,
 }: {
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   value: string;
   color: string;

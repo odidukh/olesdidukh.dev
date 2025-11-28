@@ -29,6 +29,7 @@ import {
   Package,
   Layers,
   Quote,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface JourneyPhase {
@@ -38,7 +39,7 @@ interface JourneyPhase {
   title: string;
   description: string;
   color: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   milestones: Milestone[];
 }
 
@@ -61,7 +62,7 @@ interface LearningItem {
   name: string;
   status: 'completed' | 'in-progress' | 'planned';
   progress: number;
-  icon?: React.ElementType;
+  icon?: LucideIcon;
   description?: string;
   startDate?: string;
   endDate?: string;
@@ -593,28 +594,31 @@ export default function JourneyPage() {
             <div className="max-w-5xl mx-auto">
               {/* Phase Selector */}
               <div className="flex flex-wrap gap-2 justify-center mb-12">
-                {journeyPhases.map(phase => (
-                  <button
-                    key={phase.id}
-                    onClick={() => setSelectedPhase(phase.id)}
-                    className={`
-                      px-6 py-3 rounded-lg font-medium transition-all
-                      ${
-                        selectedPhase === phase.id
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-card border border-border hover:border-primary'
-                      }
-                    `}
-                  >
-                    <div className="flex items-center gap-2">
-                      <phase.icon className="w-5 h-5" />
-                      <span>{phase.phase}</span>
-                      <Badge variant="outline" className="ml-2">
-                        {phase.years}
-                      </Badge>
-                    </div>
-                  </button>
-                ))}
+                {journeyPhases.map(phase => {
+                  const Icon = phase.icon;
+                  return (
+                    <button
+                      key={phase.id}
+                      onClick={() => setSelectedPhase(phase.id)}
+                      className={`
+                        px-6 py-3 rounded-lg font-medium transition-all
+                        ${
+                          selectedPhase === phase.id
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-card border border-border hover:border-primary'
+                        }
+                      `}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-5 h-5" />
+                        <span>{phase.phase}</span>
+                        <Badge variant="outline" className="ml-2">
+                          {phase.years}
+                        </Badge>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Selected Phase Details */}

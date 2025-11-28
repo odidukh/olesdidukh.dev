@@ -23,6 +23,7 @@ import {
   Target,
   TrendingUp,
   Award,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface Experience {
@@ -43,7 +44,7 @@ interface Experience {
   highlights?: {
     metric: string;
     value: string;
-    icon?: React.ElementType;
+    icon?: LucideIcon;
   }[];
 }
 

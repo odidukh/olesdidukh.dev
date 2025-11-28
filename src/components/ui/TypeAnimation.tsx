@@ -17,7 +17,7 @@ interface TypeAnimationProps {
 
 export function TypeAnimation({
   sequence,
-  wrapper: Wrapper = 'span',
+  wrapper = 'span',
   speed = 50,
   deletionSpeed = 30,
 
@@ -25,6 +25,8 @@ export function TypeAnimation({
   cursor = true,
   cursorClassName = '',
 }: TypeAnimationProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Wrapper: any = wrapper;
   const [displayText, setDisplayText] = React.useState('');
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isDeleting, setIsDeleting] = React.useState(false);

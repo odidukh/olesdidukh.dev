@@ -12,12 +12,13 @@ import {
   Plane,
   Brain,
   Dumbbell,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface Interest {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   description: string;
   color: string;
 }

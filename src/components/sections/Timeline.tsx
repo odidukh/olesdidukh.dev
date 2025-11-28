@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Calendar,
   MapPin,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface TimelineItem {
@@ -24,7 +25,7 @@ interface TimelineItem {
   description: string[];
   technologies?: string[];
   achievements?: string[];
-  icon: React.ElementType;
+  icon: LucideIcon;
 }
 
 const timelineData: TimelineItem[] = [

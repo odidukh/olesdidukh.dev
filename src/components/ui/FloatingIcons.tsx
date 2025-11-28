@@ -15,11 +15,12 @@ import {
   Layers,
   Package,
   Zap,
+  type LucideIcon,
 } from 'lucide-react';
 
-interface FloatingIcon {
+interface FloatingIconData {
   id: number;
-  Icon: React.ElementType;
+  Icon: LucideIcon;
   x: number;
   y: number;
   duration: number;
@@ -43,11 +44,11 @@ export function FloatingIcons() {
     Zap,
   ];
 
-  const [floatingIcons] = React.useState<FloatingIcon[]>(() => {
+  const [floatingIcons] = React.useState<FloatingIconData[]>(() => {
     const iconCount = 12;
     return Array.from({ length: iconCount }, (_, i) => ({
       id: i,
-      Icon: icons[i % icons.length] as React.ElementType,
+      Icon: icons[i % icons.length]!,
       x: Math.random() * 100,
       y: Math.random() * 100,
       duration: 15 + Math.random() * 15,

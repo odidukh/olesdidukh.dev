@@ -62,6 +62,15 @@ const ContactSection = dynamic(
   { ssr: true }
 );
 
+// Lazy load 3D background (heavy, not critical)
+const HeroBackground3D = dynamic(
+  () =>
+    import('@/components/three/HeroBackground3D').then(
+      mod => mod.HeroBackground3D
+    ),
+  { ssr: false }
+);
+
 // Quick Stats Data
 const stats = [
   {
@@ -154,6 +163,9 @@ export default function HomePage() {
         id="hero"
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
+        {/* 3D Background - Desktop only */}
+        <HeroBackground3D />
+
         {/* Dynamic Background */}
         <motion.div style={{ y: heroY }} className="absolute inset-0 -z-10">
           {/* Gradient Mesh */}

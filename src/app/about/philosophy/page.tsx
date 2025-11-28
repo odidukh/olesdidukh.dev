@@ -33,12 +33,13 @@ import {
   TreePine,
   Timer,
   FileCode,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface Principle {
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
   examples: string[];
   quote?: string;
@@ -47,7 +48,7 @@ interface Principle {
 interface Practice {
   name: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   tools?: string[];
 }
 

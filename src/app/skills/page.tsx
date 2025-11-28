@@ -28,6 +28,7 @@ import {
   Monitor,
   Package,
   Clock,
+  type LucideIcon,
 } from 'lucide-react';
 
 type ProficiencyLevel = 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
@@ -37,7 +38,7 @@ interface Skill {
   name: string;
   level: ProficiencyLevel;
   yearsOfExperience: number;
-  icon?: React.ElementType;
+  icon?: LucideIcon;
   description?: string;
   lastUsed?: string;
   projects?: number;
@@ -48,7 +49,7 @@ interface SkillCategory {
   id: string;
   title: string;
   description: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   color: string;
   skills: Skill[];
 }

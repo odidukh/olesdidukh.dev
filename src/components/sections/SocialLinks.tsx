@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { motion } from 'framer-motion';
 import { track } from '@vercel/analytics';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -20,11 +19,12 @@ import {
   Instagram,
   ExternalLink,
   ChevronDown,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface SocialLink {
   name: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   url: string;
   username: string;
   color: string;

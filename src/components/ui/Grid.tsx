@@ -75,7 +75,8 @@ const Grid = React.forwardRef<HTMLDivElement, GridProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : Component;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Comp: any = asChild ? Slot : Component;
 
     return (
       <Comp
@@ -128,7 +129,8 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : Component;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Comp: any = asChild ? Slot : Component;
 
     return (
       <Comp
