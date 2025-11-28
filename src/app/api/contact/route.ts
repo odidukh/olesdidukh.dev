@@ -1,6 +1,13 @@
 import { Resend } from 'resend';
 import { z } from 'zod';
 import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';
+import {
+  contactRateLimiter,
+  checkRateLimit,
+  createRateLimitHeaders,
+  rateLimitExceededResponse,
+  getIdentifier,
+} from '@/lib/ratelimit';
 
 const resend = new Resend(process.env['RESEND_API_KEY']);
 
@@ -17,6 +24,27 @@ const contactSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Check rate limit
+    const identifier = getIdentifier(request);
+    const rateLimitResult = await checkRateLimit(
+      contactRateLimiter,
+      identifier
+    );
+
+    if (rateLimitResult && !rateLimitResult.success) {
+      addBreadcrumb({
+        message: 'Contact form rate limit exceeded',
+        category: 'ratelimit',
+        level: 'warning',
+        data: { identifier, remaining: rateLimitResult.remaining },
+      });
+
+      return rateLimitExceededResponse(
+        rateLimitResult,
+        'Too many contact requests. Please try again in a few minutes.'
+      );
+    }
+
     const body: unknown = await request.json();
 
     const result = contactSchema.safeParse(body);
@@ -151,7 +179,12 @@ ${message}
       data: { to: process.env['CONTACT_EMAIL'], from: email },
     });
 
-    return Response.json({ success: true });
+    // Include rate limit headers in success response
+    const headers = rateLimitResult
+      ? createRateLimitHeaders(rateLimitResult)
+      : {};
+
+    return Response.json({ success: true }, { headers });
   } catch (error) {
     console.error('Contact form error:', error);
 

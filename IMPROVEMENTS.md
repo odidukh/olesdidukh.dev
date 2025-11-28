@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 3
+- **Completed**: 4
 - **In Progress**: 0
-- **Pending**: 33
+- **Pending**: 32
 
 ---
 
@@ -132,24 +132,44 @@ Create a full-featured admin panel for managing all portfolio content without co
 
 ### 2. API Rate Limiting
 
-**Status**: ⬜ Pending  
-**Effort**: Low (2-3 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (2-3 hours)
 **Security Impact**: High
 
 #### Tasks:
 
-- [ ] Install rate limiting packages (`@upstash/ratelimit`, `@upstash/redis`)
-- [ ] Implement rate limiting on `/api/contact`
-- [ ] Implement rate limiting on `/api/newsletter`
-- [ ] Add rate limit headers to responses
-- [ ] Create custom rate limit error messages
+- [x] Install rate limiting packages (`@upstash/ratelimit`, `@upstash/redis`)
+- [x] Implement rate limiting on `/api/contact`
+- [x] Implement rate limiting on `/api/newsletter`
+- [x] Add rate limit headers to responses
+- [x] Create custom rate limit error messages
 
-**Implementation Notes**:
+#### Implementation (Completed):
 
-```typescript
-// Target implementation:
-// - 5 requests per 15 minutes for contact form
-// - 3 requests per hour for newsletter signup
+**Files Created**:
+
+- `/src/lib/ratelimit.ts` - Rate limiter utility with Upstash Redis
+
+**Rate Limits**:
+
+- Contact form: 5 requests per 15 minutes (sliding window)
+- Newsletter: 3 requests per hour (sliding window)
+
+**Features**:
+
+- Sliding window rate limiting for smooth request distribution
+- Rate limit headers on all responses (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`)
+- `Retry-After` header on 429 responses
+- Custom error messages for each endpoint
+- IP-based identification with proxy support (`x-forwarded-for`, `x-real-ip`)
+- Graceful degradation when Redis is not configured
+- Sentry breadcrumbs for rate limit events
+
+**Environment Variables Required**:
+
+```env
+UPSTASH_REDIS_REST_URL=your_upstash_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 ```
 
 ### 3. Three.js Lazy Loading

@@ -1,5 +1,12 @@
 import { z } from 'zod';
 import { captureException, addBreadcrumb } from '@/lib/sentry';
+import {
+  newsletterRateLimiter,
+  checkRateLimit,
+  createRateLimitHeaders,
+  rateLimitExceededResponse,
+  getIdentifier,
+} from '@/lib/ratelimit';
 
 const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -7,6 +14,27 @@ const newsletterSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Check rate limit
+    const identifier = getIdentifier(request);
+    const rateLimitResult = await checkRateLimit(
+      newsletterRateLimiter,
+      identifier
+    );
+
+    if (rateLimitResult && !rateLimitResult.success) {
+      addBreadcrumb({
+        message: 'Newsletter rate limit exceeded',
+        category: 'ratelimit',
+        level: 'warning',
+        data: { identifier, remaining: rateLimitResult.remaining },
+      });
+
+      return rateLimitExceededResponse(
+        rateLimitResult,
+        'Too many subscription attempts. Please try again later.'
+      );
+    }
+
     const body: unknown = await request.json();
 
     const result = newsletterSchema.safeParse(body);
@@ -90,7 +118,12 @@ export async function POST(request: Request) {
       data: { email },
     });
 
-    return Response.json({ success: true });
+    // Include rate limit headers in success response
+    const headers = rateLimitResult
+      ? createRateLimitHeaders(rateLimitResult)
+      : {};
+
+    return Response.json({ success: true }, { headers });
   } catch (error) {
     console.error('Newsletter subscription error:', error);
 
