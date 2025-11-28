@@ -151,15 +151,18 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [ ] Test form interactions (future)
 - [ ] Test modal behavior (future)
 
-#### E2E Tests
+#### ~~E2E Tests~~ ✅
 
-- [ ] Install Playwright
-- [ ] Test user flows:
-  - Contact form submission
-  - Navigation
-  - Dark mode toggle
-  - Project filtering
-  - Blog search
+- [x] Install Playwright (`@playwright/test`)
+- [x] Configure `playwright.config.ts` with Chromium
+- [x] Test user flows:
+  - [x] Navigation (homepage, links, skip link, mobile menu, dark mode)
+  - [x] Contact form (validation, submission, loading states, error handling)
+  - [x] Accessibility (landmarks, image alt text)
+- [x] API mocking for form submission tests
+- [x] Added to CI workflow (GitHub Actions)
+- [ ] Project filtering tests (future)
+- [ ] Blog search tests (future)
 
 ### Priority 6: Accessibility & Quality
 
@@ -189,9 +192,11 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [x] GitHub Actions CI workflow (`.github/workflows/ci.yml`)
 - [x] Automated type checking on PR
 - [x] Lint and format checks on PR
-- [x] Test suite runs on PR
+- [x] Test suite runs on PR (Vitest)
+- [x] E2E tests run on PR (Playwright)
 - [x] Build verification on PR
 - [x] Concurrency control (cancels outdated runs)
+- [x] Artifact uploads (build output, Playwright reports)
 - [ ] Bundle size monitoring (future - can add with size-limit)
 
 #### ~~Dependency Management~~ ✅
