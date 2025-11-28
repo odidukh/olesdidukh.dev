@@ -40,7 +40,7 @@ export default function AboutPage() {
     <>
       <BreadcrumbSchema page="about" />
       <Navigation />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <AboutSection />
       </main>
       <Footer />

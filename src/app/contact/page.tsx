@@ -41,7 +41,7 @@ export default function ContactPage() {
     <>
       <BreadcrumbSchema page="contact" />
       <Navigation />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <ContactSection />
       </main>
       <Footer />

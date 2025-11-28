@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/components/Providers';
+import { SkipLink } from '@/components/ui/SkipLink';
 import './globals.css';
 
 const geistSans = Geist({
@@ -83,7 +84,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -93,6 +94,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <SkipLink />
         {children}
         <Providers />
       </body>

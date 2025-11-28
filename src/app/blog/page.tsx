@@ -40,7 +40,7 @@ export default function BlogPage() {
     <>
       <BreadcrumbSchema page="blog" />
       <Navigation />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <BlogSection />
       </main>
       <Footer />

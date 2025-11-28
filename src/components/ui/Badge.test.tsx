@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { axe } from 'vitest-axe';
 import { render, screen } from '@/test/test-utils';
 import { Badge } from './Badge';
 
@@ -83,5 +84,19 @@ describe('Badge', () => {
     render(<Badge data-testid="custom-badge">Props</Badge>);
 
     expect(screen.getByTestId('custom-badge')).toBeInTheDocument();
+  });
+
+  it('passes accessibility audit', async () => {
+    const { container } = render(<Badge>Accessible Badge</Badge>);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('passes accessibility audit with removable badge', async () => {
+    const { container } = render(<Badge onRemove={() => {}}>Removable</Badge>);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

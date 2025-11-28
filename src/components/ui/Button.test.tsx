@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { axe } from 'vitest-axe';
 import { render, screen } from '@/test/test-utils';
 import { Button } from './Button';
 
@@ -113,5 +114,19 @@ describe('Button', () => {
     render(<Button type="submit">Submit</Button>);
 
     expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
+  });
+
+  it('passes accessibility audit', async () => {
+    const { container } = render(<Button>Accessible Button</Button>);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it('passes accessibility audit when loading', async () => {
+    const { container } = render(<Button loading>Loading</Button>);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
   });
 });

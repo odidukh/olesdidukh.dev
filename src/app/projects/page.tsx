@@ -7,7 +7,7 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 
 export default function ProjectsPage() {
   return (
-    <main className="min-h-screen bg-background">
+    <main id="main-content" className="min-h-screen bg-background">
       <BreadcrumbSchema page="projects" />
       <Navigation />
       <ProjectsSection />

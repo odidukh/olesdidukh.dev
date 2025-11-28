@@ -197,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
         <Navigation />
-        <main className="pt-20">
+        <main id="main-content" className="pt-20">
           <BlogPostContent
             post={mdxPost}
             relatedPosts={relatedPosts}
@@ -264,7 +264,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Navigation />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         <BlogPostContent post={post} relatedPosts={relatedPosts} />
       </main>
       <Footer />

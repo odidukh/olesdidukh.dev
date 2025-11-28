@@ -142,7 +142,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
       />
       <Navigation />
-      <main className="pt-20">
+      <main id="main-content" className="pt-20">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-cream-50 to-cream-100 py-16 dark:from-gray-900 dark:to-gray-800 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
