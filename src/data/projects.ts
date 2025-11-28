@@ -126,6 +126,11 @@ export const projectsData: Project[] = [
       { metric: 'Page Load Speed', value: 'Under 2 seconds' },
       { metric: 'Conversion Rate', value: '3.5% improvement' },
     ],
+    testimonial: {
+      text: 'Working with Oles was a game-changer for our marketplace. His deep understanding of e-commerce complexities and ability to deliver scalable solutions helped us grow from a startup to handling millions in transactions.',
+      author: 'Michael Chen',
+      role: 'CEO, MarketHub Inc.',
+    },
   },
   {
     id: 'healthcare-portal',
@@ -173,6 +178,11 @@ export const projectsData: Project[] = [
       },
       { metric: 'Security Audits', value: '100% pass rate' },
     ],
+    testimonial: {
+      text: 'Oles delivered a secure, user-friendly portal that our patients love. His expertise in building HIPAA-compliant interfaces while maintaining excellent UX was exactly what we needed.',
+      author: 'Dr. Emily Roberts',
+      role: 'Chief Medical Officer, HealthFirst',
+    },
   },
   {
     id: 'fintech-dashboard',
@@ -218,6 +228,11 @@ export const projectsData: Project[] = [
       { metric: 'Response Time', value: 'Under 100ms' },
       { metric: 'User Retention', value: '85% monthly active users' },
     ],
+    testimonial: {
+      text: 'The dashboard Oles built handles massive amounts of real-time data without breaking a sweat. His D3.js visualizations are both beautiful and performant.',
+      author: 'James Wilson',
+      role: 'Head of Product, FinanceHub',
+    },
   },
   {
     id: 'social-platform',
@@ -349,6 +364,11 @@ export const projectsData: Project[] = [
       { metric: 'Content Delivery', value: '1B+ API calls/month' },
       { metric: 'Customer Sites', value: '1,000+ websites' },
     ],
+    testimonial: {
+      text: 'The CMS platform Oles architected powers over a thousand websites. His attention to performance and developer experience made all the difference.',
+      author: 'Alex Thompson',
+      role: 'VP of Engineering, ContentStack',
+    },
   },
   {
     id: 'open-source-ui',
@@ -434,3 +454,23 @@ export const projectCategories = [
   'All',
   ...new Set(projectsData.map(project => project.category)),
 ];
+
+export interface TestimonialWithProject {
+  text: string;
+  author: string;
+  role: string;
+  projectId: string;
+  projectTitle: string;
+}
+
+export function getTestimonials(): TestimonialWithProject[] {
+  return projectsData
+    .filter(project => project.testimonial)
+    .map(project => ({
+      text: project.testimonial!.text,
+      author: project.testimonial!.author,
+      role: project.testimonial!.role,
+      projectId: project.id,
+      projectTitle: project.title,
+    }));
+}

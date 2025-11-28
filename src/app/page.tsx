@@ -62,6 +62,14 @@ const ContactSection = dynamic(
   { ssr: true }
 );
 
+const TestimonialsCarousel = dynamic(
+  () =>
+    import('@/components/sections/TestimonialsCarousel').then(
+      mod => mod.TestimonialsCarousel
+    ),
+  { ssr: true }
+);
+
 // Lazy load 3D background (heavy, not critical)
 const HeroBackground3D = dynamic(
   () =>
@@ -659,6 +667,9 @@ export default function HomePage() {
 
       {/* Projects Section */}
       <ProjectsSection />
+
+      {/* Testimonials Section */}
+      <TestimonialsCarousel />
 
       {/* Blog Section */}
       <BlogSection />

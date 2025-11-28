@@ -114,12 +114,13 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [x] Performance fallback for mobile (skips 3D on mobile devices)
 - [x] Respect `prefers-reduced-motion` (static shapes when enabled)
 
-#### Testimonials Showcase
+#### ~~Testimonials Showcase~~ ✅
 
-- [ ] Extract testimonials from project data
-- [ ] Create carousel component
-- [ ] Add to homepage or about page
-- [ ] Include client photos (with permission)
+- [x] Extract testimonials from project data
+- [x] Create carousel component (`TestimonialsCarousel`)
+- [x] Add to homepage (after Projects section)
+- [x] Added testimonials to 5 projects (Safebooks AI, E-Commerce, Healthcare, FinTech, CMS)
+- [ ] Include client photos (future enhancement, requires permission)
 
 #### Video Content
 
