@@ -134,19 +134,22 @@ Remaining improvements and enhancements for olesdidukh.dev
 
 ### Priority 5: Testing Infrastructure
 
-#### Unit & Integration Tests
+#### ~~Unit & Integration Tests~~ ✅
 
-- [ ] Install Vitest
-- [ ] Test utility functions (`breadcrumbs.ts`, etc.)
-- [ ] Test form validation logic
-- [ ] Test data helpers
+- [x] Install Vitest and configure with jsdom environment
+- [x] Test utility functions (`utils.ts`, `breadcrumbs.ts`)
+- [x] Test data helpers (`projects.ts` - 23 tests)
+- [x] Created test setup with mocks for browser APIs
+- [ ] Test form validation logic (future)
 
-#### Component Tests
+#### ~~Component Tests~~ ✅
 
-- [ ] Install React Testing Library
-- [ ] Test critical UI components
-- [ ] Test form interactions
-- [ ] Test modal behavior
+- [x] Install React Testing Library + user-event
+- [x] Test Button component (13 tests)
+- [x] Test Badge component (11 tests)
+- [x] Created reusable test utilities (`test-utils.tsx`)
+- [ ] Test form interactions (future)
+- [ ] Test modal behavior (future)
 
 #### E2E Tests
 
