@@ -3,7 +3,11 @@
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { PerformanceMonitor } from '@/components/analytics';
+import {
+  PerformanceMonitor,
+  GoogleAnalytics,
+  MicrosoftClarity,
+} from '@/components/analytics';
 
 export function Providers() {
   return (
@@ -11,6 +15,8 @@ export function Providers() {
       <Toaster position="top-right" richColors closeButton />
       <Analytics />
       <SpeedInsights />
+      <GoogleAnalytics />
+      <MicrosoftClarity />
       <PerformanceMonitor />
     </>
   );

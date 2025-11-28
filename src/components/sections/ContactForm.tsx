@@ -4,6 +4,7 @@ import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAnalytics } from '@/hooks';
+import { trackContactFormConversion } from '@/lib/conversions';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
@@ -175,6 +176,12 @@ export function ContactForm() {
         timeline: formData.timeline || 'not_specified',
         hasCompany: !!formData.company,
         hasPhone: !!formData.phone,
+      });
+
+      // Track conversion across all analytics platforms
+      trackContactFormConversion({
+        projectType: formData.projectType || 'not_specified',
+        budget: formData.budget || 'not_specified',
       });
 
       // Reset form after successful submission

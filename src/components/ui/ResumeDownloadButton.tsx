@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useAnalytics } from '@/hooks';
+import { trackResumeDownloadConversion } from '@/lib/conversions';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, type ButtonProps } from './Button';
 import { Download, FileText, ChevronDown } from 'lucide-react';
@@ -51,6 +52,7 @@ export function ResumeDownloadButton({
 
   const handleDownload = (version: ResumeVersion) => {
     trackDownload(`resume_${version}`, 'pdf', { version });
+    trackResumeDownloadConversion(version);
   };
 
   return (
@@ -109,6 +111,7 @@ export function ResumeDownloadLink({
 
   const handleDownload = (version: ResumeVersion) => {
     trackDownload(`resume_${version}`, 'pdf', { version });
+    trackResumeDownloadConversion(version);
   };
 
   return (

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useAnalytics } from '@/hooks';
+import { trackNewsletterConversion } from '@/lib/conversions';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
@@ -57,6 +58,11 @@ export function NewsletterForm() {
 
       // Track successful newsletter signup
       trackFormSubmission('newsletter', 'success', {
+        location: window.location.pathname,
+      });
+
+      // Track conversion across all analytics platforms
+      trackNewsletterConversion({
         location: window.location.pathname,
       });
 
