@@ -70,11 +70,11 @@ const TestimonialsCarousel = dynamic(
   { ssr: true }
 );
 
-// Lazy load 3D background (heavy, not critical)
-const HeroBackground3D = dynamic(
+// Lazy load 3D background with intersection observer (heavy, not critical)
+const LazyHeroBackground3D = dynamic(
   () =>
-    import('@/components/three/HeroBackground3D').then(
-      mod => mod.HeroBackground3D
+    import('@/components/three/LazyHeroBackground3D').then(
+      mod => mod.LazyHeroBackground3D
     ),
   { ssr: false }
 );
@@ -194,8 +194,8 @@ export default function HomePage() {
           id="hero"
           className="relative min-h-screen flex items-center justify-center overflow-hidden"
         >
-          {/* 3D Background - Desktop only */}
-          <HeroBackground3D />
+          {/* 3D Background - Desktop only, lazy loaded with intersection observer */}
+          <LazyHeroBackground3D />
 
           {/* Dynamic Background */}
           <motion.div style={{ y: heroY }} className="absolute inset-0 -z-10">
