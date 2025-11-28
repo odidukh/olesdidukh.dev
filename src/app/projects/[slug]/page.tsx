@@ -27,7 +27,9 @@ import {
   Lightbulb,
   Target,
   Quote,
+  Play,
 } from 'lucide-react';
+import { VideoPlayer } from '@/components/ui/VideoPlayer';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -263,6 +265,30 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
           </div>
         </section>
+
+        {/* Video Demo Section */}
+        {project.video && (
+          <section className="py-16 lg:py-24">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto max-w-4xl">
+                <div className="mb-8 flex items-center justify-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-mocha-100 dark:bg-mocha-900/30">
+                    <Play className="h-5 w-5 text-mocha-600 dark:text-mocha-400" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Project Demo
+                  </h2>
+                </div>
+                <VideoPlayer video={project.video} className="shadow-2xl" />
+                {project.video.title && (
+                  <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                    {project.video.title}
+                  </p>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Challenges & Solutions Section */}
         <section className="py-16 lg:py-24">

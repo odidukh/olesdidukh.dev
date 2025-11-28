@@ -121,6 +121,14 @@ const featuredSkills = [
   'React Native',
 ];
 
+interface Particle {
+  id: number;
+  left: number;
+  top: number;
+  duration: number;
+  delay: number;
+}
+
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
@@ -158,6 +166,20 @@ export default function HomePage() {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Generate particles on client side to avoid hydration mismatch
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
+    const newParticles = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
+    }));
+    setParticles(newParticles);
   }, []);
 
   return (
@@ -207,22 +229,22 @@ export default function HomePage() {
 
           {/* Floating Particles */}
           <div className="absolute inset-0">
-            {[...Array(50)].map((_, i) => (
+            {particles.map(particle => (
               <motion.div
-                key={i}
+                key={particle.id}
                 className="absolute w-1 h-1 bg-primary/30 rounded-full"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                 }}
                 animate={{
                   y: [0, -30, 0],
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: Math.random() * 5 + 5,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 5,
+                  delay: particle.delay,
                 }}
               />
             ))}

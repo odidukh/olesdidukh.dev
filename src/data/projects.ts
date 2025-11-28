@@ -1,3 +1,11 @@
+export interface ProjectVideo {
+  url: string;
+  thumbnail?: string;
+  type: 'local' | 'youtube' | 'vimeo';
+  title?: string;
+  duration?: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -27,6 +35,7 @@ export interface Project {
     author: string;
     role: string;
   };
+  video?: ProjectVideo;
 }
 
 export const projectsData: Project[] = [
@@ -80,6 +89,12 @@ export const projectsData: Project[] = [
       text: 'Oles transformed our vision into reality. His technical expertise and attention to detail resulted in a platform that exceeded our expectations.',
       author: 'Sarah Johnson',
       role: 'CTO, Safebooks AI',
+    },
+    video: {
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      type: 'youtube',
+      title: 'Safebooks AI Platform Demo - Invoice Processing Walkthrough',
+      duration: '3:32',
     },
   },
   {
