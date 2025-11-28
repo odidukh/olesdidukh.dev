@@ -38,6 +38,13 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { AboutSection } from '@/components/sections/AboutSection';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import {
+  ProjectsErrorFallback,
+  BlogErrorFallback,
+  ContactErrorFallback,
+  TestimonialsErrorFallback,
+} from '@/components/ui/SectionErrorFallback';
 
 // Lazy load below-the-fold heavy components
 const ProjectsSection = dynamic(
@@ -694,16 +701,33 @@ export default function HomePage() {
         </section>
 
         {/* Projects Section */}
-        <ProjectsSection />
+        <ErrorBoundary
+          sectionName="Projects"
+          fallbackRender={ProjectsErrorFallback}
+        >
+          <ProjectsSection />
+        </ErrorBoundary>
 
         {/* Testimonials Section */}
-        <TestimonialsCarousel />
+        <ErrorBoundary
+          sectionName="Testimonials"
+          fallbackRender={TestimonialsErrorFallback}
+        >
+          <TestimonialsCarousel />
+        </ErrorBoundary>
 
         {/* Blog Section */}
-        <BlogSection />
+        <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>
+          <BlogSection />
+        </ErrorBoundary>
 
         {/* Contact Section */}
-        <ContactSection />
+        <ErrorBoundary
+          sectionName="Contact"
+          fallbackRender={ContactErrorFallback}
+        >
+          <ContactSection />
+        </ErrorBoundary>
 
         {/* Final CTA Section */}
         <section className="py-20 bg-gradient-to-t from-primary/10 via-background to-background">
