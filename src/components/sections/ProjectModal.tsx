@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFocusTrap } from '@/hooks';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import type { Project } from '@/data/projects';
@@ -28,16 +29,13 @@ interface ProjectModalProps {
 
 export function ProjectModal({ project, onClose }: ProjectModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-  const modalRef = React.useRef<HTMLDivElement>(null);
 
-  // Close on escape key
-  React.useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+  // Focus trap for accessibility
+  const { containerRef } = useFocusTrap<HTMLDivElement>({
+    enabled: true,
+    onEscape: onClose,
+    returnFocusOnDeactivate: true,
+  });
 
   // Prevent body scroll when modal is open
   // Prevent body scroll when modal is open and handle layout shift
@@ -72,7 +70,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
       onClick={onClose}
     >
       <motion.div
-        ref={modalRef}
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-modal-title"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -155,7 +156,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           <div className="space-y-4">
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold">{project.title}</h2>
+                <h2 id="project-modal-title" className="text-3xl font-bold">
+                  {project.title}
+                </h2>
                 <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <Badge variant="outline">{project.category}</Badge>
                   <span className="flex items-center gap-1">

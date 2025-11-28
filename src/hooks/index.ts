@@ -11,3 +11,4 @@ export { useIntersectionObserver } from './useIntersectionObserver';
 export { useAnalytics } from './useAnalytics';
 export { useWebVitals } from './useWebVitals';
 export { usePerformance } from './usePerformance';
+export { useFocusTrap } from './useFocusTrap';

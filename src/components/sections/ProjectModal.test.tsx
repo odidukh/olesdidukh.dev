@@ -171,7 +171,8 @@ describe('ProjectModal', () => {
   it('should call onClose when pressing Escape key', () => {
     render(<ProjectModal project={mockProject} onClose={mockOnClose} />);
 
-    fireEvent.keyDown(window, { key: 'Escape' });
+    // Focus trap listens on document, not window
+    fireEvent.keyDown(document, { key: 'Escape' });
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
