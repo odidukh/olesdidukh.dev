@@ -207,12 +207,14 @@ Remaining improvements and enhancements for olesdidukh.dev
 - [x] Grouped updates (production vs dev dependencies)
 - [x] Auto-labeling for PRs
 
-#### Error Monitoring (Future)
+#### ~~Error Monitoring~~ ✅
 
-- [ ] Set up Sentry
-- [ ] Configure source maps
-- [ ] Define error alerts
-- [ ] Create error dashboard
+- [x] Set up Sentry (`@sentry/nextjs` installed and configured)
+- [x] Configure source maps (withSentryConfig in next.config.ts)
+- [x] Define error alerts (beforeSend filters for known issues)
+- [x] Create error dashboard (custom error pages + utility functions)
+- [x] Added Sentry integration to API routes (contact, newsletter)
+- [x] Created test pages for verifying Sentry integration
 
 ---
 

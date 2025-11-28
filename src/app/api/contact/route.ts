@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { z } from 'zod';
+import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';
 
 const resend = new Resend(process.env['RESEND_API_KEY']);
 
@@ -20,6 +21,12 @@ export async function POST(request: Request) {
 
     const result = contactSchema.safeParse(body);
     if (!result.success) {
+      addBreadcrumb({
+        message: 'Contact form validation failed',
+        category: 'validation',
+        level: 'warning',
+        data: result.error.flatten(),
+      });
       return Response.json(
         { error: 'Validation failed', details: result.error.flatten() },
         { status: 400 }
@@ -36,6 +43,25 @@ export async function POST(request: Request) {
       timeline,
       message,
     } = result.data;
+
+    // Add breadcrumb for debugging
+    addBreadcrumb({
+      message: 'Processing contact form submission',
+      category: 'contact',
+      level: 'info',
+      data: { from: email, company },
+    });
+
+    // Set context for this request
+    setContext('contact_submission', {
+      name,
+      email,
+      company,
+      projectType,
+      hasPhone: !!phone,
+      hasBudget: !!budget,
+      hasTimeline: !!timeline,
+    });
 
     // Build email content
     const emailText = `
@@ -118,9 +144,24 @@ ${message}
       replyTo: email,
     });
 
+    addBreadcrumb({
+      message: 'Email sent successfully',
+      category: 'email',
+      level: 'info',
+      data: { to: process.env['CONTACT_EMAIL'], from: email },
+    });
+
     return Response.json({ success: true });
   } catch (error) {
     console.error('Contact form error:', error);
+
+    // Capture the exception with context
+    captureException(error, {
+      api_route: '/api/contact',
+      method: 'POST',
+      user_agent: request.headers.get('user-agent'),
+    });
+
     return Response.json({ error: 'Failed to send message' }, { status: 500 });
   }
 }

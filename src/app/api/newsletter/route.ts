@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { captureException, addBreadcrumb } from '@/lib/sentry';
 
 const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -10,10 +11,22 @@ export async function POST(request: Request) {
 
     const result = newsletterSchema.safeParse(body);
     if (!result.success) {
+      addBreadcrumb({
+        message: 'Newsletter validation failed',
+        category: 'validation',
+        level: 'warning',
+      });
       return Response.json({ error: 'Invalid email address' }, { status: 400 });
     }
 
     const { email } = result.data;
+
+    addBreadcrumb({
+      message: 'Processing newsletter subscription',
+      category: 'newsletter',
+      level: 'info',
+      data: { email },
+    });
 
     // Buttondown API integration
     const apiKey = process.env['BUTTONDOWN_API_KEY'];
@@ -56,15 +69,36 @@ export async function POST(request: Request) {
       }
 
       console.error('Buttondown API error:', errorData);
+
+      captureException(new Error('Buttondown API error'), {
+        api_route: '/api/newsletter',
+        status_code: response.status,
+        error_data: errorData,
+        email,
+      });
+
       return Response.json(
         { error: 'Failed to subscribe. Please try again.' },
         { status: 500 }
       );
     }
 
+    addBreadcrumb({
+      message: 'Newsletter subscription successful',
+      category: 'newsletter',
+      level: 'info',
+      data: { email },
+    });
+
     return Response.json({ success: true });
   } catch (error) {
     console.error('Newsletter subscription error:', error);
+
+    captureException(error, {
+      api_route: '/api/newsletter',
+      method: 'POST',
+    });
+
     return Response.json(
       { error: 'Failed to subscribe. Please try again.' },
       { status: 500 }
