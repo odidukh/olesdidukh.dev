@@ -1,12 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { track } from '@vercel/analytics';
+import { useAnalytics } from '@/hooks';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
 
 export function NewsletterForm() {
+  const { trackFormSubmission } = useAnalytics();
   const [email, setEmail] = React.useState('');
   const [status, setStatus] = React.useState<
     'idle' | 'loading' | 'success' | 'error'
@@ -55,7 +56,7 @@ export function NewsletterForm() {
       setEmail('');
 
       // Track successful newsletter signup
-      track('newsletter_signup', {
+      trackFormSubmission('newsletter', 'success', {
         location: window.location.pathname,
       });
 

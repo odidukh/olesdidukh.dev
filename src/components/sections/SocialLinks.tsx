@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { track } from '@vercel/analytics';
+import { useAnalytics } from '@/hooks';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/components/ui/Button';
 import {
@@ -90,10 +90,10 @@ const resumeVersions = [
 ];
 
 function ResumeDropdownItem({ index }: { index: number }) {
+  const { trackDownload } = useAnalytics();
   const handleDownload = (version: 'compact' | 'extended') => {
-    track('resume_download', {
+    trackDownload(`resume_${version}`, 'pdf', {
       version,
-      location: window.location.pathname,
     });
   };
 
@@ -151,12 +151,9 @@ function ResumeDropdownItem({ index }: { index: number }) {
 }
 
 export function SocialLinks() {
+  const { trackSocialClick } = useAnalytics();
   const handleSocialClick = (name: string, url: string) => {
-    track('social_link_click', {
-      platform: name.toLowerCase(),
-      url,
-      location: window.location.pathname,
-    });
+    trackSocialClick(name.toLowerCase(), url);
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { track } from '@vercel/analytics';
+import { useAnalytics } from '@/hooks';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button, type ButtonProps } from './Button';
 import { Download, FileText, ChevronDown } from 'lucide-react';
@@ -35,13 +35,6 @@ const resumeVersions: {
   },
 ];
 
-function trackDownload(version: ResumeVersion) {
-  track('resume_download', {
-    version,
-    location: window.location.pathname,
-  });
-}
-
 interface ResumeDownloadButtonProps
   extends Omit<ButtonProps, 'asChild' | 'onClick'> {
   showIcon?: boolean;
@@ -54,6 +47,12 @@ export function ResumeDownloadButton({
   className,
   ...props
 }: ResumeDownloadButtonProps) {
+  const { trackDownload } = useAnalytics();
+
+  const handleDownload = (version: ResumeVersion) => {
+    trackDownload(`resume_${version}`, 'pdf', { version });
+  };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -76,7 +75,7 @@ export function ResumeDownloadButton({
                 <a
                   href={path}
                   download={filename}
-                  onClick={() => trackDownload(version)}
+                  onClick={() => handleDownload(version)}
                   className="flex cursor-pointer items-start gap-3 rounded-md px-3 py-2 text-sm text-gray-900 outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800 data-[highlighted]:!bg-gray-100 data-[highlighted]:!text-gray-900 dark:data-[highlighted]:!bg-gray-800 dark:data-[highlighted]:!text-gray-100"
                 >
                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
@@ -106,6 +105,12 @@ export function ResumeDownloadLink({
   className,
   children,
 }: ResumeDownloadLinkProps) {
+  const { trackDownload } = useAnalytics();
+
+  const handleDownload = (version: ResumeVersion) => {
+    trackDownload(`resume_${version}`, 'pdf', { version });
+  };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -129,7 +134,7 @@ export function ResumeDownloadLink({
               <a
                 href={path}
                 download={filename}
-                onClick={() => trackDownload(version)}
+                onClick={() => handleDownload(version)}
                 className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-900 outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800 dark:focus:bg-gray-800 data-[highlighted]:!bg-gray-100 data-[highlighted]:!text-gray-900 dark:data-[highlighted]:!bg-gray-800 dark:data-[highlighted]:!text-gray-100"
               >
                 <FileText className="h-4 w-4 text-muted-foreground" />

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { track } from '@vercel/analytics';
+import { useAnalytics } from '@/hooks';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
@@ -66,6 +66,7 @@ const timelines = [
 ];
 
 export function ContactForm() {
+  const { trackFormSubmission } = useAnalytics();
   const [formData, setFormData] = React.useState<FormData>({
     name: '',
     email: '',
@@ -168,7 +169,7 @@ export function ContactForm() {
       });
 
       // Track successful form submission
-      track('contact_form_submission', {
+      trackFormSubmission('contact_form', 'success', {
         projectType: formData.projectType || 'not_specified',
         budget: formData.budget || 'not_specified',
         timeline: formData.timeline || 'not_specified',
