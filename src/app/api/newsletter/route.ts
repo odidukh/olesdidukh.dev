@@ -7,6 +7,7 @@ import {
   rateLimitExceededResponse,
   getIdentifier,
 } from '@/lib/ratelimit';
+import { validateCsrf } from '@/lib/csrf';
 
 const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -14,6 +15,12 @@ const newsletterSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // CSRF protection
+    const csrfError = validateCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     // Check rate limit
     const identifier = getIdentifier(request);
     const rateLimitResult = await checkRateLimit(

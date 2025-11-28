@@ -8,6 +8,7 @@ import {
   rateLimitExceededResponse,
   getIdentifier,
 } from '@/lib/ratelimit';
+import { validateCsrf } from '@/lib/csrf';
 
 const resend = new Resend(process.env['RESEND_API_KEY']);
 
@@ -24,6 +25,12 @@ const contactSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // CSRF protection
+    const csrfError = validateCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     // Check rate limit
     const identifier = getIdentifier(request);
     const rateLimitResult = await checkRateLimit(

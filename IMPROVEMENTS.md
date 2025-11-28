@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 5
+- **Completed**: 6
 - **In Progress**: 0
-- **Pending**: 31
+- **Pending**: 30
 
 ---
 
@@ -211,17 +211,42 @@ UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 
 ### 4. Security Headers Enhancement
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **Security Impact**: Medium
 
 #### Tasks:
 
-- [ ] Implement comprehensive Content-Security-Policy
-- [ ] Add Strict-Transport-Security header
-- [ ] Configure Permissions-Policy
-- [ ] Add X-XSS-Protection header
-- [ ] Implement CSRF protection for forms
+- [x] Implement comprehensive Content-Security-Policy
+- [x] Add Strict-Transport-Security header
+- [x] Configure Permissions-Policy
+- [x] Add X-XSS-Protection header
+- [x] Implement CSRF protection for forms
+
+#### Implementation (Completed):
+
+**Files Modified**:
+
+- `/next.config.ts` - Comprehensive security headers configuration
+- `/src/lib/csrf.ts` - CSRF protection utility (NEW)
+- `/src/app/api/contact/route.ts` - Added CSRF protection
+- `/src/app/api/newsletter/route.ts` - Added CSRF protection
+
+**Security Headers Added**:
+
+- **Content-Security-Policy**: Strict CSP with allowlists for scripts, styles, images, fonts, and API connections
+- **Strict-Transport-Security**: 2-year max-age with includeSubDomains and preload
+- **Permissions-Policy**: Restricts access to sensitive APIs (camera, microphone, geolocation, etc.)
+- **X-XSS-Protection**: Legacy browser XSS filter enabled
+- **Cross-Origin-Opener-Policy**: same-origin
+- **Cross-Origin-Resource-Policy**: same-origin
+
+**CSRF Protection**:
+
+- Origin/Referer header validation
+- Allowlist for production domain, Vercel previews, and localhost
+- Disabled in development for easier testing
+- Applied to `/api/contact` and `/api/newsletter` endpoints
 
 ### 5. Missing Directory Structure
 
