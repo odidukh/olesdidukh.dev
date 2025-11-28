@@ -1,0 +1,55 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Europe/Kiev'
+    open-pull-requests-limit: 10
+    reviewers:
+      - 'odidukh'
+    labels:
+      - 'dependencies'
+      - 'npm'
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      # Group minor and patch updates for production deps
+      production-dependencies:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - '@types/*'
+          - 'eslint*'
+          - 'prettier*'
+          - 'vitest*'
+          - '@testing-library/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Group dev dependencies updates
+      dev-dependencies:
+        patterns:
+          - '@types/*'
+          - 'eslint*'
+          - 'prettier*'
+          - 'vitest*'
+          - '@testing-library/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'chore(ci)'
