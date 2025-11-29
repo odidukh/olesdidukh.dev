@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useUIPreferencesStore } from '@/stores';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -32,9 +33,6 @@ interface UsePWAInstallReturn {
   isDismissed: boolean;
 }
 
-const DISMISSED_KEY = 'pwa-install-dismissed';
-const DISMISSED_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-
 /**
  * Custom hook for managing PWA installation
  *
@@ -42,14 +40,19 @@ const DISMISSED_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
  * - Captures beforeinstallprompt event
  * - Provides install prompt trigger
  * - Tracks installation state
- * - Persists dismissal preference
+ * - Persists dismissal preference (via UIPreferencesStore)
  */
 export function usePWAInstall(): UsePWAInstallReturn {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isPrompting, setIsPrompting] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+
+  // Use global store for dismissal state
+  const { pwaInstallDismissed, dismissPWAInstall, shouldShowPWAInstall } =
+    useUIPreferencesStore();
+
+  const shouldShow = shouldShowPWAInstall();
 
   // Check if already installed (standalone mode)
   useEffect(() => {
@@ -62,18 +65,6 @@ export function usePWAInstall(): UsePWAInstallReturn {
         (window.navigator as Navigator & { standalone: boolean }).standalone);
 
     setIsInstalled(isStandalone);
-
-    // Check if user has dismissed the banner recently
-    const dismissedAt = localStorage.getItem(DISMISSED_KEY);
-    if (dismissedAt) {
-      const dismissedTime = parseInt(dismissedAt, 10);
-      if (Date.now() - dismissedTime < DISMISSED_DURATION) {
-        setIsDismissed(true);
-      } else {
-        // Dismissal has expired, remove it
-        localStorage.removeItem(DISMISSED_KEY);
-      }
-    }
   }, []);
 
   // Capture the beforeinstallprompt event
@@ -90,8 +81,6 @@ export function usePWAInstall(): UsePWAInstallReturn {
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
-      // Clean up dismissed state when installed
-      localStorage.removeItem(DISMISSED_KEY);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -129,17 +118,12 @@ export function usePWAInstall(): UsePWAInstallReturn {
     }
   }, [deferredPrompt]);
 
-  const dismissBanner = useCallback(() => {
-    setIsDismissed(true);
-    localStorage.setItem(DISMISSED_KEY, Date.now().toString());
-  }, []);
-
   return {
-    canInstall: !!deferredPrompt && !isInstalled && !isDismissed,
+    canInstall: !!deferredPrompt && !isInstalled && shouldShow,
     isInstalled,
     isPrompting,
     promptInstall,
-    dismissBanner,
-    isDismissed,
+    dismissBanner: dismissPWAInstall,
+    isDismissed: pwaInstallDismissed && !shouldShow,
   };
 }

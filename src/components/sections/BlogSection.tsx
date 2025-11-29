@@ -17,6 +17,7 @@ import {
   getPostsByCategory,
   searchPosts,
 } from '@/data/blog';
+import { useBlogFilterStore } from '@/stores';
 import {
   Search,
   BookOpen,
@@ -50,12 +51,18 @@ const itemVariants = {
 };
 
 export function BlogSection() {
-  const [selectedCategory, setSelectedCategory] = React.useState('All');
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [showFilters, setShowFilters] = React.useState(false);
-  const [sortBy, setSortBy] = React.useState<'latest' | 'popular' | 'trending'>(
-    'latest'
-  );
+  // Use global filter store for persistent state
+  const {
+    selectedCategory,
+    setSelectedCategory,
+    searchQuery,
+    setSearchQuery,
+    showFilters,
+    toggleShowFilters,
+    sortBy,
+    setSortBy,
+    clearFilters,
+  } = useBlogFilterStore();
 
   // Get featured posts
   const featuredPosts = getFeaturedPosts();
@@ -182,10 +189,7 @@ export function BlogSection() {
 
               {/* Sort and Filter Buttons */}
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowFilters(!showFilters)}
-                >
+                <Button variant="outline" onClick={toggleShowFilters}>
                   <Filter className="mr-2 h-4 w-4" />
                   Filters
                 </Button>
@@ -238,13 +242,7 @@ export function BlogSection() {
                 <p className="text-muted-foreground mb-4">
                   No articles found matching your criteria.
                 </p>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory('All');
-                  }}
-                >
+                <Button variant="outline" onClick={clearFilters}>
                   Clear filters
                 </Button>
               </div>

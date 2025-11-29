@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useThemeStore } from '@/stores';
 import { Button } from './Button';
 import { Container } from './Container';
 import { Menu, X, Github, Linkedin, Mail, Moon, Sun } from 'lucide-react';
@@ -30,7 +31,9 @@ export function Navigation({ className }: NavigationProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
-  const [isDark, setIsDark] = React.useState(false);
+
+  // Use global theme store
+  const { isDark, toggleTheme } = useThemeStore();
 
   // Handle scroll effect
   React.useEffect(() => {
@@ -41,19 +44,6 @@ export function Navigation({ className }: NavigationProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Handle dark mode
-  React.useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newMode = !isDark;
-    setIsDark(newMode);
-    document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', newMode ? 'dark' : 'light');
-  };
 
   return (
     <header
@@ -133,7 +123,7 @@ export function Navigation({ className }: NavigationProps) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleDarkMode}
+              onClick={toggleTheme}
               className="h-9 w-9"
               aria-label="Toggle dark mode"
             >

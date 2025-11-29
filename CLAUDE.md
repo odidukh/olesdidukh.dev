@@ -63,6 +63,11 @@ src/
 │   └── projects.ts         # Project data with details
 ├── lib/
 │   └── utils.ts            # cn() utility for class merging
+├── stores/                 # Zustand state management stores
+│   ├── useThemeStore.ts    # Theme (dark/light mode)
+│   ├── useProjectsFilterStore.ts  # Project filters
+│   ├── useBlogFilterStore.ts      # Blog filters
+│   └── useUIPreferencesStore.ts   # UI preferences
 └── styles/
     └── design-tokens.css   # CSS custom properties
 ```
@@ -75,6 +80,7 @@ src/
 @/lib/*        → src/lib/
 @/styles/*     → src/styles/
 @/data/*       → src/data/
+@/stores       → src/stores/
 ```
 
 ## Design System

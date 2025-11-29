@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ProjectCard } from './ProjectCard';
 import { projectsData } from '@/data/projects';
+import { useProjectsFilterStore } from '@/stores';
 import { Search, Filter, Grid3x3, List, Sparkles, X } from 'lucide-react';
 
 const categories = [
@@ -36,13 +37,20 @@ const technologies = [
 ];
 
 export function ProjectsSection() {
-  const [selectedCategory, setSelectedCategory] = React.useState('All');
-  const [selectedTechnologies, setSelectedTechnologies] = React.useState<
-    string[]
-  >([]);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid');
-  const [showFilters, setShowFilters] = React.useState(false);
+  // Use global filter store for persistent state
+  const {
+    selectedCategory,
+    setSelectedCategory,
+    selectedTechnologies,
+    toggleTechnology,
+    searchQuery,
+    setSearchQuery,
+    viewMode,
+    setViewMode,
+    showFilters,
+    toggleShowFilters,
+    clearFilters,
+  } = useProjectsFilterStore();
 
   // Filter projects based on category, technologies, and search
   const filteredProjects = React.useMemo(() => {
@@ -73,18 +81,6 @@ export function ProjectsSection() {
       return true;
     });
   }, [selectedCategory, selectedTechnologies, searchQuery]);
-
-  const handleTechnologyToggle = (tech: string) => {
-    setSelectedTechnologies(prev =>
-      prev.includes(tech) ? prev.filter(t => t !== tech) : [...prev, tech]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedCategory('All');
-    setSelectedTechnologies([]);
-    setSearchQuery('');
-  };
 
   const activeFiltersCount =
     (selectedCategory !== 'All' ? 1 : 0) +
@@ -135,7 +131,7 @@ export function ProjectsSection() {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={toggleShowFilters}
                 className="relative"
               >
                 <Filter className="mr-2 h-4 w-4" />
@@ -217,7 +213,7 @@ export function ProjectsSection() {
                               : 'outline'
                           }
                           className="cursor-pointer transition-all hover:scale-105"
-                          onClick={() => handleTechnologyToggle(tech)}
+                          onClick={() => toggleTechnology(tech)}
                         >
                           {tech}
                         </Badge>
@@ -265,7 +261,7 @@ export function ProjectsSection() {
                 <Badge key={tech} variant="secondary">
                   {tech}
                   <button
-                    onClick={() => handleTechnologyToggle(tech)}
+                    onClick={() => toggleTechnology(tech)}
                     className="ml-2 hover:text-destructive"
                   >
                     <X className="h-3 w-3" />
