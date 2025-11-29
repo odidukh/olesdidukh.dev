@@ -10,9 +10,9 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | ------------- | ------ | --------------- |
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
-| P2 - Medium   | 15     | 11 Complete     |
-| P3 - Low      | 7      | 9 Complete      |
-| **Total**     | **33** | **30 Complete** |
+| P2 - Medium   | 15     | 12 Complete     |
+| P3 - Low      | 7      | 10 Complete     |
+| **Total**     | **33** | **32 Complete** |
 
 ---
 
@@ -704,17 +704,34 @@ Audited all Image components across the codebase. Key findings:
 
 ### 23. Implement Global Search
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: High (1-2 days)
 **Impact**: UX
 
 **Issue**: No site-wide search functionality.
 
-**Solution**: Implement search with:
+**Implementation**:
 
-- Algolia (hosted)
-- Fuse.js (client-side)
-- Next.js API route with simple text search
+Used Fuse.js for client-side fuzzy search (no external dependencies, works offline):
+
+1. **Installed Fuse.js** - Lightweight fuzzy search library
+
+2. **Created search index** (`/src/lib/search.ts`):
+   - Combines blog posts, projects, and static pages
+   - Configurable search weights (title: 0.4, description: 0.3, category/tags: 0.15)
+   - Functions: `search()`, `getRecentItems()`, `groupResultsByType()`
+
+3. **Created useSearch hook** (`/src/hooks/useSearch.ts`):
+   - Debounced search input (150ms default)
+   - Returns results, grouped results, loading state
+   - Provides recent items for quick access
+
+4. **Created SearchDialog component** (`/src/components/ui/SearchDialog.tsx`):
+   - Command palette style (Cmd+K to open)
+   - Radix UI Dialog with Framer Motion animations
+   - Keyboard navigation (↑/↓, Enter, Esc)
+   - Type icons and categories display
+   - `SearchTrigger` and `useSearchShortcut` exports
 
 ---
 

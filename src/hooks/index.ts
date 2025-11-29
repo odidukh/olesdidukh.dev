@@ -15,6 +15,7 @@ export { usePerformance } from './usePerformance';
 export { useFocusTrap } from './useFocusTrap';
 export { usePWAInstall } from './usePWAInstall';
 export { usePageEngagement } from './usePageEngagement';
+export { useSearch } from './useSearch';
 
 // Type exports
 export type {
@@ -37,6 +38,8 @@ export type {
 export type { UsePWAInstallReturn } from './usePWAInstall';
 
 export type { UsePageEngagementOptions } from './usePageEngagement';
+
+export type { UseSearchOptions, UseSearchReturn } from './useSearch';
 
 // Derived return types for advanced use cases
 export type UseAnalyticsReturn = ReturnType<
