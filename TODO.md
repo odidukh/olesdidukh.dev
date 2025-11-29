@@ -11,8 +11,8 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
 | P2 - Medium   | 15     | 11 Complete     |
-| P3 - Low      | 7      | 7 Complete      |
-| **Total**     | **33** | **28 Complete** |
+| P3 - Low      | 7      | 8 Complete      |
+| **Total**     | **33** | **29 Complete** |
 
 ---
 
@@ -931,14 +931,32 @@ Removed non-standard `X-RateLimit-*` headers that exposed throttling configurati
 
 ### 31. Focus Trap Optimization
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (1-2 hours)
 **Impact**: Code Quality
 
-**Tasks**:
+**Implementation**:
 
-- [ ] Evaluate replacing custom `useFocusTrap` with `focus-trap-react` or Radix UI primitives
-- [ ] If keeping custom implementation, add comprehensive unit tests
+1. **Evaluated replacement options**:
+   - `focus-trap-react`: Would add a new dependency for minimal benefit
+   - Radix Dialog: Already installed but would require significant refactoring of ProjectModal animations
+   - Custom hook: Well-implemented with comprehensive features (Tab/Shift+Tab trapping, Escape handling, initial focus, return focus, focusin prevention)
+
+2. **Decision**: Keep custom implementation - it's robust and only used in one place (ProjectModal)
+
+3. **Added comprehensive unit tests** (`/src/hooks/useFocusTrap.test.tsx`):
+   - 13 tests covering all functionality:
+     - containerRef initialization
+     - getFocusableElements with various element states
+     - Disabled elements exclusion
+     - tabindex="-1" exclusion
+     - Escape key handling (enabled/disabled)
+     - Tab focus wrapping (last to first)
+     - Shift+Tab focus wrapping (first to last)
+     - Focus restoration on unmount
+     - Custom focusableSelector support
+     - Empty container handling
+     - Enable/disable toggling
 
 ---
 
