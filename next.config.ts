@@ -9,12 +9,26 @@ const nextConfig: NextConfig = {
 
   experimental: {
     optimizePackageImports: [
+      // UI Libraries
       'lucide-react',
       'framer-motion',
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-dialog',
       '@radix-ui/react-slot',
+      '@radix-ui/react-toast',
+      '@radix-ui/react-tooltip',
       'sonner',
+      // 3D Libraries
+      'three',
+      '@react-three/drei',
+      '@react-three/fiber',
+      // Data & State
+      '@supabase/supabase-js',
+      'zustand',
+      'zod',
+      // Forms
+      'react-hook-form',
+      '@hookform/resolvers',
     ],
     webpackBuildWorker: true,
   },

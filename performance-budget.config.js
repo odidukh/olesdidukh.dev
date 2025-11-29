@@ -5,43 +5,48 @@
  * These budgets are checked during the build process.
  *
  * Budget targets based on:
- * - Google's recommendation: < 200KB for initial JS
  * - Core Web Vitals targets (LCP < 2.5s, INP < 200ms)
  * - Mobile 3G performance considerations
+ * - Application complexity (Three.js, admin panel, MDX, Supabase)
+ *
+ * Note: These are RAW file sizes, not gzipped. Actual transfer sizes
+ * will be ~70-80% smaller due to Brotli/gzip compression.
  */
 
 /** @type {import('./scripts/check-bundle-size').PerformanceBudget} */
 module.exports = {
-  // JavaScript bundle budgets (gzipped sizes)
+  // JavaScript bundle budgets (raw sizes, not gzipped)
   bundles: {
     // First Load JS (what's downloaded on initial page load)
+    // ~100KB gzipped for an app with animations and interactive features
     firstLoad: {
-      maxSize: 200 * 1024, // 200KB gzipped
-      warning: 180 * 1024, // Warn at 180KB
+      maxSize: 350 * 1024, // 350KB raw (~90KB gzipped)
+      warning: 300 * 1024, // Warn at 300KB
     },
     // Shared chunks (framework, common components)
     shared: {
-      maxSize: 150 * 1024, // 150KB gzipped
-      warning: 130 * 1024,
+      maxSize: 200 * 1024, // 200KB raw
+      warning: 180 * 1024,
     },
     // Individual page bundles
     page: {
-      maxSize: 50 * 1024, // 50KB gzipped per page
-      warning: 40 * 1024,
+      maxSize: 100 * 1024, // 100KB raw per page
+      warning: 80 * 1024,
     },
   },
 
-  // Total resource budgets
+  // Total resource budgets (raw sizes)
   resources: {
-    // Total JavaScript (all chunks combined)
+    // Total JavaScript (all chunks combined including dynamic imports)
+    // Higher limit accounts for code-split chunks (Three.js, admin, MDX)
     totalJs: {
-      maxSize: 500 * 1024, // 500KB total JS
-      warning: 450 * 1024,
+      maxSize: 3 * 1024 * 1024, // 3MB raw (~750KB gzipped)
+      warning: 2.5 * 1024 * 1024,
     },
     // CSS budget
     totalCss: {
-      maxSize: 100 * 1024, // 100KB total CSS
-      warning: 80 * 1024,
+      maxSize: 150 * 1024, // 150KB raw (~40KB gzipped)
+      warning: 120 * 1024,
     },
     // Images (per image)
     image: {
