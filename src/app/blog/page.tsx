@@ -3,6 +3,8 @@ import { BlogSection } from '@/components/sections/BlogSection';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { BlogErrorFallback } from '@/components/ui/SectionErrorFallback';
 
 export const metadata: Metadata = {
   title: 'Blog | Oles Didukh - Web Development Insights',
@@ -41,7 +43,9 @@ export default function BlogPage() {
       <BreadcrumbSchema page="blog" />
       <Navigation />
       <main id="main-content" className="pt-20">
-        <BlogSection />
+        <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>
+          <BlogSection />
+        </ErrorBoundary>
       </main>
       <Footer />
     </>

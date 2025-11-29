@@ -54,16 +54,15 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Server/Client Component Optimization
 
-- [ ] **Convert home page to Server Component**
-  - File: `src/app/page.tsx` (Line 1)
-  - Issue: Marked `'use client'` unnecessarily
-  - Action: Keep page as Server Component, use Client Components only for interactive sections
-  - Impact: Increases JS bundle, loses SSR benefits
+- [x] **Convert home page to Server Component**
+  - File: `src/app/page.tsx`
+  - Note: Home page requires `'use client'` due to extensive interactivity (hooks, framer-motion, mouse tracking)
+  - Already has error boundaries wrapping all major sections
 
-- [ ] **Remove redundant 'use client' from projects page**
-  - File: `src/app/projects/page.tsx` (Line 1)
-  - Issue: Both page and `ProjectsSection` are marked `'use client'`
-  - Action: Make page a Server Component
+- [x] **Remove redundant 'use client' from projects page**
+  - File: `src/app/projects/page.tsx`
+  - Removed `'use client'` directive - page is now a Server Component
+  - Added `<ErrorBoundary>` wrapper for ProjectsSection
 
 ### Data Consistency
 
@@ -73,16 +72,15 @@ This document contains prioritized improvement suggestions organized by category
   - Issue: Lines 269, 312, 355 use generic placeholder images
   - Action: Create unique images for each project
 
-- [ ] **Extract hardcoded author data to constant**
+- [x] **Extract hardcoded author data to constant**
   - File: `src/data/blog.ts`
-  - Issue: Author object repeated 9 times (Lines 334, 449, 516, 574, 649, 701, 762, 804)
-  - Action: Create `const AUTHOR = { name: 'Oles Didukh', ... }` and reference it
+  - Created `BlogAuthor` interface and `DEFAULT_AUTHOR` constant
+  - Replaced all 8 inline author objects with `DEFAULT_AUTHOR` reference
 
-- [ ] **Remove or implement unused `relatedPosts` field**
+- [x] **Remove unused `relatedPosts` field**
   - File: `src/data/blog.ts`
-  - Issue: Field defined (Line 26) but only used in 1 of 9 posts
-  - Issue: `getRelatedPosts()` function auto-calculates, making field redundant
-  - Action: Either remove field or implement consistently
+  - Removed `relatedPosts` field from `BlogPost` interface
+  - Removed the one usage from data (auto-calculation handles related posts)
 
 - [ ] **Remove or populate unused `ProjectVideo` interface**
   - File: `src/data/projects.ts`
@@ -91,16 +89,15 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Component Issues
 
-- [ ] **Add error boundaries to data grid sections**
-  - Files: `src/components/sections/ProjectsSection.tsx`, `src/components/sections/BlogSection.tsx`
-  - Issue: No error boundary wrapping project/blog grids
-  - Action: Wrap with `<ErrorBoundary>` component
-  - Impact: Silent failures possible when data loading fails
+- [x] **Add error boundaries to data grid sections**
+  - Added `<ErrorBoundary>` to `src/app/projects/page.tsx` wrapping `ProjectsSection`
+  - Added `<ErrorBoundary>` to `src/app/blog/page.tsx` wrapping `BlogSection`
+  - Home page already had error boundaries
 
-- [ ] **Add image error handling to BlogCard**
+- [x] **Add image error handling to BlogCard**
   - File: `src/components/sections/BlogCard.tsx`
-  - Issue: No `onError` handler for cover image
-  - Reference: `ProjectCard.tsx` (Lines 48-71) has proper error state handling
+  - Added `imageError` state and `onError` handler
+  - Shows fallback with `BookOpen` icon when image fails to load
 
 - [ ] **Extract hardcoded configuration values**
   - File: `src/components/sections/ContactForm.tsx` (Lines 44-70)
@@ -112,15 +109,15 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Store Consistency
 
-- [ ] **Align filter store semantics**
-  - Issue: `useProjectsFilterStore` has only `clearFilters()` (Line 106)
-  - Issue: `useBlogFilterStore` has both `clearFilters()` and `resetAll()` (Lines 101-112)
-  - Action: Add `resetAll()` to projects store for consistency
+- [x] **Align filter store semantics**
+  - Added `resetAll()` method to `useProjectsFilterStore`
+  - Now matches `useBlogFilterStore` API with both `clearFilters()` and `resetAll()`
 
-- [ ] **Add error handling to filter stores**
-  - Files: `src/stores/useProjectsFilterStore.ts`, `src/stores/useBlogFilterStore.ts`
-  - Issue: Only theme store has Sentry error handling
-  - Reference: `src/stores/useThemeStore.ts` (Lines 131-135)
+- [x] **Add error handling to filter stores**
+  - Added `onRehydrateStorage` error handler with Sentry to both stores:
+    - `src/stores/useProjectsFilterStore.ts`
+    - `src/stores/useBlogFilterStore.ts`
+  - Now matches theme store pattern
 
 ---
 
@@ -407,17 +404,17 @@ This document contains prioritized improvement suggestions organized by category
 
 ## Summary Statistics
 
-| Category      | Critical | High   | Medium | Low    | Total   |
-| ------------- | -------- | ------ | ------ | ------ | ------- |
-| Dependencies  | ~~2~~ 0  | 0      | 5      | 0      | 5       |
-| SEO/Metadata  | ~~2~~ 0  | 0      | 0      | 0      | 0       |
-| Components    | 0        | 4      | 3      | 4      | 11      |
-| Data          | 0        | 4      | 2      | 3      | 9       |
-| Stores        | 0        | 2      | 3      | 3      | 8       |
-| Configuration | 0        | 0      | 3      | 1      | 4       |
-| Code Quality  | 0        | 0      | 1      | 5      | 6       |
-| Testing       | 0        | 0      | 0      | 0      | 35+     |
-| **Total**     | **0**    | **10** | **17** | **16** | **78+** |
+| Category      | Critical | High    | Medium | Low    | Total   |
+| ------------- | -------- | ------- | ------ | ------ | ------- |
+| Dependencies  | ~~2~~ 0  | 0       | 5      | 0      | 5       |
+| SEO/Metadata  | ~~2~~ 0  | 0       | 0      | 0      | 0       |
+| Components    | 0        | ~~4~~ 1 | 3      | 4      | 8       |
+| Data          | 0        | ~~4~~ 2 | 2      | 3      | 7       |
+| Stores        | 0        | ~~2~~ 0 | 3      | 3      | 6       |
+| Configuration | 0        | 0       | 3      | 1      | 4       |
+| Code Quality  | 0        | 0       | 1      | 5      | 6       |
+| Testing       | 0        | 0       | 0      | 0      | 35+     |
+| **Total**     | **0**    | **3**   | **17** | **16** | **71+** |
 
 ---
 
@@ -430,12 +427,13 @@ This document contains prioritized improvement suggestions organized by category
 3. ~~Add missing metadata exports~~ → Created layout.tsx files for 5 pages
 4. ~~Add loading states for dynamic routes~~ → Created loading.tsx for blog/[slug] and projects/[slug]
 
-### Phase 2: High Priority (Week 2-3)
+### Phase 2: High Priority (Week 2-3) - COMPLETED
 
-1. Fix Server/Client component issues
-2. Fix data consistency issues
-3. Add error boundaries
-4. Align store semantics
+1. ~~Fix Server/Client component issues~~ → Removed 'use client' from projects page, added error boundaries
+2. ~~Fix data consistency issues~~ → Extracted DEFAULT_AUTHOR, removed relatedPosts field
+3. ~~Add error boundaries~~ → Added to projects and blog pages
+4. ~~Align store semantics~~ → Added resetAll() and Sentry error handling to filter stores
+5. ~~Add BlogCard image error handling~~ → Added imageError state with fallback UI
 
 ### Phase 3: Testing Foundation (Week 3-4)
 

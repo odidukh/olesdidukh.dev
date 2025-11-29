@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { captureException } from '@/lib/sentry';
 
 type ViewMode = 'grid' | 'list';
 
@@ -29,8 +30,10 @@ interface ProjectsFilterState {
   toggleShowFilters: () => void;
   /** Set filter panel visibility */
   setShowFilters: (show: boolean) => void;
-  /** Clear all filters */
+  /** Clear all filters (resets category, technologies, and search, keeps view mode) */
   clearFilters: () => void;
+  /** Reset all to defaults including view mode */
+  resetAll: () => void;
   /** Check if any filters are active */
   hasActiveFilters: () => boolean;
 }
@@ -110,6 +113,14 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
           searchQuery: '',
         }),
 
+      resetAll: () =>
+        set({
+          selectedCategory: 'All',
+          selectedTechnologies: [],
+          searchQuery: '',
+          viewMode: 'grid',
+        }),
+
       hasActiveFilters: () => {
         const state = get();
         return (
@@ -138,6 +149,14 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
         searchQuery: state.searchQuery,
         viewMode: state.viewMode,
       }),
+      onRehydrateStorage: () => (_state, error) => {
+        if (error) {
+          captureException(error, {
+            store: 'useProjectsFilterStore',
+            action: 'rehydrate',
+          });
+        }
+      },
     }
   )
 );

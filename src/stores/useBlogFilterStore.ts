@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { captureException } from '@/lib/sentry';
 
 type SortOption = 'latest' | 'popular' | 'trending';
 
@@ -134,6 +135,14 @@ export const useBlogFilterStore = create<BlogFilterState>()(
         searchQuery: state.searchQuery,
         sortBy: state.sortBy,
       }),
+      onRehydrateStorage: () => (_state, error) => {
+        if (error) {
+          captureException(error, {
+            store: 'useBlogFilterStore',
+            action: 'rehydrate',
+          });
+        }
+      },
     }
   )
 );

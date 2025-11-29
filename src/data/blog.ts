@@ -1,3 +1,9 @@
+export interface BlogAuthor {
+  name: string;
+  avatar: string;
+  role: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -5,11 +11,7 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   coverImage: string;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
+  author: BlogAuthor;
   publishedAt: string;
   updatedAt?: string;
   readingTime: number; // in minutes
@@ -23,8 +25,16 @@ export interface BlogPost {
   };
   views?: number;
   likes?: number;
-  relatedPosts?: string[]; // IDs of related posts
 }
+
+/**
+ * Default author for all blog posts
+ */
+export const DEFAULT_AUTHOR: BlogAuthor = {
+  name: 'Oles Didukh',
+  avatar: '/images/avatar.png',
+  role: 'Senior Front-End Engineer',
+};
 
 export const blogCategories = [
   'All',
@@ -331,11 +341,7 @@ By following these best practices, you can build React applications that are not
 - [React Performance Checklist](https://github.com/performance-checklist)
     `,
     coverImage: '/images/blog/react-perf.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-03-15',
     readingTime: 12,
     category: 'React',
@@ -349,7 +355,6 @@ By following these best practices, you can build React applications that are not
     featured: true,
     views: 1250,
     likes: 89,
-    relatedPosts: ['react-18-features', 'state-management-comparison'],
   },
   {
     id: 'typescript-advanced-patterns',
@@ -446,11 +451,7 @@ type PartialConfig = DeepPartial<Config>;
 The article continues with more advanced patterns...
     `,
     coverImage: '/images/blog/typescript.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-03-10',
     readingTime: 15,
     category: 'TypeScript',
@@ -513,11 +514,7 @@ function AddToCartButton({ productId }) {
 More content continues...
     `,
     coverImage: '/images/blog/nextjs.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-03-05',
     readingTime: 10,
     category: 'React',
@@ -570,11 +567,7 @@ Measures visual stability. Should maintain a score of less than 0.1.
 More optimization techniques...
     `,
     coverImage: '/images/blog/modern-css.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-02-28',
     readingTime: 8,
     category: 'Performance',
@@ -646,11 +639,7 @@ const useBearStore = create<BearState>((set) => ({
 Detailed comparison continues...
     `,
     coverImage: '/images/blog/react-perf.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-02-20',
     readingTime: 14,
     category: 'React',
@@ -699,11 +688,7 @@ describe('Counter', () => {
 More testing patterns and examples...
     `,
     coverImage: '/images/blog/typescript.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-02-15',
     readingTime: 11,
     category: 'Best Practices',
@@ -758,11 +743,7 @@ CSS has evolved significantly. Let's explore modern features that make styling m
 More modern CSS techniques...
     `,
     coverImage: '/images/blog/modern-css.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-02-10',
     readingTime: 9,
     category: 'Web Development',
@@ -800,11 +781,7 @@ Both having mentors and mentoring others accelerated my learning.
 Personal stories and advice continue...
     `,
     coverImage: '/images/blog/career-journey.png',
-    author: {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
+    author: DEFAULT_AUTHOR,
     publishedAt: '2024-02-01',
     readingTime: 7,
     category: 'Career',
