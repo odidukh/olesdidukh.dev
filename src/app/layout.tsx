@@ -19,6 +19,16 @@ export const metadata: Metadata = {
   description:
     'Portfolio of Oles Didukh, a Senior Front-End Engineer specializing in React, TypeScript, and Next.js.',
   metadataBase: new URL('https://olesdidukh.dev'),
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        { url: '/feed.xml', title: 'Oles Didukh - Blog RSS Feed' },
+      ],
+      'application/atom+xml': [
+        { url: '/atom.xml', title: 'Oles Didukh - Blog Atom Feed' },
+      ],
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

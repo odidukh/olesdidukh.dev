@@ -1,10 +1,13 @@
 import type { MetadataRoute } from 'next';
+import { blogPosts } from '@/data/blog';
+import { projectsData } from '@/data/projects';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://olesdidukh.dev';
   const now = new Date();
 
-  return [
+  // Static pages
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
@@ -59,7 +62,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
-    // Blog posts - add individual blog post URLs here when blog posts have dedicated pages
-    // For now, blog posts are shown on the blog listing page
   ];
+
+  // Blog post pages
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map(post => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.updatedAt
+      ? new Date(post.updatedAt)
+      : new Date(post.publishedAt),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  // Project pages
+  const projectPages: MetadataRoute.Sitemap = projectsData.map(project => ({
+    url: `${baseUrl}/projects/${project.id}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...blogPages, ...projectPages];
 }
