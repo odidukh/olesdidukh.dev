@@ -14,6 +14,7 @@ export { useWebVitals } from './useWebVitals';
 export { usePerformance } from './usePerformance';
 export { useFocusTrap } from './useFocusTrap';
 export { usePWAInstall } from './usePWAInstall';
+export { usePageEngagement } from './usePageEngagement';
 
 // Type exports
 export type {
@@ -34,6 +35,8 @@ export type {
 } from './useIntersectionObserver';
 
 export type { UsePWAInstallReturn } from './usePWAInstall';
+
+export type { UsePageEngagementOptions } from './usePageEngagement';
 
 // Derived return types for advanced use cases
 export type UseAnalyticsReturn = ReturnType<

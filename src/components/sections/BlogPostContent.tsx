@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePageEngagement } from '@/hooks';
 
 // Support both legacy BlogPost and new BlogPostMeta
 type PostData =
@@ -49,6 +50,9 @@ export function BlogPostContent({
   const copyTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+
+  // Track scroll depth and time on page for blog posts
+  usePageEngagement();
 
   // Cleanup timeout on unmount
   React.useEffect(() => {

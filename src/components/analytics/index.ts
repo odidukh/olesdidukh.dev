@@ -1,5 +1,6 @@
 export { TrackPageView } from './TrackPageView';
 export { TrackedExternalLink } from './TrackedExternalLink';
+export { TrackedLink } from './TrackedLink';
 export { PerformanceMonitor } from './PerformanceMonitor';
 export {
   GoogleAnalytics,

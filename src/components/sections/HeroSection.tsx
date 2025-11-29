@@ -25,7 +25,7 @@ import {
   Code2,
   Zap,
 } from 'lucide-react';
-import Link from 'next/link';
+import { TrackedLink } from '@/components/analytics';
 
 const heroVariants: Variants = {
   hidden: { opacity: 0 },
@@ -207,10 +207,10 @@ export function HeroSection() {
                 className="flex flex-wrap gap-4"
               >
                 <Button size="lg" className="group" asChild>
-                  <Link href="/projects">
+                  <TrackedLink href="/projects" ctaName="hero_view_work">
                     View My Work
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
+                  </TrackedLink>
                 </Button>
                 <ResumeDownloadButton size="lg" variant="outline" />
               </motion.div>

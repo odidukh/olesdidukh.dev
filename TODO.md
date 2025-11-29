@@ -720,18 +720,35 @@ Audited all Image components across the codebase. Key findings:
 
 ### 24. Complete Analytics Event Coverage
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (2-3 hours)
 **Impact**: Business Insights
 
 **Issue**: Some user interactions not tracked.
 
-**Events to Add**:
+**Implementation**:
 
-- [ ] CTA button clicks
-- [ ] Form field focus (start tracking)
-- [ ] Scroll depth milestones
-- [ ] Time on page
+Created new tracking utilities and integrated them:
+
+1. **`usePageEngagement` hook** (`/src/hooks/usePageEngagement.ts`)
+   - Automatically tracks scroll depth milestones (25%, 50%, 75%, 90%, 100%)
+   - Tracks time on page intervals (30s, 60s, 120s, 300s)
+   - Tracks total time on page exit
+   - Used in `BlogPostContent` for article engagement tracking
+
+2. **`TrackedLink` component** (`/src/components/analytics/TrackedLink.tsx`)
+   - Wraps Next.js Link with CTA click tracking
+   - Tracks destination, location, and custom CTA names
+   - Used in `HeroSection` and `HeroSimple` for "View My Work" CTA
+
+**Events now tracked**:
+
+- [x] CTA button clicks (`cta_click` event via TrackedLink)
+- [x] Scroll depth milestones (`scroll_depth` event)
+- [x] Time on page (`time_on_page` event)
+- [ ] Form field focus (deferred - low value, high noise)
+
+**Note**: Form field focus tracking was intentionally skipped as it creates noise in analytics data without providing actionable insights. The existing `trackFormSubmission` covers form completion which is more valuable.
 
 ---
 
