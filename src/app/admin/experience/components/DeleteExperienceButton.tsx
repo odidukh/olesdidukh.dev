@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
@@ -29,14 +30,22 @@ export function DeleteExperienceButton({
         .eq('id', experienceId);
 
       if (error) {
-        console.error('Error deleting experience:', error);
+        captureException(error, {
+          component: 'DeleteExperienceButton',
+          action: 'delete_experience',
+          experienceId,
+        });
         alert('Failed to delete experience');
         return;
       }
 
       router.refresh();
     } catch (error) {
-      console.error('Error:', error);
+      captureException(error, {
+        component: 'DeleteExperienceButton',
+        action: 'delete_experience',
+        experienceId,
+      });
       alert('An unexpected error occurred');
     } finally {
       setLoading(false);

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useAnalytics } from '@/hooks';
 import { trackContactFormConversion } from '@/lib/conversions';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
@@ -211,7 +212,11 @@ export function ContactForm() {
         setSubmitStatus('idle');
       }, 3000);
     } catch (error) {
-      console.error('Form submission error:', error);
+      captureException(error, {
+        component: 'ContactForm',
+        action: 'submit_form',
+        projectType: formData.projectType || 'not_specified',
+      });
       setSubmitStatus('error');
       toast.error('Failed to send message', {
         description:

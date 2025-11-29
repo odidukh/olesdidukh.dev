@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { captureException } from '@/lib/sentry';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -128,7 +129,10 @@ export const useThemeStore = create<ThemeState>()(
       partialize: state => ({ mode: state.mode }),
       onRehydrateStorage: () => (state, error) => {
         if (error) {
-          console.error('Failed to rehydrate theme store:', error);
+          captureException(error, {
+            store: 'useThemeStore',
+            action: 'rehydrate',
+          });
           return;
         }
 

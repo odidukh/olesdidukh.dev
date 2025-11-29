@@ -193,8 +193,6 @@ ${message}
 
     return Response.json({ success: true }, { headers });
   } catch (error) {
-    console.error('Contact form error:', error);
-
     // Capture the exception with context
     captureException(error, {
       api_route: '/api/contact',

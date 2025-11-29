@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -76,7 +77,11 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
       router.push('/admin/skills');
       router.refresh();
     } catch (err) {
-      console.error('Error saving skill:', err);
+      captureException(err, {
+        component: 'SkillForm',
+        action: mode === 'create' ? 'create_skill' : 'update_skill',
+        skillId: skill?.id,
+      });
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred'
       );

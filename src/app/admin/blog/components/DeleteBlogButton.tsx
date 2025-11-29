@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
@@ -26,14 +27,22 @@ export function DeleteBlogButton({ postId, postTitle }: DeleteBlogButtonProps) {
         .eq('id', postId);
 
       if (error) {
-        console.error('Error deleting post:', error);
+        captureException(error, {
+          component: 'DeleteBlogButton',
+          action: 'delete_post',
+          postId,
+        });
         alert('Failed to delete post');
         return;
       }
 
       router.refresh();
     } catch (error) {
-      console.error('Error:', error);
+      captureException(error, {
+        component: 'DeleteBlogButton',
+        action: 'delete_post',
+        postId,
+      });
       alert('An unexpected error occurred');
     } finally {
       setLoading(false);

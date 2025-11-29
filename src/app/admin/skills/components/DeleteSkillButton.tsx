@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
@@ -29,14 +30,22 @@ export function DeleteSkillButton({
         .eq('id', skillId);
 
       if (error) {
-        console.error('Error deleting skill:', error);
+        captureException(error, {
+          component: 'DeleteSkillButton',
+          action: 'delete_skill',
+          skillId,
+        });
         alert('Failed to delete skill');
         return;
       }
 
       router.refresh();
     } catch (error) {
-      console.error('Error:', error);
+      captureException(error, {
+        component: 'DeleteSkillButton',
+        action: 'delete_skill',
+        skillId,
+      });
       alert('An unexpected error occurred');
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Trash2, AlertTriangle } from 'lucide-react';
 
@@ -29,14 +30,22 @@ export function DeleteProjectButton({
         .eq('id', projectId);
 
       if (error) {
-        console.error('Error deleting project:', error);
+        captureException(error, {
+          component: 'DeleteProjectButton',
+          action: 'delete_project',
+          projectId,
+        });
         alert('Failed to delete project');
         return;
       }
 
       router.refresh();
     } catch (error) {
-      console.error('Error:', error);
+      captureException(error, {
+        component: 'DeleteProjectButton',
+        action: 'delete_project',
+        projectId,
+      });
       alert('An unexpected error occurred');
     } finally {
       setLoading(false);

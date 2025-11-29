@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import {
@@ -26,7 +27,10 @@ async function getProjects(): Promise<Project[]> {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    console.error('Error fetching projects:', error);
+    captureException(error, {
+      page: 'admin/projects',
+      action: 'fetch_projects',
+    });
     return [];
   }
 

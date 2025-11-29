@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -101,7 +102,11 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
       router.push('/admin/experience');
       router.refresh();
     } catch (err) {
-      console.error('Error saving experience:', err);
+      captureException(err, {
+        component: 'ExperienceForm',
+        action: mode === 'create' ? 'create_experience' : 'update_experience',
+        experienceId: experience?.id,
+      });
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred'
       );

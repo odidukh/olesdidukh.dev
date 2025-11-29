@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -133,7 +134,11 @@ export function BlogForm({ post, mode }: BlogFormProps) {
       router.push('/admin/blog');
       router.refresh();
     } catch (err) {
-      console.error('Error saving post:', err);
+      captureException(err, {
+        component: 'BlogForm',
+        action: mode === 'create' ? 'create_post' : 'update_post',
+        postId: post?.id,
+      });
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred'
       );

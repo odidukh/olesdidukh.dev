@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import {
@@ -27,7 +28,10 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching blog posts:', error);
+    captureException(error, {
+      page: 'admin/blog',
+      action: 'fetch_blog_posts',
+    });
     return [];
   }
 

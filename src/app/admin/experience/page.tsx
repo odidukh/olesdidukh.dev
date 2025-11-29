@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Plus, Pencil, Calendar, MapPin, Building2 } from 'lucide-react';
@@ -19,7 +20,10 @@ async function getExperiences(): Promise<Experience[]> {
     .order('sort_order', { ascending: true });
 
   if (error) {
-    console.error('Error fetching experiences:', error);
+    captureException(error, {
+      page: 'admin/experience',
+      action: 'fetch_experiences',
+    });
     return [];
   }
 

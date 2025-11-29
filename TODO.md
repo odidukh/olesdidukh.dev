@@ -8,11 +8,11 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
-| P0 - Critical | 2      | 1 Complete     |
+| P0 - Critical | 2      | 2 Complete     |
 | P1 - High     | 9      | Pending        |
 | P2 - Medium   | 15     | Pending        |
 | P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **1 Complete** |
+| **Total**     | **33** | **2 Complete** |
 
 ---
 
@@ -42,29 +42,32 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 ### 2. Replace Console Statements with Sentry
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (1-2 hours)
 **Impact**: Security & Code Quality
 
 **Issue**: Multiple `console.error()` calls expose error details in production.
 
-**Files**:
+**Implementation** (Completed):
 
-- `/src/app/api/contact/route.ts`
-- `/src/app/api/newsletter/route.ts`
-- `/src/app/admin/**/*.tsx` (multiple forms)
-- `/src/app/sw.ts`
+Replaced all production `console.error()` calls with `captureException()` from `@/lib/sentry`:
 
-**Solution**:
+- `/src/app/api/newsletter/route.ts` - Removed console.error, kept existing captureException
+- `/src/app/admin/skills/components/DeleteSkillButton.tsx` - Added captureException with context
+- `/src/app/admin/skills/components/SkillForm.tsx` - Added captureException with context
+- `/src/app/admin/blog/page.tsx` - Added captureException for fetch errors
+- `/src/app/admin/blog/components/DeleteBlogButton.tsx` - Added captureException with context
+- `/src/app/admin/blog/components/BlogForm.tsx` - Added captureException with context
+- `/src/app/admin/projects/page.tsx` - Added captureException for fetch errors
+- `/src/app/admin/projects/components/DeleteProjectButton.tsx` - Added captureException with context
+- `/src/app/admin/projects/components/ProjectForm.tsx` - Added captureException with context
+- `/src/app/admin/experience/page.tsx` - Added captureException for fetch errors
+- `/src/app/admin/experience/components/DeleteExperienceButton.tsx` - Added captureException with context
+- `/src/app/admin/experience/components/ExperienceForm.tsx` - Added captureException with context
+- `/src/components/sections/ContactForm.tsx` - Added captureException with context
+- `/src/stores/useThemeStore.ts` - Added captureException for hydration errors
 
-```tsx
-// Instead of:
-console.error('Error:', error);
-
-// Use:
-import * as Sentry from '@sentry/nextjs';
-Sentry.captureException(error);
-```
+**Note**: Console.error statements in ErrorBoundary are kept for development-only logging (wrapped in `process.env.NODE_ENV === 'development'`)
 
 ---
 
@@ -706,7 +709,7 @@ ADMIN_EMAIL=
 
 ## Quick Wins (< 1 hour each)
 
-- [ ] #2 Replace console with Sentry
+- [x] #2 Replace console with Sentry
 - [ ] #7 Complete Sentry configuration
 - [ ] #12 Add canonical tags
 - [ ] #17 Fix ESLint disable comments

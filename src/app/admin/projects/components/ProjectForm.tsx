@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -168,7 +169,11 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       router.push('/admin/projects');
       router.refresh();
     } catch (err) {
-      console.error('Error saving project:', err);
+      captureException(err, {
+        component: 'ProjectForm',
+        action: mode === 'create' ? 'create_project' : 'update_project',
+        projectId: project?.id,
+      });
       setError(
         err instanceof Error ? err.message : 'An unexpected error occurred'
       );

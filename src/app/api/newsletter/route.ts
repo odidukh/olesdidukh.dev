@@ -67,7 +67,10 @@ export async function POST(request: Request) {
     const apiKey = process.env['BUTTONDOWN_API_KEY'];
 
     if (!apiKey) {
-      console.error('BUTTONDOWN_API_KEY is not configured');
+      captureException(new Error('BUTTONDOWN_API_KEY is not configured'), {
+        api_route: '/api/newsletter',
+        config_error: true,
+      });
       return Response.json(
         { error: 'Newsletter service is not configured' },
         { status: 500 }
@@ -103,8 +106,6 @@ export async function POST(request: Request) {
         );
       }
 
-      console.error('Buttondown API error:', errorData);
-
       captureException(new Error('Buttondown API error'), {
         api_route: '/api/newsletter',
         status_code: response.status,
@@ -132,8 +133,6 @@ export async function POST(request: Request) {
 
     return Response.json({ success: true }, { headers });
   } catch (error) {
-    console.error('Newsletter subscription error:', error);
-
     captureException(error, {
       api_route: '/api/newsletter',
       method: 'POST',
