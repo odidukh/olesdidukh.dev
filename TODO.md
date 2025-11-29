@@ -11,8 +11,8 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
 | P2 - Medium   | 15     | 11 Complete     |
-| P3 - Low      | 7      | 4 Complete      |
-| **Total**     | **33** | **25 Complete** |
+| P3 - Low      | 7      | 5 Complete      |
+| **Total**     | **33** | **26 Complete** |
 
 ---
 
@@ -845,15 +845,30 @@ Verified dark mode persistence is fully functional:
 
 ### 28. Rate Limit Header Security Review
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (1 hour)
 **Impact**: Security (Minor)
 
 **Issue**: Rate limit headers expose throttling behavior.
 
-**File**: `/src/app/api/contact/route.ts`
+**Implementation**:
 
-**Solution**: Consider removing X-RateLimit-\* headers or keeping only standard headers.
+Removed non-standard `X-RateLimit-*` headers that exposed throttling configuration:
+
+1. **Removed from success responses** (`/src/app/api/contact/route.ts`, `/src/app/api/newsletter/route.ts`)
+   - Previously exposed `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` on every success
+   - Now only returns `{ success: true }` without rate limit metadata
+
+2. **Simplified 429 responses** (`/src/lib/ratelimit.ts`)
+   - Removed `createRateLimitHeaders()` function (no longer needed)
+   - 429 responses now only include the standard `Retry-After` header (RFC 7231)
+   - Keeps `retryAfter` in response body for client convenience
+
+**Security improvement**: Attackers can no longer probe the API to determine:
+
+- Exact rate limit thresholds (was 5/15min for contact, 3/1h for newsletter)
+- Number of remaining requests before throttling
+- Exact reset timestamps
 
 ---
 

@@ -4,7 +4,6 @@ import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';
 import {
   contactRateLimiter,
   checkRateLimit,
-  createRateLimitHeaders,
   rateLimitExceededResponse,
   getIdentifier,
 } from '@/lib/ratelimit';
@@ -189,12 +188,9 @@ ${message}
       data: { to: contactEmail, from: email },
     });
 
-    // Include rate limit headers in success response
-    const headers = rateLimitResult
-      ? createRateLimitHeaders(rateLimitResult)
-      : {};
-
-    return Response.json({ success: true }, { headers });
+    // Don't expose rate limit headers on success responses
+    // to avoid revealing throttling configuration to potential attackers
+    return Response.json({ success: true });
   } catch (error) {
     // Capture the exception with context
     captureException(error, {

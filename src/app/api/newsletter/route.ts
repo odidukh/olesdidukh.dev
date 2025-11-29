@@ -3,7 +3,6 @@ import { captureException, addBreadcrumb } from '@/lib/sentry';
 import {
   newsletterRateLimiter,
   checkRateLimit,
-  createRateLimitHeaders,
   rateLimitExceededResponse,
   getIdentifier,
 } from '@/lib/ratelimit';
@@ -127,12 +126,9 @@ export async function POST(request: Request) {
       data: { email },
     });
 
-    // Include rate limit headers in success response
-    const headers = rateLimitResult
-      ? createRateLimitHeaders(rateLimitResult)
-      : {};
-
-    return Response.json({ success: true }, { headers });
+    // Don't expose rate limit headers on success responses
+    // to avoid revealing throttling configuration to potential attackers
+    return Response.json({ success: true });
   } catch (error) {
     captureException(error, {
       api_route: '/api/newsletter',

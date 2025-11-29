@@ -61,18 +61,10 @@ export async function checkRateLimit(
 }
 
 /**
- * Create rate limit headers for the response
- */
-export function createRateLimitHeaders(result: RateLimitResult): HeadersInit {
-  return {
-    'X-RateLimit-Limit': result.limit.toString(),
-    'X-RateLimit-Remaining': result.remaining.toString(),
-    'X-RateLimit-Reset': result.reset.toString(),
-  };
-}
-
-/**
  * Create a rate limit exceeded response
+ *
+ * Only includes the standard Retry-After header (RFC 7231) to avoid
+ * exposing rate limit configuration details to potential attackers.
  */
 export function rateLimitExceededResponse(
   result: RateLimitResult,
@@ -88,7 +80,6 @@ export function rateLimitExceededResponse(
     {
       status: 429,
       headers: {
-        ...createRateLimitHeaders(result),
         'Retry-After': retryAfter.toString(),
       },
     }
