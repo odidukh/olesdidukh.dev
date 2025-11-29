@@ -41,7 +41,7 @@ function CustomImage({ src, alt }: { src?: string; alt?: string }) {
     <span className="my-8 block overflow-hidden rounded-xl">
       <Image
         src={src}
-        alt={alt || ''}
+        alt={alt || 'Blog post image'}
         width={800}
         height={450}
         className="w-full"

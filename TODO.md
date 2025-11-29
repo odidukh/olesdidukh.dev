@@ -10,9 +10,9 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | ------------- | ------ | --------------- |
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
-| P2 - Medium   | 15     | 5 Complete      |
+| P2 - Medium   | 15     | 6 Complete      |
 | P3 - Low      | 7      | Pending         |
-| **Total**     | **33** | **15 Complete** |
+| **Total**     | **33** | **16 Complete** |
 
 ---
 
@@ -473,21 +473,26 @@ Total Storybook stories: 10 files (5 existing + 5 new)
 
 ### 16. Add Alt Text Audit
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (1-2 hours)
 **Impact**: Accessibility & SEO
 
 **Issue**: Some dynamic images may lack descriptive alt text.
 
-**Files**:
+**Implementation** (Completed):
 
-- `/src/components/sections/ProjectCard.tsx`
-- `/src/components/sections/BlogCard.tsx`
+1. **Audited all Image components** - Found all dynamic images already have meaningful alt text:
+   - `ProjectCard.tsx`: uses `alt={project.title}` ✅
+   - `BlogCard.tsx`: uses `alt={post.title}` and `alt={post.author.name}` ✅
+   - `FeaturedPost.tsx`: uses `alt={post.title}` and `alt={post.author.name}` ✅
+   - `ProjectModal.tsx`: uses descriptive alt text with image index ✅
+   - `VideoPlayer.tsx`: uses `alt={title || 'Video thumbnail'}` ✅
 
-**Solution**:
+2. **Fixed fallback alt text** in components with optional alt props:
+   - `/src/mdx-components.tsx` - Changed `alt={alt || ''}` to `alt={alt || 'Blog post image'}`
+   - `/src/components/ui/Card.tsx` - Changed `alt={alt || ''}` to `alt={alt || 'Card image'}`
 
-1. Ensure all Image components have meaningful alt text
-2. Add ESLint jsx-a11y rule enforcement
+3. **Verified ESLint enforcement** - `jsx-a11y/alt-text` rule is already enabled via `next/core-web-vitals`
 
 ---
 
