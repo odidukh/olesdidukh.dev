@@ -33,7 +33,36 @@ export interface TimingResult {
 
 /**
  * Hook for custom performance tracking
+ *
  * Provides utilities for marking, measuring, and reporting performance
+ * of specific operations. Uses the Performance API under the hood.
+ *
+ * @example
+ * ```tsx
+ * function DataFetcher() {
+ *   const { startTiming, endTiming, timeAsync } = usePerformance({
+ *     prefix: 'api',
+ *     reportToAnalytics: true,
+ *   });
+ *
+ *   const fetchData = async () => {
+ *     // Option 1: Manual timing
+ *     startTiming('fetch-users');
+ *     const response = await fetch('/api/users');
+ *     const result = endTiming('fetch-users');
+ *     console.log(`Fetch took ${result?.duration}ms`);
+ *
+ *     // Option 2: Automatic timing with timeAsync
+ *     const data = await timeAsync('parse-json', async () => {
+ *       return response.json();
+ *     });
+ *
+ *     return data;
+ *   };
+ *
+ *   return <button onClick={fetchData}>Fetch Data</button>;
+ * }
+ * ```
  */
 export function usePerformance(options: UsePerformanceOptions = {}) {
   const {

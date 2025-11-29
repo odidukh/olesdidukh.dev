@@ -16,8 +16,46 @@ export interface IntersectionResult {
 
 /**
  * Hook to observe element intersection with viewport
+ *
+ * Useful for lazy loading, animations on scroll, infinite scroll,
+ * and tracking element visibility.
+ *
  * @param options - IntersectionObserver options
  * @returns Object with ref, isIntersecting, and entry
+ *
+ * @example
+ * ```tsx
+ * // Basic usage - animate when visible
+ * function AnimateOnScroll() {
+ *   const { ref, isIntersecting } = useIntersectionObserver({
+ *     threshold: 0.1,
+ *     freezeOnceVisible: true, // Only animate once
+ *   });
+ *
+ *   return (
+ *     <div
+ *       ref={ref}
+ *       className={isIntersecting ? 'animate-fade-in' : 'opacity-0'}
+ *     >
+ *       Content
+ *     </div>
+ *   );
+ * }
+ *
+ * // Lazy load images
+ * function LazyImage({ src, alt }: { src: string; alt: string }) {
+ *   const { ref, isIntersecting } = useIntersectionObserver({
+ *     rootMargin: '100px', // Start loading 100px before visible
+ *     freezeOnceVisible: true,
+ *   });
+ *
+ *   return (
+ *     <div ref={ref}>
+ *       {isIntersecting && <img src={src} alt={alt} />}
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useIntersectionObserver<T extends Element = Element>(
   options: IntersectionObserverOptions = {}

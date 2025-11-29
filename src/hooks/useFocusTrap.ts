@@ -37,6 +37,30 @@ const DEFAULT_FOCUSABLE_SELECTOR = [
 
 /**
  * Hook for creating an accessible focus trap
+ *
+ * Traps keyboard focus within a container element. Essential for modals,
+ * dialogs, and dropdown menus to ensure keyboard users can't tab out.
+ *
+ * @example
+ * ```tsx
+ * function Modal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+ *   const { containerRef } = useFocusTrap<HTMLDivElement>({
+ *     enabled: isOpen,
+ *     onEscape: onClose,
+ *     initialFocus: '[data-autofocus]',
+ *   });
+ *
+ *   if (!isOpen) return null;
+ *
+ *   return (
+ *     <div ref={containerRef} role="dialog" aria-modal="true">
+ *       <button data-autofocus onClick={onClose}>Close</button>
+ *       <input type="text" placeholder="Name" />
+ *       <button onClick={onClose}>Submit</button>
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useFocusTrap<T extends HTMLElement>(
   options: UseFocusTrapOptions = {}

@@ -4,9 +4,47 @@ import { useState, useEffect, useCallback } from 'react';
 
 /**
  * Hook to sync state with localStorage
+ *
+ * Automatically persists state to localStorage and syncs across browser tabs.
+ * Handles SSR safely by returning initial value on server.
+ *
  * @param key - localStorage key
  * @param initialValue - Initial value if key doesn't exist
  * @returns Tuple of [value, setValue, removeValue]
+ *
+ * @example
+ * ```tsx
+ * function UserPreferences() {
+ *   const [theme, setTheme, clearTheme] = useLocalStorage('theme', 'light');
+ *
+ *   return (
+ *     <div>
+ *       <button onClick={() => setTheme('dark')}>Dark Mode</button>
+ *       <button onClick={() => setTheme('light')}>Light Mode</button>
+ *       <button onClick={clearTheme}>Reset to Default</button>
+ *     </div>
+ *   );
+ * }
+ *
+ * // With complex objects
+ * interface Settings {
+ *   notifications: boolean;
+ *   language: string;
+ * }
+ *
+ * function SettingsPanel() {
+ *   const [settings, setSettings] = useLocalStorage<Settings>('settings', {
+ *     notifications: true,
+ *     language: 'en',
+ *   });
+ *
+ *   return (
+ *     <button onClick={() => setSettings(prev => ({ ...prev, notifications: !prev.notifications }))}>
+ *       Toggle Notifications
+ *     </button>
+ *   );
+ * }
+ * ```
  */
 export function useLocalStorage<T>(
   key: string,

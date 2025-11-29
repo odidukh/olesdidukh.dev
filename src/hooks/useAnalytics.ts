@@ -19,7 +19,48 @@ export interface UseAnalyticsOptions {
 
 /**
  * Custom hook for analytics tracking
- * Provides utilities for tracking events, form submissions, and user interactions
+ *
+ * Provides utilities for tracking events, form submissions, and user interactions.
+ * Integrates with Vercel Analytics and logs events in development mode.
+ *
+ * @example
+ * ```tsx
+ * function ContactForm() {
+ *   const {
+ *     trackFormSubmission,
+ *     trackButtonClick,
+ *     trackError,
+ *   } = useAnalytics();
+ *
+ *   const handleSubmit = async (data: FormData) => {
+ *     trackButtonClick('contact_submit');
+ *
+ *     try {
+ *       await submitForm(data);
+ *       trackFormSubmission('contact', 'success', { hasAttachment: false });
+ *     } catch (error) {
+ *       trackFormSubmission('contact', 'error');
+ *       trackError('form_submission', error.message);
+ *     }
+ *   };
+ *
+ *   return <form onSubmit={handleSubmit}>...</form>;
+ * }
+ *
+ * // Track external links
+ * function SocialLinks() {
+ *   const { trackSocialClick } = useAnalytics();
+ *
+ *   return (
+ *     <a
+ *       href="https://github.com/user"
+ *       onClick={() => trackSocialClick('github', 'https://github.com/user')}
+ *     >
+ *       GitHub
+ *     </a>
+ *   );
+ * }
+ * ```
  */
 export function useAnalytics(options: UseAnalyticsOptions = {}) {
   const { debug = process.env.NODE_ENV === 'development' } = options;

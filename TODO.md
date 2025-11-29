@@ -754,13 +754,32 @@ Created new tracking utilities and integrated them:
 
 ### 25. Add Usage Examples to Hook JSDoc
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (2-3 hours)
 **Impact**: Documentation
 
 **Issue**: Hooks have JSDoc but limited examples.
 
-**Files**: `/src/hooks/*.ts`
+**Implementation**:
+
+Added comprehensive `@example` blocks to all custom hooks:
+
+| Hook                      | Examples Added                         |
+| ------------------------- | -------------------------------------- |
+| `useMediaQuery`           | Responsive layout, dark mode detection |
+| `useReducedMotion`        | Framer Motion animation adjustment     |
+| `useIsMobile`             | Mobile menu, custom breakpoint         |
+| `useLocalStorage`         | Theme persistence, complex objects     |
+| `useDebounce`             | Search input with API call             |
+| `useIntersectionObserver` | Animate on scroll, lazy load images    |
+| `useFocusTrap`            | Modal with keyboard accessibility      |
+| `useAnalytics`            | Form submission tracking, social links |
+| `useWebVitals`            | Root layout monitoring, custom handler |
+| `usePerformance`          | API timing, async operation tracking   |
+| `usePageEngagement`       | Already had example from creation      |
+| `usePWAInstall`           | Already had comprehensive docs         |
+
+All examples are practical, copy-pasteable TypeScript/TSX code blocks.
 
 ---
 

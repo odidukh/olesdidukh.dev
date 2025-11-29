@@ -37,6 +37,37 @@ export interface WebVitalsState {
 
 /**
  * Hook to track and report Web Vitals metrics
+ *
+ * Automatically collects Core Web Vitals (LCP, FID, CLS, FCP, TTFB, INP)
+ * and reports them to analytics. Use for performance monitoring dashboards.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage - add to root layout
+ * function RootLayout({ children }) {
+ *   useWebVitals(); // Automatically tracks and reports
+ *   return <>{children}</>;
+ * }
+ *
+ * // With custom handler
+ * function PerformanceMonitor() {
+ *   const { metrics, score, isDegraded } = useWebVitals({
+ *     onMetric: (metric) => {
+ *       console.log(`${metric.name}: ${metric.value}ms (${metric.rating})`);
+ *     },
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       <p>Performance Score: {score}%</p>
+ *       {isDegraded && <Warning>Performance issues detected</Warning>}
+ *       {metrics.map(m => (
+ *         <p key={m.name}>{m.name}: {m.value}</p>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useWebVitals(options: UseWebVitalsOptions = {}) {
   const {
