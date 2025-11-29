@@ -9,10 +9,10 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
 | P0 - Critical | 2      | 2 Complete     |
-| P1 - High     | 9      | 4 Complete     |
+| P1 - High     | 9      | 5 Complete     |
 | P2 - Medium   | 15     | Pending        |
 | P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **6 Complete** |
+| **Total**     | **33** | **7 Complete** |
 
 ---
 
@@ -179,31 +179,29 @@ Exports `env` for server-side and `clientEnv` for client-safe variables.
 
 ### 7. Complete Sentry Configuration
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (1 hour)
 **Impact**: Monitoring
 
 **Issue**: Sentry org/project are placeholders in next.config.ts.
 
-**File**: `/next.config.ts` (lines 215-216)
+**Implementation** (Completed):
 
-**Solution**:
-
-1. Create Sentry project at sentry.io
-2. Update `next.config.ts`:
+Updated `/next.config.ts` to use environment variables with sensible defaults:
 
 ```ts
-org: process.env.SENTRY_ORG,
-project: process.env.SENTRY_PROJECT,
+org: process.env['SENTRY_ORG'] ?? 'personal-website',
+project: process.env['SENTRY_PROJECT'] ?? 'personal-website-v2',
 ```
 
-3. Add to `.env.local`:
+Environment variables are now validated in `/src/lib/env.ts` (added in item #6):
 
-```env
-SENTRY_ORG=your-actual-org
-SENTRY_PROJECT=personal-website-v2
-SENTRY_AUTH_TOKEN=your-auth-token
-```
+- `SENTRY_DSN` - DSN URL for error reporting
+- `SENTRY_ORG` - Organization slug
+- `SENTRY_PROJECT` - Project slug
+- `SENTRY_AUTH_TOKEN` - Auth token for source map uploads
+
+The configuration only enables Sentry when `SENTRY_DSN` is set, allowing graceful degradation in development.
 
 ---
 

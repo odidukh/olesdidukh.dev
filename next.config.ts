@@ -212,8 +212,9 @@ const sentryWebpackPluginOptions = {
   // Suppresses source map uploading logs during build
   silent: true,
 
-  org: 'your-sentry-org',
-  project: 'your-sentry-project',
+  // Use environment variables for org and project
+  org: process.env['SENTRY_ORG'] ?? 'personal-website',
+  project: process.env['SENTRY_PROJECT'] ?? 'personal-website-v2',
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
