@@ -10,9 +10,9 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | ------------- | ------ | --------------- |
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
-| P2 - Medium   | 15     | 6 Complete      |
+| P2 - Medium   | 15     | 7 Complete      |
 | P3 - Low      | 7      | Pending         |
-| **Total**     | **33** | **16 Complete** |
+| **Total**     | **33** | **17 Complete** |
 
 ---
 
@@ -498,15 +498,29 @@ Total Storybook stories: 10 files (5 existing + 5 new)
 
 ### 17. Fix ESLint Disable Comments
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (30 min)
 **Impact**: Code Quality
 
 **Issue**: ESLint rules disabled instead of fixed.
 
-**File**: `/src/lib/mdx.ts` (line 94)
+**Implementation** (Completed):
 
-**Solution**: Address the underlying unused variable issue properly.
+1. **Fixed `/src/lib/mdx.ts`** - Changed destructuring to use underscore prefix:
+
+   ```typescript
+   // Before: eslint-disable + const { content, ...meta }
+   // After:  const { content: _content, ...meta }
+   ```
+
+2. **Added explanatory comments** to remaining necessary eslint-disable statements:
+   - Polymorphic components (Grid, Container, TypeAnimation) - `any` needed for dynamic component rendering
+   - MDX options - Complex rehype plugin typing doesn't align with SerializeOptions
+   - Test files - Using `<img>` in mocks for simplicity
+   - Type definitions - Necessary for type augmentation
+   - Admin pages - Using `<img>` for external user-uploaded images
+
+All remaining eslint-disable comments are now documented with explanations for why they're necessary.
 
 ---
 

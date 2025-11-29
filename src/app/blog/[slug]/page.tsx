@@ -120,6 +120,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 }
 
 // MDX options with syntax highlighting
+// Using 'any' due to complex rehype plugin typing that doesn't align with SerializeOptions
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mdxOptions: any = {
   mdxOptions: {

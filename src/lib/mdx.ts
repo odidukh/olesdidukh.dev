@@ -92,7 +92,7 @@ export function getAllPosts(): BlogPostMeta[] {
       const post = getPostBySlug(slug);
       if (!post) return null;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { content, ...meta } = post;
+      const { content: _content, ...meta } = post;
       return meta;
     })
     .filter((post): post is BlogPostMeta => post !== null)

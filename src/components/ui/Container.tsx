@@ -60,6 +60,7 @@ const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
     },
     ref
   ) => {
+    // Using 'any' for dynamic component is standard pattern for polymorphic components
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Comp: any = asChild ? Slot : Component;
 

@@ -25,6 +25,7 @@ export function TypeAnimation({
   cursor = true,
   cursorClassName = '',
 }: TypeAnimationProps) {
+  // Using 'any' for dynamic component is standard pattern for polymorphic components
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Wrapper: any = wrapper;
   const [displayText, setDisplayText] = React.useState('');
