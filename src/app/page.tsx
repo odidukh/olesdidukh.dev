@@ -11,23 +11,13 @@ import {
   Star,
   GitBranch,
   Briefcase,
-  Award,
   Users,
-  Zap,
   Globe,
   Calendar,
   ExternalLink,
   Mail,
   MousePointer2,
-  Rocket,
-  Brain,
-  Heart,
-  BookOpen,
-  School,
-  Server,
-  Smartphone,
-  Cloud,
-  Monitor,
+  Award,
 } from 'lucide-react';
 
 // Import critical above-the-fold components
@@ -38,6 +28,10 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { AboutSection } from '@/components/sections/AboutSection';
+import { HeroBackground } from '@/components/sections/HeroBackground';
+import { JourneySection } from '@/components/sections/JourneySection';
+import { SkillsPreviewSection } from '@/components/sections/SkillsPreviewSection';
+import { PhilosophySection } from '@/components/sections/PhilosophySection';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import {
   ProjectsErrorFallback,
@@ -128,14 +122,6 @@ const featuredSkills = [
   'React Native',
 ];
 
-interface Particle {
-  id: number;
-  left: number;
-  top: number;
-  duration: number;
-  delay: number;
-}
-
 export default function HomePage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
@@ -175,20 +161,6 @@ export default function HomePage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Generate particles on client side to avoid hydration mismatch
-  const [particles, setParticles] = useState<Particle[]>([]);
-
-  useEffect(() => {
-    const newParticles = Array.from({ length: 50 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      duration: Math.random() * 5 + 5,
-      delay: Math.random() * 5,
-    }));
-    setParticles(newParticles);
-  }, []);
-
   return (
     <>
       {/* Main Navigation */}
@@ -205,59 +177,7 @@ export default function HomePage() {
           <LazyHeroBackground3D />
 
           {/* Dynamic Background */}
-          <motion.div style={{ y: heroY }} className="absolute inset-0 -z-10">
-            {/* Gradient Mesh */}
-            <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-background" />
-
-            {/* Animated Orbs */}
-            <motion.div
-              animate={{
-                x: mousePosition.x * 0.02,
-                y: mousePosition.y * 0.02,
-              }}
-              transition={{ type: 'spring', stiffness: 50 }}
-              className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
-            />
-            <motion.div
-              animate={{
-                x: mousePosition.x * -0.02,
-                y: mousePosition.y * -0.02,
-              }}
-              transition={{ type: 'spring', stiffness: 50 }}
-              className="absolute bottom-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
-            />
-
-            {/* Grid Pattern */}
-            <div
-              className="absolute inset-0 opacity-5"
-              style={{
-                backgroundImage: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary), 0.1) 0%, transparent 50%)`,
-              }}
-            />
-
-            {/* Floating Particles */}
-            <div className="absolute inset-0">
-              {particles.map(particle => (
-                <motion.div
-                  key={particle.id}
-                  className="absolute w-1 h-1 bg-primary/30 rounded-full"
-                  style={{
-                    left: `${particle.left}%`,
-                    top: `${particle.top}%`,
-                  }}
-                  animate={{
-                    y: [0, -30, 0],
-                    opacity: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: particle.duration,
-                    repeat: Infinity,
-                    delay: particle.delay,
-                  }}
-                />
-              ))}
-            </div>
-          </motion.div>
+          <HeroBackground heroY={heroY} mousePosition={mousePosition} />
 
           <Container size="lg" className="relative z-10">
             <motion.div
@@ -404,301 +324,13 @@ export default function HomePage() {
         <AboutSection />
 
         {/* Featured Journey Teaser */}
-        <section className="py-20 bg-muted/30">
-          <Container size="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
-                <Rocket className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">
-                  Career Journey
-                </span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                From <span className="text-primary">Physics</span> to{' '}
-                <span className="text-primary">Pixels</span>
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                A journey of continuous growth, learning, and innovation
-              </p>
-            </motion.div>
-
-            {/* Journey Timeline Preview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
-              {[
-                {
-                  year: '2017',
-                  title: 'Started Journey',
-                  icon: School,
-                  color: 'from-blue-500/20 to-cyan-500/20',
-                },
-                {
-                  year: '2018',
-                  title: 'First Dev Role',
-                  icon: Briefcase,
-                  color: 'from-green-500/20 to-emerald-500/20',
-                },
-                {
-                  year: '2021',
-                  title: 'Senior Level',
-                  icon: Award,
-                  color: 'from-purple-500/20 to-pink-500/20',
-                },
-                {
-                  year: '2024',
-                  title: 'Innovation Era',
-                  icon: Rocket,
-                  color: 'from-orange-500/20 to-red-500/20',
-                },
-              ].map((item, index) => (
-                <motion.div
-                  key={item.year}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="relative group"
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${item.color} rounded-xl opacity-10 group-hover:opacity-20 transition-opacity`}
-                  />
-                  <div className="relative bg-card border border-border rounded-xl p-6 text-center">
-                    <div
-                      className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${item.color} mb-3`}
-                    >
-                      <item.icon className="w-6 h-6" />
-                    </div>
-                    <div className="text-2xl font-bold mb-1">{item.year}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {item.title}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Journey CTA */}
-            <div className="text-center">
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/about/journey">
-                  Explore Full Journey
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-            </div>
-          </Container>
-        </section>
+        <JourneySection />
 
         {/* Skills & Expertise Teaser */}
-        <section className="py-20">
-          <Container size="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            >
-              {/* Left: Content */}
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
-                  <Code2 className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-primary">
-                    Technical Expertise
-                  </span>
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Modern Tech Stack for
-                  <span className="text-primary"> Modern Solutions</span>
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Proficient in cutting-edge technologies and frameworks,
-                  constantly expanding my toolkit to deliver the best solutions.
-                </p>
-
-                {/* Skill Categories Preview */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  {[
-                    { name: 'Frontend', count: '15+', icon: Monitor },
-                    { name: 'Backend', count: '8+', icon: Server },
-                    { name: 'Mobile', count: '5+', icon: Smartphone },
-                    { name: 'DevOps', count: '10+', icon: Cloud },
-                  ].map(category => (
-                    <div
-                      key={category.name}
-                      className="flex items-center gap-3"
-                    >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <category.icon className="w-5 h-5 text-primary" />
-                      </div>
-                      <div>
-                        <div className="font-semibold">{category.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {category.count} tools
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-4">
-                  <Button asChild>
-                    <Link href="/skills">
-                      View All Skills
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="/experience">Work Experience</Link>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Right: Visual */}
-              <div className="relative">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  className="relative"
-                >
-                  {/* Skill Cloud Visualization */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      'React',
-                      'TypeScript',
-                      'Next.js',
-                      'Node.js',
-                      'GraphQL',
-                      'Docker',
-                      'AWS',
-                      'Tailwind',
-                      'PostgreSQL',
-                    ].map((skill, index) => (
-                      <motion.div
-                        key={skill}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.05 }}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        className="bg-card border border-border rounded-lg p-3 text-center"
-                      >
-                        <span className="text-sm font-medium">{skill}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Decorative Elements */}
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                    className="absolute -top-4 -right-4 w-24 h-24 border-2 border-primary/20 rounded-full"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{
-                      duration: 30,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                    className="absolute -bottom-4 -left-4 w-32 h-32 border-2 border-primary/10 rounded-full"
-                  />
-                </motion.div>
-              </div>
-            </motion.div>
-          </Container>
-        </section>
+        <SkillsPreviewSection />
 
         {/* Philosophy Teaser */}
-        <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-background">
-          <Container size="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center max-w-4xl mx-auto"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
-                <Brain className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">
-                  Development Philosophy
-                </span>
-              </div>
-
-              <h2 className="text-3xl md:text-4xl font-bold mb-8">
-                Guided by <span className="text-primary">Principles</span>
-              </h2>
-
-              {/* Philosophy Cards Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
-                {[
-                  {
-                    title: 'Performance First',
-                    icon: Zap,
-                    description: 'Every millisecond matters',
-                  },
-                  {
-                    title: 'User-Centric',
-                    icon: Heart,
-                    description: 'Intuitive experiences',
-                  },
-                  {
-                    title: 'Clean Code',
-                    icon: Code2,
-                    description: 'Maintainable solutions',
-                  },
-                  {
-                    title: 'Continuous Learning',
-                    icon: BookOpen,
-                    description: 'Always evolving',
-                  },
-                  {
-                    title: 'Team Excellence',
-                    icon: Users,
-                    description: 'Collaborative success',
-                  },
-                  {
-                    title: 'Innovation',
-                    icon: Rocket,
-                    description: 'Pragmatic creativity',
-                  },
-                ].map((principle, index) => (
-                  <motion.div
-                    key={principle.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ y: -5 }}
-                    className="bg-card border border-border rounded-xl p-4"
-                  >
-                    <principle.icon className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <h3 className="font-semibold mb-1">{principle.title}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {principle.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-
-              <Button variant="outline" asChild>
-                <Link href="/about/philosophy">
-                  Explore My Philosophy
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </Button>
-            </motion.div>
-          </Container>
-        </section>
+        <PhilosophySection />
 
         {/* Projects Section */}
         <ErrorBoundary

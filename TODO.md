@@ -9,10 +9,10 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
 | P0 - Critical | 2      | 2 Complete     |
-| P1 - High     | 9      | 1 Complete     |
+| P1 - High     | 9      | 3 Complete     |
 | P2 - Medium   | 15     | Pending        |
 | P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **3 Complete** |
+| **Total**     | **33** | **5 Complete** |
 
 ---
 
@@ -94,47 +94,58 @@ Wrapped list card components with `React.memo()` to prevent unnecessary re-rende
 
 ### 4. Fix SSR Hydration Risk in HomePage
 
-**Status**: [ ] Pending
+**Status**: [x] Complete (Already Implemented)
 **Effort**: Medium (2-3 hours)
 **Impact**: Stability
 
 **Issue**: Particle initialization with random values causes hydration mismatch.
 
-**File**: `/src/app/page.tsx` (lines 178-190)
+**Implementation** (Already in place):
 
-**Solution**:
+The codebase already correctly handles this issue in `/src/app/page.tsx` (lines 178-190):
 
 ```tsx
-// Use useId() for deterministic IDs
-import { useId } from 'react';
-
-// Or initialize particles only on client
+// Generate particles on client side to avoid hydration mismatch
 const [particles, setParticles] = useState<Particle[]>([]);
 
 useEffect(() => {
-  // Move random initialization here
-  setParticles(generateParticles());
+  const newParticles = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    duration: Math.random() * 5 + 5,
+    delay: Math.random() * 5,
+  }));
+  setParticles(newParticles);
 }, []);
 ```
+
+This pattern ensures:
+
+- Server renders with an empty particle array
+- Client hydrates with the same empty array (no mismatch)
+- `useEffect` then populates particles client-side only
 
 ---
 
 ### 5. Split HomePage Component
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: High (4-6 hours)
 **Impact**: Maintainability
 
 **Issue**: HomePage exceeds 800 lines, violates ESLint max-lines rule.
 
-**File**: `/src/app/page.tsx` (810 lines)
+**Implementation** (Completed):
 
-**Solution**: Extract into separate components:
+Reduced `/src/app/page.tsx` from **810 lines to 442 lines** (45% reduction) by extracting:
 
-- `/src/components/sections/JourneySection.tsx`
-- `/src/components/sections/SkillsPreviewSection.tsx`
-- `/src/components/sections/PhilosophySection.tsx`
-- `/src/components/sections/ParticleBackground.tsx`
+- `/src/components/sections/JourneySection.tsx` - Career journey timeline preview (103 lines)
+- `/src/components/sections/SkillsPreviewSection.tsx` - Skills and expertise teaser (134 lines)
+- `/src/components/sections/PhilosophySection.tsx` - Development philosophy cards (102 lines)
+- `/src/components/sections/HeroBackground.tsx` - Particle effects and animated background (98 lines)
+
+All extracted components are wrapped with `React.memo()` for performance optimization.
 
 ---
 
