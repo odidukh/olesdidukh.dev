@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { BlogCard } from '@/components/sections/BlogCard';
 import { blogPosts, type BlogPost } from '@/data/blog';
 import type { BlogPostMeta } from '@/lib/mdx';
+import { sanitizeHtml } from '@/lib/sanitize';
 import {
   Calendar,
   Clock,
@@ -322,7 +323,11 @@ export function BlogPostContent({
                 {mdxContent ? (
                   mdxContent
                 ) : 'content' in post ? (
-                  <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeHtml(post.content),
+                    }}
+                  />
                 ) : null}
               </div>
             </motion.div>

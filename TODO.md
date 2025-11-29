@@ -8,11 +8,11 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
-| P0 - Critical | 2      | Pending        |
-| P1 - High     | 8      | Pending        |
-| P2 - Medium   | 12     | Pending        |
-| P3 - Low      | 6      | Pending        |
-| **Total**     | **28** | **0 Complete** |
+| P0 - Critical | 2      | 1 Complete     |
+| P1 - High     | 9      | Pending        |
+| P2 - Medium   | 15     | Pending        |
+| P3 - Low      | 7      | Pending        |
+| **Total**     | **33** | **1 Complete** |
 
 ---
 
@@ -20,7 +20,7 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 ### 1. Sanitize HTML in BlogPostContent
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Medium (2-3 hours)
 **Impact**: Security - XSS Prevention
 
@@ -28,19 +28,15 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 **File**: `/src/components/sections/BlogPostContent.tsx`
 
-**Solution**:
+**Implementation** (Completed):
 
-```bash
-npm install dompurify @types/dompurify
-```
-
-```tsx
-import DOMPurify from 'dompurify';
-
-// Sanitize HTML before rendering
-const sanitizedContent = DOMPurify.sanitize(post.content);
-<div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />;
-```
+- Installed `isomorphic-dompurify` for SSR-compatible sanitization
+- Created `/src/lib/sanitize.ts` with comprehensive sanitization utilities:
+  - `sanitizeHtml()` - Main sanitization function with configurable allowed tags/attributes
+  - `sanitizeHtmlWithReport()` - Returns sanitized HTML + list of removed elements
+  - `stripHtml()` - Removes all HTML, returns plain text
+  - `sanitizeUrl()` - Validates URLs against dangerous protocols
+- Updated `BlogPostContent.tsx` to use `sanitizeHtml()` before rendering
 
 ---
 
@@ -651,6 +647,63 @@ ADMIN_EMAIL=
 
 ---
 
+### 29. Documentation Overhaul
+
+**Status**: [ ] Pending
+**Effort**: Medium (2-3 hours)
+**Impact**: Developer Experience
+
+**Issue**: Project documentation needs updating.
+
+**Tasks**:
+
+- [ ] Update `README.md` with project overview, setup instructions, tech stack, and deployment info
+- [ ] Create `CONTRIBUTING.md` with guidelines for contributing
+- [ ] Document custom hooks in `src/hooks/README.md` (optional)
+
+---
+
+### 30. Accessibility Enhancements
+
+**Status**: [ ] Pending
+**Effort**: Low (1-2 hours)
+**Impact**: User Experience
+
+**Tasks**:
+
+- [ ] Update `src/components/ui/Input.tsx` to include `aria-invalid={error}`
+- [ ] Audit color contrast for text overlays on gradients in `HomePage`
+- [ ] Ensure all interactive elements in `HomePage` have visible focus states
+
+---
+
+### 31. Focus Trap Optimization
+
+**Status**: [ ] Pending
+**Effort**: Low (1-2 hours)
+**Impact**: Code Quality
+
+**Tasks**:
+
+- [ ] Evaluate replacing custom `useFocusTrap` with `focus-trap-react` or Radix UI primitives
+- [ ] If keeping custom implementation, add comprehensive unit tests
+
+---
+
+### 32. Internationalization (i18n)
+
+**Status**: [ ] Pending
+**Effort**: High (2-3 days)
+**Impact**: Future Proofing
+
+**Tasks**:
+
+- [ ] Install and configure `next-intl`
+- [ ] Extract hardcoded strings from `HomePage` and components into message files
+- [ ] Add language switcher to `Navigation`
+
+---
+
 ## Quick Wins (< 1 hour each)
 
 - [ ] #2 Replace console with Sentry
@@ -674,7 +727,13 @@ ADMIN_EMAIL=
 
 **Phase 3 - Quality & DX (Week 3)** 9. #8 Enforce path aliases 10. #14 Increase test coverage 11. #18 Standardize component patterns 12. #13 Extract magic numbers
 
-**Phase 4 - Polish (Ongoing)** 13. Remaining P2 and P3 items
+**Phase 4 - Polish (Ongoing)**
+
+13. Remaining P2 and P3 items
+14. #29 Documentation Overhaul
+15. #30 Accessibility Enhancements
+16. #31 Focus Trap Optimization
+17. #32 Internationalization (i18n)
 
 ---
 
