@@ -79,6 +79,89 @@ refactor(auth): simplify token validation
 - Prefer composition over inheritance
 - Respect `prefers-reduced-motion` for animations
 
+### Component Patterns
+
+This project follows a consistent component architecture pattern:
+
+#### UI Primitives (`src/components/ui/`)
+
+Use `React.forwardRef()` for reusable UI primitives that may need ref forwarding:
+
+```tsx
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'default' | 'outline';
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'default', children, ...props }, ref) => {
+    return (
+      <button ref={ref} className={cn('base-styles', className)} {...props}>
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';
+
+export { Button };
+```
+
+**Key requirements for UI primitives:**
+
+- Use `React.forwardRef()` for ref forwarding support
+- Set `displayName` for better debugging
+- Extend appropriate HTML element attributes
+- Support `className` prop with `cn()` utility
+- Use `class-variance-authority` (cva) for variant styling
+
+#### Section Components (`src/components/sections/`)
+
+Use regular function components for page-level feature components:
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { motion } from 'framer-motion';
+
+export function HeroSection() {
+  // State and effects
+  const [state, setState] = React.useState(false);
+
+  return (
+    <section id="hero" className="py-20">
+      {/* Component content */}
+    </section>
+  );
+}
+```
+
+**Key requirements for section components:**
+
+- Use `'use client'` directive for client-side interactivity
+- Regular function export (no forwardRef needed)
+- Include semantic HTML (section, article, etc.)
+- Add `id` attribute for navigation anchors
+
+#### Memoization
+
+Use `React.memo()` for list item components that receive props from parent:
+
+```tsx
+export const ProjectCard = React.memo(function ProjectCard({
+  project,
+  index,
+}: ProjectCardProps) {
+  // Component implementation
+});
+
+ProjectCard.displayName = 'ProjectCard';
+```
+
 ### Styling
 
 - Tailwind CSS for styling
