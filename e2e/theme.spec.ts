@@ -67,15 +67,28 @@ test.describe('Dark Mode', () => {
       await themeToggle.click();
     }
 
-    // Wait for state to be saved
+    // Wait for state to be saved to localStorage
     await page.waitForTimeout(500);
+
+    // Verify dark mode is active before reload
+    await expect(page.locator('html')).toHaveClass(/dark/);
+
+    // Verify localStorage was set
+    const storedTheme = await page.evaluate(() => {
+      const stored = localStorage.getItem('theme-storage');
+      return stored ? JSON.parse(stored) : null;
+    });
+    expect(storedTheme?.state?.mode).toBe('dark');
 
     // Reload page
     await page.reload();
 
-    // Dark mode should persist (may have brief flash, check after hydration)
-    await page.waitForTimeout(1000);
-    await expect(page.locator('html')).toHaveClass(/dark/);
+    // The blocking script in layout.tsx should apply 'dark' class immediately
+    // Wait for the page to fully load
+    await page.waitForLoadState('load');
+
+    // Dark mode should persist (applied by the blocking script before React hydration)
+    await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 5000 });
   });
 
   test('light mode persists across navigation', async ({ page }) => {
@@ -162,51 +175,49 @@ test.describe('Dark Mode', () => {
 });
 
 test.describe('Theme Respects System Preference', () => {
-  test('respects prefers-color-scheme: dark', async ({ page }) => {
-    // Emulate dark color scheme preference
-    await page.emulateMedia({ colorScheme: 'dark' });
+  test('respects prefers-color-scheme: dark', async ({ browser }) => {
+    // Create a fresh context with dark color scheme
+    const context = await browser.newContext({
+      colorScheme: 'dark',
+    });
+    const page = await context.newPage();
 
-    // Clear any stored theme preference
-    await page.context().clearCookies();
-    await page.evaluate(() => localStorage.clear());
-
+    // Navigate to the site (fresh context = no localStorage)
     await page.goto('/');
+    await page.waitForLoadState('load');
 
-    // Wait for client-side hydration
-    await page.waitForTimeout(1000);
-
-    // Check if system preference is respected (if store is in 'system' mode)
-    // Note: This depends on implementation - some sites default to system, others to light
+    // The blocking script checks matchMedia for 'system' mode (default)
+    // With prefers-color-scheme: dark, it should add 'dark' class
     const html = page.locator('html');
     const isDark = await html.evaluate(el => el.classList.contains('dark'));
 
-    // This test documents the behavior rather than strictly asserting
-    // If using system preference, should be dark
-    if (isDark) {
-      await expect(html).toHaveClass(/dark/);
-    }
+    // With system preference set to dark and no stored preference,
+    // the default 'system' mode should result in dark theme
+    expect(isDark).toBe(true);
+
+    await context.close();
   });
 
-  test('respects prefers-color-scheme: light', async ({ page }) => {
-    // Emulate light color scheme preference
-    await page.emulateMedia({ colorScheme: 'light' });
+  test('respects prefers-color-scheme: light', async ({ browser }) => {
+    // Create a fresh context with light color scheme
+    const context = await browser.newContext({
+      colorScheme: 'light',
+    });
+    const page = await context.newPage();
 
-    // Clear any stored theme preference
-    await page.context().clearCookies();
-    await page.evaluate(() => localStorage.clear());
-
+    // Navigate to the site (fresh context = no localStorage)
     await page.goto('/');
+    await page.waitForLoadState('load');
 
-    // Wait for client-side hydration
-    await page.waitForTimeout(1000);
-
-    // Check system preference is respected
+    // The blocking script checks matchMedia for 'system' mode (default)
+    // With prefers-color-scheme: light, it should NOT add 'dark' class
     const html = page.locator('html');
     const isDark = await html.evaluate(el => el.classList.contains('dark'));
 
-    // If using system preference, should be light
-    if (!isDark) {
-      await expect(html).not.toHaveClass(/dark/);
-    }
+    // With system preference set to light and no stored preference,
+    // the default 'system' mode should result in light theme
+    expect(isDark).toBe(false);
+
+    await context.close();
   });
 });

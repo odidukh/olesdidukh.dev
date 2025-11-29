@@ -10,9 +10,9 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | ------------- | ------ | --------------- |
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
-| P2 - Medium   | 15     | 10 Complete     |
-| P3 - Low      | 7      | Pending         |
-| **Total**     | **33** | **20 Complete** |
+| P2 - Medium   | 15     | 11 Complete     |
+| P3 - Low      | 7      | 4 Complete      |
+| **Total**     | **33** | **25 Complete** |
 
 ---
 
@@ -811,15 +811,35 @@ Each variable includes:
 
 ### 27. Verify Dark Mode Persistence
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (1 hour)
 **Impact**: UX
 
 **Issue**: Verify theme preference persists across sessions.
 
-**File**: `/src/stores/useThemeStore.ts`
+**Implementation**:
 
-**Solution**: Test localStorage persistence manually and add E2E test.
+Verified dark mode persistence is fully functional:
+
+1. **Zustand persist middleware** (`/src/stores/useThemeStore.ts`)
+   - Uses `persist` middleware with localStorage key `theme-storage`
+   - Stores theme mode (`light`, `dark`, `system`) in state
+
+2. **Blocking script for flash prevention** (`/src/app/layout.tsx:151-167`)
+   - Reads localStorage before React hydration
+   - Applies `dark` class to `<html>` element immediately
+   - Respects system preference when mode is `system`
+
+3. **E2E test coverage** (`/e2e/theme.spec.ts`)
+   - All 8 tests passing:
+     - ✅ Dark mode toggle changes theme
+     - ✅ Dark mode persists across page navigation
+     - ✅ Dark mode persists after page reload
+     - ✅ Light mode persists across navigation
+     - ✅ Theme toggle is keyboard accessible
+     - ✅ Dark mode applies correct colors
+     - ✅ Respects prefers-color-scheme: dark
+     - ✅ Respects prefers-color-scheme: light
 
 ---
 
