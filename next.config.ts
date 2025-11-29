@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   // Force webpack for production builds (required for Serwist PWA support)
@@ -196,6 +197,9 @@ const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env['ANALYZE'] === 'true',
 });
 
+// Internationalization plugin
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
 // PWA/Service Worker configuration using Serwist
 const withSerwist = withSerwistInit({
   swSrc: 'src/app/sw.ts',
@@ -245,9 +249,10 @@ const sentryWebpackPluginOptions = {
 };
 
 // Make sure adding Sentry options is the last code to run before exporting
-// Chain: nextConfig -> bundleAnalyzer -> withSerwist -> (optionally) withSentry
+// Chain: nextConfig -> bundleAnalyzer -> withNextIntl -> withSerwist -> (optionally) withSentry
 const configWithAnalyzer = bundleAnalyzer(nextConfig);
-const configWithSerwist = withSerwist(configWithAnalyzer);
+const configWithIntl = withNextIntl(configWithAnalyzer);
+const configWithSerwist = withSerwist(configWithIntl);
 
 const finalConfig = process.env['SENTRY_DSN']
   ? withSentryConfig(configWithSerwist, sentryWebpackPluginOptions)

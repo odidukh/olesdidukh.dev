@@ -11,8 +11,8 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
 | P2 - Medium   | 15     | 11 Complete     |
-| P3 - Low      | 7      | 8 Complete      |
-| **Total**     | **33** | **29 Complete** |
+| P3 - Low      | 7      | 9 Complete      |
+| **Total**     | **33** | **30 Complete** |
 
 ---
 
@@ -962,15 +962,45 @@ Removed non-standard `X-RateLimit-*` headers that exposed throttling configurati
 
 ### 32. Internationalization (i18n)
 
-**Status**: [ ] Pending
+**Status**: [x] Completed (Foundation)
 **Effort**: High (2-3 days)
 **Impact**: Future Proofing
 
-**Tasks**:
+**Implementation**:
 
-- [ ] Install and configure `next-intl`
-- [ ] Extract hardcoded strings from `HomePage` and components into message files
-- [ ] Add language switcher to `Navigation`
+Foundation for i18n is complete. Full string extraction is a separate ongoing effort.
+
+1. **Installed and configured `next-intl`**:
+   - Added `next-intl` package
+   - Created `createNextIntlPlugin` wrapper in `next.config.ts`
+   - Configured plugin chain: nextConfig → bundleAnalyzer → withNextIntl → withSerwist → withSentry
+
+2. **Created i18n configuration** (`/src/i18n/`):
+   - `config.ts` - Defines locales (`en`, `uk`), default locale, names, and flags
+   - `request.ts` - Server-side locale detection (cookie → Accept-Language → default)
+   - `index.ts` - Barrel export
+
+3. **Created message files** (`/messages/`):
+   - `en.json` - English translations for all major sections
+   - `uk.json` - Ukrainian translations for all major sections
+   - Sections: metadata, navigation, hero, stats, about, projects, blog, contact, footer, common, language
+
+4. **Created LanguageSwitcher component** (`/src/components/ui/LanguageSwitcher.tsx`):
+   - Globe icon dropdown using Radix UI
+   - Shows flag + language name
+   - Persists preference via cookie
+   - Triggers page refresh on locale change
+
+5. **Created locale API route** (`/src/app/api/locale/route.ts`):
+   - POST endpoint to update locale preference
+   - Sets 1-year cookie for persistence
+   - Validates locale before accepting
+
+**Next steps** (future work):
+
+- Integrate LanguageSwitcher into Navigation component
+- Use `useTranslations` hook in components to replace hardcoded strings
+- Add locale to metadata for SEO
 
 ---
 

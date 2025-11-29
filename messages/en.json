@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "title": "Oles Didukh - Senior Front-End Engineer",
+    "description": "Portfolio of Oles Didukh, a Senior Front-End Engineer specializing in React, TypeScript, and Next.js."
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "blog": "Blog",
+    "contact": "Contact",
+    "resume": "Resume",
+    "toggleTheme": "Toggle theme",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "hero": {
+    "greeting": "Hi, I'm Oles Didukh",
+    "title": "Senior Front-End",
+    "subtitle": "Engineer",
+    "description": "Crafting exceptional web experiences with modern technologies. 7+ years transforming ideas into scalable, performant applications that delight users and drive business results.",
+    "viewWork": "View My Work",
+    "getInTouch": "Get In Touch",
+    "resume": "Resume",
+    "scrollDown": "Scroll to about section"
+  },
+  "stats": {
+    "yearsExperience": "Years Experience",
+    "projectsCompleted": "Projects Completed",
+    "technologies": "Technologies",
+    "happyClients": "Happy Clients"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Learn more about my journey and expertise"
+  },
+  "projects": {
+    "title": "Featured Projects",
+    "subtitle": "A selection of my recent work",
+    "viewAll": "View All Projects",
+    "viewLive": "View Live",
+    "sourceCode": "Source Code",
+    "demo": "Demo",
+    "featured": "Featured Project",
+    "technologies": "Technologies Used",
+    "challenges": "Challenges",
+    "solutions": "Solutions",
+    "results": "Key Results",
+    "role": "My Role",
+    "close": "Close modal"
+  },
+  "blog": {
+    "title": "Latest Articles",
+    "subtitle": "Thoughts on development, design, and technology",
+    "viewAll": "View All Posts",
+    "readMore": "Read More",
+    "minRead": "min read",
+    "search": "Search articles...",
+    "noResults": "No articles found",
+    "categories": "Categories",
+    "all": "All"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Let's discuss your next project",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "company": "Company",
+    "message": "Message",
+    "projectType": "Project Type",
+    "budget": "Budget Range",
+    "timeline": "Timeline",
+    "submit": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again.",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "messageRequired": "Message is required",
+      "messageMinLength": "Message must be at least 10 characters"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Oles Didukh. All rights reserved.",
+    "builtWith": "Built with Next.js, React, and TypeScript",
+    "connect": "Connect",
+    "links": "Quick Links"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "learnMore": "Learn More",
+    "seeAll": "See All"
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "uk": "Українська"
+  }
+}
