@@ -46,6 +46,18 @@ export function BlogPostContent({
   const [bookmarked, setBookmarked] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
   const [showShareMenu, setShowShareMenu] = React.useState(false);
+  const copyTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -57,7 +69,7 @@ export function BlogPostContent({
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
     }
   };
 

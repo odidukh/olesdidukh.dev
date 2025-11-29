@@ -71,11 +71,23 @@ export function ApiEndpoint({
       ? JSON.stringify(endpoint.requestBody.example, null, 2)
       : ''
   );
+  const copyTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   };
 
   const tryEndpoint = async () => {

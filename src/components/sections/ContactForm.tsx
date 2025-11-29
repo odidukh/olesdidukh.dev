@@ -88,6 +88,18 @@ export function ContactForm() {
   const [submitStatus, setSubmitStatus] = React.useState<
     'idle' | 'success' | 'error'
   >('idle');
+  const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (resetTimeoutRef.current) {
+        clearTimeout(resetTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Validation functions
   const validateEmail = (email: string): boolean => {
@@ -197,7 +209,7 @@ export function ContactForm() {
       });
 
       // Reset form after successful submission
-      setTimeout(() => {
+      resetTimeoutRef.current = setTimeout(() => {
         setFormData({
           name: '',
           email: '',

@@ -1,12 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import Head from 'next/head';
 import { captureMessage } from '@/lib/sentry';
 
 export default function SentryExamplePage() {
   const [sentMessage, setSentMessage] = useState(false);
+  const messageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -51,7 +61,10 @@ export default function SentryExamplePage() {
             onClick={() => {
               captureMessage('Test message from Sentry example page', 'info');
               setSentMessage(true);
-              setTimeout(() => setSentMessage(false), 3000);
+              messageTimeoutRef.current = setTimeout(
+                () => setSentMessage(false),
+                3000
+              );
             }}
             variant="outline"
           >

@@ -14,6 +14,18 @@ export function NewsletterForm() {
     'idle' | 'loading' | 'success' | 'error'
   >('idle');
   const [error, setError] = React.useState('');
+  const statusTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (statusTimeoutRef.current) {
+        clearTimeout(statusTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,7 +78,7 @@ export function NewsletterForm() {
         location: window.location.pathname,
       });
 
-      setTimeout(() => {
+      statusTimeoutRef.current = setTimeout(() => {
         setStatus('idle');
       }, 5000);
     } catch {
