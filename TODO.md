@@ -9,10 +9,10 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
 | P0 - Critical | 2      | 2 Complete     |
-| P1 - High     | 9      | 3 Complete     |
+| P1 - High     | 9      | 4 Complete     |
 | P2 - Medium   | 15     | Pending        |
 | P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **5 Complete** |
+| **Total**     | **33** | **6 Complete** |
 
 ---
 
@@ -151,28 +151,29 @@ All extracted components are wrapped with `React.memo()` for performance optimiz
 
 ### 6. Validate Environment Variables
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Medium (2-3 hours)
 **Impact**: DX & Reliability
 
 **Issue**: No runtime validation of required environment variables.
 
-**Solution**:
+**Implementation** (Completed):
 
-```tsx
-// /src/lib/env.ts
-import { z } from 'zod';
+Created `/src/lib/env.ts` with comprehensive Zod validation:
 
-const envSchema = z.object({
-  RESEND_API_KEY: z.string().min(1),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
-});
+- Server-side variables: `RESEND_API_KEY`, `CONTACT_EMAIL`, `BUTTONDOWN_API_KEY`, `UPSTASH_REDIS_*`, `ADMIN_EMAIL`, `SENTRY_*`
+- Client-side variables: `NEXT_PUBLIC_SUPABASE_*`, `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_CLARITY_PROJECT_ID`, `NEXT_PUBLIC_SENTRY_DSN`
 
-export const env = envSchema.parse(process.env);
-```
+Updated files to use validated env:
+
+- `/src/app/api/contact/route.ts` - Uses `env.RESEND_API_KEY` and `env.CONTACT_EMAIL`
+- `/src/app/api/newsletter/route.ts` - Uses `env.BUTTONDOWN_API_KEY`
+- `/src/app/admin/layout.tsx` - Uses `env.ADMIN_EMAIL`
+- `/src/lib/supabase/client.ts` - Uses `clientEnv` for Supabase config
+- `/src/lib/supabase/server.ts` - Uses `clientEnv` for Supabase config
+- `/src/lib/supabase/middleware.ts` - Uses `clientEnv` for Supabase config
+
+Exports `env` for server-side and `clientEnv` for client-safe variables.
 
 ---
 

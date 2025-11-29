@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { clientEnv } from '@/lib/env';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -7,8 +8,8 @@ export async function updateSession(request: NextRequest) {
   });
 
   const supabase = createServerClient(
-    process.env['NEXT_PUBLIC_SUPABASE_URL']!,
-    process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!,
+    clientEnv.NEXT_PUBLIC_SUPABASE_URL,
+    clientEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
@@ -44,7 +45,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Check if user is admin
-    const adminEmail = process.env['ADMIN_EMAIL'];
+    const adminEmail = process.env['ADMIN_EMAIL']; // Use process.env here since env validation may not be available in middleware
     if (adminEmail && user.email !== adminEmail) {
       const url = request.nextUrl.clone();
       url.pathname = '/';

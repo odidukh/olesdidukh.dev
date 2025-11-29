@@ -8,6 +8,7 @@ import {
   getIdentifier,
 } from '@/lib/ratelimit';
 import { validateCsrf } from '@/lib/csrf';
+import { env } from '@/lib/env';
 
 const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -64,7 +65,7 @@ export async function POST(request: Request) {
     });
 
     // Buttondown API integration
-    const apiKey = process.env['BUTTONDOWN_API_KEY'];
+    const apiKey = env.BUTTONDOWN_API_KEY;
 
     if (!apiKey) {
       captureException(new Error('BUTTONDOWN_API_KEY is not configured'), {

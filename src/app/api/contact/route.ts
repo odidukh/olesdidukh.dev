@@ -9,8 +9,9 @@ import {
   getIdentifier,
 } from '@/lib/ratelimit';
 import { validateCsrf } from '@/lib/csrf';
+import { env } from '@/lib/env';
 
-const resend = new Resend(process.env['RESEND_API_KEY']);
+const resend = new Resend(env.RESEND_API_KEY);
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -170,9 +171,11 @@ ${message}
 </html>
     `.trim();
 
+    const contactEmail = env.CONTACT_EMAIL ?? 'oles.didukh@gmail.com';
+
     await resend.emails.send({
       from: 'Portfolio Contact <contact@olesdidukh.dev>',
-      to: process.env['CONTACT_EMAIL'] ?? 'oles.didukh@gmail.com',
+      to: contactEmail,
       subject: `New contact from ${name}${company ? ` (${company})` : ''}`,
       text: emailText,
       html: emailHtml,
@@ -183,7 +186,7 @@ ${message}
       message: 'Email sent successfully',
       category: 'email',
       level: 'info',
-      data: { to: process.env['CONTACT_EMAIL'], from: email },
+      data: { to: contactEmail, from: email },
     });
 
     // Include rate limit headers in success response

@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { env } from '@/lib/env';
 import { AdminSidebar } from './components/AdminSidebar';
 import { AdminHeader } from './components/AdminHeader';
 
@@ -27,7 +28,7 @@ export default async function AdminLayout({
   }
 
   // Check if user is admin
-  const adminEmail = process.env['ADMIN_EMAIL'];
+  const adminEmail = env.ADMIN_EMAIL;
   if (adminEmail && user.email !== adminEmail) {
     redirect('/');
   }
