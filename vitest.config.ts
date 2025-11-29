@@ -19,7 +19,17 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.config.*',
         '**/types/*',
+        'src/app/**/*.tsx', // Page components - tested via e2e
+        'src/components/sections/**/*.tsx', // Section components - tested via e2e
+        'src/data/**/*.ts', // Static data files
       ],
+      thresholds: {
+        // Start with achievable thresholds, increase over time
+        lines: 50,
+        functions: 50,
+        branches: 40,
+        statements: 50,
+      },
     },
   },
   resolve: {
