@@ -51,3 +51,6 @@ next-env.d.ts
 .sentryclirc
 .sentryignore
 .sentry/
+
+*storybook.log
+storybook-static
