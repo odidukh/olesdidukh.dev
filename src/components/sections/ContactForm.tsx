@@ -29,6 +29,8 @@ interface FormData {
   budget: string;
   timeline: string;
   message: string;
+  // Honeypot field - should remain empty (bots will fill it)
+  website: string;
 }
 
 interface FormErrors {
@@ -77,6 +79,7 @@ export function ContactForm() {
     budget: '',
     timeline: '',
     message: '',
+    website: '', // Honeypot field
   });
 
   const [errors, setErrors] = React.useState<FormErrors>({});
@@ -143,6 +146,14 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Honeypot check - if filled, it's likely a bot
+    if (formData.website) {
+      // Silently "succeed" to not alert bots
+      setSubmitStatus('success');
+      toast.success('Message sent successfully!');
+      return;
+    }
+
     if (!validateForm()) {
       toast.error('Please fix the errors in the form');
       return;
@@ -195,6 +206,7 @@ export function ContactForm() {
           budget: '',
           timeline: '',
           message: '',
+          website: '',
         });
         setSubmitStatus('idle');
       }, 3000);
@@ -212,6 +224,20 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Honeypot field - hidden from users, bots will fill it */}
+      <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          value={formData.website}
+          onChange={e => handleInputChange('website', e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       {/* Personal Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput
