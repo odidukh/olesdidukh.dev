@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 16
+- **Completed**: 18
 - **In Progress**: 0
-- **Pending**: 20
+- **Pending**: 18
 
 ---
 
@@ -704,16 +704,38 @@ NEXT_PUBLIC_CLARITY_PROJECT_ID=xxxxxxxxxx
 
 ### 17. Reading Time Estimates
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **UX Impact**: Low
 
 #### Tasks:
 
-- [ ] Add reading-time package
-- [ ] Calculate for each blog post
-- [ ] Display in blog cards
-- [ ] Add to blog post headers
+- [x] Add reading-time package (N/A - using static field)
+- [x] Calculate for each blog post (defined in blog data)
+- [x] Display in blog cards
+- [x] Add to blog post headers
+
+#### Implementation (Already Completed):
+
+Reading time was already implemented in the codebase:
+
+**BlogPost Interface** (`/src/data/blog.ts`):
+
+```typescript
+interface BlogPost {
+  readingTime: number; // in minutes
+  // ...
+}
+```
+
+**Display Locations**:
+
+- `BlogCard.tsx` - Shows on hover and in card footer
+- `FeaturedPost.tsx` - Shows in post metadata
+- `BlogPostContent.tsx` - Shows in post header
+- `BlogSection.tsx` - Calculates total reading time
+
+**Format**: `{readingTime} min read`
 
 ### 18. Resource Hints
 
@@ -1048,16 +1070,48 @@ refactor: simplify data fetching logic
 
 ### 35. Font Loading Optimization
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **Performance Impact**: Low
 
 #### Tasks:
 
-- [ ] Implement font-display: swap
-- [ ] Add font preloading
-- [ ] Optimize font files
-- [ ] Test loading performance
+- [x] Implement font-display: swap
+- [x] Add font preloading
+- [x] Optimize font files (via next/font automatic optimization)
+- [x] Test loading performance
+
+#### Implementation (Completed):
+
+**Files Modified**:
+
+- `/src/app/layout.tsx` - Enhanced font configuration
+
+**Font Configuration**:
+
+```typescript
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+  display: 'swap', // Prevent FOIT
+  preload: true, // Preload font files
+  adjustFontFallback: true, // Reduce CLS
+});
+```
+
+**Optimizations Applied**:
+
+- `display: 'swap'` - Prevents Flash of Invisible Text (FOIT)
+- `preload: true` - Preloads font files for faster loading
+- `adjustFontFallback: true` - Reduces CLS with size-adjusted fallback fonts
+- `subsets: ['latin']` - Only loads Latin character subset
+
+**Benefits** (via next/font):
+
+- Self-hosted fonts (no external requests to Google Fonts)
+- Automatic CSS size-adjust for reduced CLS
+- Automatic font file optimization and subsetting
+- Zero layout shift from font loading
 
 ---
 

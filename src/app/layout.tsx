@@ -4,14 +4,29 @@ import { Providers } from '@/components/Providers';
 import { SkipLink } from '@/components/ui/SkipLink';
 import './globals.css';
 
+/**
+ * Font Configuration
+ *
+ * Using next/font for optimal font loading:
+ * - Automatic font-display: swap for FOUT prevention
+ * - Self-hosted fonts (no external requests to Google Fonts)
+ * - Automatic CSS size-adjust for reduced CLS
+ * - Preloading of font files
+ */
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap', // Prevent FOIT (Flash of Invisible Text)
+  preload: true, // Preload font files
+  adjustFontFallback: true, // Reduce CLS with size-adjusted fallback
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
