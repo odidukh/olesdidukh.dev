@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { ANIMATION } from '@/constants';
 import {
   Code2,
   Palette,
@@ -395,7 +396,7 @@ export default function SkillsPage() {
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-10">
-            {[...Array(50)].map((_, i) => (
+            {[...Array(ANIMATION.PARTICLE_COUNT)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-primary rounded-full"

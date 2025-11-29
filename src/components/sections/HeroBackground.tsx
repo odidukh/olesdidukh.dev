@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { motion, MotionValue } from 'framer-motion';
+import { ANIMATION } from '@/constants';
 
 interface Particle {
   id: number;
@@ -25,13 +26,16 @@ export const HeroBackground = React.memo(function HeroBackground({
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    const newParticles = Array.from({ length: 50 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      duration: Math.random() * 5 + 5,
-      delay: Math.random() * 5,
-    }));
+    const newParticles = Array.from(
+      { length: ANIMATION.PARTICLE_COUNT },
+      (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        duration: Math.random() * 5 + 5,
+        delay: Math.random() * 5,
+      })
+    );
     setParticles(newParticles);
   }, []);
 

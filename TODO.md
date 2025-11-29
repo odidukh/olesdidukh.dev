@@ -10,9 +10,9 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | ------------- | ------ | --------------- |
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
-| P2 - Medium   | 15     | 2 Complete      |
+| P2 - Medium   | 15     | 3 Complete      |
 | P3 - Low      | 7      | Pending         |
-| **Total**     | **33** | **12 Complete** |
+| **Total**     | **33** | **13 Complete** |
 
 ---
 
@@ -391,31 +391,37 @@ All dynamic routes now have proper canonical URLs for SEO.
 
 ### 13. Extract Magic Numbers to Constants
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Medium (2-3 hours)
 **Impact**: Maintainability
 
 **Issue**: Hardcoded values scattered throughout codebase.
 
-**File**: `/src/app/page.tsx` and others
+**Implementation** (Completed):
 
-**Solution**:
+Created `/src/constants/index.ts` with comprehensive constants:
 
 ```tsx
-// /src/constants/config.ts
 export const ANIMATION = {
   PARTICLE_COUNT: 50,
-  STAGGER_DELAY: 0.3,
-  TRANSITION_DURATION: 0.5,
+  DURATION: { FAST: 0.3, NORMAL: 0.5, SLOW: 0.6, EXTRA_SLOW: 1 },
+  STAGGER: { FAST: 0.05, NORMAL: 0.1, SLOW: 0.2 },
+  DELAY: { NONE: 0, SHORT: 0.1, MEDIUM: 0.2, LONG: 0.5 },
 } as const;
 
-export const BREAKPOINTS = {
-  SM: 640,
-  MD: 768,
-  LG: 1024,
-  XL: 1280,
-} as const;
+export const BREAKPOINTS = { SM: 640, MD: 768, LG: 1024, XL: 1280, '2XL': 1536 } as const;
+export const LAYOUT = { MAX_WIDTH: {...}, NAV_HEIGHT: 80, SECTION_PADDING: {...} } as const;
+export const VALIDATION = { MAX_LENGTH: {...}, MIN_LENGTH: {...} } as const;
+export const RATE_LIMIT = { CONTACT_FORM: {...}, NEWSLETTER: {...} } as const;
+export const SEO = { SITE_URL: 'https://olesdidukh.dev', OG_IMAGE: {...} } as const;
 ```
+
+Updated files to use constants:
+
+- `/src/components/sections/HeroBackground.tsx` - Uses `ANIMATION.PARTICLE_COUNT`
+- `/src/app/skills/page.tsx` - Uses `ANIMATION.PARTICLE_COUNT`
+
+Constants are available via `@/constants` path alias.
 
 ---
 
