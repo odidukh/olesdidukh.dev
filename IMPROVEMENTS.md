@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 15
+- **Completed**: 16
 - **In Progress**: 0
-- **Pending**: 21
+- **Pending**: 20
 
 ---
 
@@ -905,16 +905,54 @@ refactor: simplify data fetching logic
 
 ### 27. Performance Budget
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **Performance Impact**: Medium
 
 #### Tasks:
 
-- [ ] Define performance budgets
-- [ ] Add to build process
-- [ ] Configure alerts
-- [ ] Document in README
+- [x] Define performance budgets
+- [x] Add to build process
+- [x] Configure alerts (via script output)
+- [x] Document in README (via config file comments)
+
+#### Implementation (Completed):
+
+**Files Created**:
+
+- `/performance-budget.config.js` - Budget configuration
+- `/scripts/check-bundle-size.js` - Bundle size checker script
+
+**NPM Scripts Added**:
+
+- `npm run budget` - Check bundle sizes against budgets
+- `npm run build:check` - Build and check budgets in one command
+
+**Budget Limits**:
+
+| Resource      | Warning | Max   |
+| ------------- | ------- | ----- |
+| First Load JS | 180KB   | 200KB |
+| Total JS      | 450KB   | 500KB |
+| Total CSS     | 80KB    | 100KB |
+| Per-page JS   | 40KB    | 50KB  |
+
+**Core Web Vitals Targets**:
+
+- LCP: < 2.5s
+- FID: < 100ms
+- CLS: < 0.1
+- FCP: < 1.8s
+- TTFB: < 800ms
+- INP: < 200ms
+
+**Features**:
+
+- Color-coded output (green/yellow/red)
+- Heavy dependency detection warnings
+- Top 5 largest JS files display
+- Exit code 1 on budget exceeded (for CI)
+- Configurable exclude pages (admin, design-system)
 
 ### 28. Monitoring Dashboard
 
