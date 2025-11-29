@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 21
+- **Completed**: 24
 - **In Progress**: 0
-- **Pending**: 15
+- **Pending**: 12
 
 ---
 
@@ -990,16 +990,32 @@ refactor: simplify data fetching logic
 
 ### 26. SEO Schema Expansion
 
-**Status**: ⬜ Pending  
-**Effort**: Low (2-3 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (2-3 hours)
 **SEO Impact**: Medium
 
 #### Tasks:
 
-- [ ] Add Article schema for blog posts
-- [ ] Add BreadcrumbList schema
-- [ ] Add SoftwareApplication schema for projects
-- [ ] Add FAQ schema where applicable
+- [x] Add Article schema for blog posts
+- [x] Add BreadcrumbList schema
+- [x] Add CreativeWork schema for projects
+- [ ] Add FAQ schema where applicable (no FAQ page yet)
+
+#### Implementation (Already Completed):
+
+**Article Schema** (`/src/app/blog/[slug]/page.tsx`):
+
+- Full Article structured data for blog posts
+- Includes author, dates, images, publisher info
+
+**BreadcrumbList Schema** (`/src/components/BreadcrumbSchema.tsx`):
+
+- Reusable component for breadcrumb navigation
+- Used on projects, blog, about, experience, contact pages
+
+**CreativeWork Schema** (`/src/app/projects/[slug]/page.tsx`):
+
+- Project pages use CreativeWork for portfolio items
 
 ### 27. Performance Budget
 
@@ -1068,29 +1084,61 @@ refactor: simplify data fetching logic
 
 ### 29. Contributing Guidelines
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **Community Impact**: Medium
 
 #### Tasks:
 
-- [ ] Create CONTRIBUTING.md
-- [ ] Document code standards
-- [ ] Add PR template
-- [ ] Add issue templates
+- [x] Create CONTRIBUTING.md
+- [x] Document code standards
+- [x] Add PR template
+- [ ] Add issue templates (optional)
+
+#### Implementation (Completed):
+
+**File Created**: `/CONTRIBUTING.md`
+
+**Contents**:
+
+- Setup instructions
+- Branch naming conventions
+- Commit message format (conventional commits)
+- Code standards (TypeScript, React, Tailwind)
+- File organization guide
+- Quality check commands
+- Pre-commit hooks info
+- PR checklist and template
+- Testing instructions
 
 ### 30. Deployment Documentation
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1-2 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (1-2 hours)
 **Documentation Impact**: High
 
 #### Tasks:
 
-- [ ] Document Vercel setup
-- [ ] Add environment variables guide
-- [ ] Create deployment checklist
-- [ ] Add rollback procedures
+- [x] Document Vercel setup
+- [x] Add environment variables guide
+- [x] Create deployment checklist
+- [x] Add rollback procedures
+
+#### Implementation (Completed):
+
+**File Created**: `/DEPLOYMENT.md`
+
+**Contents**:
+
+- Vercel initial setup
+- All environment variables with descriptions
+- Domain configuration
+- Pre/post deployment checklists
+- Automatic deployment info
+- Rollback procedure
+- Build optimization notes
+- Monitoring setup
+- Troubleshooting guide
 
 ### 31. Architecture Decision Records
 
