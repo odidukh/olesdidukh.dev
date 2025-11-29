@@ -115,6 +115,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             type={type}
+            aria-invalid={error || undefined}
             className={cn(
               inputVariants({ variant: computedVariant, inputSize }),
               leftIcon && 'pl-10',
@@ -136,6 +137,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         type={type}
+        aria-invalid={error || undefined}
         className={cn(
           inputVariants({ variant: computedVariant, inputSize }),
           className

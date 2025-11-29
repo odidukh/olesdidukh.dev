@@ -305,7 +305,11 @@ export default function HomePage() {
                 transition={{ delay: 1.5 }}
                 className="absolute bottom-8 left-1/2 -translate-x-1/2"
               >
-                <Link href="#about" className="block">
+                <Link
+                  href="#about"
+                  className="block rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label="Scroll to about section"
+                >
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}

@@ -70,6 +70,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <textarea
+        aria-invalid={error || undefined}
         className={cn(
           textareaVariants({ variant: computedVariant, textareaSize }),
           autoResize && 'resize-none',
