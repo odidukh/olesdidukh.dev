@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -11,7 +12,7 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Lock, Mail, ArrowLeft, AlertCircle } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/admin';
@@ -48,94 +49,126 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Container size="sm">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md mx-auto"
-        >
-          {/* Back to home */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-md mx-auto"
+    >
+      {/* Back to home */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back to site
+      </Link>
+
+      {/* Login Card */}
+      <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Admin Login</h1>
+          <p className="text-muted-foreground mt-2">
+            Sign in to access the admin dashboard
+          </p>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-error/10 border border-error/20 rounded-lg p-4 mb-6 flex items-start gap-3"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Back to site
-          </Link>
+            <AlertCircle className="w-5 h-5 text-error shrink-0 mt-0.5" />
+            <p className="text-sm text-error">{error}</p>
+          </motion.div>
+        )}
 
-          {/* Login Card */}
-          <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-8 h-8 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold text-foreground">
-                Admin Login
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                Sign in to access the admin dashboard
-              </p>
+        {/* Login Form */}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+                className="pl-10"
+                required
+              />
             </div>
-
-            {/* Error Message */}
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-error/10 border border-error/20 rounded-lg p-4 mb-6 flex items-start gap-3"
-              >
-                <AlertCircle className="w-5 h-5 text-error shrink-0 mt-0.5" />
-                <p className="text-sm text-error">{error}</p>
-              </motion.div>
-            )}
-
-            {/* Login Form */}
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="admin@example.com"
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </form>
           </div>
 
-          {/* Footer */}
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Protected area. Authorized personnel only.
-          </p>
-        </motion.div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="pl-10"
+                required
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign in'}
+          </Button>
+        </form>
+      </div>
+
+      {/* Footer */}
+      <p className="text-center text-sm text-muted-foreground mt-6">
+        Protected area. Authorized personnel only.
+      </p>
+    </motion.div>
+  );
+}
+
+function LoginFormSkeleton() {
+  return (
+    <div className="w-full max-w-md mx-auto animate-pulse">
+      <div className="h-6 w-24 bg-muted rounded mb-8" />
+      <div className="bg-card border border-border rounded-xl p-8 shadow-lg">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-16 h-16 bg-muted rounded-full mb-4" />
+          <div className="h-7 w-32 bg-muted rounded mb-2" />
+          <div className="h-5 w-48 bg-muted rounded" />
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <div className="h-4 w-12 bg-muted rounded" />
+            <div className="h-10 bg-muted rounded" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 w-16 bg-muted rounded" />
+            <div className="h-10 bg-muted rounded" />
+          </div>
+          <div className="h-10 bg-muted rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Container size="sm">
+        <Suspense fallback={<LoginFormSkeleton />}>
+          <LoginForm />
+        </Suspense>
       </Container>
     </div>
   );

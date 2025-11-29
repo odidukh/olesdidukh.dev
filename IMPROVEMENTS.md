@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 24
+- **Completed**: 25
 - **In Progress**: 0
-- **Pending**: 12
+- **Pending**: 11
 
 ---
 
@@ -401,18 +401,103 @@ A comprehensive analytics hook providing:
 
 ### 8. Service Worker & PWA
 
-**Status**: ⬜ Pending  
-**Effort**: High (1-2 days)  
+**Status**: ✅ Completed
+**Effort**: High (1-2 days)
 **User Experience Impact**: High
 
 #### Tasks:
 
-- [ ] Create service worker with workbox
-- [ ] Implement offline page
-- [ ] Add manifest.json
-- [ ] Configure caching strategies
-- [ ] Add install prompt UI
-- [ ] Test offline functionality
+- [x] Create service worker with Serwist
+- [x] Implement offline page
+- [x] Add manifest.json
+- [x] Configure caching strategies
+- [x] Add install prompt UI
+- [x] Test offline functionality
+
+#### Implementation (Completed):
+
+**Technology Choice**: Serwist (modern successor to next-pwa, built on Workbox)
+
+**Packages Installed**:
+
+- `@serwist/next` - Next.js integration for Serwist
+- `serwist` - Core service worker library
+
+**Files Created**:
+
+- `/src/app/sw.ts` - Service worker with custom caching strategies
+- `/src/app/offline/page.tsx` - Offline fallback page
+- `/src/app/offline/layout.tsx` - Offline page layout with metadata
+- `/public/manifest.json` - Web App Manifest for PWA
+- `/src/components/pwa/PWAInstallPrompt.tsx` - Install prompt banner component
+- `/src/hooks/usePWAInstall.ts` - Custom hook for PWA installation logic
+
+**Files Modified**:
+
+- `/next.config.ts` - Added Serwist configuration
+- `/src/app/layout.tsx` - Added manifest and Apple Web App metadata
+- `/src/components/Providers.tsx` - Added PWAInstallPrompt component
+- `/package.json` - Updated build script to use webpack (required for Serwist)
+- `/eslint.config.mjs` - Ignore generated sw.js file
+- `/.prettierignore` - Created to ignore generated files
+
+**Service Worker Features** (`/src/app/sw.ts`):
+
+- **Precaching**: Automatic precaching of static assets via `__SW_MANIFEST`
+- **Navigation Preload**: Enabled for faster page loads
+- **Offline Fallback**: Redirects to `/offline` page when network unavailable
+
+**Caching Strategies**:
+
+| Resource Type          | Strategy                | Cache Name       |
+| ---------------------- | ----------------------- | ---------------- |
+| Google Fonts           | CacheFirst              | google-fonts     |
+| Static Images (local)  | CacheFirst              | static-images    |
+| External Images        | StaleWhileRevalidate    | external-images  |
+| JS/CSS Assets          | StaleWhileRevalidate    | static-resources |
+| Contact/Newsletter API | NetworkFirst (no cache) | api-no-cache     |
+| Other API Routes       | NetworkFirst            | api-cache        |
+| Document Pages         | NetworkFirst            | pages-cache      |
+
+**PWA Manifest** (`/public/manifest.json`):
+
+- App name and short name
+- Theme color: #8B7355 (Mocha Mousse)
+- Background color: #0a0a0a
+- Display mode: standalone
+- App shortcuts: Projects, Blog, Contact
+- Icon sizes: 192x192, 512x512 (regular + maskable)
+- Apple touch icon: 180x180
+
+**Install Prompt Features** (`/src/components/pwa/PWAInstallPrompt.tsx`):
+
+- Captures `beforeinstallprompt` event
+- Animated banner with spring animation
+- "Install" and "Not now" actions
+- Dismissal persists for 7 days
+- Respects user preference
+- Accessible with ARIA attributes
+
+**usePWAInstall Hook** (`/src/hooks/usePWAInstall.ts`):
+
+- `canInstall` - Whether installation is available
+- `isInstalled` - Whether app is in standalone mode
+- `isPrompting` - Whether prompt is active
+- `promptInstall()` - Trigger native install prompt
+- `dismissBanner()` - Dismiss with localStorage persistence
+
+**Build Configuration**:
+
+- Build uses `--webpack` flag (Turbopack not yet supported by Serwist)
+- Service worker disabled in development for easier debugging
+- Generated `sw.js` placed in `/public/`
+
+**Note**: PWA icons need to be created and placed in `/public/icons/` directory:
+
+- icon-192x192.png, icon-192x192-maskable.png
+- icon-512x512.png, icon-512x512-maskable.png
+- apple-touch-icon.png (180x180)
+- shortcut-projects.png, shortcut-blog.png, shortcut-contact.png (96x96)
 
 ### 9. Storybook Integration
 
@@ -1314,4 +1399,4 @@ const geistSans = Geist({
 
 ---
 
-_Last updated: November 2025_
+_Last updated: November 29, 2025_

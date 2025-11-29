@@ -8,6 +8,7 @@ import {
   GoogleAnalytics,
   MicrosoftClarity,
 } from '@/components/analytics';
+import { PWAInstallPrompt } from '@/components/pwa';
 
 export function Providers() {
   return (
@@ -18,6 +19,7 @@ export function Providers() {
       <GoogleAnalytics />
       <MicrosoftClarity />
       <PerformanceMonitor />
+      <PWAInstallPrompt />
     </>
   );
 }
