@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ExperienceForm } from '../components/ExperienceForm';
+import { ExperienceForm } from '@/app/admin/experience/components/ExperienceForm';
 
 export const metadata = {
   title: 'Edit Experience | Admin Dashboard',

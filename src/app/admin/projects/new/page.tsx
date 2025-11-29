@@ -1,4 +1,4 @@
-import { ProjectForm } from '../components/ProjectForm';
+import { ProjectForm } from '@/app/admin/projects/components/ProjectForm';
 
 export const metadata = {
   title: 'New Project | Admin Dashboard',

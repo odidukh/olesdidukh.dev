@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { SkillForm } from '../components/SkillForm';
+import { SkillForm } from '@/app/admin/skills/components/SkillForm';
 
 export const metadata = {
   title: 'Edit Skill | Admin Dashboard',

@@ -1,4 +1,4 @@
-import { ExperienceForm } from '../components/ExperienceForm';
+import { ExperienceForm } from '@/app/admin/experience/components/ExperienceForm';
 
 export const metadata = {
   title: 'Add Experience | Admin Dashboard',

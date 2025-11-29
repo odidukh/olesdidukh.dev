@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { BlogForm } from '../components/BlogForm';
+import { BlogForm } from '@/app/admin/blog/components/BlogForm';
 
 export const metadata = {
   title: 'Edit Blog Post | Admin Dashboard',

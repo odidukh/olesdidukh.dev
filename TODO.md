@@ -9,10 +9,10 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | Priority      | Count  | Status         |
 | ------------- | ------ | -------------- |
 | P0 - Critical | 2      | 2 Complete     |
-| P1 - High     | 9      | 5 Complete     |
+| P1 - High     | 9      | 6 Complete     |
 | P2 - Medium   | 15     | Pending        |
 | P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **7 Complete** |
+| **Total**     | **33** | **8 Complete** |
 
 ---
 
@@ -207,29 +207,44 @@ The configuration only enables Sentry when `SENTRY_DSN` is set, allowing gracefu
 
 ### 8. Enforce Path Aliases Consistently
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Medium (2-3 hours)
 **Impact**: DX & Maintainability
 
-**Issue**: 70+ instances of relative imports instead of path aliases.
+**Issue**: 11 instances of relative imports instead of path aliases.
 
-**Files**: Various components use `../` instead of `@/`
+**Implementation** (Completed):
 
-**Solution**:
+1. Fixed all relative imports in the following files:
+   - `/src/app/admin/skills/[id]/page.tsx` - `@/app/admin/skills/components/SkillForm`
+   - `/src/app/admin/skills/new/page.tsx` - `@/app/admin/skills/components/SkillForm`
+   - `/src/app/admin/blog/[id]/page.tsx` - `@/app/admin/blog/components/BlogForm`
+   - `/src/app/admin/blog/new/page.tsx` - `@/app/admin/blog/components/BlogForm`
+   - `/src/app/admin/experience/[id]/page.tsx` - `@/app/admin/experience/components/ExperienceForm`
+   - `/src/app/admin/experience/new/page.tsx` - `@/app/admin/experience/components/ExperienceForm`
+   - `/src/app/admin/projects/[id]/page.tsx` - `@/app/admin/projects/components/ProjectForm`
+   - `/src/app/admin/projects/new/page.tsx` - `@/app/admin/projects/components/ProjectForm`
+   - `/src/components/sections/HeroSection.tsx` - `@/components/ui/*` for TypeAnimation, ParticleField, FloatingIcons
 
-1. Add ESLint rule:
+2. Added ESLint rule in `/eslint.config.mjs` to prevent future relative imports:
 
 ```js
-// eslint.config.mjs
-'no-restricted-imports': ['error', {
-  patterns: ['../*']
-}]
-```
-
-2. Run codemod to fix existing:
-
-```bash
-npx jscodeshift -t ./scripts/fix-imports.ts src/
+{
+  files: ['src/**/*.ts', 'src/**/*.tsx'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['../*'],
+            message: 'Use path aliases (@/) instead of relative imports.',
+          },
+        ],
+      },
+    ],
+  },
+}
 ```
 
 ---

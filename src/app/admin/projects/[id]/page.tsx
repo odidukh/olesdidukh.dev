@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ProjectForm } from '../components/ProjectForm';
+import { ProjectForm } from '@/app/admin/projects/components/ProjectForm';
 
 export const metadata = {
   title: 'Edit Project | Admin Dashboard',

@@ -13,9 +13,9 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
-import { TypeAnimation } from '../ui/TypeAnimation';
-import { ParticleField } from '../ui/ParticleField';
-import { FloatingIcons } from '../ui/FloatingIcons';
+import { TypeAnimation } from '@/components/ui/TypeAnimation';
+import { ParticleField } from '@/components/ui/ParticleField';
+import { FloatingIcons } from '@/components/ui/FloatingIcons';
 import {
   ArrowRight,
   Github,

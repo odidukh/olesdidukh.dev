@@ -1,4 +1,4 @@
-import { BlogForm } from '../components/BlogForm';
+import { BlogForm } from '@/app/admin/blog/components/BlogForm';
 
 export const metadata = {
   title: 'New Blog Post | Admin Dashboard',
