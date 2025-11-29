@@ -6,13 +6,13 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 
 ## Overview
 
-| Priority      | Count  | Status         |
-| ------------- | ------ | -------------- |
-| P0 - Critical | 2      | 2 Complete     |
-| P1 - High     | 9      | 7 Complete     |
-| P2 - Medium   | 15     | Pending        |
-| P3 - Low      | 7      | Pending        |
-| **Total**     | **33** | **9 Complete** |
+| Priority      | Count  | Status          |
+| ------------- | ------ | --------------- |
+| P0 - Critical | 2      | 2 Complete      |
+| P1 - High     | 9      | 8 Complete      |
+| P2 - Medium   | 15     | 2 Complete      |
+| P3 - Low      | 7      | Pending         |
+| **Total**     | **33** | **12 Complete** |
 
 ---
 
@@ -284,23 +284,17 @@ All badges now support:
 
 ### 10. Create JsonLd Component
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (1-2 hours)
 **Impact**: Code Quality
 
 **Issue**: Multiple files use `dangerouslySetInnerHTML` for JSON-LD.
 
-**Files**:
+**Implementation** (Completed):
 
-- `/src/app/layout.tsx`
-- `/src/app/blog/[slug]/page.tsx`
-- `/src/app/projects/[slug]/page.tsx`
-- `/src/components/BreadcrumbSchema.tsx`
-
-**Solution**:
+Created `/src/components/JsonLd.tsx`:
 
 ```tsx
-// /src/components/JsonLd.tsx
 interface JsonLdProps {
   data: Record<string, unknown>;
 }
@@ -315,59 +309,83 @@ export function JsonLd({ data }: JsonLdProps) {
 }
 ```
 
+Updated all files to use the new component:
+
+- `/src/app/layout.tsx` - Uses `<JsonLd data={jsonLd} />`
+- `/src/app/blog/[slug]/page.tsx` - Uses `<JsonLd />` for article and breadcrumb schemas (both MDX and legacy post branches)
+- `/src/app/projects/[slug]/page.tsx` - Uses `<JsonLd data={projectSchema} />`
+- `/src/components/BreadcrumbSchema.tsx` - Uses `<JsonLd data={schema} />`
+
+All JSON-LD structured data is now rendered through a single, centralized component.
+
 ---
 
 ## P2 - Medium Priority
 
 ### 11. Add Admin Authentication Middleware
 
-**Status**: [ ] Pending
+**Status**: [x] Complete (Already Implemented)
 **Effort**: High (4-6 hours)
 **Impact**: Security
 
 **Issue**: Admin routes lack visible authentication guards.
 
-**Files**: `/src/app/admin/**/*.tsx`
+**Implementation** (Already in place):
 
-**Solution**:
+Admin route protection is implemented at two levels:
 
-```tsx
-// /src/middleware.ts - Add admin route protection
-if (pathname.startsWith('/admin')) {
-  const session = await getSession(request);
-  if (!session || session.user.email !== process.env.ADMIN_EMAIL) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-}
-```
+1. **Middleware level** (`/src/lib/supabase/middleware.ts` lines 38-54):
+
+   ```tsx
+   // Protect admin routes
+   if (request.nextUrl.pathname.startsWith('/admin')) {
+     if (!user) {
+       const url = request.nextUrl.clone();
+       url.pathname = '/login';
+       url.searchParams.set('redirect', request.nextUrl.pathname);
+       return NextResponse.redirect(url);
+     }
+
+     // Check if user is admin
+     const adminEmail = process.env['ADMIN_EMAIL'];
+     if (adminEmail && user.email !== adminEmail) {
+       const url = request.nextUrl.clone();
+       url.pathname = '/';
+       return NextResponse.redirect(url);
+     }
+   }
+   ```
+
+2. **Layout level** (`/src/app/admin/layout.tsx` lines 26-34):
+   - Double-checks authentication via Supabase `getUser()`
+   - Verifies user email matches `env.ADMIN_EMAIL`
+   - Redirects unauthenticated users to `/login?redirect=/admin`
+   - Redirects non-admin users to home page
+
+This dual-layer approach ensures robust protection even if middleware is bypassed.
 
 ---
 
 ### 12. Add Canonical Tags to Dynamic Routes
 
-**Status**: [ ] Pending
+**Status**: [x] Complete
 **Effort**: Low (1 hour)
 **Impact**: SEO
 
 **Issue**: Missing canonical tags for blog/project pages.
 
-**Files**:
+**Implementation** (Completed):
 
-- `/src/app/blog/[slug]/page.tsx`
-- `/src/app/projects/[slug]/page.tsx`
+1. **Blog pages** (`/src/app/blog/[slug]/page.tsx`):
+   - Added `alternates.canonical` to MDX post metadata (line 74-76)
+   - Added `alternates.canonical` to legacy post metadata (line 116-118)
+   - Both now point to `https://olesdidukh.dev/blog/${slug}`
 
-**Solution**:
+2. **Project pages** (`/src/app/projects/[slug]/page.tsx`):
+   - Already had canonical tags implemented (lines 82-84)
+   - Points to `https://olesdidukh.dev/projects/${project.id}`
 
-```tsx
-export async function generateMetadata({ params }): Promise<Metadata> {
-  return {
-    // ... existing metadata
-    alternates: {
-      canonical: `https://olesdidukh.dev/blog/${params.slug}`,
-    },
-  };
-}
-```
+All dynamic routes now have proper canonical URLs for SEO.
 
 ---
 

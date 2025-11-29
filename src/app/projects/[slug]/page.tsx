@@ -7,6 +7,7 @@ import { Footer } from '@/components/ui/Footer';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { JsonLd } from '@/components/JsonLd';
 import { TrackPageView, TrackedExternalLink } from '@/components/analytics';
 import {
   getProjectBySlug,
@@ -137,10 +138,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         projectTitle={project.title}
         projectSlug={project.id}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchema) }}
-      />
+      <JsonLd data={projectSchema} />
       <Navigation />
       <main id="main-content" className="pt-20">
         {/* Hero Section */}

@@ -3,6 +3,7 @@ import {
   breadcrumbConfigs,
   getProjectBreadcrumbs,
 } from '@/lib/breadcrumbs';
+import { JsonLd } from '@/components/JsonLd';
 
 interface BreadcrumbSchemaProps {
   page: keyof typeof breadcrumbConfigs;
@@ -27,10 +28,5 @@ export function BreadcrumbSchema({
 
   const schema = generateBreadcrumbSchema(breadcrumbs);
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
-  );
+  return <JsonLd data={schema} />;
 }

@@ -11,6 +11,7 @@ import {
 import { BlogPostContent } from '@/components/sections/BlogPostContent';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { JsonLd } from '@/components/JsonLd';
 import {
   generateBreadcrumbSchema,
   getBlogPostBreadcrumbs,
@@ -70,6 +71,9 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
         description: mdxPost.excerpt,
         images: [ogImageUrl],
       },
+      alternates: {
+        canonical: `https://olesdidukh.dev/blog/${slug}`,
+      },
     };
   }
 
@@ -108,6 +112,9 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       title: post.title,
       description: post.excerpt,
       images: [ogImageUrl],
+    },
+    alternates: {
+      canonical: `https://olesdidukh.dev/blog/${slug}`,
     },
   };
 }
@@ -188,14 +195,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     return (
       <>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-        />
+        <JsonLd data={articleJsonLd} />
+        <JsonLd data={breadcrumbJsonLd} />
         <Navigation />
         <main id="main-content" className="pt-20">
           <BlogPostContent
@@ -255,14 +256,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      <JsonLd data={articleJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <Navigation />
       <main id="main-content" className="pt-20">
         <BlogPostContent post={post} relatedPosts={relatedPosts} />

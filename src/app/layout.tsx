@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { SkipLink } from '@/components/ui/SkipLink';
+import { JsonLd } from '@/components/JsonLd';
 import './globals.css';
 
 /**
@@ -145,10 +146,7 @@ export default function RootLayout({
           <link key={url} rel="dns-prefetch" href={url} />
         ))}
         {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={jsonLd} />
         {/* Theme initialization script - prevents flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{
