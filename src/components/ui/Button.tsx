@@ -4,6 +4,15 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Button variant styles using class-variance-authority.
+ *
+ * @example
+ * ```tsx
+ * // Apply variants directly
+ * <div className={buttonVariants({ variant: 'outline', size: 'lg' })} />
+ * ```
+ */
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
@@ -39,14 +48,50 @@ const buttonVariants = cva(
   }
 );
 
+/**
+ * Props for the Button component.
+ *
+ * @property {boolean} [asChild=false] - When true, renders as a Slot component to merge props with child element.
+ *   Useful for rendering custom elements or links as buttons.
+ * @property {boolean} [loading=false] - Shows a loading spinner and disables the button.
+ * @property {string} [loadingText] - Text to display while loading. If not provided, shows original children.
+ * @property {'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'gradient' | 'glow'} [variant='default'] - Visual style variant.
+ * @property {'default' | 'sm' | 'lg' | 'xl' | 'icon'} [size='default'] - Button size.
+ */
 interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /** When true, renders as a Slot to merge props with child element */
   asChild?: boolean;
+  /** Shows a loading spinner and disables the button */
   loading?: boolean;
+  /** Text to display while loading */
   loadingText?: string;
 }
 
+/**
+ * A versatile button component with multiple variants, sizes, and loading states.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Button>Click me</Button>
+ *
+ * // With variant and size
+ * <Button variant="outline" size="lg">Large Outline</Button>
+ *
+ * // Loading state
+ * <Button loading loadingText="Submitting...">Submit</Button>
+ *
+ * // As a link (using asChild)
+ * <Button asChild>
+ *   <Link href="/page">Go to page</Link>
+ * </Button>
+ *
+ * // Gradient button with glow effect
+ * <Button variant="gradient">Premium Action</Button>
+ * ```
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {

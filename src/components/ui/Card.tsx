@@ -3,6 +3,12 @@ import Image from 'next/image';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
+/**
+ * Card variant styles using class-variance-authority.
+ *
+ * @property {'default' | 'elevated' | 'ghost' | 'bordered' | 'interactive'} variant - Visual style variant.
+ * @property {'none' | 'sm' | 'md' | 'lg' | 'xl'} padding - Internal padding size.
+ */
 const cardVariants = cva('rounded-xl border bg-card text-card-foreground', {
   variants: {
     variant: {
@@ -27,7 +33,42 @@ const cardVariants = cva('rounded-xl border bg-card text-card-foreground', {
   },
 });
 
-// Main Card Component
+/**
+ * A compound card component for displaying content in a contained box.
+ *
+ * Use with CardHeader, CardTitle, CardDescription, CardContent, CardFooter, and CardImage
+ * for a complete card structure.
+ *
+ * @example
+ * ```tsx
+ * // Basic card
+ * <Card>
+ *   <CardHeader>
+ *     <CardTitle>Card Title</CardTitle>
+ *     <CardDescription>Card description text</CardDescription>
+ *   </CardHeader>
+ *   <CardContent>
+ *     <p>Card content goes here</p>
+ *   </CardContent>
+ *   <CardFooter>
+ *     <Button>Action</Button>
+ *   </CardFooter>
+ * </Card>
+ *
+ * // Interactive card (clickable)
+ * <Card variant="interactive" onClick={handleClick}>
+ *   <CardContent>Clickable card</CardContent>
+ * </Card>
+ *
+ * // Card with image
+ * <Card padding="none">
+ *   <CardImage src="/image.jpg" alt="Description" />
+ *   <CardHeader className="p-4">
+ *     <CardTitle>Project Name</CardTitle>
+ *   </CardHeader>
+ * </Card>
+ * ```
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof cardVariants>
@@ -40,7 +81,7 @@ const Card = React.forwardRef<
 ));
 Card.displayName = 'Card';
 
-// Card Header Component
+/** Card header container for title and description */
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -53,7 +94,7 @@ const CardHeader = React.forwardRef<
 ));
 CardHeader.displayName = 'CardHeader';
 
-// Card Title Component
+/** Card title element (renders as h3) */
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
@@ -71,7 +112,7 @@ const CardTitle = React.forwardRef<
 ));
 CardTitle.displayName = 'CardTitle';
 
-// Card Description Component
+/** Card description text (muted styling) */
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -84,7 +125,7 @@ const CardDescription = React.forwardRef<
 ));
 CardDescription.displayName = 'CardDescription';
 
-// Card Content Component
+/** Card main content area */
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -93,7 +134,7 @@ const CardContent = React.forwardRef<
 ));
 CardContent.displayName = 'CardContent';
 
-// Card Footer Component
+/** Card footer for actions (flexbox row) */
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -102,12 +143,21 @@ const CardFooter = React.forwardRef<
 ));
 CardFooter.displayName = 'CardFooter';
 
-// Card Image Component (for project showcases)
+/**
+ * Card image component with responsive aspect ratios.
+ *
+ * @property {string} [src] - Image source URL.
+ * @property {string} [alt] - Image alt text for accessibility.
+ * @property {'square' | 'video' | 'wide' | 'portrait'} [aspectRatio='video'] - Aspect ratio preset.
+ */
 const CardImage = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
+    /** Image source URL */
     src?: string;
+    /** Image alt text for accessibility */
     alt?: string;
+    /** Aspect ratio: 'square' (1:1), 'video' (16:9), 'wide' (21:9), 'portrait' (3:4) */
     aspectRatio?: 'square' | 'video' | 'wide' | 'portrait';
   }
 >(({ className, src, alt, aspectRatio = 'video', ...props }, ref) => {

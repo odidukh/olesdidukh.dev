@@ -2,6 +2,12 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
+/**
+ * Input variant styles using class-variance-authority.
+ *
+ * @property {'default' | 'error' | 'success' | 'warning'} variant - Visual state variant.
+ * @property {'sm' | 'md' | 'lg' | 'xl'} inputSize - Input height and padding.
+ */
 const inputVariants = cva(
   'flex w-full rounded-lg border bg-transparent px-3 py-2 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
   {
@@ -26,15 +32,57 @@ const inputVariants = cva(
   }
 );
 
+/**
+ * Props for the Input component.
+ *
+ * @property {React.ReactNode} [leftIcon] - Icon displayed on the left side of the input.
+ * @property {React.ReactNode} [rightIcon] - Icon displayed on the right side of the input.
+ * @property {boolean} [error] - Shorthand for variant="error". Shows error styling.
+ * @property {boolean} [success] - Shorthand for variant="success". Shows success styling.
+ * @property {'default' | 'error' | 'success' | 'warning'} [variant] - Visual state variant.
+ * @property {'sm' | 'md' | 'lg' | 'xl'} [inputSize] - Input size (height and padding).
+ */
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof inputVariants> {
+  /** Icon displayed on the left side of the input */
   leftIcon?: React.ReactNode;
+  /** Icon displayed on the right side of the input */
   rightIcon?: React.ReactNode;
+  /** Shorthand for variant="error". Shows error styling. */
   error?: boolean;
+  /** Shorthand for variant="success". Shows success styling. */
   success?: boolean;
 }
 
+/**
+ * A form input component with validation states and icon support.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Input placeholder="Enter your email" type="email" />
+ *
+ * // With icons
+ * <Input
+ *   leftIcon={<Mail className="h-4 w-4" />}
+ *   placeholder="Email address"
+ * />
+ *
+ * // Error state
+ * <Input error placeholder="Invalid input" />
+ *
+ * // Different sizes
+ * <Input inputSize="sm" placeholder="Small input" />
+ * <Input inputSize="lg" placeholder="Large input" />
+ *
+ * // With form validation
+ * <Input
+ *   error={!!errors.email}
+ *   {...register('email')}
+ * />
+ * ```
+ */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {

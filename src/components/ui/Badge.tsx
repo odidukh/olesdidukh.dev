@@ -2,6 +2,15 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
+/**
+ * Badge variant styles using class-variance-authority.
+ *
+ * @example
+ * ```tsx
+ * // Apply variants directly
+ * <span className={badgeVariants({ variant: 'success', size: 'lg' })} />
+ * ```
+ */
 const badgeVariants = cva(
   'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   {
@@ -45,13 +54,50 @@ const badgeVariants = cva(
   }
 );
 
+/**
+ * Props for the Badge component.
+ *
+ * @property {'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' | 'info' | 'mocha' | 'navy' | 'ghost'} [variant='default'] - Visual style variant.
+ * @property {'sm' | 'md' | 'lg'} [size='md'] - Badge size.
+ * @property {'full' | 'lg' | 'md' | 'sm'} [rounded='full'] - Border radius style.
+ * @property {React.ReactNode} [icon] - Icon to display before the badge text.
+ * @property {() => void} [onRemove] - Callback when remove button is clicked. Shows an X button when provided.
+ */
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
+  /** Icon to display before the badge text */
   icon?: React.ReactNode;
+  /** Callback when remove button is clicked. Shows an X button when provided. */
   onRemove?: () => void;
 }
 
+/**
+ * A small status indicator or label component.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Badge>New</Badge>
+ *
+ * // With variant
+ * <Badge variant="success">Active</Badge>
+ *
+ * // With icon
+ * <Badge variant="info" icon={<InfoIcon className="h-3 w-3" />}>
+ *   Info
+ * </Badge>
+ *
+ * // Removable badge
+ * <Badge variant="secondary" onRemove={() => handleRemove(id)}>
+ *   React
+ * </Badge>
+ *
+ * // Different sizes
+ * <Badge size="sm">Small</Badge>
+ * <Badge size="lg">Large</Badge>
+ * ```
+ */
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   (
     { className, variant, size, rounded, icon, onRemove, children, ...props },
