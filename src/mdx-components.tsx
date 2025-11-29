@@ -44,6 +44,7 @@ function CustomImage({ src, alt }: { src?: string; alt?: string }) {
         alt={alt || 'Blog post image'}
         width={800}
         height={450}
+        sizes="(max-width: 768px) 100vw, 800px"
         className="w-full"
       />
     </span>

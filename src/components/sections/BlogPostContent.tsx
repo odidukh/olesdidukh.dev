@@ -159,6 +159,7 @@ export function BlogPostContent({
                     src={post.author.avatar}
                     alt={post.author.name}
                     fill
+                    sizes="48px"
                     className="object-cover"
                   />
                 </div>
@@ -215,6 +216,8 @@ export function BlogPostContent({
               src={post.coverImage}
               alt={post.title}
               fill
+              priority
+              sizes="100vw"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

@@ -42,6 +42,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className={`object-cover transition-all duration-700 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
@@ -125,6 +126,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                         src={post.author.avatar}
                         alt={post.author.name}
                         fill
+                        sizes="40px"
                         className="object-cover"
                       />
                     </div>

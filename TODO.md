@@ -666,13 +666,37 @@ Audited all 22 setTimeout/setInterval instances:
 
 ### 22. Add lazy Loading for Below-Fold Images
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Low (1-2 hours)
 **Impact**: Performance
 
 **Issue**: Some images may not use lazy loading.
 
-**Solution**: Audit all Image components and add `loading="lazy"` for below-fold content.
+**Implementation**:
+
+Audited all Image components across the codebase. Key findings:
+
+1. **Next.js Image defaults to lazy loading** - `loading="lazy"` is the default behavior
+2. **Added `priority` for above-fold images** - Blog post cover images now have `priority`
+3. **Added `sizes` prop for responsive images** - Helps browser choose optimal image size
+
+**Changes made:**
+
+| File                       | Changes                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| `projects/[slug]/page.tsx` | Added `sizes` to related project images                                       |
+| `BlogPostContent.tsx`      | Added `priority` and `sizes="100vw"` to cover image, `sizes="48px"` to avatar |
+| `BlogCard.tsx`             | Added `sizes` to cover image and `sizes="32px"` to avatar                     |
+| `FeaturedPost.tsx`         | Added `sizes` to cover image and `sizes="40px"` to avatar                     |
+| `ProjectCard.tsx`          | Added `sizes` to both list and grid view images                               |
+| `mdx-components.tsx`       | Added `sizes` to MDX images                                                   |
+| `ApiEndpoint.tsx`          | Added `sizes` to OG preview image                                             |
+
+**Best practices applied:**
+
+- Above-fold hero images: `priority` prop (disables lazy loading for LCP)
+- Small fixed-size images (avatars): Explicit `sizes` matching container
+- Responsive images: `sizes` with breakpoint-based values
 
 ---
 

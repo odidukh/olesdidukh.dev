@@ -376,6 +376,7 @@ export function ApiEndpoint({
                   alt="OG Image Preview"
                   width={1200}
                   height={630}
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="w-full h-auto"
                   unoptimized
                 />
