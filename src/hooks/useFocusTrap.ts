@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-interface UseFocusTrapOptions {
+export interface UseFocusTrapOptions {
   /**
    * Whether the focus trap is active
    */

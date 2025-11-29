@@ -9,7 +9,7 @@ import {
 } from '@/lib/performance';
 import { useAnalytics } from './useAnalytics';
 
-interface UsePerformanceOptions {
+export interface UsePerformanceOptions {
   /**
    * Prefix for all marks/measures
    */
@@ -24,7 +24,7 @@ interface UsePerformanceOptions {
   debug?: boolean;
 }
 
-interface TimingResult {
+export interface TimingResult {
   name: string;
   duration: number;
   startTime: number;

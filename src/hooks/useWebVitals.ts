@@ -13,7 +13,7 @@ import {
 } from '@/lib/performance';
 import { useAnalytics } from './useAnalytics';
 
-interface UseWebVitalsOptions {
+export interface UseWebVitalsOptions {
   /**
    * Enable reporting to analytics
    */
@@ -28,7 +28,7 @@ interface UseWebVitalsOptions {
   debug?: boolean;
 }
 
-interface WebVitalsState {
+export interface WebVitalsState {
   metrics: PerformanceMetric[];
   score: number;
   isLoading: boolean;

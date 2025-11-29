@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { track } from '@vercel/analytics';
 
-type EventProperties = Record<string, string | number | boolean | null>;
+export type EventProperties = Record<string, string | number | boolean | null>;
 
-interface AnalyticsEvent {
+export interface AnalyticsEvent {
   name: string;
   properties?: EventProperties | undefined;
 }
 
-interface UseAnalyticsOptions {
+export interface UseAnalyticsOptions {
   /**
    * Enable debug logging in development
    */

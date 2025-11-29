@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-interface UsePWAInstallReturn {
+export interface UsePWAInstallReturn {
   /** Whether the PWA can be installed (prompt is available) */
   canInstall: boolean;
   /** Whether the app is already installed (running in standalone mode) */

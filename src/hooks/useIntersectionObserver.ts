@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-interface IntersectionObserverOptions {
+export interface IntersectionObserverOptions {
   root?: Element | null;
   rootMargin?: string;
   threshold?: number | number[];
   freezeOnceVisible?: boolean;
 }
 
-interface IntersectionResult {
+export interface IntersectionResult {
   isIntersecting: boolean;
   entry: IntersectionObserverEntry | null;
 }
