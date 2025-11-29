@@ -14,7 +14,10 @@ interface BlogCardProps {
   index: number;
 }
 
-export function BlogCard({ post, index }: BlogCardProps) {
+export const BlogCard = React.memo(function BlogCard({
+  post,
+  index,
+}: BlogCardProps) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [liked, setLiked] = React.useState(false);
 
@@ -172,4 +175,6 @@ export function BlogCard({ post, index }: BlogCardProps) {
       </Link>
     </motion.div>
   );
-}
+});
+
+BlogCard.displayName = 'BlogCard';

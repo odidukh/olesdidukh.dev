@@ -24,7 +24,11 @@ interface ProjectCardProps {
   viewMode: 'grid' | 'list';
 }
 
-export function ProjectCard({ project, index, viewMode }: ProjectCardProps) {
+export const ProjectCard = React.memo(function ProjectCard({
+  project,
+  index,
+  viewMode,
+}: ProjectCardProps) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [imageError, setImageError] = React.useState(false);
 
@@ -298,4 +302,6 @@ export function ProjectCard({ project, index, viewMode }: ProjectCardProps) {
       </Link>
     </motion.div>
   );
-}
+});
+
+ProjectCard.displayName = 'ProjectCard';
