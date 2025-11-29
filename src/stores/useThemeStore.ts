@@ -1,71 +1,116 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+type ThemeMode = 'light' | 'dark' | 'system';
+
 interface ThemeState {
-  /** Whether dark mode is enabled */
-  isDark: boolean;
+  /** The selected theme mode: light, dark, or system */
+  mode: ThemeMode;
+  /** The resolved theme (always light or dark, based on mode and system preference) */
+  resolvedTheme: 'light' | 'dark';
   /** Whether the store has been hydrated from localStorage */
   hasHydrated: boolean;
 
-  /** Toggle between light and dark mode */
+  /** Set theme mode */
+  setMode: (mode: ThemeMode) => void;
+  /** Toggle between light and dark (skips system) */
   toggleTheme: () => void;
-  /** Set theme explicitly */
-  setTheme: (isDark: boolean) => void;
+  /** Update resolved theme based on system preference */
+  updateResolvedTheme: () => void;
   /** Set hydrated state */
   setHasHydrated: (hydrated: boolean) => void;
 }
 
 /**
+ * Get system preference for color scheme
+ */
+function getSystemPreference(): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
+}
+
+/**
+ * Apply theme to DOM with smooth transition
+ */
+function applyTheme(theme: 'light' | 'dark') {
+  if (typeof document === 'undefined') return;
+
+  const root = document.documentElement;
+
+  // Add transition class for smooth theme change
+  root.classList.add('theme-transition');
+
+  if (theme === 'dark') {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+
+  // Remove transition class after animation completes
+  // Using requestAnimationFrame to ensure the class is applied first
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 300);
+  });
+}
+
+/**
  * Global theme store using Zustand with localStorage persistence.
+ *
+ * Supports three modes:
+ * - 'light': Always use light theme
+ * - 'dark': Always use dark theme
+ * - 'system': Follow system preference (prefers-color-scheme)
  *
  * @example
  * ```tsx
  * import { useThemeStore } from '@/stores/useThemeStore';
  *
  * function ThemeToggle() {
- *   const { isDark, toggleTheme } = useThemeStore();
+ *   const { mode, setMode, resolvedTheme } = useThemeStore();
  *   return (
- *     <button onClick={toggleTheme}>
- *       {isDark ? 'Light' : 'Dark'} Mode
- *     </button>
+ *     <select value={mode} onChange={(e) => setMode(e.target.value as ThemeMode)}>
+ *       <option value="light">Light</option>
+ *       <option value="dark">Dark</option>
+ *       <option value="system">System</option>
+ *     </select>
  *   );
  * }
  * ```
  */
 export const useThemeStore = create<ThemeState>()(
   persist(
-    set => ({
-      isDark: false,
+    (set, get) => ({
+      mode: 'system',
+      resolvedTheme: 'light',
       hasHydrated: false,
 
-      toggleTheme: () =>
-        set(state => {
-          const newIsDark = !state.isDark;
-          // Apply to DOM
-          if (typeof document !== 'undefined') {
-            if (newIsDark) {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-          }
-          return { isDark: newIsDark };
-        }),
+      setMode: (mode: ThemeMode) => {
+        const resolvedTheme = mode === 'system' ? getSystemPreference() : mode;
+        applyTheme(resolvedTheme);
+        set({ mode, resolvedTheme });
+      },
 
-      setTheme: isDark =>
-        set(() => {
-          // Apply to DOM
-          if (typeof document !== 'undefined') {
-            if (isDark) {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-          }
-          return { isDark };
-        }),
+      toggleTheme: () => {
+        const { resolvedTheme } = get();
+        const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+        set({ mode: newTheme, resolvedTheme: newTheme });
+      },
 
-      setHasHydrated: hydrated => set({ hasHydrated: hydrated }),
+      updateResolvedTheme: () => {
+        const { mode } = get();
+        if (mode === 'system') {
+          const resolvedTheme = getSystemPreference();
+          applyTheme(resolvedTheme);
+          set({ resolvedTheme });
+        }
+      },
+
+      setHasHydrated: (hydrated: boolean) => set({ hasHydrated: hydrated }),
     }),
     {
       name: 'theme-storage',
@@ -80,20 +125,32 @@ export const useThemeStore = create<ThemeState>()(
         }
         return localStorage;
       }),
-      partialize: state => ({ isDark: state.isDark }),
+      partialize: state => ({ mode: state.mode }),
       onRehydrateStorage: () => (state, error) => {
         if (error) {
           console.error('Failed to rehydrate theme store:', error);
           return;
         }
 
-        // Apply theme to DOM on rehydrate
-        if (state?.isDark && typeof document !== 'undefined') {
-          document.documentElement.classList.add('dark');
-        }
-
-        // Mark as hydrated
         if (state) {
+          // Calculate and apply resolved theme
+          const resolvedTheme =
+            state.mode === 'system' ? getSystemPreference() : state.mode;
+          applyTheme(resolvedTheme);
+          state.resolvedTheme = resolvedTheme;
+
+          // Set up system preference listener
+          if (typeof window !== 'undefined') {
+            const mediaQuery = window.matchMedia(
+              '(prefers-color-scheme: dark)'
+            );
+            const handleChange = () => {
+              state.updateResolvedTheme();
+            };
+            mediaQuery.addEventListener('change', handleChange);
+          }
+
+          // Mark as hydrated
           state.setHasHydrated(true);
         }
       },
@@ -102,10 +159,17 @@ export const useThemeStore = create<ThemeState>()(
 );
 
 /**
- * Hook to get only the isDark value without subscribing to other state changes.
- * This is useful for components that only need to know the theme.
+ * Hook to get only the resolved theme (light or dark).
+ * This is useful for components that only need to know the current theme.
  */
-export const useIsDark = () => useThemeStore(state => state.isDark);
+export const useResolvedTheme = () =>
+  useThemeStore(state => state.resolvedTheme);
+
+/**
+ * Hook to check if dark mode is active (shorthand).
+ */
+export const useIsDark = () =>
+  useThemeStore(state => state.resolvedTheme === 'dark');
 
 /**
  * Hook to check if the store has been hydrated from localStorage.

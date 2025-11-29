@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 31
+- **Completed**: 32
 - **In Progress**: 0
-- **Pending**: 5
+- **Pending**: 4
 
 ---
 
@@ -1351,16 +1351,52 @@ refactor: simplify data fetching logic
 
 ### 25. Dark Mode Enhancements
 
-**Status**: ⬜ Pending  
-**Effort**: Low (2-3 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (2-3 hours)
 **UX Impact**: Low
 
 #### Tasks:
 
-- [ ] Improve color contrast
-- [ ] Add transition animations
-- [ ] Fix edge cases
-- [ ] Add system preference sync
+- [x] Improve color contrast
+- [x] Add transition animations
+- [x] Fix edge cases
+- [x] Add system preference sync
+
+#### Implementation (Completed):
+
+**Theme Store Enhancements** (`/src/stores/useThemeStore.ts`):
+
+- **Three modes**: `light`, `dark`, and `system` (follows OS preference)
+- **System preference sync**: Listens to `prefers-color-scheme` media query changes
+- **Resolved theme**: Always provides the actual theme (light/dark) being displayed
+- **Hooks**: `useIsDark()`, `useResolvedTheme()`, `useThemeHydrated()`
+
+**Transition Animations** (`/src/app/globals.css`):
+
+```css
+html.theme-transition * {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.15s ease;
+}
+```
+
+- Smooth 300ms transitions for background and borders
+- Faster 150ms transitions for text color
+- Respects `prefers-reduced-motion` preference
+- Transition class auto-removed after animation completes
+
+**Flash Prevention** (`/src/app/layout.tsx`):
+
+- Inline script runs before React hydration
+- Reads theme preference from localStorage
+- Applies `dark` class immediately if needed
+- Supports system preference fallback
+
+**Updated Components**:
+
+- `Navigation.tsx` - Updated to use new `resolvedTheme` API
 
 ### 26. SEO Schema Expansion
 

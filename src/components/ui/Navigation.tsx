@@ -34,7 +34,8 @@ export function Navigation({ className }: NavigationProps) {
   const [isScrolled, setIsScrolled] = React.useState(false);
 
   // Use global theme store
-  const { isDark, toggleTheme } = useThemeStore();
+  const { resolvedTheme, toggleTheme } = useThemeStore();
+  const isDark = resolvedTheme === 'dark';
 
   // Handle scroll effect
   React.useEffect(() => {
