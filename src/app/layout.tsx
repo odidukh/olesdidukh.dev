@@ -57,6 +57,25 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Resource hints for performance optimization
+ * - preconnect: Establish early connections to important third-party origins
+ * - dns-prefetch: Resolve DNS for external domains ahead of time
+ */
+const resourceHints = {
+  // High-priority connections (preconnect)
+  preconnect: [
+    'https://va.vercel-scripts.com', // Vercel Analytics
+    'https://www.googletagmanager.com', // Google Analytics (if configured)
+    'https://www.clarity.ms', // Microsoft Clarity (if configured)
+  ],
+  // Lower-priority DNS resolution (dns-prefetch)
+  dnsPrefetch: [
+    'https://api.buttondown.email', // Newsletter API
+    'https://o4504644030119936.ingest.us.sentry.io', // Sentry (example, update with actual DSN)
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -96,6 +115,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Resource Hints - Preconnect for high-priority third-party origins */}
+        {resourceHints.preconnect.map(url => (
+          <link key={url} rel="preconnect" href={url} crossOrigin="anonymous" />
+        ))}
+        {/* Resource Hints - DNS Prefetch for lower-priority domains */}
+        {resourceHints.dnsPrefetch.map(url => (
+          <link key={url} rel="dns-prefetch" href={url} />
+        ))}
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

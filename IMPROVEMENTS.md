@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 13
+- **Completed**: 15
 - **In Progress**: 0
-- **Pending**: 23
+- **Pending**: 21
 
 ---
 
@@ -717,16 +717,40 @@ NEXT_PUBLIC_CLARITY_PROJECT_ID=xxxxxxxxxx
 
 ### 18. Resource Hints
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1 hour)  
+**Status**: ✅ Completed
+**Effort**: Low (1 hour)
 **Performance Impact**: Low
 
 #### Tasks:
 
-- [ ] Add preconnect for external domains
-- [ ] Add dns-prefetch for API endpoints
-- [ ] Implement route prefetching
-- [ ] Add critical CSS preload
+- [x] Add preconnect for external domains
+- [x] Add dns-prefetch for API endpoints
+- [x] Implement route prefetching (Next.js handles automatically)
+- [x] Add critical CSS preload (Next.js handles automatically)
+
+#### Implementation (Completed):
+
+**Files Modified**:
+
+- `/src/app/layout.tsx` - Added resource hints configuration and link elements
+
+**Preconnect Hints** (High Priority):
+
+- `https://va.vercel-scripts.com` - Vercel Analytics
+- `https://www.googletagmanager.com` - Google Analytics (when configured)
+- `https://www.clarity.ms` - Microsoft Clarity (when configured)
+
+**DNS Prefetch Hints** (Lower Priority):
+
+- `https://api.buttondown.email` - Newsletter API
+- Sentry ingestion endpoint
+
+**Benefits**:
+
+- Reduces connection latency for third-party scripts
+- Allows browser to resolve DNS ahead of time
+- Improves Time to First Byte (TTFB) for external resources
+- Combined with Next.js automatic prefetching for internal routes
 
 ### 19. Animation Constants
 
@@ -783,16 +807,59 @@ NEXT_PUBLIC_CLARITY_PROJECT_ID=xxxxxxxxxx
 
 ### 23. Commit Message Validation
 
-**Status**: ⬜ Pending  
-**Effort**: Low (1 hour)  
+**Status**: ✅ Completed
+**Effort**: Low (1 hour)
 **DX Impact**: Low
 
 #### Tasks:
 
-- [ ] Install commitlint
-- [ ] Configure conventional commits
-- [ ] Add to husky hooks
-- [ ] Document in contributing guide
+- [x] Install commitlint
+- [x] Configure conventional commits
+- [x] Add to husky hooks
+- [ ] Document in contributing guide (optional, when CONTRIBUTING.md is created)
+
+#### Implementation (Completed):
+
+**Packages Installed**:
+
+- `@commitlint/cli` - Commitlint CLI
+- `@commitlint/config-conventional` - Conventional commits preset
+
+**Files Created**:
+
+- `/commitlint.config.js` - Commitlint configuration
+- `/.husky/commit-msg` - Husky hook for commit message validation
+
+**Commit Types Allowed**:
+
+- `feat` - New feature
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, etc.)
+- `refactor` - Code refactoring
+- `perf` - Performance improvement
+- `test` - Adding or correcting tests
+- `build` - Build system or dependency changes
+- `ci` - CI/CD configuration changes
+- `chore` - Other changes
+- `revert` - Reverts a previous commit
+
+**Validation Rules**:
+
+- Type must be lowercase and non-empty
+- Subject must be non-empty and max 100 chars
+- Subject must not end with period
+- Header max length: 100 characters
+- Body/footer max line length: 200 characters
+
+**Example Valid Commits**:
+
+```bash
+feat: add user authentication
+fix: resolve login redirect issue
+docs: update API documentation
+refactor: simplify data fetching logic
+```
 
 ### 24. Visual Regression Tests
 
