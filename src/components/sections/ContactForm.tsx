@@ -299,13 +299,26 @@ export function ContactForm() {
           Project Type
           <span className="text-muted-foreground ml-1">(optional)</span>
         </label>
-        <div className="flex flex-wrap gap-2">
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Project type options"
+        >
           {projectTypes.map(type => (
             <Badge
               key={type}
               variant={formData.projectType === type ? 'default' : 'outline'}
-              className="cursor-pointer transition-all hover:scale-105"
+              className="cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               onClick={() => handleInputChange('projectType', type)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleInputChange('projectType', type);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-pressed={formData.projectType === type}
             >
               {type}
             </Badge>
@@ -320,13 +333,26 @@ export function ContactForm() {
             Budget Range
             <span className="text-muted-foreground ml-1">(optional)</span>
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div
+            className="grid grid-cols-2 gap-2"
+            role="group"
+            aria-label="Budget range options"
+          >
             {budgetRanges.map(range => (
               <Badge
                 key={range}
                 variant={formData.budget === range ? 'default' : 'outline'}
-                className="cursor-pointer transition-all hover:scale-105 justify-center"
+                className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 onClick={() => handleInputChange('budget', range)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleInputChange('budget', range);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-pressed={formData.budget === range}
               >
                 {range}
               </Badge>
@@ -339,13 +365,26 @@ export function ContactForm() {
             Timeline
             <span className="text-muted-foreground ml-1">(optional)</span>
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div
+            className="grid grid-cols-2 gap-2"
+            role="group"
+            aria-label="Timeline options"
+          >
             {timelines.map(time => (
               <Badge
                 key={time}
                 variant={formData.timeline === time ? 'default' : 'outline'}
-                className="cursor-pointer transition-all hover:scale-105 justify-center"
+                className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 onClick={() => handleInputChange('timeline', time)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleInputChange('timeline', time);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-pressed={formData.timeline === time}
               >
                 {time}
               </Badge>
