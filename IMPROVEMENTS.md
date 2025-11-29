@@ -7,9 +7,9 @@ This document tracks all suggested improvements for the portfolio website (olesd
 ## 📊 Overview
 
 - **Total Improvements**: 36
-- **Completed**: 30
+- **Completed**: 31
 - **In Progress**: 0
-- **Pending**: 6
+- **Pending**: 5
 
 ---
 
@@ -1235,16 +1235,47 @@ Added documentation clarifying budgets are raw sizes, not gzipped.
 
 ### 22. Uses/Stack Page
 
-**Status**: ⬜ Pending  
-**Effort**: Low (2-3 hours)  
+**Status**: ✅ Completed
+**Effort**: Low (2-3 hours)
 **Content Impact**: Low
 
 #### Tasks:
 
-- [ ] Create /uses page
-- [ ] Document development setup
-- [ ] List tools and technologies
-- [ ] Add to navigation
+- [x] Create /uses page
+- [x] Document development setup
+- [x] List tools and technologies
+- [x] Add to navigation
+
+#### Implementation (Completed):
+
+**Files Created**:
+
+- `/src/app/uses/page.tsx` - Uses & Stack page component
+- `/src/app/uses/layout.tsx` - Metadata and SEO configuration
+
+**Page Structure** (`/uses`):
+
+The page documents tools, technologies, and services used for development:
+
+| Category                | Items                                                                                        |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| Hardware                | MacBook Pro, Monitor, Keyboard, Mouse, Headphones                                            |
+| Development Environment | VS Code, Cursor, iTerm2 + Oh My Zsh, GitHub Copilot                                          |
+| VS Code Extensions      | ESLint, Prettier, GitLens, Tailwind IntelliSense                                             |
+| Design & Assets         | Figma, Excalidraw, ImageOptim, Lucide Icons                                                  |
+| Productivity Apps       | Raycast, Arc Browser, Notion, Slack, 1Password                                               |
+| This Website            | Next.js 16, React 19, TypeScript, Tailwind CSS v4, Framer Motion, Three.js, Vercel, Supabase |
+| Services & APIs         | GitHub, Vercel Analytics, Sentry, Resend, Upstash Redis                                      |
+
+**Features**:
+
+- Animated sections with Framer Motion
+- Responsive grid layout
+- External links to tools/services
+- Categorized by type
+- Inspired by uses.tech
+
+**Navigation**: Added "Uses" link to main navigation between Skills and Blog
 
 ### 23. Commit Message Validation
 
