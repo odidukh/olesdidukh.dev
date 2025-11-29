@@ -11,8 +11,8 @@ This document tracks actionable improvements for the portfolio website (olesdidu
 | P0 - Critical | 2      | 2 Complete      |
 | P1 - High     | 9      | 8 Complete      |
 | P2 - Medium   | 15     | 11 Complete     |
-| P3 - Low      | 7      | 5 Complete      |
-| **Total**     | **33** | **26 Complete** |
+| P3 - Low      | 7      | 6 Complete      |
+| **Total**     | **33** | **27 Complete** |
 
 ---
 
@@ -874,17 +874,33 @@ Removed non-standard `X-RateLimit-*` headers that exposed throttling configurati
 
 ### 29. Documentation Overhaul
 
-**Status**: [ ] Pending
+**Status**: [x] Completed
 **Effort**: Medium (2-3 hours)
 **Impact**: Developer Experience
 
 **Issue**: Project documentation needs updating.
 
-**Tasks**:
+**Implementation**:
 
-- [ ] Update `README.md` with project overview, setup instructions, tech stack, and deployment info
-- [ ] Create `CONTRIBUTING.md` with guidelines for contributing
-- [ ] Document custom hooks in `src/hooks/README.md` (optional)
+1. **Updated `README.md`** - Complete rewrite with:
+   - Project overview and live site link
+   - Full tech stack table
+   - Getting started guide (prerequisites, installation, env vars)
+   - Development commands and quality checks
+   - Project structure overview
+   - Features list (dark mode, blog, projects, contact, analytics, PWA, a11y)
+   - Performance targets table
+   - Link to CONTRIBUTING.md
+
+2. **`CONTRIBUTING.md`** - Already comprehensive (created in item #18):
+   - Getting started and setup instructions
+   - Branch naming and commit message conventions
+   - Code standards (TypeScript, React, styling)
+   - Component patterns (UI primitives, section components, memoization)
+   - Quality checks and pre-commit hooks
+   - PR template and testing instructions
+
+3. **Hooks documentation** - Skipped separate README as all hooks now have comprehensive JSDoc with @example blocks (item #25)
 
 ---
 
