@@ -39,13 +39,22 @@ export function ParticleField() {
 
     generateParticles();
 
-    // Regenerate particles on resize
+    // Debounced resize handler to prevent expensive particle regeneration on every resize event
+    let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
     const handleResize = () => {
-      generateParticles();
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+      resizeTimeout = setTimeout(generateParticles, 250);
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+    };
   }, []);
 
   // Track mouse position for interactive effect
