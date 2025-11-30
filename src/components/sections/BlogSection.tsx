@@ -182,7 +182,7 @@ export function BlogSection() {
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                     className="pl-10"
-                    inputSize="lg"
+                    size="lg"
                   />
                 </div>
               </div>

@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
  * Input variant styles using class-variance-authority.
  *
  * @property {'default' | 'error' | 'success' | 'warning'} variant - Visual state variant.
- * @property {'sm' | 'md' | 'lg' | 'xl'} inputSize - Input height and padding.
+ * @property {'sm' | 'md' | 'lg' | 'xl'} size - Input height and padding.
  */
 const inputVariants = cva(
   'flex w-full rounded-lg border bg-transparent px-3 py-2 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
@@ -18,7 +18,7 @@ const inputVariants = cva(
         success: 'border-success focus-visible:ring-success',
         warning: 'border-warning focus-visible:ring-warning',
       },
-      inputSize: {
+      size: {
         sm: 'h-8 px-2 text-xs',
         md: 'h-10 px-3 py-2',
         lg: 'h-12 px-4 text-base',
@@ -27,7 +27,7 @@ const inputVariants = cva(
     },
     defaultVariants: {
       variant: 'default',
-      inputSize: 'md',
+      size: 'md',
     },
   }
 );
@@ -40,10 +40,11 @@ const inputVariants = cva(
  * @property {boolean} [error] - Shorthand for variant="error". Shows error styling.
  * @property {boolean} [success] - Shorthand for variant="success". Shows success styling.
  * @property {'default' | 'error' | 'success' | 'warning'} [variant] - Visual state variant.
- * @property {'sm' | 'md' | 'lg' | 'xl'} [inputSize] - Input size (height and padding).
+ * @property {'sm' | 'md' | 'lg' | 'xl'} [size] - Input size (height and padding).
  */
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof inputVariants> {
   /** Icon displayed on the left side of the input */
   leftIcon?: React.ReactNode;
@@ -73,8 +74,8 @@ export interface InputProps
  * <Input error placeholder="Invalid input" />
  *
  * // Different sizes
- * <Input inputSize="sm" placeholder="Small input" />
- * <Input inputSize="lg" placeholder="Large input" />
+ * <Input size="sm" placeholder="Small input" />
+ * <Input size="lg" placeholder="Large input" />
  *
  * // With form validation
  * <Input
@@ -89,7 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       type,
       variant,
-      inputSize,
+      size,
       leftIcon,
       rightIcon,
       error,
@@ -117,7 +118,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             aria-invalid={error || undefined}
             className={cn(
-              inputVariants({ variant: computedVariant, inputSize }),
+              inputVariants({ variant: computedVariant, size }),
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               className
@@ -139,7 +140,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         aria-invalid={error || undefined}
         className={cn(
-          inputVariants({ variant: computedVariant, inputSize }),
+          inputVariants({ variant: computedVariant, size }),
           className
         )}
         ref={ref}

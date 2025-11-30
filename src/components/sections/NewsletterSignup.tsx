@@ -183,7 +183,7 @@ export function NewsletterSignup() {
                         }}
                         className={`pl-10 ${error ? 'border-destructive' : ''}`}
                         disabled={status === 'loading'}
-                        inputSize="lg"
+                        size="lg"
                       />
                     </div>
                     {error && (

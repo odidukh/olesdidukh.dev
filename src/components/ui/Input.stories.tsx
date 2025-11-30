@@ -22,7 +22,7 @@ const meta = {
       options: ['default', 'error', 'success', 'warning'],
       description: 'The validation state variant',
     },
-    inputSize: {
+    size: {
       control: 'select',
       options: ['sm', 'md', 'lg', 'xl'],
       description: 'The size of the input',
@@ -97,28 +97,28 @@ export const Search: Story = {
 // Sizes
 export const Small: Story = {
   args: {
-    inputSize: 'sm',
+    size: 'sm',
     placeholder: 'Small input',
   },
 };
 
 export const Medium: Story = {
   args: {
-    inputSize: 'md',
+    size: 'md',
     placeholder: 'Medium input (default)',
   },
 };
 
 export const Large: Story = {
   args: {
-    inputSize: 'lg',
+    size: 'lg',
     placeholder: 'Large input',
   },
 };
 
 export const ExtraLarge: Story = {
   args: {
-    inputSize: 'xl',
+    size: 'xl',
     placeholder: 'Extra large input',
   },
 };
@@ -236,10 +236,10 @@ export const FormField: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div className="space-y-4">
-      <Input inputSize="sm" placeholder="Small" />
-      <Input inputSize="md" placeholder="Medium (default)" />
-      <Input inputSize="lg" placeholder="Large" />
-      <Input inputSize="xl" placeholder="Extra Large" />
+      <Input size="sm" placeholder="Small" />
+      <Input size="md" placeholder="Medium (default)" />
+      <Input size="lg" placeholder="Large" />
+      <Input size="xl" placeholder="Extra Large" />
     </div>
   ),
 };

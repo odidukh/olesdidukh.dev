@@ -68,7 +68,7 @@ describe('Input', () => {
   });
 
   it('applies small size', () => {
-    render(<Input inputSize="sm" placeholder="Small input" />);
+    render(<Input size="sm" placeholder="Small input" />);
 
     const input = screen.getByPlaceholderText('Small input');
     expect(input).toHaveClass('h-8');
@@ -76,14 +76,14 @@ describe('Input', () => {
   });
 
   it('applies large size', () => {
-    render(<Input inputSize="lg" placeholder="Large input" />);
+    render(<Input size="lg" placeholder="Large input" />);
 
     const input = screen.getByPlaceholderText('Large input');
     expect(input).toHaveClass('h-12');
   });
 
   it('applies xl size', () => {
-    render(<Input inputSize="xl" placeholder="XL input" />);
+    render(<Input size="xl" placeholder="XL input" />);
 
     const input = screen.getByPlaceholderText('XL input');
     expect(input).toHaveClass('h-14');

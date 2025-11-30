@@ -70,7 +70,7 @@ describe('Textarea', () => {
   });
 
   it('applies small size', () => {
-    render(<Textarea textareaSize="sm" placeholder="Small textarea" />);
+    render(<Textarea size="sm" placeholder="Small textarea" />);
 
     const textarea = screen.getByPlaceholderText('Small textarea');
     expect(textarea).toHaveClass('min-h-[60px]');
@@ -78,14 +78,14 @@ describe('Textarea', () => {
   });
 
   it('applies large size', () => {
-    render(<Textarea textareaSize="lg" placeholder="Large textarea" />);
+    render(<Textarea size="lg" placeholder="Large textarea" />);
 
     const textarea = screen.getByPlaceholderText('Large textarea');
     expect(textarea).toHaveClass('min-h-[120px]');
   });
 
   it('applies xl size', () => {
-    render(<Textarea textareaSize="xl" placeholder="XL textarea" />);
+    render(<Textarea size="xl" placeholder="XL textarea" />);
 
     const textarea = screen.getByPlaceholderText('XL textarea');
     expect(textarea).toHaveClass('min-h-[160px]');

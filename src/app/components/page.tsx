@@ -386,13 +386,10 @@ export default function ComponentShowcase() {
                     <CardTitle>Input Sizes</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <FormInput inputSize="sm" placeholder="Small input" />
-                    <FormInput
-                      inputSize="md"
-                      placeholder="Medium input (default)"
-                    />
-                    <FormInput inputSize="lg" placeholder="Large input" />
-                    <FormInput inputSize="xl" placeholder="Extra large input" />
+                    <FormInput size="sm" placeholder="Small input" />
+                    <FormInput size="md" placeholder="Medium input (default)" />
+                    <FormInput size="lg" placeholder="Large input" />
+                    <FormInput size="xl" placeholder="Extra large input" />
                   </CardContent>
                 </Card>
               </div>
