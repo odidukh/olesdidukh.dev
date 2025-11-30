@@ -4,6 +4,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import { Play, Pause, Volume2, VolumeX, Maximize, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { VIDEO_PLAYER_CONFIG } from '@/config/animations';
 import type { ProjectVideo } from '@/data/projects';
 
 interface VideoPlayerProps {
@@ -334,7 +335,10 @@ export function VideoPlayer({
           observer.disconnect();
         }
       },
-      { rootMargin: '100px', threshold: 0.1 }
+      {
+        rootMargin: VIDEO_PLAYER_CONFIG.INTERSECTION_ROOT_MARGIN,
+        threshold: VIDEO_PLAYER_CONFIG.INTERSECTION_THRESHOLD,
+      }
     );
 
     if (containerRef.current) {

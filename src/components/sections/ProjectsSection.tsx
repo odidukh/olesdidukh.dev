@@ -10,31 +10,11 @@ import { ProjectCard } from './ProjectCard';
 import { projectsData } from '@/data/projects';
 import { useProjectsFilterStore } from '@/stores';
 import { Search, Filter, Grid3x3, List, Sparkles, X } from 'lucide-react';
-
-const categories = [
-  'All',
-  'Web Application',
-  'E-Commerce',
-  'SaaS',
-  'Mobile App',
-  'Open Source',
-  'UI/UX Design',
-];
-
-const technologies = [
-  'React',
-  'TypeScript',
-  'Next.js',
-  'Node.js',
-  'GraphQL',
-  'PostgreSQL',
-  'MongoDB',
-  'Redux',
-  'Tailwind CSS',
-  'AWS',
-  'Docker',
-  'React Native',
-];
+import {
+  PROJECT_CATEGORIES,
+  PROJECT_TECHNOLOGIES,
+} from '@/config/project-filters';
+import { ALL_FILTER } from '@/constants';
 
 export function ProjectsSection() {
   // Use global filter store for persistent state
@@ -56,7 +36,10 @@ export function ProjectsSection() {
   const filteredProjects = React.useMemo(() => {
     return projectsData.filter(project => {
       // Category filter
-      if (selectedCategory !== 'All' && project.category !== selectedCategory) {
+      if (
+        selectedCategory !== ALL_FILTER &&
+        project.category !== selectedCategory
+      ) {
         return false;
       }
 
@@ -83,7 +66,7 @@ export function ProjectsSection() {
   }, [selectedCategory, selectedTechnologies, searchQuery]);
 
   const activeFiltersCount =
-    (selectedCategory !== 'All' ? 1 : 0) +
+    (selectedCategory !== ALL_FILTER ? 1 : 0) +
     selectedTechnologies.length +
     (searchQuery ? 1 : 0);
 
@@ -181,7 +164,7 @@ export function ProjectsSection() {
                       Categories
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {categories.map(category => (
+                      {PROJECT_CATEGORIES.map(category => (
                         <Badge
                           key={category}
                           variant={
@@ -204,7 +187,7 @@ export function ProjectsSection() {
                       Technologies
                     </h3>
                     <div className="flex flex-wrap gap-2">
-                      {technologies.map(tech => (
+                      {PROJECT_TECHNOLOGIES.map(tech => (
                         <Badge
                           key={tech}
                           variant={
@@ -246,11 +229,11 @@ export function ProjectsSection() {
               <span className="text-sm text-muted-foreground">
                 Active filters:
               </span>
-              {selectedCategory !== 'All' && (
+              {selectedCategory !== ALL_FILTER && (
                 <Badge variant="secondary">
                   {selectedCategory}
                   <button
-                    onClick={() => setSelectedCategory('All')}
+                    onClick={() => setSelectedCategory(ALL_FILTER)}
                     className="ml-2 hover:text-destructive"
                   >
                     <X className="h-3 w-3" />

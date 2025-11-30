@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { PARTICLE_CONFIG } from '@/config/animations';
 
 interface Particle {
   id: number;
@@ -21,17 +22,26 @@ export function ParticleField() {
   React.useEffect(() => {
     const generateParticles = () => {
       const newParticles: Particle[] = [];
-      const particleCount = window.innerWidth < 768 ? 20 : 40; // Fewer particles on mobile
+      const particleCount =
+        window.innerWidth < PARTICLE_CONFIG.MOBILE_BREAKPOINT
+          ? PARTICLE_CONFIG.MOBILE_COUNT
+          : PARTICLE_CONFIG.DESKTOP_COUNT;
 
       for (let i = 0; i < particleCount; i++) {
         newParticles.push({
           id: i,
           x: Math.random() * 100,
           y: Math.random() * 100,
-          size: Math.random() * 4 + 1,
-          duration: Math.random() * 20 + 20,
-          delay: Math.random() * 5,
-          opacity: Math.random() * 0.5 + 0.2,
+          size:
+            Math.random() * PARTICLE_CONFIG.SIZE_RANGE +
+            PARTICLE_CONFIG.SIZE_MIN,
+          duration:
+            Math.random() * PARTICLE_CONFIG.DURATION_RANGE +
+            PARTICLE_CONFIG.DURATION_MIN,
+          delay: Math.random() * PARTICLE_CONFIG.MAX_DELAY,
+          opacity:
+            Math.random() * PARTICLE_CONFIG.OPACITY_RANGE +
+            PARTICLE_CONFIG.OPACITY_MIN,
         });
       }
       setParticles(newParticles);
@@ -45,7 +55,10 @@ export function ParticleField() {
       if (resizeTimeout) {
         clearTimeout(resizeTimeout);
       }
-      resizeTimeout = setTimeout(generateParticles, 250);
+      resizeTimeout = setTimeout(
+        generateParticles,
+        PARTICLE_CONFIG.RESIZE_DEBOUNCE_MS
+      );
     };
 
     window.addEventListener('resize', handleResize);
@@ -83,7 +96,10 @@ export function ParticleField() {
         );
 
         // Particles glow brighter when mouse is near
-        const glowIntensity = Math.max(0, 1 - distance / 30);
+        const glowIntensity = Math.max(
+          0,
+          1 - distance / PARTICLE_CONFIG.GLOW_DISTANCE_THRESHOLD
+        );
 
         return (
           <motion.div
@@ -147,7 +163,7 @@ export function ParticleField() {
             );
 
             // Only draw lines between nearby particles
-            if (distance < 15) {
+            if (distance < PARTICLE_CONFIG.CONNECTION_DISTANCE_THRESHOLD) {
               return (
                 <motion.line
                   key={`${particle1.id}-${particle2.id}`}
@@ -160,7 +176,10 @@ export function ParticleField() {
                   className="text-gray-300 dark:text-gray-700"
                   initial={{ opacity: 0 }}
                   animate={{
-                    opacity: (15 - distance) / 30,
+                    opacity:
+                      (PARTICLE_CONFIG.CONNECTION_DISTANCE_THRESHOLD -
+                        distance) /
+                      PARTICLE_CONFIG.GLOW_DISTANCE_THRESHOLD,
                   }}
                   transition={{
                     duration: 0.5,

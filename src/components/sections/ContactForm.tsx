@@ -20,6 +20,7 @@ import {
   AlertCircle,
   Sparkles,
 } from 'lucide-react';
+import { PROJECT_TYPES, BUDGET_RANGES, TIMELINES } from '@/config/contact-form';
 
 interface FormData {
   name: string;
@@ -40,34 +41,6 @@ interface FormErrors {
   phone?: string;
   message?: string;
 }
-
-const projectTypes = [
-  'Web Application',
-  'E-Commerce Site',
-  'SaaS Platform',
-  'Mobile App',
-  'UI/UX Design',
-  'Consulting',
-  'Other',
-];
-
-const budgetRanges = [
-  'Under $5k',
-  '$5k - $10k',
-  '$10k - $25k',
-  '$25k - $50k',
-  '$50k+',
-  'Not Sure',
-];
-
-const timelines = [
-  'ASAP',
-  '1-2 weeks',
-  '1 month',
-  '2-3 months',
-  '3-6 months',
-  'Flexible',
-];
 
 export function ContactForm() {
   const { trackFormSubmission } = useAnalytics();
@@ -316,7 +289,7 @@ export function ContactForm() {
           role="group"
           aria-label="Project type options"
         >
-          {projectTypes.map(type => (
+          {PROJECT_TYPES.map(type => (
             <Badge
               key={type}
               variant={formData.projectType === type ? 'default' : 'outline'}
@@ -350,7 +323,7 @@ export function ContactForm() {
             role="group"
             aria-label="Budget range options"
           >
-            {budgetRanges.map(range => (
+            {BUDGET_RANGES.map(range => (
               <Badge
                 key={range}
                 variant={formData.budget === range ? 'default' : 'outline'}
@@ -382,7 +355,7 @@ export function ContactForm() {
             role="group"
             aria-label="Timeline options"
           >
-            {timelines.map(time => (
+            {TIMELINES.map(time => (
               <Badge
                 key={time}
                 variant={formData.timeline === time ? 'default' : 'outline'}
