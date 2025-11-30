@@ -264,23 +264,23 @@ This document contains prioritized improvement suggestions organized by category
 
 ## Testing Improvements
 
-### Critical: Custom Hooks (0% coverage → target 80%)
+### Critical: Custom Hooks ✅ (64 tests)
 
-- [ ] **Add tests for useSearch hook**
-  - File: `src/hooks/useSearch.ts`
-  - Priority: High (core search functionality)
+- [x] **Add tests for useSearch hook**
+  - File: `src/hooks/useSearch.test.tsx` (19 tests)
+  - Covers: Search queries, filtering, sorting, edge cases
 
-- [ ] **Add tests for useMediaQuery hook**
-  - File: `src/hooks/useMediaQuery.ts`
-  - Priority: High (responsive design)
+- [x] **Add tests for useMediaQuery hook**
+  - File: `src/hooks/useMediaQuery.test.tsx` (11 tests)
+  - Covers: Query matching, SSR, window listeners, cleanup
 
-- [ ] **Add tests for useLocalStorage hook**
-  - File: `src/hooks/useLocalStorage.ts`
-  - Priority: High (persistent state)
+- [x] **Add tests for useLocalStorage hook**
+  - File: `src/hooks/useLocalStorage.test.tsx` (12 tests)
+  - Covers: Get/set, serialization, SSR, storage events
 
-- [ ] **Add tests for useDebounce hook**
-  - File: `src/hooks/useDebounce.ts`
-  - Priority: High (input handling)
+- [x] **Add tests for useDebounce hook**
+  - File: `src/hooks/useDebounce.test.tsx` (11 tests)
+  - Covers: Delay, value updates, cleanup, immediate
 
 - [ ] **Add tests for remaining hooks**
   - `useIntersectionObserver.ts`
@@ -292,25 +292,27 @@ This document contains prioritized improvement suggestions organized by category
   - `usePWAInstall.ts`
   - `usePageEngagement.ts`
 
-### High: UI Components (15% → target 60%)
+### High: UI Components (252 tests)
 
-- [ ] **Add tests for Input component**
-  - File: `src/components/ui/Input.tsx`
-  - Cover: Validation states, sizes, disabled, error messages
+- [x] **Add tests for Input component**
+  - File: `src/components/ui/Input.test.tsx` (26 tests)
+  - Covers: Validation states, sizes, disabled, error messages
 
-- [ ] **Add tests for Textarea component**
-  - File: `src/components/ui/Textarea.tsx`
+- [x] **Add tests for Textarea component**
+  - File: `src/components/ui/Textarea.test.tsx` (24 tests)
+  - Covers: Same as Input, plus resize behavior
 
-- [ ] **Add tests for Card compound component**
-  - File: `src/components/ui/Card.tsx`
-  - Cover: All sub-components (Header, Title, Content, Footer)
+- [x] **Add tests for Card compound component**
+  - File: `src/components/ui/Card.test.tsx` (31 tests)
+  - Covers: All sub-components (Header, Title, Content, Footer, Image), variants, padding
 
-- [ ] **Add tests for FormField component**
-  - File: `src/components/ui/FormField.tsx`
+- [x] **Add tests for FormField component**
+  - File: `src/components/ui/FormField.test.tsx` (21 tests)
+  - Covers: Label association, error/success/hint states, required/optional indicators
 
-- [ ] **Add tests for ErrorBoundary component**
-  - File: `src/components/ui/ErrorBoundary.tsx`
-  - Cover: Error catching, fallback rendering, Sentry integration
+- [x] **Add tests for ErrorBoundary component**
+  - File: `src/components/ui/ErrorBoundary.test.tsx` (17 tests)
+  - Covers: Error catching, fallback rendering, reset, Sentry integration, HOC
 
 - [ ] **Add tests for remaining UI components**
   - LanguageSwitcher, NewsletterForm, Breadcrumb, Tooltip
@@ -346,13 +348,18 @@ This document contains prioritized improvement suggestions organized by category
   - File: `src/stores/useUIPreferencesStore.test.tsx` (18 tests)
   - Covers: PWA dismiss logic, locale, preferences reset, persistence
 
-### Medium: API Routes (40% → target 100%)
+### Medium: API Routes ✅ (100%)
 
-- [ ] **Add tests for /api/locale route**
-  - File: `src/app/api/locale/route.ts`
+- [x] **Add tests for /api/locale route**
+  - File: `src/app/api/locale/route.test.ts` (6 tests)
+  - Covers: Valid locale setting, invalid locale, empty locale, JSON errors
 
-- [ ] **Add tests for /api/openapi.json route**
-  - File: `src/app/api/openapi.json/route.ts`
+- [x] **Add tests for /api/openapi.json route**
+  - File: `src/app/api/openapi.json/route.test.ts` (6 tests)
+  - Covers: OpenAPI spec structure, headers, paths, servers
+
+- [x] **Fixed /api/contact and /api/newsletter test mocks**
+  - Added proper env, ratelimit, and CSRF mocks
 
 ### Medium: Data Files ✅
 
