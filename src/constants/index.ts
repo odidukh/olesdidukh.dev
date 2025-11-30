@@ -121,3 +121,14 @@ export const SEO = {
     HEIGHT: 630,
   },
 } as const;
+
+/**
+ * Filter constants for blog and projects
+ */
+export const FILTERS = {
+  /** Default filter value representing all items */
+  ALL: 'All',
+} as const;
+
+/** Convenience export for the ALL filter value */
+export const ALL_FILTER = FILTERS.ALL;
