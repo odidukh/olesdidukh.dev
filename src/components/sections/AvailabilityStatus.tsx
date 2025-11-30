@@ -37,7 +37,7 @@ export function AvailabilityStatus() {
   const statusConfig = {
     available: {
       color: 'text-success-600 dark:text-success-400',
-      bgColor: 'bg-success-50 dark:bg-success-900/20',
+      bgColor: 'bg-success-50 dark:bg-success-900',
       borderColor: 'border-success-200 dark:border-success-800',
       icon: CheckCircle,
       text: 'Available for new projects',
@@ -45,7 +45,7 @@ export function AvailabilityStatus() {
     },
     limited: {
       color: 'text-warning-600 dark:text-warning-400',
-      bgColor: 'bg-warning-50 dark:bg-warning-900/20',
+      bgColor: 'bg-warning-50 dark:bg-warning-900',
       borderColor: 'border-warning-200 dark:border-warning-800',
       icon: AlertCircle,
       text: 'Limited availability',
@@ -53,7 +53,7 @@ export function AvailabilityStatus() {
     },
     busy: {
       color: 'text-destructive-600 dark:text-destructive-400',
-      bgColor: 'bg-destructive-50 dark:bg-destructive-900/20',
+      bgColor: 'bg-destructive-50 dark:bg-destructive-900',
       borderColor: 'border-destructive-200 dark:border-destructive-800',
       icon: AlertCircle,
       text: 'Currently at capacity',
