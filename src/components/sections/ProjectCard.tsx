@@ -144,6 +144,7 @@ export const ProjectCard = React.memo(function ProjectCard({
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label={`View ${project.title} live demo`}
                     onClick={e => {
                       e.stopPropagation();
                       window.open(project.liveUrl, '_blank');
@@ -156,6 +157,7 @@ export const ProjectCard = React.memo(function ProjectCard({
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label={`View ${project.title} on GitHub`}
                     onClick={e => {
                       e.stopPropagation();
                       window.open(project.githubUrl, '_blank');
@@ -227,6 +229,7 @@ export const ProjectCard = React.memo(function ProjectCard({
                   variant="secondary"
                   size="icon"
                   className="h-8 w-8 bg-white/90 hover:bg-white"
+                  aria-label={`View ${project.title} live demo`}
                   onClick={e => {
                     e.stopPropagation();
                     window.open(project.liveUrl, '_blank');
@@ -240,6 +243,7 @@ export const ProjectCard = React.memo(function ProjectCard({
                   variant="secondary"
                   size="icon"
                   className="h-8 w-8 bg-white/90 hover:bg-white"
+                  aria-label={`View ${project.title} on GitHub`}
                   onClick={e => {
                     e.stopPropagation();
                     window.open(project.githubUrl, '_blank');
