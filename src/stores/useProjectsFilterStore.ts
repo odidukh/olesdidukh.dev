@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
+import { ALL_FILTER } from '@/constants';
 
 type ViewMode = 'grid' | 'list';
 
@@ -39,7 +40,7 @@ interface ProjectsFilterState {
 }
 
 const initialState = {
-  selectedCategory: 'All',
+  selectedCategory: ALL_FILTER,
   selectedTechnologies: [] as string[],
   searchQuery: '',
   viewMode: 'grid' as ViewMode,
@@ -81,83 +82,86 @@ const initialState = {
  * ```
  */
 export const useProjectsFilterStore = create<ProjectsFilterState>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
+  devtools(
+    persist(
+      (set, get) => ({
+        ...initialState,
 
-      setSelectedCategory: category => set({ selectedCategory: category }),
+        setSelectedCategory: category => set({ selectedCategory: category }),
 
-      toggleTechnology: tech =>
-        set(state => ({
-          selectedTechnologies: state.selectedTechnologies.includes(tech)
-            ? state.selectedTechnologies.filter(t => t !== tech)
-            : [...state.selectedTechnologies, tech],
-        })),
+        toggleTechnology: tech =>
+          set(state => ({
+            selectedTechnologies: state.selectedTechnologies.includes(tech)
+              ? state.selectedTechnologies.filter(t => t !== tech)
+              : [...state.selectedTechnologies, tech],
+          })),
 
-      setSelectedTechnologies: technologies =>
-        set({ selectedTechnologies: technologies }),
+        setSelectedTechnologies: technologies =>
+          set({ selectedTechnologies: technologies }),
 
-      setSearchQuery: query => set({ searchQuery: query }),
+        setSearchQuery: query => set({ searchQuery: query }),
 
-      setViewMode: mode => set({ viewMode: mode }),
+        setViewMode: mode => set({ viewMode: mode }),
 
-      toggleShowFilters: () =>
-        set(state => ({ showFilters: !state.showFilters })),
+        toggleShowFilters: () =>
+          set(state => ({ showFilters: !state.showFilters })),
 
-      setShowFilters: show => set({ showFilters: show }),
+        setShowFilters: show => set({ showFilters: show }),
 
-      clearFilters: () =>
-        set({
-          selectedCategory: 'All',
-          selectedTechnologies: [],
-          searchQuery: '',
-        }),
+        clearFilters: () =>
+          set({
+            selectedCategory: ALL_FILTER,
+            selectedTechnologies: [],
+            searchQuery: '',
+          }),
 
-      resetAll: () =>
-        set({
-          selectedCategory: 'All',
-          selectedTechnologies: [],
-          searchQuery: '',
-          viewMode: 'grid',
-        }),
+        resetAll: () =>
+          set({
+            selectedCategory: ALL_FILTER,
+            selectedTechnologies: [],
+            searchQuery: '',
+            viewMode: 'grid',
+          }),
 
-      hasActiveFilters: () => {
-        const state = get();
-        return (
-          state.selectedCategory !== 'All' ||
-          state.selectedTechnologies.length > 0 ||
-          state.searchQuery !== ''
-        );
-      },
-    }),
-    {
-      name: 'projects-filter-storage',
-      storage: createJSONStorage(() => {
-        if (typeof window === 'undefined') {
-          return {
-            getItem: () => null,
-            setItem: () => {},
-            removeItem: () => {},
-          };
-        }
-        return localStorage;
+        hasActiveFilters: () => {
+          const state = get();
+          return (
+            state.selectedCategory !== ALL_FILTER ||
+            state.selectedTechnologies.length > 0 ||
+            state.searchQuery !== ''
+          );
+        },
       }),
-      // Only persist filter values and view mode, not UI state like showFilters
-      partialize: state => ({
-        selectedCategory: state.selectedCategory,
-        selectedTechnologies: state.selectedTechnologies,
-        searchQuery: state.searchQuery,
-        viewMode: state.viewMode,
-      }),
-      onRehydrateStorage: () => (_state, error) => {
-        if (error) {
-          captureException(error, {
-            store: 'useProjectsFilterStore',
-            action: 'rehydrate',
-          });
-        }
-      },
-    }
+      {
+        name: 'projects-filter-storage',
+        storage: createJSONStorage(() => {
+          if (typeof window === 'undefined') {
+            return {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            };
+          }
+          return localStorage;
+        }),
+        // Only persist filter values and view mode, not UI state like showFilters
+        partialize: state => ({
+          selectedCategory: state.selectedCategory,
+          selectedTechnologies: state.selectedTechnologies,
+          searchQuery: state.searchQuery,
+          viewMode: state.viewMode,
+        }),
+        onRehydrateStorage: () => (_state, error) => {
+          if (error) {
+            captureException(error, {
+              store: 'useProjectsFilterStore',
+              action: 'rehydrate',
+            });
+          }
+        },
+      }
+    ),
+    { name: 'ProjectsFilter', enabled: process.env.NODE_ENV === 'development' }
   )
 );
 
@@ -175,3 +179,6 @@ export const useProjectsSearchQuery = () =>
 
 export const useProjectsViewMode = () =>
   useProjectsFilterStore(state => state.viewMode);
+
+export const useProjectsHasActiveFilters = () =>
+  useProjectsFilterStore(state => state.hasActiveFilters());

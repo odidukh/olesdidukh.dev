@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
+import { ALL_FILTER } from '@/constants';
 
 type SortOption = 'latest' | 'popular' | 'trending';
 
@@ -33,7 +34,7 @@ interface BlogFilterState {
 }
 
 const initialState = {
-  selectedCategory: 'All',
+  selectedCategory: ALL_FILTER,
   searchQuery: '',
   sortBy: 'latest' as SortOption,
   showFilters: false,
@@ -84,66 +85,71 @@ const initialState = {
  * ```
  */
 export const useBlogFilterStore = create<BlogFilterState>()(
-  persist(
-    (set, get) => ({
-      ...initialState,
+  devtools(
+    persist(
+      (set, get) => ({
+        ...initialState,
 
-      setSelectedCategory: category => set({ selectedCategory: category }),
+        setSelectedCategory: category => set({ selectedCategory: category }),
 
-      setSearchQuery: query => set({ searchQuery: query }),
+        setSearchQuery: query => set({ searchQuery: query }),
 
-      setSortBy: sort => set({ sortBy: sort }),
+        setSortBy: sort => set({ sortBy: sort }),
 
-      toggleShowFilters: () =>
-        set(state => ({ showFilters: !state.showFilters })),
+        toggleShowFilters: () =>
+          set(state => ({ showFilters: !state.showFilters })),
 
-      setShowFilters: show => set({ showFilters: show }),
+        setShowFilters: show => set({ showFilters: show }),
 
-      clearFilters: () =>
-        set({
-          selectedCategory: 'All',
-          searchQuery: '',
-        }),
+        clearFilters: () =>
+          set({
+            selectedCategory: ALL_FILTER,
+            searchQuery: '',
+          }),
 
-      resetAll: () =>
-        set({
-          selectedCategory: 'All',
-          searchQuery: '',
-          sortBy: 'latest',
-        }),
+        resetAll: () =>
+          set({
+            selectedCategory: ALL_FILTER,
+            searchQuery: '',
+            sortBy: 'latest',
+          }),
 
-      hasActiveFilters: () => {
-        const state = get();
-        return state.selectedCategory !== 'All' || state.searchQuery !== '';
-      },
-    }),
-    {
-      name: 'blog-filter-storage',
-      storage: createJSONStorage(() => {
-        if (typeof window === 'undefined') {
-          return {
-            getItem: () => null,
-            setItem: () => {},
-            removeItem: () => {},
-          };
-        }
-        return localStorage;
+        hasActiveFilters: () => {
+          const state = get();
+          return (
+            state.selectedCategory !== ALL_FILTER || state.searchQuery !== ''
+          );
+        },
       }),
-      // Only persist filter values and sort, not UI state like showFilters
-      partialize: state => ({
-        selectedCategory: state.selectedCategory,
-        searchQuery: state.searchQuery,
-        sortBy: state.sortBy,
-      }),
-      onRehydrateStorage: () => (_state, error) => {
-        if (error) {
-          captureException(error, {
-            store: 'useBlogFilterStore',
-            action: 'rehydrate',
-          });
-        }
-      },
-    }
+      {
+        name: 'blog-filter-storage',
+        storage: createJSONStorage(() => {
+          if (typeof window === 'undefined') {
+            return {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            };
+          }
+          return localStorage;
+        }),
+        // Only persist filter values and sort, not UI state like showFilters
+        partialize: state => ({
+          selectedCategory: state.selectedCategory,
+          searchQuery: state.searchQuery,
+          sortBy: state.sortBy,
+        }),
+        onRehydrateStorage: () => (_state, error) => {
+          if (error) {
+            captureException(error, {
+              store: 'useBlogFilterStore',
+              action: 'rehydrate',
+            });
+          }
+        },
+      }
+    ),
+    { name: 'BlogFilter', enabled: process.env.NODE_ENV === 'development' }
   )
 );
 
