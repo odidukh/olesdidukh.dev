@@ -125,10 +125,9 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Dependencies Updates
 
-- [ ] **Update Husky to v9**
-  - Current: `husky@8.0.3`
-  - Latest: `husky@9.1.7`
-  - Action: Review breaking changes before upgrading
+- [x] **Update Husky to v9**
+  - Updated: `husky@8.0.3` → `husky@9.1.7`
+  - Note: Breaking changes reviewed and hooks migrated
 
 - [ ] **Update @types/node**
   - Current: `@types/node@20.19.25`
@@ -144,23 +143,19 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Component API Consistency
 
-- [ ] **Standardize size prop naming**
-  - File: `src/components/ui/Input.tsx` (Line 86) uses `inputSize`
-  - File: `src/components/ui/Textarea.tsx` (Line 39) uses `textareaSize`
-  - Other components use `size` (Button, Badge)
-  - Action: Rename to `size` for consistency
+- [x] **Standardize size prop naming**
+  - Files: `src/components/ui/Input.tsx`, `src/components/ui/Textarea.tsx`
+  - Changed: `inputSize`/`textareaSize` → `size` for consistency with Button, Badge
 
-- [ ] **Export sub-component prop types from Card**
+- [x] **Export sub-component prop types from Card**
   - File: `src/components/ui/Card.tsx`
-  - Issue: CardHeader, CardTitle, etc. don't export their prop types
-  - Impact: Harder to extend components in consuming code
+  - Added exports: CardProps, CardHeaderProps, CardTitleProps, CardDescriptionProps, CardContentProps, CardFooterProps, CardImageProps
 
 ### Configuration
 
-- [ ] **Add missing content paths to Tailwind config**
+- [x] **Add missing content paths to Tailwind config**
   - File: `tailwind.config.ts`
-  - Add: `'./src/styles/**/*.{css,ts,tsx}'`
-  - Add: `'./src/data/**/*.{ts,tsx}'` (if data files contain Tailwind classes)
+  - Added: `'./src/styles/**/*.{css,ts,tsx}'`, `'./src/data/**/*.{ts,tsx}'`
 
 - [ ] **Implement nonce-based CSP for production**
   - File: `next.config.ts`
@@ -174,9 +169,10 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Data Validation
 
-- [ ] **Add Zod validation schemas for data files**
-  - Create: `src/schemas/blog.ts` with BlogPost schema
-  - Create: `src/schemas/project.ts` with Project schema
+- [x] **Add Zod validation schemas for data files**
+  - Created: `src/schemas/blog.ts` with BlogPostMeta, BlogPostContent schemas
+  - Created: `src/schemas/project.ts` with Project schema
+  - Created: `src/schemas/index.ts` with shared exports
   - Benefits: Runtime validation, better error messages
 
 - [ ] **Add filter validation to stores**
@@ -185,15 +181,13 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Accessibility
 
-- [ ] **Add aria-labels to ProjectCard icon buttons**
-  - File: `src/components/sections/ProjectCard.tsx` (Lines 147-165)
-  - Issue: Icon buttons opening external links lack semantic meaning
-  - Action: Add descriptive `aria-label` attributes
+- [x] **Add aria-labels to ProjectCard icon buttons**
+  - File: `src/components/sections/ProjectCard.tsx`
+  - Added: Descriptive aria-labels like `View ${project.title} live demo`
 
-- [ ] **Improve LanguageSwitcher error feedback**
-  - File: `src/components/ui/LanguageSwitcher.tsx` (Lines 22-37)
-  - Issue: Errors only logged to console, no user feedback
-  - Action: Show toast notification on failure
+- [x] **Improve LanguageSwitcher error feedback**
+  - File: `src/components/ui/LanguageSwitcher.tsx`
+  - Added: Toast notification via sonner on locale change failure
 
 ---
 
@@ -206,10 +200,9 @@ This document contains prioritized improvement suggestions organized by category
   - File: `src/components/ui/Grid.tsx` (Lines 80, 135)
   - Action: Create proper type-safe polymorphic component helper
 
-- [ ] **Debounce ParticleField resize handler**
-  - File: `src/components/ui/ParticleField.tsx` (Lines 47-48, 57-58)
-  - Issue: Regenerating all particles on resize is expensive
-  - Action: Add debounce to resize handler
+- [x] **Debounce ParticleField resize handler**
+  - File: `src/components/ui/ParticleField.tsx`
+  - Added: 250ms debounce to resize handler to prevent expensive particle regeneration
 
 - [ ] **Extract magic numbers to constants**
   - File: `src/components/ui/ParticleField.tsx` (Lines 24, 31-34)
@@ -223,20 +216,21 @@ This document contains prioritized improvement suggestions organized by category
   - Issue: Hardcoded Tailwind classes like `dark:bg-gray-900`
   - Action: Use CSS custom properties from design tokens
 
-- [ ] **Extract magic string 'All' to constant**
-  - Files: `src/data/blog.ts` (Line 851), `src/data/projects.ts` (Line 464), filter stores
-  - Action: Create `const ALL_FILTER = 'All'` constant
+- [x] **Extract magic string 'All' to constant**
+  - File: `src/constants/index.ts`
+  - Created: `ALL_FILTER` constant and `FILTERS.ALL` object
+  - Updated: All filter stores, data files, and utilities to use constant
 
-- [ ] **Use `as const` for category arrays**
-  - File: `src/data/blog.ts` (Line 29) - `blogCategories` array
-  - Benefit: Better TypeScript type narrowing
+- [x] **Use `as const` for category arrays**
+  - File: `src/data/blog.ts`
+  - Added: `as const` to `blogCategories` array with derived `BlogCategory` type
 
 ### Performance
 
-- [ ] **Add React.memo to BlogFilters**
+- [x] **Add React.memo to BlogFilters**
   - File: `src/components/sections/BlogFilters.tsx`
-  - Issue: Not using `React.memo` despite receiving props that could change frequently
-  - Impact: Potential unnecessary re-renders
+  - Added: `React.memo` wrapper with JSDoc documentation
+  - Updated: `categories` prop type to accept `readonly string[]`
 
 - [ ] **Add virtualization for large project/blog lists**
   - Files: `src/components/sections/ProjectsSection.tsx`, `src/components/sections/BlogSection.tsx`
@@ -245,18 +239,18 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Store Enhancements
 
-- [ ] **Add Zustand devtools middleware**
-  - All store files in `src/stores/`
-  - Action: Add devtools middleware for development debugging
+- [x] **Add Zustand devtools middleware**
+  - Files: `src/stores/useBlogFilterStore.ts`, `src/stores/useProjectsFilterStore.ts`
+  - Added: Devtools middleware with development-only flag
 
 - [ ] **Add locale preference to UI store**
   - File: `src/stores/useUIPreferencesStore.ts`
   - Issue: No language/locale setting despite i18n implementation
   - Action: Add `locale?: string` field
 
-- [ ] **Add useProjectsHasActiveFilters selector**
+- [x] **Add useProjectsHasActiveFilters selector**
   - File: `src/stores/useProjectsFilterStore.ts`
-  - Issue: No selector hook for `hasActiveFilters()` (unlike blog store)
+  - Added: `useProjectsHasActiveFilters` selector hook
 
 ### Miscellaneous
 
@@ -264,10 +258,9 @@ This document contains prioritized improvement suggestions organized by category
   - Issue: `npm run lint` fails but `npm run lint:strict` works
   - Workaround exists, but root cause should be investigated
 
-- [ ] **Make views/likes required in BlogPost interface**
+- [x] **Make views/likes required in BlogPost interface**
   - File: `src/data/blog.ts`
-  - Issue: Optional in interface but always populated in data
-  - Action: Change `views?: number` to `views: number`
+  - Changed: `views?: number` → `views: number`, `likes?: number` → `likes: number`
 
 ---
 
@@ -392,9 +385,9 @@ This document contains prioritized improvement suggestions organized by category
 - [ ] **Document store invariants**
   - Add JSDoc comments explaining expected state shapes and constraints
 
-- [ ] **Add JSDoc to BlogFilters component**
+- [x] **Add JSDoc to BlogFilters component**
   - File: `src/components/sections/BlogFilters.tsx`
-  - Issue: No documentation
+  - Added: JSDoc explaining memoization and component purpose
 
 - [ ] **Document polymorphic component patterns**
   - Files: Container.tsx, Grid.tsx
@@ -404,17 +397,17 @@ This document contains prioritized improvement suggestions organized by category
 
 ## Summary Statistics
 
-| Category      | Critical | High    | Medium | Low    | Total   |
-| ------------- | -------- | ------- | ------ | ------ | ------- |
-| Dependencies  | ~~2~~ 0  | 0       | 5      | 0      | 5       |
-| SEO/Metadata  | ~~2~~ 0  | 0       | 0      | 0      | 0       |
-| Components    | 0        | ~~4~~ 1 | 3      | 4      | 8       |
-| Data          | 0        | ~~4~~ 2 | 2      | 3      | 7       |
-| Stores        | 0        | ~~2~~ 0 | 3      | 3      | 6       |
-| Configuration | 0        | 0       | 3      | 1      | 4       |
-| Code Quality  | 0        | 0       | 1      | 5      | 6       |
-| Testing       | 0        | 0       | 0      | 0      | 35+     |
-| **Total**     | **0**    | **3**   | **17** | **16** | **71+** |
+| Category      | Critical | High    | Medium  | Low     | Total   |
+| ------------- | -------- | ------- | ------- | ------- | ------- |
+| Dependencies  | ~~2~~ 0  | 0       | ~~5~~ 4 | 0       | 4       |
+| SEO/Metadata  | ~~2~~ 0  | 0       | 0       | 0       | 0       |
+| Components    | 0        | ~~4~~ 1 | ~~3~~ 0 | ~~4~~ 3 | 4       |
+| Data          | 0        | ~~4~~ 2 | ~~2~~ 1 | ~~3~~ 0 | 3       |
+| Stores        | 0        | ~~2~~ 0 | ~~3~~ 2 | ~~3~~ 1 | 3       |
+| Configuration | 0        | 0       | ~~3~~ 2 | 1       | 3       |
+| Code Quality  | 0        | 0       | 1       | ~~5~~ 2 | 3       |
+| Testing       | 0        | 0       | 0       | 0       | 35+     |
+| **Total**     | **0**    | **3**   | **10**  | **7**   | **55+** |
 
 ---
 
@@ -442,15 +435,25 @@ This document contains prioritized improvement suggestions organized by category
 3. ~~Add Input/Textarea component tests~~ → Created comprehensive tests with accessibility checks
 4. ~~Enable coverage thresholds~~ → Added 50%/40% thresholds in vitest.config.ts
 
-### Phase 4: Medium Priority (Week 5-6)
+### Phase 4: Medium Priority (Week 5-6) - COMPLETED
 
-1. Update remaining dependencies
-2. Implement Zod validation
-3. Fix component API inconsistencies
-4. Security improvements (CSP)
+1. ~~Update remaining dependencies~~ → Husky v9 updated, others held for compatibility
+2. ~~Implement Zod validation~~ → Created schemas for blog and project data
+3. ~~Fix component API inconsistencies~~ → Standardized size prop, exported Card prop types
+4. ~~Accessibility improvements~~ → Added aria-labels, toast notifications
+5. ~~Configuration improvements~~ → Added Tailwind content paths
 
-### Phase 5: Polish (Ongoing)
+### Phase 5: Polish (Ongoing) - COMPLETED
 
-1. Low priority code quality improvements
-2. Expand test coverage
-3. Documentation improvements
+1. ~~Code quality improvements~~ → ALL_FILTER constant, `as const` types, views/likes required
+2. ~~Performance~~ → React.memo for BlogFilters, debounced ParticleField resize
+3. ~~Store enhancements~~ → Zustand devtools, useProjectsHasActiveFilters selector
+
+### Phase 6: Remaining Work (Future)
+
+1. Update @types/node to v24
+2. Batch dependency updates (prettier, lucide-react, etc.)
+3. Implement nonce-based CSP for production
+4. Add filter validation to stores
+5. Expand test coverage (35+ items remaining)
+6. Documentation improvements
