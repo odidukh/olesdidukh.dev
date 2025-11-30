@@ -128,11 +128,9 @@ const mdxOptions: any = {
       [
         rehypePrettyCode,
         {
-          theme: {
-            dark: 'github-dark',
-            light: 'github-light',
-          },
-          keepBackground: false,
+          // Use dark theme for both modes for better code readability
+          theme: 'github-dark',
+          keepBackground: true,
         },
       ],
     ],

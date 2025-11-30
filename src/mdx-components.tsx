@@ -161,7 +161,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     // Code blocks
     pre: ({ children, ...props }) => (
       <pre
-        className="my-6 overflow-x-auto rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm dark:border-gray-700 dark:bg-gray-900"
+        className="my-6 overflow-x-auto rounded-xl border border-gray-600 bg-[#1e293b] p-5 text-[0.9375rem] leading-7"
         {...props}
       >
         {children}
@@ -173,7 +173,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       if (isInline) {
         return (
           <code
-            className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-mocha-700 dark:bg-gray-800 dark:text-mocha-300"
+            className="rounded bg-slate-700 px-1.5 py-0.5 font-mono text-[0.9375rem] text-slate-200"
             {...props}
           >
             {children}
