@@ -71,15 +71,6 @@ const TestimonialsCarousel = dynamic(
   { ssr: true }
 );
 
-// Lazy load 3D background with intersection observer (heavy, not critical)
-const LazyHeroBackground3D = dynamic(
-  () =>
-    import('@/components/three/LazyHeroBackground3D').then(
-      mod => mod.LazyHeroBackground3D
-    ),
-  { ssr: false }
-);
-
 // Quick Stats Data
 const stats = [
   {
@@ -173,9 +164,6 @@ export default function HomePage() {
           id="hero"
           className="relative min-h-screen flex items-center justify-center overflow-hidden"
         >
-          {/* 3D Background - Desktop only, lazy loaded with intersection observer */}
-          <LazyHeroBackground3D />
-
           {/* Dynamic Background */}
           <HeroBackground heroY={heroY} mousePosition={mousePosition} />
 

@@ -1,0 +1,9 @@
+export { GridPatternBackground } from './GridPatternBackground';
+export { GradientMeshBackground } from './GradientMeshBackground';
+export { GeometricShapesBackground } from './GeometricShapesBackground';
+export { NoiseTextureBackground } from './NoiseTextureBackground';
+export { WaveAuroraBackground } from './WaveAuroraBackground';
+export { CodeRainBackground } from './CodeRainBackground';
+export { TopographicBackground } from './TopographicBackground';
+export { SpotlightBackground } from './SpotlightBackground';
+export { SunsetCodeRainBackground } from './SunsetCodeRainBackground';

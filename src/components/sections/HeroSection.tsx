@@ -1,21 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionValue,
-  useSpring,
-  Variants,
-} from 'framer-motion';
+import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { TypeAnimation } from '@/components/ui/TypeAnimation';
-import { ParticleField } from '@/components/ui/ParticleField';
-import { FloatingIcons } from '@/components/ui/FloatingIcons';
+import { SunsetCodeRainBackground } from '@/components/ui/backgrounds';
 import {
   ArrowRight,
   Github,
@@ -51,39 +43,10 @@ const itemVariants: Variants = {
   },
 };
 
-const floatingVariants = {
-  initial: { y: 0 },
-  animate: {
-    y: [-10, 10, -10],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: 'easeInOut' as const,
-    },
-  },
-};
-
 export function HeroSection() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 300], [0, 50]);
-
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-
-  // Mouse parallax effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 150 };
-  const moveX = useSpring(mouseX, springConfig);
-  const moveY = useSpring(mouseY, springConfig);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(x / 20);
-    mouseY.set(y / 20);
-  };
 
   const stats = [
     { label: 'Years Experience', value: '7+' },
@@ -94,44 +57,11 @@ export function HeroSection() {
   const skills = ['React', 'TypeScript', 'Next.js', 'Node.js', 'AWS'];
 
   return (
-    <section
-      className="relative min-h-screen flex items-center overflow-hidden"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10">
-        {/* Gradient Background */}
-        <motion.div
-          style={{ opacity }}
-          className="absolute inset-0 bg-gradient-to-br from-mocha-100 via-background to-navy-50 dark:from-navy-900 dark:via-background dark:to-mocha-900"
-        />
-
-        {/* Particle Field */}
-        <ParticleField />
-
-        {/* Floating Tech Icons */}
-        <FloatingIcons />
-
-        {/* Animated Gradient Orbs */}
-        <motion.div
-          style={{ x: moveX, y: moveY }}
-          className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-mocha-400/30 to-transparent rounded-full blur-3xl"
-          animate={floatingVariants.animate}
-          initial={floatingVariants.initial}
-        />
-        <motion.div
-          style={{ x: moveX, y: moveY }}
-          className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-accent-green/20 to-transparent rounded-full blur-3xl"
-          animate={{
-            y: [10, -10, 10],
-            transition: {
-              duration: 8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            },
-          }}
-        />
-      </div>
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Animated Background - Sunset Gradient + Code Rain */}
+      <motion.div className="absolute inset-0 -z-10" style={{ opacity }}>
+        <SunsetCodeRainBackground columns={16} rainOpacity={0.4} />
+      </motion.div>
 
       <Container size="wide" padding="lg">
         <motion.div
