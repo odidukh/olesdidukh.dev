@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { toast } from 'sonner';
 import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { locales, localeNames, localeFlags, type Locale } from '@/i18n';
@@ -29,9 +30,12 @@ export function LanguageSwitcher() {
       if (response.ok) {
         // Refresh the page to apply the new locale
         router.refresh();
+      } else {
+        toast.error(t('error'));
       }
     } catch (error) {
       console.error('Failed to change locale:', error);
+      toast.error(t('error'));
     } finally {
       setIsPending(false);
     }
