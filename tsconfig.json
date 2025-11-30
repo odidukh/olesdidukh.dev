@@ -43,7 +43,9 @@
       "@/data/*": ["./src/data/*"],
       "@/services/*": ["./src/services/*"],
       "@/stores/*": ["./src/stores/*"],
-      "@/stores": ["./src/stores"]
+      "@/stores": ["./src/stores"],
+      "@/schemas/*": ["./src/schemas/*"],
+      "@/schemas": ["./src/schemas"]
     },
     "target": "ES2017"
   },
