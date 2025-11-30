@@ -9,6 +9,7 @@ import {
   projectCategories,
   getTestimonials,
 } from './projects';
+import { ALL_FILTER } from '@/constants';
 
 describe('projectsData', () => {
   it('contains projects', () => {
@@ -137,8 +138,8 @@ describe('getAllProjectSlugs', () => {
 });
 
 describe('getProjectsByCategory', () => {
-  it('returns all projects for "All" category', () => {
-    const projects = getProjectsByCategory('All');
+  it('returns all projects for ALL_FILTER category', () => {
+    const projects = getProjectsByCategory(ALL_FILTER);
 
     expect(projects.length).toBe(projectsData.length);
   });
@@ -160,8 +161,8 @@ describe('getProjectsByCategory', () => {
 });
 
 describe('projectCategories', () => {
-  it('includes "All" as first category', () => {
-    expect(projectCategories[0]).toBe('All');
+  it('includes ALL_FILTER as first category', () => {
+    expect(projectCategories[0]).toBe(ALL_FILTER);
   });
 
   it('includes all unique categories from projects', () => {

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { ALL_FILTER } from '@/constants';
 
 const contentDirectory = path.join(process.cwd(), 'src/content/blog');
 
@@ -115,7 +116,7 @@ export function getFeaturedPosts(): BlogPostMeta[] {
  * Get posts by category
  */
 export function getPostsByCategory(category: string): BlogPostMeta[] {
-  if (category === 'All') return getAllPosts();
+  if (category === ALL_FILTER) return getAllPosts();
   return getAllPosts().filter(post => post.category === category);
 }
 
@@ -178,7 +179,7 @@ function calculateReadingTime(content: string): number {
 export function getAllCategories(): string[] {
   const posts = getAllPosts();
   const categories = new Set(posts.map(post => post.category));
-  return ['All', ...Array.from(categories)];
+  return [ALL_FILTER, ...Array.from(categories)];
 }
 
 /**

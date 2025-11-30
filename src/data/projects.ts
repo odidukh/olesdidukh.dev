@@ -1,3 +1,5 @@
+import { ALL_FILTER } from '@/constants';
+
 export interface ProjectVideo {
   url: string;
   thumbnail?: string;
@@ -461,12 +463,12 @@ export function getAllProjectSlugs(): string[] {
 }
 
 export function getProjectsByCategory(category: string): Project[] {
-  if (category === 'All') return projectsData;
+  if (category === ALL_FILTER) return projectsData;
   return projectsData.filter(project => project.category === category);
 }
 
 export const projectCategories = [
-  'All',
+  ALL_FILTER,
   ...new Set(projectsData.map(project => project.category)),
 ];
 

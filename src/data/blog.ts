@@ -1,3 +1,5 @@
+import { ALL_FILTER } from '@/constants';
+
 export interface BlogAuthor {
   name: string;
   avatar: string;
@@ -23,8 +25,8 @@ export interface BlogPost {
     part: number;
     total: number;
   };
-  views?: number;
-  likes?: number;
+  views: number;
+  likes: number;
 }
 
 /**
@@ -37,7 +39,7 @@ export const DEFAULT_AUTHOR: BlogAuthor = {
 };
 
 export const blogCategories = [
-  'All',
+  ALL_FILTER,
   'React',
   'TypeScript',
   'Web Development',
@@ -47,7 +49,10 @@ export const blogCategories = [
   'Best Practices',
   'Tools',
   'Open Source',
-];
+] as const;
+
+/** Type for valid blog categories */
+export type BlogCategory = (typeof blogCategories)[number];
 
 export const blogPosts: BlogPost[] = [
   {
@@ -825,7 +830,7 @@ export function getRelatedPosts(postId: string, limit: number = 3): BlogPost[] {
 
 // Helper function to get posts by category
 export function getPostsByCategory(category: string): BlogPost[] {
-  if (category === 'All') return blogPosts;
+  if (category === ALL_FILTER) return blogPosts;
   return blogPosts.filter(post => post.category === category);
 }
 
