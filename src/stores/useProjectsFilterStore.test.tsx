@@ -314,9 +314,8 @@ describe('useProjectsFilterStore selector hooks', () => {
   });
 
   it('useProjectsCategory returns current category', async () => {
-    const { useProjectsFilterStore, useProjectsCategory } = await import(
-      './useProjectsFilterStore'
-    );
+    const { useProjectsFilterStore, useProjectsCategory } =
+      await import('./useProjectsFilterStore');
 
     const { result: storeResult } = renderHook(() => useProjectsFilterStore());
     const { result: selectorResult } = renderHook(() => useProjectsCategory());
@@ -332,9 +331,8 @@ describe('useProjectsFilterStore selector hooks', () => {
   });
 
   it('useProjectsTechnologies returns selected technologies', async () => {
-    const { useProjectsFilterStore, useProjectsTechnologies } = await import(
-      './useProjectsFilterStore'
-    );
+    const { useProjectsFilterStore, useProjectsTechnologies } =
+      await import('./useProjectsFilterStore');
 
     const { result: storeResult } = renderHook(() => useProjectsFilterStore());
     const { result: selectorResult } = renderHook(() =>
@@ -354,9 +352,8 @@ describe('useProjectsFilterStore selector hooks', () => {
   });
 
   it('useProjectsSearchQuery returns search query', async () => {
-    const { useProjectsFilterStore, useProjectsSearchQuery } = await import(
-      './useProjectsFilterStore'
-    );
+    const { useProjectsFilterStore, useProjectsSearchQuery } =
+      await import('./useProjectsFilterStore');
 
     const { result: storeResult } = renderHook(() => useProjectsFilterStore());
     const { result: selectorResult } = renderHook(() =>
@@ -376,9 +373,8 @@ describe('useProjectsFilterStore selector hooks', () => {
   });
 
   it('useProjectsViewMode returns view mode', async () => {
-    const { useProjectsFilterStore, useProjectsViewMode } = await import(
-      './useProjectsFilterStore'
-    );
+    const { useProjectsFilterStore, useProjectsViewMode } =
+      await import('./useProjectsFilterStore');
 
     const { result: storeResult } = renderHook(() => useProjectsFilterStore());
     const { result: selectorResult } = renderHook(() => useProjectsViewMode());

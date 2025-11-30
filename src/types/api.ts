@@ -73,7 +73,9 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 /**
  * Fetch options with typed body
  */
-export interface TypedFetchOptions<T = unknown>
-  extends Omit<RequestInit, 'body'> {
+export interface TypedFetchOptions<T = unknown> extends Omit<
+  RequestInit,
+  'body'
+> {
   body?: T;
 }
