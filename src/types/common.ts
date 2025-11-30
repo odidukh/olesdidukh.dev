@@ -120,7 +120,7 @@ export interface NavigationItem {
  * Social link
  */
 export interface SocialLink {
-  platform: 'github' | 'linkedin' | 'twitter' | 'email' | 'website';
+  platform: 'github' | 'linkedin' | 'threads' | 'email' | 'website';
   url: string;
   label: string;
 }

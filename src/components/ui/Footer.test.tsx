@@ -88,7 +88,7 @@ describe('Footer', () => {
 
     expect(screen.getByRole('link', { name: /github/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /linkedin/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /twitter/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /threads/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /email/i })).toBeInTheDocument();
   });
 
@@ -107,12 +107,12 @@ describe('Footer', () => {
     );
     expect(linkedinLink).toHaveAttribute('target', '_blank');
 
-    const twitterLink = screen.getByRole('link', { name: /twitter/i });
-    expect(twitterLink).toHaveAttribute(
+    const threadsLink = screen.getByRole('link', { name: /threads/i });
+    expect(threadsLink).toHaveAttribute(
       'href',
-      'https://twitter.com/OlesDidukh'
+      'https://www.threads.com/@oles.o.didukh'
     );
-    expect(twitterLink).toHaveAttribute('target', '_blank');
+    expect(threadsLink).toHaveAttribute('target', '_blank');
   });
 
   it('renders location information', () => {

@@ -11,7 +11,7 @@ import {
 import {
   Github,
   Linkedin,
-  Twitter,
+  AtSign,
   Mail,
   FileText,
   Globe,
@@ -49,11 +49,11 @@ const socialLinks: SocialLink[] = [
     description: 'Professional network',
   },
   {
-    name: 'Twitter',
-    icon: Twitter,
-    url: 'https://twitter.com/OlesDidukh',
-    username: '@OlesDidukh',
-    color: 'hover:text-sky-500',
+    name: 'Threads',
+    icon: AtSign,
+    url: 'https://www.threads.com/@oles.o.didukh',
+    username: '@oles.o.didukh',
+    color: 'hover:text-gray-900 dark:hover:text-gray-100',
     description: 'Tech thoughts & updates',
   },
   {

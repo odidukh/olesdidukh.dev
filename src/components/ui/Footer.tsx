@@ -8,11 +8,11 @@ import {
   Github,
   Linkedin,
   Mail,
-  Twitter,
   Heart,
   ExternalLink,
   MapPin,
   Phone,
+  AtSign,
 } from 'lucide-react';
 
 interface FooterLink {
@@ -204,12 +204,12 @@ export function Footer({ className }: FooterProps) {
                   className="h-9 w-9 hover:text-primary"
                 >
                   <a
-                    href="https://twitter.com/OlesDidukh"
+                    href="https://www.threads.com/@oles.o.didukh"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Twitter"
+                    aria-label="Threads"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <AtSign className="h-4 w-4" />
                   </a>
                 </Button>
                 <Button
