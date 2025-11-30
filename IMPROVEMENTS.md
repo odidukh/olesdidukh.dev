@@ -154,10 +154,14 @@ This document contains prioritized improvement suggestions organized by category
   - File: `tailwind.config.ts`
   - Added: `'./src/styles/**/*.{css,ts,tsx}'`, `'./src/data/**/*.{ts,tsx}'`
 
-- [ ] **Implement nonce-based CSP for production**
-  - File: `next.config.ts`
-  - Issue: CSP includes `'unsafe-inline'` for scripts in production
-  - Action: Implement nonce-based CSP for stricter security
+- [x] **Implement nonce-based CSP for production**
+  - Created: `src/lib/csp.ts` - Nonce generation and CSP building utilities
+  - Created: `src/lib/nonce.ts` - Server-side nonce access helper
+  - Updated: `middleware.ts` - Generates nonce per request, sets CSP header
+  - Updated: `src/app/layout.tsx` - Uses nonce for inline scripts
+  - Updated: `src/components/JsonLd.tsx` - Accepts nonce prop
+  - Updated: `next.config.ts` - Removed static CSP (now dynamic in middleware)
+  - Production uses `'nonce-xxx' 'strict-dynamic'` instead of `'unsafe-inline'`
 
 - [x] **Externalize PWA cooldown constant**
   - Created `src/config/ui.ts` with PWA_DISMISS_COOLDOWN_MS constant
@@ -230,10 +234,10 @@ This document contains prioritized improvement suggestions organized by category
   - Added: `React.memo` wrapper with JSDoc documentation
   - Updated: `categories` prop type to accept `readonly string[]`
 
-- [ ] **Add virtualization for large project/blog lists**
+- [x] **Add virtualization for large project/blog lists** _(Deferred - Not needed)_
   - Files: `src/components/sections/ProjectsSection.tsx`, `src/components/sections/BlogSection.tsx`
-  - Issue: Could benefit from virtualization if item count grows
-  - Action: Consider react-window or similar library
+  - Status: Currently only 9 projects and 9 blog posts - virtualization is premature optimization
+  - Action: Revisit when list grows to 50+ items; consider @tanstack/react-virtual
 
 ### Store Enhancements
 
@@ -462,10 +466,10 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Phase 6: Remaining Work (Future)
 
-1. Batch dependency updates (prettier, lucide-react, zod, react-hook-form, next)
-2. Implement nonce-based CSP for production
-3. Fix duplicate project images
-4. Add virtualization for large lists
-5. Use design tokens for hardcoded colors
+1. Batch dependency updates (prettier, lucide-react, zod, react-hook-form, next) ✅ _Already up to date_
+2. ~~Implement nonce-based CSP for production~~ ✅ _Completed_
+3. Fix duplicate project images _(Requires manual asset creation)_
+4. ~~Add virtualization for large lists~~ ✅ _Deferred - only 9 items, not needed_
+5. Use design tokens for hardcoded colors _(Low priority)_
 6. Expand test coverage (25+ items remaining - hooks, UI components, sections)
 7. Add Storybook stories for untested components
