@@ -99,13 +99,12 @@ This document contains prioritized improvement suggestions organized by category
   - Added `imageError` state and `onError` handler
   - Shows fallback with `BookOpen` icon when image fails to load
 
-- [ ] **Extract hardcoded configuration values**
-  - File: `src/components/sections/ContactForm.tsx` (Lines 44-70)
-    - Project types, budget ranges, timelines are hardcoded
-    - Action: Move to `src/config/contact-form.ts`
-  - File: `src/components/sections/ProjectsSection.tsx` (Lines 14-37)
-    - Filter categories/technologies are hardcoded
-    - Action: Move to `src/config/project-filters.ts`
+- [x] **Extract hardcoded configuration values**
+  - Created `src/config/contact-form.ts` with PROJECT_TYPES, BUDGET_RANGES, TIMELINES
+  - Created `src/config/project-filters.ts` with PROJECT_CATEGORIES, PROJECT_TECHNOLOGIES
+  - Created `src/config/animations.ts` with PARTICLE_CONFIG, VIDEO_PLAYER_CONFIG
+  - Created `src/config/ui.ts` with PWA_DISMISS_COOLDOWN_MS, FONT_SIZES
+  - Updated ContactForm and ProjectsSection to import from config
 
 ### Store Consistency
 
@@ -129,10 +128,8 @@ This document contains prioritized improvement suggestions organized by category
   - Updated: `husky@8.0.3` → `husky@9.1.7`
   - Note: Breaking changes reviewed and hooks migrated
 
-- [ ] **Update @types/node**
-  - Current: `@types/node@20.19.25`
-  - Latest: `@types/node@24.10.1`
-  - Action: Consider upgrading for latest Node.js type support
+- [x] **Update @types/node**
+  - Updated: `@types/node@20.19.25` → `@types/node@24.10.1`
 
 - [ ] **Batch update minor dependencies**
   - `prettier`: 3.6.2 → 3.7.3
@@ -162,10 +159,9 @@ This document contains prioritized improvement suggestions organized by category
   - Issue: CSP includes `'unsafe-inline'` for scripts in production
   - Action: Implement nonce-based CSP for stricter security
 
-- [ ] **Externalize PWA cooldown constant**
-  - File: `src/stores/useUIPreferencesStore.ts` (Line 53)
-  - Issue: `7 * 24 * 60 * 60 * 1000` hardcoded
-  - Action: Move to config file or environment variable
+- [x] **Externalize PWA cooldown constant**
+  - Created `src/config/ui.ts` with PWA_DISMISS_COOLDOWN_MS constant
+  - Updated `useUIPreferencesStore.ts` to import from config
 
 ### Data Validation
 
@@ -175,9 +171,10 @@ This document contains prioritized improvement suggestions organized by category
   - Created: `src/schemas/index.ts` with shared exports
   - Benefits: Runtime validation, better error messages
 
-- [ ] **Add filter validation to stores**
-  - Issue: No checks for valid category/technology values in filter stores
-  - Action: Validate against allowed values on state updates
+- [x] **Add filter validation to stores**
+  - Added validation to `useBlogFilterStore` (validates against blogCategories)
+  - Added validation to `useProjectsFilterStore` (validates categories and technologies)
+  - Invalid values now fallback to ALL_FILTER or are ignored
 
 ### Accessibility
 
@@ -195,20 +192,21 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Code Quality
 
-- [ ] **Replace `any` types in polymorphic components**
-  - File: `src/components/ui/Container.tsx` (Line 65)
-  - File: `src/components/ui/Grid.tsx` (Lines 80, 135)
-  - Action: Create proper type-safe polymorphic component helper
+- [x] **Replace `any` types in polymorphic components**
+  - Created `src/lib/polymorphic.ts` with type-safe utilities:
+    - `PolymorphicComponentProps` for 'as' prop pattern
+    - `PolymorphicComponentPropsWithRef` for ref forwarding
+    - `PolymorphicRef` type helper
+  - Includes comprehensive JSDoc with usage examples
 
 - [x] **Debounce ParticleField resize handler**
   - File: `src/components/ui/ParticleField.tsx`
   - Added: 250ms debounce to resize handler to prevent expensive particle regeneration
 
-- [ ] **Extract magic numbers to constants**
-  - File: `src/components/ui/ParticleField.tsx` (Lines 24, 31-34)
-    - Particle count, size, duration, opacity values hardcoded
-  - File: `src/components/ui/VideoPlayer.tsx` (Line 337)
-    - `rootMargin: '100px'` hardcoded
+- [x] **Extract magic numbers to constants**
+  - Created `src/config/animations.ts` with PARTICLE_CONFIG and VIDEO_PLAYER_CONFIG
+  - Updated ParticleField to use PARTICLE_CONFIG constants
+  - Updated VideoPlayer to use VIDEO_PLAYER_CONFIG constants
 
 - [ ] **Use design tokens for hardcoded colors**
   - File: `src/components/ui/ResumeDownloadButton.tsx` (Lines 70, 131)
@@ -243,10 +241,10 @@ This document contains prioritized improvement suggestions organized by category
   - Files: `src/stores/useBlogFilterStore.ts`, `src/stores/useProjectsFilterStore.ts`
   - Added: Devtools middleware with development-only flag
 
-- [ ] **Add locale preference to UI store**
-  - File: `src/stores/useUIPreferencesStore.ts`
-  - Issue: No language/locale setting despite i18n implementation
-  - Action: Add `locale?: string` field
+- [x] **Add locale preference to UI store**
+  - Added `locale` field to `useUIPreferencesStore` (en/uk/pl support)
+  - Added `setLocale` action and `useLocalePreference` selector hook
+  - Exports `Locale` type for consumers
 
 - [x] **Add useProjectsHasActiveFilters selector**
   - File: `src/stores/useProjectsFilterStore.ts`
@@ -254,9 +252,9 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Miscellaneous
 
-- [ ] **Investigate npm run lint CLI issue**
-  - Issue: `npm run lint` fails but `npm run lint:strict` works
-  - Workaround exists, but root cause should be investigated
+- [x] **Investigate npm run lint CLI issue**
+  - Fixed: Changed `next lint` to direct `eslint . --ext .ts,.tsx` command
+  - Root cause: Next.js lint wrapper had "Invalid project directory" issue
 
 - [x] **Make views/likes required in BlogPost interface**
   - File: `src/data/blog.ts`
@@ -330,22 +328,23 @@ This document contains prioritized improvement suggestions organized by category
 - [ ] **Add tests for ContactSection**
 - [ ] **Add tests for NewsletterSignup**
 
-### Medium: State Management (0% → target 100%)
+### Medium: State Management (0% → 100%) ✅
 
-- [ ] **Add tests for useThemeStore**
-  - File: `src/stores/useThemeStore.ts`
-  - Cover: Theme toggle, persistence, system preference, hydration
+- [x] **Add tests for useThemeStore**
+  - File: `src/stores/useThemeStore.test.tsx` (15 tests)
+  - Covers: Theme toggle, persistence, system preference, hydration
 
-- [ ] **Add tests for useProjectsFilterStore**
-  - File: `src/stores/useProjectsFilterStore.ts`
-  - Cover: Filter operations, clear, persistence
+- [x] **Add tests for useProjectsFilterStore**
+  - File: `src/stores/useProjectsFilterStore.test.tsx` (21 tests)
+  - Covers: Filter operations, clear, persistence, validation
 
-- [ ] **Add tests for useBlogFilterStore**
-  - File: `src/stores/useBlogFilterStore.ts`
+- [x] **Add tests for useBlogFilterStore**
+  - File: `src/stores/useBlogFilterStore.test.tsx` (17 tests)
+  - Covers: Category/search/sort state, validation, persistence
 
-- [ ] **Add tests for useUIPreferencesStore**
-  - File: `src/stores/useUIPreferencesStore.ts`
-  - Cover: PWA dismiss logic, preferences reset
+- [x] **Add tests for useUIPreferencesStore**
+  - File: `src/stores/useUIPreferencesStore.test.tsx` (18 tests)
+  - Covers: PWA dismiss logic, locale, preferences reset, persistence
 
 ### Medium: API Routes (40% → target 100%)
 
@@ -355,11 +354,12 @@ This document contains prioritized improvement suggestions organized by category
 - [ ] **Add tests for /api/openapi.json route**
   - File: `src/app/api/openapi.json/route.ts`
 
-### Medium: Data Files
+### Medium: Data Files ✅
 
-- [ ] **Add tests for blog.ts data file**
-  - Reference: `src/data/projects.test.ts` (comprehensive example)
-  - Cover: Data integrity, helper functions, edge cases
+- [x] **Add tests for blog.ts data file**
+  - File: `src/data/blog.test.ts` (38 tests)
+  - Covers: blogPosts integrity, categories, DEFAULT_AUTHOR,
+    getRelatedPosts, getPostsByCategory, getFeaturedPosts, searchPosts
 
 ### Low: Admin Panel
 
@@ -382,16 +382,20 @@ This document contains prioritized improvement suggestions organized by category
 - [ ] **Add Storybook stories for untested components**
   - Priority components: Input, Textarea, FormField, ErrorBoundary
 
-- [ ] **Document store invariants**
-  - Add JSDoc comments explaining expected state shapes and constraints
+- [x] **Document store invariants**
+  - Added JSDoc "Invariants" sections to all stores documenting:
+    - Valid value constraints and fallback behavior
+    - Persistence behavior (what's persisted vs transient)
+    - Semantic differences (clearFilters vs resetAll)
 
 - [x] **Add JSDoc to BlogFilters component**
   - File: `src/components/sections/BlogFilters.tsx`
   - Added: JSDoc explaining memoization and component purpose
 
-- [ ] **Document polymorphic component patterns**
-  - Files: Container.tsx, Grid.tsx
-  - Explain `as` prop usage and type safety considerations
+- [x] **Document polymorphic component patterns**
+  - File: `src/lib/polymorphic.ts`
+  - Comprehensive JSDoc with usage patterns, ref forwarding examples,
+    and TypeScript limitations documentation
 
 ---
 
@@ -399,15 +403,15 @@ This document contains prioritized improvement suggestions organized by category
 
 | Category      | Critical | High    | Medium  | Low     | Total   |
 | ------------- | -------- | ------- | ------- | ------- | ------- |
-| Dependencies  | ~~2~~ 0  | 0       | ~~5~~ 4 | 0       | 4       |
+| Dependencies  | ~~2~~ 0  | 0       | ~~5~~ 1 | 0       | 1       |
 | SEO/Metadata  | ~~2~~ 0  | 0       | 0       | 0       | 0       |
-| Components    | 0        | ~~4~~ 1 | ~~3~~ 0 | ~~4~~ 3 | 4       |
-| Data          | 0        | ~~4~~ 2 | ~~2~~ 1 | ~~3~~ 0 | 3       |
-| Stores        | 0        | ~~2~~ 0 | ~~3~~ 2 | ~~3~~ 1 | 3       |
-| Configuration | 0        | 0       | ~~3~~ 2 | 1       | 3       |
-| Code Quality  | 0        | 0       | 1       | ~~5~~ 2 | 3       |
-| Testing       | 0        | 0       | 0       | 0       | 35+     |
-| **Total**     | **0**    | **3**   | **10**  | **7**   | **55+** |
+| Components    | 0        | ~~4~~ 0 | ~~3~~ 0 | ~~4~~ 1 | 1       |
+| Data          | 0        | ~~4~~ 2 | ~~2~~ 0 | ~~3~~ 0 | 2       |
+| Stores        | 0        | ~~2~~ 0 | ~~3~~ 0 | ~~3~~ 0 | 0       |
+| Configuration | 0        | 0       | ~~3~~ 1 | 1       | 2       |
+| Code Quality  | 0        | 0       | 1       | ~~5~~ 0 | 1       |
+| Testing       | 0        | 0       | 0       | 0       | 25+     |
+| **Total**     | **0**    | **2**   | **3**   | **2**   | **32+** |
 
 ---
 
@@ -451,9 +455,10 @@ This document contains prioritized improvement suggestions organized by category
 
 ### Phase 6: Remaining Work (Future)
 
-1. Update @types/node to v24
-2. Batch dependency updates (prettier, lucide-react, etc.)
-3. Implement nonce-based CSP for production
-4. Add filter validation to stores
-5. Expand test coverage (35+ items remaining)
-6. Documentation improvements
+1. Batch dependency updates (prettier, lucide-react, zod, react-hook-form, next)
+2. Implement nonce-based CSP for production
+3. Fix duplicate project images
+4. Add virtualization for large lists
+5. Use design tokens for hardcoded colors
+6. Expand test coverage (25+ items remaining - hooks, UI components, sections)
+7. Add Storybook stories for untested components
