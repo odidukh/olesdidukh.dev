@@ -5,15 +5,20 @@ import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { blogPosts } from '@/data/blog';
+import { ALL_FILTER } from '@/constants';
 import { X, Hash, Folder } from 'lucide-react';
 
 interface BlogFiltersProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-  categories: string[];
+  categories: readonly string[];
 }
 
-export function BlogFilters({
+/**
+ * Blog filters component for category and tag filtering.
+ * Memoized to prevent unnecessary re-renders when parent state changes.
+ */
+export const BlogFilters = React.memo(function BlogFilters({
   selectedCategory,
   onCategoryChange,
   categories,
@@ -51,7 +56,7 @@ export function BlogFilters({
           <div className="flex flex-wrap gap-2">
             {categories.map(category => {
               const count =
-                category === 'All'
+                category === ALL_FILTER
                   ? blogPosts.length
                   : blogPosts.filter(p => p.category === category).length;
 
@@ -111,12 +116,12 @@ export function BlogFilters({
         </div>
 
         {/* Clear Filters */}
-        {selectedCategory !== 'All' && (
+        {selectedCategory !== ALL_FILTER && (
           <div className="flex justify-end pt-2 border-t">
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => onCategoryChange('All')}
+              onClick={() => onCategoryChange(ALL_FILTER)}
               className="text-muted-foreground"
             >
               <X className="mr-2 h-4 w-4" />
@@ -127,4 +132,6 @@ export function BlogFilters({
       </div>
     </motion.div>
   );
-}
+});
+
+BlogFilters.displayName = 'BlogFilters';
