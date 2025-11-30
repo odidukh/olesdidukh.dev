@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { POST } from './route';
 
 // Mock Sentry
 vi.mock('@/lib/sentry', () => ({
@@ -7,20 +6,42 @@ vi.mock('@/lib/sentry', () => ({
   addBreadcrumb: vi.fn(),
 }));
 
-// Store original env
-const originalEnv = process.env;
+// Mock rate limiting (not configured in tests)
+vi.mock('@/lib/ratelimit', () => ({
+  newsletterRateLimiter: null,
+  checkRateLimit: vi.fn().mockResolvedValue(null),
+  rateLimitExceededResponse: vi.fn(),
+  getIdentifier: vi.fn().mockReturnValue('test-ip'),
+}));
+
+// Mock CSRF (skip in tests)
+vi.mock('@/lib/csrf', () => ({
+  validateCsrf: vi.fn().mockReturnValue(null),
+}));
+
+// Mock env module with mutable object
+vi.mock('@/lib/env', () => ({
+  env: {
+    BUTTONDOWN_API_KEY: 'test-api-key',
+    RESEND_API_KEY: 'test-resend-key',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
+  },
+}));
+
+import { POST } from './route';
+import { env } from '@/lib/env';
 
 describe('/api/newsletter', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset env before each test
-    process.env = { ...originalEnv, BUTTONDOWN_API_KEY: 'test-api-key' };
+    // Reset env mock to default
+    (env as { BUTTONDOWN_API_KEY: string }).BUTTONDOWN_API_KEY = 'test-api-key';
     // Reset fetch mock
     vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
-    process.env = originalEnv;
     vi.unstubAllGlobals();
   });
 
@@ -57,7 +78,8 @@ describe('/api/newsletter', () => {
 
   describe('API key configuration', () => {
     it('should return 500 if BUTTONDOWN_API_KEY is not configured', async () => {
-      delete process.env['BUTTONDOWN_API_KEY'];
+      // Clear the API key in mock
+      (env as { BUTTONDOWN_API_KEY: string }).BUTTONDOWN_API_KEY = '';
 
       const response = await POST(createRequest({ email: 'test@example.com' }));
 

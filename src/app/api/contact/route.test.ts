@@ -19,6 +19,30 @@ vi.mock('@/lib/sentry', () => ({
   setContext: vi.fn(),
 }));
 
+// Mock rate limiting (not configured in tests)
+vi.mock('@/lib/ratelimit', () => ({
+  contactRateLimiter: null,
+  checkRateLimit: vi.fn().mockResolvedValue(null),
+  rateLimitExceededResponse: vi.fn(),
+  getIdentifier: vi.fn().mockReturnValue('test-ip'),
+}));
+
+// Mock CSRF (skip in tests)
+vi.mock('@/lib/csrf', () => ({
+  validateCsrf: vi.fn().mockReturnValue(null),
+}));
+
+// Mock env module
+vi.mock('@/lib/env', () => ({
+  env: {
+    RESEND_API_KEY: 'test-resend-key',
+    CONTACT_EMAIL: 'test@example.com',
+    BUTTONDOWN_API_KEY: 'test-api-key',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
+  },
+}));
+
 // Dynamic import to ensure mocks are in place
 const { POST } = await import('./route');
 
