@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { SkipLink } from '@/components/ui/SkipLink';
 import { JsonLd } from '@/components/JsonLd';
+import { getNonce } from '@/lib/nonce';
 import './globals.css';
 
 /**
@@ -98,11 +99,13 @@ const resourceHints = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = await getNonce();
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -146,9 +149,10 @@ export default function RootLayout({
           <link key={url} rel="dns-prefetch" href={url} />
         ))}
         {/* Structured Data */}
-        <JsonLd data={jsonLd} />
+        <JsonLd data={jsonLd} nonce={nonce} />
         {/* Theme initialization script - prevents flash of wrong theme */}
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
