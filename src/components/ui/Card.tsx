@@ -196,6 +196,29 @@ const CardImage = React.forwardRef<
 });
 CardImage.displayName = 'CardImage';
 
+// Prop type exports for sub-components
+type CardProps = React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof cardVariants>;
+
+type CardHeaderProps = React.HTMLAttributes<HTMLDivElement>;
+
+type CardTitleProps = React.HTMLAttributes<HTMLHeadingElement>;
+
+type CardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
+
+type CardContentProps = React.HTMLAttributes<HTMLDivElement>;
+
+type CardFooterProps = React.HTMLAttributes<HTMLDivElement>;
+
+type CardImageProps = React.HTMLAttributes<HTMLDivElement> & {
+  /** Image source URL */
+  src?: string;
+  /** Image alt text for accessibility */
+  alt?: string;
+  /** Aspect ratio: 'square' (1:1), 'video' (16:9), 'wide' (21:9), 'portrait' (3:4) */
+  aspectRatio?: 'square' | 'video' | 'wide' | 'portrait';
+};
+
 export {
   Card,
   CardHeader,
@@ -205,4 +228,14 @@ export {
   CardContent,
   CardImage,
   cardVariants,
+};
+
+export type {
+  CardProps,
+  CardHeaderProps,
+  CardTitleProps,
+  CardDescriptionProps,
+  CardContentProps,
+  CardFooterProps,
+  CardImageProps,
 };
