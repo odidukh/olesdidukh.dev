@@ -2,6 +2,15 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
 import { ALL_FILTER } from '@/constants';
+import {
+  PROJECT_CATEGORIES,
+  PROJECT_TECHNOLOGIES,
+} from '@/config/project-filters';
+
+/** Valid category values for filtering */
+const validCategories = new Set<string>(PROJECT_CATEGORIES);
+/** Valid technology values for filtering */
+const validTechnologies = new Set<string>(PROJECT_TECHNOLOGIES);
 
 type ViewMode = 'grid' | 'list';
 
@@ -56,6 +65,12 @@ const initialState = {
  * - Supports category, technology, and search query filters
  * - Remembers view mode preference (grid/list)
  *
+ * Invariants:
+ * - selectedCategory is always a valid category from PROJECT_CATEGORIES (defaults to ALL_FILTER)
+ * - selectedTechnologies only contains valid technologies from PROJECT_TECHNOLOGIES
+ * - showFilters is transient (not persisted to localStorage)
+ * - clearFilters() preserves viewMode; resetAll() resets everything
+ *
  * @example
  * ```tsx
  * import { useProjectsFilterStore } from '@/stores/useProjectsFilterStore';
@@ -87,17 +102,29 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
       (set, get) => ({
         ...initialState,
 
-        setSelectedCategory: category => set({ selectedCategory: category }),
+        setSelectedCategory: category => {
+          // Validate category against allowed values, fallback to ALL_FILTER
+          const validCategory = validCategories.has(category)
+            ? category
+            : ALL_FILTER;
+          set({ selectedCategory: validCategory });
+        },
 
-        toggleTechnology: tech =>
+        toggleTechnology: tech => {
+          // Only toggle valid technologies
+          if (!validTechnologies.has(tech)) return;
           set(state => ({
             selectedTechnologies: state.selectedTechnologies.includes(tech)
               ? state.selectedTechnologies.filter(t => t !== tech)
               : [...state.selectedTechnologies, tech],
-          })),
+          }));
+        },
 
-        setSelectedTechnologies: technologies =>
-          set({ selectedTechnologies: technologies }),
+        setSelectedTechnologies: technologies => {
+          // Filter to only valid technologies
+          const validTechs = technologies.filter(t => validTechnologies.has(t));
+          set({ selectedTechnologies: validTechs });
+        },
 
         setSearchQuery: query => set({ searchQuery: query }),
 

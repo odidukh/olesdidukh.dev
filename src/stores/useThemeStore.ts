@@ -66,6 +66,13 @@ function applyTheme(theme: 'light' | 'dark') {
  * - 'dark': Always use dark theme
  * - 'system': Follow system preference (prefers-color-scheme)
  *
+ * Invariants:
+ * - mode is always one of: 'light' | 'dark' | 'system'
+ * - resolvedTheme is always 'light' or 'dark' (computed from mode + system preference)
+ * - toggleTheme() cycles between light/dark directly, setting mode to the resolved value
+ * - Theme changes apply a CSS transition class for 300ms smooth animation
+ * - System preference changes are automatically tracked when mode is 'system'
+ *
  * @example
  * ```tsx
  * import { useThemeStore } from '@/stores/useThemeStore';

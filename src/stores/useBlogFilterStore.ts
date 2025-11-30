@@ -2,6 +2,10 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
 import { ALL_FILTER } from '@/constants';
+import { blogCategories } from '@/data/blog';
+
+/** Valid category values for filtering */
+const validCategories = new Set<string>(blogCategories);
 
 type SortOption = 'latest' | 'popular' | 'trending';
 
@@ -49,6 +53,12 @@ const initialState = {
  * - Supports category and search query filters
  * - Remembers sort preference
  *
+ * Invariants:
+ * - selectedCategory is always a valid category from blogCategories (defaults to ALL_FILTER)
+ * - showFilters is transient (not persisted to localStorage)
+ * - clearFilters() preserves sortBy; resetAll() resets everything
+ * - hasActiveFilters() returns true only for category or search, not sortBy
+ *
  * @example
  * ```tsx
  * import { useBlogFilterStore } from '@/stores/useBlogFilterStore';
@@ -90,7 +100,13 @@ export const useBlogFilterStore = create<BlogFilterState>()(
       (set, get) => ({
         ...initialState,
 
-        setSelectedCategory: category => set({ selectedCategory: category }),
+        setSelectedCategory: category => {
+          // Validate category against allowed values, fallback to ALL_FILTER
+          const validCategory = validCategories.has(category)
+            ? category
+            : ALL_FILTER;
+          set({ selectedCategory: validCategory });
+        },
 
         setSearchQuery: query => set({ searchQuery: query }),
 

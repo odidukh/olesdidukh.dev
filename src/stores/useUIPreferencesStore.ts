@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { PWA_DISMISS_COOLDOWN_MS, type FontSize } from '@/config/ui';
 
-type FontSize = 'small' | 'normal' | 'large';
+/** Supported locales */
+type Locale = 'en' | 'uk' | 'pl';
 
 interface UIPreferencesState {
   /** Whether to use reduced motion animations */
@@ -18,6 +20,8 @@ interface UIPreferencesState {
   pwaInstallDismissed: boolean;
   /** Timestamp when PWA install was dismissed */
   pwaInstallDismissedAt: number | null;
+  /** Preferred locale/language */
+  locale: Locale | null;
 
   /** Set reduced motion preference */
   setReducedMotion: (reduced: boolean) => void;
@@ -35,6 +39,8 @@ interface UIPreferencesState {
   dismissPWAInstall: () => void;
   /** Check if PWA install should be shown (after 7 days cooldown) */
   shouldShowPWAInstall: () => boolean;
+  /** Set locale preference */
+  setLocale: (locale: Locale | null) => void;
   /** Reset all preferences to defaults */
   resetPreferences: () => void;
 }
@@ -47,10 +53,8 @@ const initialState = {
   showReadingProgress: true,
   pwaInstallDismissed: false,
   pwaInstallDismissedAt: null as number | null,
+  locale: null as Locale | null,
 };
-
-// 7 days in milliseconds
-const PWA_DISMISS_COOLDOWN = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Global UI preferences store using Zustand with localStorage persistence.
@@ -60,6 +64,12 @@ const PWA_DISMISS_COOLDOWN = 7 * 24 * 60 * 60 * 1000;
  * - Respects reduced motion preferences
  * - Controls layout and accessibility options
  * - Manages PWA install prompt dismissal
+ *
+ * Invariants:
+ * - fontSize is always one of: 'small' | 'normal' | 'large'
+ * - locale is null (system default) or a valid Locale type
+ * - PWA dismissal has a 7-day cooldown before shouldShowPWAInstall() returns true again
+ * - resetPreferences() preserves PWA dismissal state
  *
  * @example
  * ```tsx
@@ -122,8 +132,10 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
         if (!state.pwaInstallDismissedAt) return true;
 
         const elapsed = Date.now() - state.pwaInstallDismissedAt;
-        return elapsed > PWA_DISMISS_COOLDOWN;
+        return elapsed > PWA_DISMISS_COOLDOWN_MS;
       },
+
+      setLocale: locale => set({ locale }),
 
       resetPreferences: () =>
         set({
@@ -132,6 +144,7 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
           fontSize: 'normal',
           sidebarCollapsed: false,
           showReadingProgress: true,
+          locale: null,
           // Keep PWA dismissal state
         }),
     }),
@@ -169,3 +182,11 @@ export const usePWAInstallState = () =>
     shouldShow: state.shouldShowPWAInstall(),
     dismiss: state.dismissPWAInstall,
   }));
+
+export const useLocalePreference = () =>
+  useUIPreferencesStore(state => ({
+    locale: state.locale,
+    setLocale: state.setLocale,
+  }));
+
+export type { Locale };
