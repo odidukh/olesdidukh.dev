@@ -2,7 +2,7 @@ export default function ProjectDetailLoading() {
   return (
     <main className="pt-20">
       {/* Hero Section Skeleton */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-cream-50 to-cream-100 py-16 dark:from-gray-900 dark:to-gray-800 lg:py-24">
+      <section className="relative overflow-hidden bg-gradient-project py-16 lg:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back link skeleton */}
           <div className="mb-8 animate-pulse">

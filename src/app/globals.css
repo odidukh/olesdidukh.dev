@@ -20,6 +20,22 @@
   --color-mocha-800: var(--mocha-800);
   --color-mocha-900: var(--mocha-900);
 
+  /* Custom Gray colors */
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+
+  /* Custom Cream colors */
+  --color-cream-50: var(--cream-50);
+  --color-cream-100: var(--cream-100);
+
   /* Custom Navy colors */
   --color-navy-50: var(--navy-50);
   --color-navy-100: var(--navy-100);
@@ -109,6 +125,14 @@
   }
   .bg-mocha-900 {
     background-color: var(--mocha-900);
+  }
+
+  /* Cream background colors */
+  .bg-cream-50 {
+    background-color: var(--cream-50);
+  }
+  .bg-cream-100 {
+    background-color: var(--cream-100);
   }
 
   /* Mocha text colors */
@@ -567,6 +591,15 @@
   .bg-gradient-hero {
     background-image: var(--gradient-hero);
   }
+  .bg-gradient-cream {
+    background-image: var(--gradient-cream);
+  }
+  .bg-gradient-project {
+    background-image: var(--gradient-project-light);
+  }
+  .dark .bg-gradient-project {
+    background-image: var(--gradient-project-dark);
+  }
 
   /* ==========================================
      DARK MODE VARIANTS
@@ -726,6 +759,10 @@
 }
 .dark .dark\:text-gray-900 {
   color: #0f172a !important;
+}
+
+.dark .dark\:text-white {
+  color: #ffffff !important;
 }
 
 .dark .dark\:border-gray-200 {

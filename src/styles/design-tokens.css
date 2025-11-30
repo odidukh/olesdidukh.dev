@@ -18,6 +18,10 @@
   --mocha-800: #614439; /* Darker - emphasis text */
   --mocha-900: #523a32; /* Darkest - headings, high contrast */
 
+  /* Cream colors for backgrounds */
+  --cream-50: #faf9f7;
+  --cream-100: #f3f0eb;
+
   /* ==========================================
      PROFESSIONAL NEUTRAL PALETTE
      Gray scale for UI elements
@@ -119,6 +123,17 @@
     rgba(164, 120, 100, 0.15) 0%,
     rgba(98, 125, 152, 0.1) 50%,
     transparent 100%
+  );
+  --gradient-cream: linear-gradient(
+    135deg,
+    var(--cream-50) 0%,
+    var(--cream-100) 100%
+  );
+  --gradient-project-light: var(--gradient-cream);
+  --gradient-project-dark: linear-gradient(
+    to bottom right,
+    var(--gray-900),
+    var(--gray-800)
   );
 
   /* ==========================================

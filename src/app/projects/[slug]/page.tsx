@@ -142,12 +142,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <Navigation />
       <main id="main-content" className="pt-20">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-cream-50 to-cream-100 py-16 dark:from-gray-900 dark:to-gray-800 lg:py-24">
+        <section className="relative overflow-hidden bg-gradient-project py-16 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             {/* Back Link */}
             <Link
               href="/projects"
-              className="mb-8 inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-mocha-600 dark:text-gray-400 dark:hover:text-mocha-400"
+              className="mb-8 inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-mocha-600 dark:text-gray-200 dark:hover:text-mocha-400"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Projects
@@ -162,28 +162,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white lg:text-5xl">
                   {project.title}
                 </h1>
-                <p className="mb-6 text-lg text-gray-600 dark:text-gray-300">
+                <p className="mb-6 text-lg text-gray-600 dark:text-gray-100">
                   {project.longDescription}
                 </p>
 
                 {/* Project Meta */}
                 <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
                     <Calendar className="h-4 w-4 text-mocha-500" />
                     <span>{project.year}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
                     <Clock className="h-4 w-4 text-mocha-500" />
                     <span>{project.duration}</span>
                   </div>
                   {project.team && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
                       <Users className="h-4 w-4 text-mocha-500" />
                       <span>{project.team}</span>
                     </div>
                   )}
                   {project.client && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
                       <Building className="h-4 w-4 text-mocha-500" />
                       <span>{project.client}</span>
                     </div>
