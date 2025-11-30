@@ -1,8 +1,23 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { generateNonce, buildCSP, CSP_NONCE_HEADER } from '@/lib/csp';
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // Get the base response from Supabase session handling
+  const response = await updateSession(request);
+
+  // Generate a nonce for this request
+  const nonce = generateNonce();
+  const isDev = process.env.NODE_ENV === 'development';
+
+  // Add nonce to request headers so it can be accessed in server components
+  response.headers.set(CSP_NONCE_HEADER, nonce);
+
+  // Build and set CSP header
+  const csp = buildCSP(nonce, isDev);
+  response.headers.set('Content-Security-Policy', csp);
+
+  return response;
 }
 
 export const config = {

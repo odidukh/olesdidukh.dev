@@ -57,60 +57,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
 
   async headers() {
-    // Content Security Policy
-    // Note: 'unsafe-inline' and 'unsafe-eval' are needed for Next.js development
-    // In production, consider using nonces for stricter CSP
-    const isDev = process.env.NODE_ENV === 'development';
-
-    const cspDirectives = [
-      // Default fallback
-      "default-src 'self'",
-
-      // Scripts - allow self, inline (for Next.js), and specific CDNs
-      isDev
-        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://*.sentry.io"
-        : "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://*.sentry.io",
-
-      // Styles - allow self and inline (for Tailwind CSS)
-      "style-src 'self' 'unsafe-inline'",
-
-      // Images - allow self, data URIs, and placeholder services
-      "img-src 'self' data: blob: https://via.placeholder.com https://img.youtube.com https://*.supabase.co",
-
-      // Fonts - allow self and common font CDNs
-      "font-src 'self' data:",
-
-      // Connect - API endpoints
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.buttondown.email https://*.sentry.io https://va.vercel-scripts.com",
-
-      // Frame ancestors - prevent clickjacking
-      "frame-ancestors 'none'",
-
-      // Form actions
-      "form-action 'self'",
-
-      // Base URI
-      "base-uri 'self'",
-
-      // Object sources
-      "object-src 'none'",
-
-      // Upgrade insecure requests in production
-      ...(isDev ? [] : ['upgrade-insecure-requests']),
-    ];
-
-    const ContentSecurityPolicy = cspDirectives.join('; ');
-
+    // Security headers
+    // Note: CSP is now set dynamically in middleware with nonce support
     return [
       {
         source: '/(.*)',
         headers: [
-          // Content Security Policy
-          {
-            key: 'Content-Security-Policy',
-            value: ContentSecurityPolicy,
-          },
-
           // Strict Transport Security (HSTS)
           // max-age: 2 years, includeSubDomains, preload ready
           {
