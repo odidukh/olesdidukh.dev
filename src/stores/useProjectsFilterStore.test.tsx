@@ -50,10 +50,10 @@ describe('useProjectsFilterStore', () => {
     const { result } = renderHook(() => useProjectsFilterStore());
 
     act(() => {
-      result.current.setSelectedCategory('Web App');
+      result.current.setSelectedCategory('Web Application');
     });
 
-    expect(result.current.selectedCategory).toBe('Web App');
+    expect(result.current.selectedCategory).toBe('Web Application');
   });
 
   it('toggleTechnology adds technology when not present', async () => {
@@ -173,13 +173,13 @@ describe('useProjectsFilterStore', () => {
     const { result } = renderHook(() => useProjectsFilterStore());
 
     act(() => {
-      result.current.setSelectedCategory('Web App');
+      result.current.setSelectedCategory('Web Application');
       result.current.toggleTechnology('React');
       result.current.setSearchQuery('test');
       result.current.setViewMode('list');
     });
 
-    expect(result.current.selectedCategory).toBe('Web App');
+    expect(result.current.selectedCategory).toBe('Web Application');
     expect(result.current.selectedTechnologies).toEqual(['React']);
     expect(result.current.searchQuery).toBe('test');
     expect(result.current.viewMode).toBe('list');
@@ -201,7 +201,7 @@ describe('useProjectsFilterStore', () => {
     const { result } = renderHook(() => useProjectsFilterStore());
 
     act(() => {
-      result.current.setSelectedCategory('Web App');
+      result.current.setSelectedCategory('Web Application');
       result.current.toggleTechnology('React');
       result.current.setSearchQuery('test');
       result.current.setViewMode('list');
@@ -231,7 +231,7 @@ describe('useProjectsFilterStore', () => {
     const { result } = renderHook(() => useProjectsFilterStore());
 
     act(() => {
-      result.current.setSelectedCategory('Web App');
+      result.current.setSelectedCategory('Web Application');
     });
 
     expect(result.current.hasActiveFilters()).toBe(true);
@@ -267,7 +267,7 @@ describe('useProjectsFilterStore', () => {
     const { result } = renderHook(() => useProjectsFilterStore());
 
     act(() => {
-      result.current.setSelectedCategory('Web App');
+      result.current.setSelectedCategory('Web Application');
       result.current.toggleTechnology('React');
       result.current.setSearchQuery('test');
       result.current.setViewMode('list');
@@ -276,7 +276,7 @@ describe('useProjectsFilterStore', () => {
     expect(mockStorage['projects-filter-storage']).toBeDefined();
     const stored = JSON.parse(mockStorage['projects-filter-storage'] ?? '{}');
 
-    expect(stored.state?.selectedCategory).toBe('Web App');
+    expect(stored.state?.selectedCategory).toBe('Web Application');
     expect(stored.state?.selectedTechnologies).toEqual(['React']);
     expect(stored.state?.searchQuery).toBe('test');
     expect(stored.state?.viewMode).toBe('list');
@@ -323,11 +323,11 @@ describe('useProjectsFilterStore selector hooks', () => {
     expect(selectorResult.current).toBe('All');
 
     act(() => {
-      storeResult.current.setSelectedCategory('Web App');
+      storeResult.current.setSelectedCategory('Web Application');
     });
 
     const { result: updatedResult } = renderHook(() => useProjectsCategory());
-    expect(updatedResult.current).toBe('Web App');
+    expect(updatedResult.current).toBe('Web Application');
   });
 
   it('useProjectsTechnologies returns selected technologies', async () => {
