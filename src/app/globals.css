@@ -1007,3 +1007,136 @@ html.theme-transition *::after {
     transition: none !important;
   }
 }
+
+/* ==========================================
+   TIMELINE COMPONENT - ADAPTIVE THEME DESIGN
+   Light: Gradient Accent with round icons
+   Dark: Neon Glow effect
+   ========================================== */
+
+/* Timeline Line - Light Theme (Gradient) */
+.timeline-line {
+  background: linear-gradient(to bottom, #ec4899, #8b5cf6, #3b82f6, #10b981);
+  width: 4px;
+  border-radius: 2px;
+}
+
+/* Timeline Line - Dark Theme (Neon Glow) */
+.dark .timeline-line {
+  background: #0ff;
+  width: 2px;
+  box-shadow:
+    0 0 10px #0ff,
+    0 0 20px #0ff,
+    0 0 40px #0ff;
+}
+
+/* Timeline Icon Container - Light Theme (Gradient Border) */
+.timeline-icon {
+  position: relative;
+  border: 3px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6) border-box;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.timeline-icon:hover {
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  transform: scale(1.05);
+}
+
+/* Timeline Icon - Light Theme */
+.timeline-icon svg {
+  color: #8b5cf6;
+}
+
+/* Timeline Icon Container - Dark Theme (Neon Glow) */
+.dark .timeline-icon {
+  border: 3px solid #0ff;
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow:
+    0 0 15px #0ff,
+    0 0 30px rgba(0, 255, 255, 0.5),
+    inset 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.dark .timeline-icon:hover {
+  box-shadow:
+    0 0 20px #0ff,
+    0 0 40px rgba(0, 255, 255, 0.6),
+    inset 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Timeline Icon - Dark Theme */
+.dark .timeline-icon svg {
+  color: #0ff;
+  filter: drop-shadow(0 0 6px #0ff);
+}
+
+/* Timeline Card - Light Theme */
+.timeline-card {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.timeline-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Timeline Card - Dark Theme */
+.dark .timeline-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.dark .timeline-card:hover {
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow:
+    0 0 30px rgba(0, 255, 255, 0.2),
+    0 0 60px rgba(0, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Timeline Card Title - Dark Theme */
+.dark .timeline-card h4 {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Timeline Achievement Text - Light Theme (Gradient) */
+.timeline-achievement {
+  background: linear-gradient(90deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Timeline Achievement Text - Dark Theme (Neon Green) */
+.dark .timeline-achievement {
+  color: #0f0;
+  text-shadow: 0 0 8px #0f0;
+  background: none;
+  -webkit-text-fill-color: #0f0;
+}
+
+/* Timeline Bullet Points - Light Theme */
+.timeline-bullet {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+}
+
+/* Timeline Bullet Points - Dark Theme */
+.dark .timeline-bullet {
+  background: #0ff;
+  box-shadow: 0 0 6px #0ff;
+}
+
+/* Timeline Company Name - Dark Theme */
+.dark .timeline-company {
+  color: #67e8f9;
+}

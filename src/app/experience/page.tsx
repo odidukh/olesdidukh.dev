@@ -315,170 +315,191 @@ export default function ExperiencePage() {
               className="relative"
             >
               {/* Timeline Line */}
-              <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-border" />
+              <div className="timeline-line absolute left-8 md:left-1/2 top-0 bottom-0 -translate-x-1/2" />
 
-              {experiences.map((exp, index) => (
-                <motion.div
-                  key={exp.id}
-                  variants={itemVariants}
-                  className={`relative flex items-center mb-16 ${
-                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                  }`}
-                >
-                  {/* Timeline Dot */}
-                  <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-primary rounded-full -translate-x-1/2 ring-4 ring-background" />
+              {experiences.map((exp, index) => {
+                const isLeft = index % 2 === 0;
 
-                  {/* Content */}
-                  <div
-                    className={`ml-20 md:ml-0 md:w-1/2 ${
-                      index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'
-                    }`}
+                const CardContent = (
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="timeline-card bg-card rounded-xl p-6 cursor-pointer"
+                    onClick={() =>
+                      setSelectedExperience(
+                        selectedExperience === exp.id ? null : exp.id
+                      )
+                    }
                   >
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-card border border-border rounded-xl p-6 cursor-pointer"
-                      onClick={() =>
-                        setSelectedExperience(
-                          selectedExperience === exp.id ? null : exp.id
-                        )
-                      }
-                    >
-                      {/* Header */}
-                      <div
-                        className={`flex items-start gap-4 ${
-                          index % 2 === 0 ? 'md:flex-row-reverse' : ''
-                        }`}
-                      >
-                        <div className="flex-1">
-                          <h3 className="text-2xl font-bold mb-1">
-                            {exp.position}
-                          </h3>
-                          <div
-                            className={`flex items-center gap-2 mb-3 flex-wrap ${
-                              index % 2 === 0 ? 'md:justify-end' : ''
-                            }`}
-                          >
-                            <span className="text-primary font-semibold">
-                              {exp.company}
-                            </span>
-                            {exp.companyUrl && (
-                              <a
-                                href={exp.companyUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-muted-foreground hover:text-primary"
-                                onClick={e => e.stopPropagation()}
-                              >
-                                <ExternalLink className="w-4 h-4" />
-                              </a>
-                            )}
-                          </div>
-                          <div
-                            className={`flex items-center gap-4 text-sm text-muted-foreground flex-wrap ${
-                              index % 2 === 0 ? 'md:justify-end' : ''
-                            }`}
-                          >
-                            <span className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {exp.duration}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {exp.location}
-                            </span>
-                            <Badge variant="secondary">{exp.type}</Badge>
-                          </div>
+                    {/* Header */}
+                    <div className="flex items-start gap-4">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold mb-1">
+                          {exp.position}
+                        </h3>
+                        <div
+                          className={`flex items-center gap-2 mb-3 flex-wrap ${
+                            isLeft ? 'md:justify-end' : ''
+                          }`}
+                        >
+                          <span className="text-primary font-semibold">
+                            {exp.company}
+                          </span>
+                          {exp.companyUrl && (
+                            <a
+                              href={exp.companyUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-muted-foreground hover:text-primary"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                        <div
+                          className={`flex items-center gap-4 text-sm text-muted-foreground flex-wrap ${
+                            isLeft ? 'md:justify-end' : ''
+                          }`}
+                        >
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {exp.duration}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {exp.location}
+                          </span>
+                          <Badge variant="secondary">{exp.type}</Badge>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Description */}
-                      <p className="mt-4 text-muted-foreground">
-                        {exp.description}
-                      </p>
+                    {/* Description */}
+                    <p
+                      className={`mt-4 text-muted-foreground ${isLeft ? 'md:text-right' : ''}`}
+                    >
+                      {exp.description}
+                    </p>
 
-                      {/* Technologies */}
-                      <div
-                        className={`mt-4 flex gap-2 flex-wrap ${
-                          index % 2 === 0 ? 'md:justify-end' : ''
-                        }`}
+                    {/* Technologies */}
+                    <div
+                      className={`mt-4 flex gap-2 flex-wrap ${
+                        isLeft ? 'md:justify-end' : ''
+                      }`}
+                    >
+                      {exp.technologies.slice(0, 5).map(tech => (
+                        <Badge key={tech} variant="outline">
+                          {tech}
+                        </Badge>
+                      ))}
+                      {exp.technologies.length > 5 && (
+                        <Badge variant="outline">
+                          +{exp.technologies.length - 5} more
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Expanded Content */}
+                    {selectedExperience === exp.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-6 pt-6 border-t"
                       >
-                        {exp.technologies.slice(0, 5).map(tech => (
-                          <Badge key={tech} variant="outline">
-                            {tech}
-                          </Badge>
-                        ))}
-                        {exp.technologies.length > 5 && (
-                          <Badge variant="outline">
-                            +{exp.technologies.length - 5} more
-                          </Badge>
+                        {/* Highlights */}
+                        {exp.highlights && (
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            {exp.highlights.map(highlight => (
+                              <div
+                                key={highlight.metric}
+                                className="text-center"
+                              >
+                                {highlight.icon && (
+                                  <highlight.icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                                )}
+                                <div className="text-xl font-bold">
+                                  {highlight.value}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {highlight.metric}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         )}
+
+                        {/* Achievements */}
+                        <div>
+                          <h4
+                            className={`font-semibold mb-3 flex items-center gap-2 ${isLeft ? 'md:justify-end' : ''}`}
+                          >
+                            <Trophy className="w-5 h-5 text-primary" />
+                            Key Achievements
+                          </h4>
+                          <ul className="space-y-2">
+                            {exp.achievements.map((achievement, i) => (
+                              <li
+                                key={i}
+                                className={`flex items-start gap-2 ${isLeft ? 'md:flex-row-reverse md:text-right' : ''}`}
+                              >
+                                <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                                <span className="text-sm text-muted-foreground">
+                                  {achievement}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Team Size */}
+                        {exp.teamSize && (
+                          <div
+                            className={`mt-4 flex items-center gap-2 text-sm text-muted-foreground ${isLeft ? 'md:justify-end' : ''}`}
+                          >
+                            <Users className="w-4 h-4" />
+                            Team size: {exp.teamSize}
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                );
+
+                return (
+                  <motion.div
+                    key={exp.id}
+                    variants={itemVariants}
+                    className="relative mb-16"
+                  >
+                    {/* Mobile Layout */}
+                    <div className="md:hidden pl-20">{CardContent}</div>
+
+                    {/* Desktop Layout - CSS Grid for precise alignment */}
+                    <div className="hidden md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-0">
+                      {/* Left Column */}
+                      <div className={isLeft ? 'pr-12 text-right' : ''}>
+                        {isLeft && CardContent}
                       </div>
 
-                      {/* Expanded Content */}
-                      {selectedExperience === exp.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="mt-6 pt-6 border-t"
-                        >
-                          {/* Highlights */}
-                          {exp.highlights && (
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                              {exp.highlights.map(highlight => (
-                                <div
-                                  key={highlight.metric}
-                                  className="text-center"
-                                >
-                                  {highlight.icon && (
-                                    <highlight.icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                                  )}
-                                  <div className="text-xl font-bold">
-                                    {highlight.value}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {highlight.metric}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                      {/* Center Column - Icon */}
+                      <div className="timeline-icon w-10 h-10 rounded-full flex items-center justify-center z-10 mx-auto">
+                        <Briefcase className="w-4 h-4" />
+                      </div>
 
-                          {/* Achievements */}
-                          <div>
-                            <h4 className="font-semibold mb-3 flex items-center gap-2">
-                              <Trophy className="w-5 h-5 text-primary" />
-                              Key Achievements
-                            </h4>
-                            <ul
-                              className={`space-y-2 ${
-                                index % 2 === 0 ? 'md:text-left' : ''
-                              }`}
-                            >
-                              {exp.achievements.map((achievement, i) => (
-                                <li key={i} className="flex items-start gap-2">
-                                  <ArrowRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                                  <span className="text-sm text-muted-foreground">
-                                    {achievement}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                      {/* Right Column */}
+                      <div className={!isLeft ? 'pl-12' : ''}>
+                        {!isLeft && CardContent}
+                      </div>
+                    </div>
 
-                          {/* Team Size */}
-                          {exp.teamSize && (
-                            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                              <Users className="w-4 h-4" />
-                              Team size: {exp.teamSize}
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
+                    {/* Mobile Icon */}
+                    <div className="md:hidden timeline-icon absolute left-8 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center z-10">
+                      <Briefcase className="w-4 h-4" />
+                    </div>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           ) : (
             /* Card View */
@@ -489,7 +510,7 @@ export default function ExperiencePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -5 }}
-                  className="bg-card border border-border rounded-xl p-8"
+                  className="timeline-card bg-card rounded-xl p-8"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">

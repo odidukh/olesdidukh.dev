@@ -158,7 +158,7 @@ export function Timeline() {
   return (
     <div ref={ref} className="relative">
       {/* Timeline Line */}
-      <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-mocha-500 via-navy-500 to-accent-green transform -translate-x-1/2" />
+      <div className="timeline-line absolute left-8 md:left-1/2 top-0 bottom-0 transform -translate-x-1/2" />
 
       {/* Timeline Items */}
       <div className="space-y-12">
@@ -205,9 +205,9 @@ export function Timeline() {
                 initial={{ scale: 0 }}
                 animate={isInView ? { scale: 1 } : {}}
                 transition={{ delay: index * 0.1 + 0.2, type: 'spring' }}
-                className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-background border-4 border-mocha-500 flex items-center justify-center z-10"
+                className="timeline-icon absolute left-8 md:left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full flex items-center justify-center z-10"
               >
-                <Icon className="h-5 w-5 text-mocha-600" />
+                <Icon className="h-5 w-5" />
               </motion.div>
             </motion.div>
           );
@@ -219,13 +219,13 @@ export function Timeline() {
 
 function TimelineCard({ item }: { item: TimelineItem }) {
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="timeline-card">
       <CardContent className="pt-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>
             <h4 className="text-lg font-semibold">{item.title}</h4>
-            <p className="text-mocha-600 dark:text-mocha-400 font-medium">
+            <p className="timeline-company text-mocha-600 dark:text-mocha-400 font-medium">
               {item.company}
             </p>
             <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
@@ -254,7 +254,7 @@ function TimelineCard({ item }: { item: TimelineItem }) {
               key={index}
               className="text-sm text-muted-foreground flex items-start gap-2"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-mocha-500 mt-1.5 shrink-0" />
+              <div className="timeline-bullet w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" />
               <span>{desc}</span>
             </li>
           ))}
@@ -276,10 +276,7 @@ function TimelineCard({ item }: { item: TimelineItem }) {
           <div className="pt-3 border-t">
             <div className="flex flex-wrap gap-3 text-xs">
               {item.achievements.map((achievement, index) => (
-                <span
-                  key={index}
-                  className="text-success-600 dark:text-success-400 font-medium"
-                >
+                <span key={index} className="timeline-achievement font-medium">
                   ✓ {achievement}
                 </span>
               ))}
