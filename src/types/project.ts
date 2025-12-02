@@ -12,8 +12,7 @@ export type ProjectCategory =
   | 'SaaS'
   | 'Dashboard'
   | 'Landing Page'
-  | 'API'
-  | 'Open Source';
+  | 'API';
 
 /**
  * Project video configuration

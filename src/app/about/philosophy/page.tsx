@@ -118,7 +118,7 @@ const corePrinciples: Principle[] = [
     color: 'from-green-500/20 to-emerald-500/20',
     examples: [
       'Weekly exploration of new technologies',
-      'Contributing to open source projects',
+      'Building side projects and experiments',
       'Attending conferences and workshops',
       'Teaching and mentoring others',
     ],

@@ -307,19 +307,6 @@ const journeyPhases: JourneyPhase[] = [
         ],
       },
       {
-        date: 'Jun 2024',
-        title: 'Open Source Contributor',
-        description:
-          'Active contributions to React ecosystem and developer tools',
-        type: 'achievement',
-        impact: 'medium',
-        tags: ['Open Source', 'Community', 'GitHub'],
-        metrics: [
-          { label: 'PRs Merged', value: '25+' },
-          { label: 'Stars Earned', value: '100+' },
-        ],
-      },
-      {
         date: 'Nov 2024',
         title: 'Portfolio 2.0 Launch',
         description:
@@ -453,14 +440,6 @@ const mentors: Mentor[] = [
       'Always think about scale from day one, but don&apos;t over-engineer',
     period: '2023-Present',
     impact: 'Learned to balance innovation with pragmatism',
-  },
-  {
-    name: 'Open Source Community',
-    role: 'Various Contributors',
-    company: 'GitHub',
-    lesson: 'Collaboration and knowledge sharing accelerate growth',
-    period: '2019-Present',
-    impact: 'Expanded technical horizons and network',
   },
 ];
 

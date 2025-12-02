@@ -38,7 +38,7 @@ const socialLinks: SocialLink[] = [
     url: 'https://github.com/odidukh',
     username: '@odidukh',
     color: 'hover:text-gray-900 dark:hover:text-gray-100',
-    description: 'Open source projects & code',
+    description: 'Code repositories & projects',
   },
   {
     name: 'LinkedIn',

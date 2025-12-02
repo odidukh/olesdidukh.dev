@@ -387,50 +387,6 @@ export const projectsData: Project[] = [
       role: 'VP of Engineering, ContentStack',
     },
   },
-  {
-    id: 'open-source-ui',
-    title: 'React UI Component Library',
-    description:
-      'Open-source React component library with 50+ accessible, customizable components.',
-    longDescription:
-      'Created and maintain a popular open-source React component library focused on accessibility, performance, and developer experience. The library includes comprehensive documentation and testing.',
-    category: 'Open Source',
-    technologies: [
-      'React',
-      'TypeScript',
-      'Storybook',
-      'Jest',
-      'Rollup',
-      'CSS-in-JS',
-    ],
-    image: '/images/projects/ui-library.png',
-    images: [
-      '/images/projects/ui-library.png',
-      '/images/projects/ui-library.png',
-      '/images/projects/ui-library.png',
-    ],
-    githubUrl: 'https://github.com/odidukh/react-ui-library',
-    demoUrl: 'https://ui-library-demo.vercel.app',
-    featured: true,
-    year: 2023,
-    duration: 'Ongoing',
-    role: 'Creator & Maintainer',
-    challenges: [
-      'Ensuring accessibility compliance',
-      'Supporting multiple styling solutions',
-      'Maintaining backward compatibility',
-    ],
-    solutions: [
-      'Automated accessibility testing with jest-axe',
-      'CSS-in-JS with theming support',
-      'Semantic versioning and migration guides',
-    ],
-    results: [
-      { metric: 'GitHub Stars', value: '2,500+' },
-      { metric: 'Weekly Downloads', value: '10,000+' },
-      { metric: 'Contributors', value: '50+' },
-    ],
-  },
 ];
 
 // Helper functions

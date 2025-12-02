@@ -88,8 +88,8 @@ export function ProjectsSection() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               A showcase of my best work, from enterprise applications to
-              open-source contributions. Each project demonstrates my commitment
-              to quality, performance, and user experience.
+              innovative solutions. Each project demonstrates my commitment to
+              quality, performance, and user experience.
             </p>
           </div>
 

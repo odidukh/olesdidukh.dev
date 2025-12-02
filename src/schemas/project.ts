@@ -15,7 +15,6 @@ export const projectCategorySchema = z.enum([
   'Dashboard',
   'Landing Page',
   'API',
-  'Open Source',
 ]);
 
 export type ProjectCategory = z.infer<typeof projectCategorySchema>;

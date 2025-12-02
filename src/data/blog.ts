@@ -48,7 +48,6 @@ export const blogCategories = [
   'Tutorial',
   'Best Practices',
   'Tools',
-  'Open Source',
 ] as const;
 
 /** Type for valid blog categories */

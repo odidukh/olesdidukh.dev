@@ -23,7 +23,6 @@ const projectCategories = [
   'FinTech',
   'Healthcare',
   'Enterprise',
-  'Open Source',
   'Mobile',
   'Other',
 ];

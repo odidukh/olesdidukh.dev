@@ -26,7 +26,6 @@ const blogCategories = [
   'Tutorial',
   'Best Practices',
   'Tools',
-  'Open Source',
 ];
 
 export function BlogForm({ post, mode }: BlogFormProps) {

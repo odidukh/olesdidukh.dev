@@ -14,7 +14,6 @@ export const PROJECT_CATEGORIES = [
   'E-Commerce',
   'SaaS',
   'Mobile App',
-  'Open Source',
   'UI/UX Design',
 ] as const;
 

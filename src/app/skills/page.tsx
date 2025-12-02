@@ -22,7 +22,6 @@ import {
   Activity,
   BarChart3,
   Layers,
-  GitBranch,
   Terminal,
   Globe,
   Smartphone,
@@ -756,15 +755,6 @@ export default function SkillsPage() {
                     <div className="font-medium">Performance Expert</div>
                     <div className="text-sm text-muted-foreground">
                       Achieved 95+ Lighthouse scores on multiple projects
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <GitBranch className="w-5 h-5 text-primary mt-0.5" />
-                  <div>
-                    <div className="font-medium">Open Source Contributor</div>
-                    <div className="text-sm text-muted-foreground">
-                      Contributed to 10+ open source projects
                     </div>
                   </div>
                 </div>
