@@ -224,7 +224,7 @@ export function ContactSection() {
                     </Button>
                     <Button className="w-full" variant="outline" asChild>
                       <a
-                        href="https://calendly.com/olesdidukh"
+                        href="https://calendly.com/oles-didukh"
                         target="_blank"
                         rel="noopener noreferrer"
                       >

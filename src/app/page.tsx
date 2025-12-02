@@ -388,7 +388,7 @@ export default function HomePage() {
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a
-                    href="https://calendly.com/olesdidukh"
+                    href="https://calendly.com/oles-didukh"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
