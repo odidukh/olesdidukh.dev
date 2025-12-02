@@ -125,10 +125,10 @@ const experiences: Experience[] = [
   {
     id: 'inango',
     company: 'Inango Systems',
-    position: 'Junior Front-End Developer',
+    position: 'Front-End Developer',
     location: 'Vinnytsia, Ukraine',
-    duration: 'Mar 2018 - May 2020',
-    startDate: '2018-03',
+    duration: 'Mar 2019 - May 2020',
+    startDate: '2019-03',
     endDate: '2020-05',
     type: 'Full-time',
     companyUrl: 'https://inango.com',
@@ -161,30 +161,33 @@ const experiences: Experience[] = [
   {
     id: 'helios',
     company: 'Helios Technologies',
-    position: 'Front-End Developer Intern',
-    location: 'Vinnytsia, Ukraine',
-    duration: 'Sep 2017 - Feb 2018',
-    startDate: '2017-09',
-    endDate: '2018-02',
+    position: 'Junior Front-End Developer',
+    location: 'Paris, France (Remote)',
+    duration: 'Jun 2018 - Feb 2019',
+    startDate: '2018-06',
+    endDate: '2019-02',
     type: 'Contract',
+    companyUrl: 'https://www.heliostech.fr',
     description:
-      'Started my professional journey in web development, working on various client projects and learning industry best practices.',
+      'Started my professional journey at a cloud consulting company specializing in digital transformation, DevOps, and cloud-native solutions. Developed web applications and dashboards for clients undergoing digital transformation.',
     achievements: [
-      'Developed 3 responsive websites for local businesses',
-      'Learned React and modern JavaScript ecosystem',
-      'Implemented pixel-perfect designs from Figma/Sketch',
-      'Collaborated with senior developers on code reviews',
+      'Built responsive dashboards for cloud infrastructure monitoring',
+      'Developed front-end components for client-facing web applications',
+      'Collaborated with DevOps engineers on CI/CD pipeline interfaces',
+      'Implemented data visualization features for analytics dashboards',
+      'Gained exposure to cloud technologies (AWS, Docker) and agile methodologies',
     ],
     technologies: [
+      'JavaScript',
+      'React',
       'HTML5',
       'CSS3',
-      'JavaScript',
-      'jQuery',
       'Bootstrap',
-      'PHP',
-      'MySQL',
+      'Chart.js',
+      'REST APIs',
+      'Git',
     ],
-    teamSize: '3-4 people',
+    teamSize: '5-8 people',
   },
 ];
 
@@ -194,7 +197,7 @@ export default function ExperiencePage() {
   );
   const [viewMode, setViewMode] = useState<'timeline' | 'cards'>('timeline');
 
-  const totalYears = new Date().getFullYear() - 2017;
+  const totalYears = new Date().getFullYear() - 2018;
   const companiesCount = experiences.length;
   const projectsCompleted = 50; // You can calculate this dynamically
 

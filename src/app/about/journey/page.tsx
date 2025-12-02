@@ -82,7 +82,7 @@ const journeyPhases: JourneyPhase[] = [
   {
     id: 'foundation',
     phase: 'Foundation',
-    years: '2017-2018',
+    years: '2018-2019',
     title: 'The Beginning',
     description:
       'Discovering passion for web development and building core skills',
@@ -90,7 +90,7 @@ const journeyPhases: JourneyPhase[] = [
     icon: School,
     milestones: [
       {
-        date: 'Sep 2017',
+        date: 'Early 2018',
         title: 'First Line of Code',
         description:
           'Started learning HTML, CSS, and JavaScript through online courses and bootcamps',
@@ -103,33 +103,20 @@ const journeyPhases: JourneyPhase[] = [
         ],
       },
       {
-        date: 'Dec 2017',
-        title: 'First Client Project',
+        date: 'Jun 2018',
+        title: 'Joined Helios Technologies',
         description:
-          'Built complete website for local business, handling design and development',
-        type: 'achievement',
-        impact: 'medium',
-        tags: ['Web Design', 'Client Work', 'Freelance'],
-        metrics: [
-          { label: 'Project Duration', value: '3 weeks' },
-          { label: 'Client Rating', value: '5/5' },
-        ],
-      },
-      {
-        date: 'Mar 2018',
-        title: 'Joined Inango Systems',
-        description:
-          'Started as Junior Front-End Developer, working on embedded web interfaces for network devices',
+          'Started as Junior Front-End Developer at a cloud consulting company in Paris, building dashboards and web apps for digital transformation clients',
         type: 'work',
         impact: 'high',
-        tags: ['First Job', 'Professional Growth', 'Enterprise'],
+        tags: ['First Job', 'Cloud', 'Digital Transformation'],
         metrics: [
-          { label: 'Team Size', value: '5 developers' },
-          { label: 'Products Shipped', value: '3' },
+          { label: 'Team Size', value: '5-8 people' },
+          { label: 'Duration', value: '9 months' },
         ],
       },
       {
-        date: 'Jun 2018',
+        date: 'Sep 2018',
         title: 'React.js Adoption',
         description:
           'Mastered React.js and introduced component-based architecture to team projects',
@@ -139,6 +126,19 @@ const journeyPhases: JourneyPhase[] = [
         metrics: [
           { label: 'Components Built', value: '50+' },
           { label: 'Performance Gain', value: '40%' },
+        ],
+      },
+      {
+        date: 'Feb 2019',
+        title: 'Cloud & DevOps Exposure',
+        description:
+          'Gained valuable experience with cloud technologies and CI/CD pipelines through collaboration with DevOps engineers',
+        type: 'skill',
+        impact: 'medium',
+        tags: ['AWS', 'Docker', 'CI/CD'],
+        metrics: [
+          { label: 'Dashboards Built', value: '5+' },
+          { label: 'Technologies Learned', value: '8+' },
         ],
       },
     ],
@@ -153,7 +153,20 @@ const journeyPhases: JourneyPhase[] = [
     icon: TrendingUp,
     milestones: [
       {
-        date: 'Jan 2019',
+        date: 'Mar 2019',
+        title: 'Joined Inango Systems',
+        description:
+          'Joined as Front-End Developer, working on embedded web interfaces for network management systems and IoT devices',
+        type: 'work',
+        impact: 'high',
+        tags: ['IoT', 'Embedded', 'Real-time'],
+        metrics: [
+          { label: 'Products Shipped', value: '5' },
+          { label: 'Team Size', value: '5-7 people' },
+        ],
+      },
+      {
+        date: 'Aug 2019',
         title: 'Full-Stack Development',
         description:
           'Learned Node.js, Express, and MongoDB to become a versatile developer',
@@ -169,7 +182,7 @@ const journeyPhases: JourneyPhase[] = [
         date: 'Jun 2020',
         title: 'Joined Emerline',
         description:
-          'Promoted to Front-End Developer, working with international clients from USA, Germany, and UK',
+          'Moved to Front-End Developer role, working with international clients from USA, Germany, and UK',
         type: 'work',
         impact: 'high',
         tags: ['Career Growth', 'International', 'Remote'],
@@ -449,7 +462,7 @@ export default function JourneyPage() {
 
   const selectedPhaseData = journeyPhases.find(p => p.id === selectedPhase);
 
-  const totalYears = new Date().getFullYear() - 2017;
+  const totalYears = new Date().getFullYear() - 2018;
   const totalProjects = 50;
   const technologiesMastered = 25;
   const menteesTrained = 6;
