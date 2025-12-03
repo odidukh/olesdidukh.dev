@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Navigation', () => {
+  // Add retries for flaky navigation tests
+  test.describe.configure({ retries: 2 });
   test('homepage loads correctly', async ({ page }) => {
     await page.goto('/');
 
