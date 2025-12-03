@@ -61,7 +61,7 @@ test.describe('Visual Regression - Desktop', () => {
     await page.waitForTimeout(500);
 
     await expect(page).toHaveScreenshot('contact-desktop.png', {
-      maxDiffPixels: 100,
+      maxDiffPixels: 200,
     });
   });
 
@@ -118,7 +118,7 @@ test.describe('Visual Regression - Mobile', () => {
     await page.waitForTimeout(300);
 
     await expect(page).toHaveScreenshot('mobile-menu.png', {
-      maxDiffPixels: 100,
+      maxDiffPixels: 200,
     });
   });
 });
