@@ -32,12 +32,10 @@ vi.mock('../ui/TypeAnimation', () => ({
   ),
 }));
 
-vi.mock('../ui/ParticleField', () => ({
-  ParticleField: () => <div data-testid="particle-field" />,
-}));
-
-vi.mock('../ui/FloatingIcons', () => ({
-  FloatingIcons: () => <div data-testid="floating-icons" />,
+vi.mock('../ui/backgrounds/SunsetCodeRainBackground', () => ({
+  SunsetCodeRainBackground: () => (
+    <div data-testid="sunset-code-rain-background" />
+  ),
 }));
 
 vi.mock('../ui/ResumeDownloadButton', () => ({
@@ -181,8 +179,9 @@ describe('HeroSection', () => {
   it('should render background elements', () => {
     render(<HeroSection />);
 
-    expect(screen.getByTestId('particle-field')).toBeInTheDocument();
-    expect(screen.getByTestId('floating-icons')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('sunset-code-rain-background')
+    ).toBeInTheDocument();
   });
 
   it('should render technologies mentioned', () => {
