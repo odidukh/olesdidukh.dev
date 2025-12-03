@@ -4,10 +4,8 @@ import * as React from 'react';
 import Link from 'next/link';
 import { track } from '@vercel/analytics';
 
-interface TrackedLinkProps extends Omit<
-  React.ComponentProps<typeof Link>,
-  'onClick'
-> {
+interface TrackedLinkProps
+  extends Omit<React.ComponentProps<typeof Link>, 'onClick'> {
   /**
    * CTA name for tracking (e.g., "view_my_work", "contact_me")
    */

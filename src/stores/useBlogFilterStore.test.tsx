@@ -265,8 +265,9 @@ describe('useBlogFilterStore selector hooks', () => {
   });
 
   it('useBlogCategory returns current category', async () => {
-    const { useBlogFilterStore, useBlogCategory } =
-      await import('./useBlogFilterStore');
+    const { useBlogFilterStore, useBlogCategory } = await import(
+      './useBlogFilterStore'
+    );
 
     const { result: storeResult } = renderHook(() => useBlogFilterStore());
     const { result: selectorResult } = renderHook(() => useBlogCategory());
@@ -282,8 +283,9 @@ describe('useBlogFilterStore selector hooks', () => {
   });
 
   it('useBlogSearchQuery returns search query', async () => {
-    const { useBlogFilterStore, useBlogSearchQuery } =
-      await import('./useBlogFilterStore');
+    const { useBlogFilterStore, useBlogSearchQuery } = await import(
+      './useBlogFilterStore'
+    );
 
     const { result: storeResult } = renderHook(() => useBlogFilterStore());
     const { result: selectorResult } = renderHook(() => useBlogSearchQuery());
@@ -299,8 +301,9 @@ describe('useBlogFilterStore selector hooks', () => {
   });
 
   it('useBlogSortBy returns sort option', async () => {
-    const { useBlogFilterStore, useBlogSortBy } =
-      await import('./useBlogFilterStore');
+    const { useBlogFilterStore, useBlogSortBy } = await import(
+      './useBlogFilterStore'
+    );
 
     const { result: storeResult } = renderHook(() => useBlogFilterStore());
     const { result: selectorResult } = renderHook(() => useBlogSortBy());

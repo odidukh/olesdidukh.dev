@@ -113,7 +113,6 @@ export function SunsetCodeRainBackground({
       delay: Math.random() * 10,
       chars: Array.from({ length: 12 }, () => getRandomKeyword()),
     }));
-     
   }, [columns, rainSpeed]);
 
   const blobs = React.useMemo(() => {

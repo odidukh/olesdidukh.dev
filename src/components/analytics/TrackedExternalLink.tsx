@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { track } from '@vercel/analytics';
 
-interface TrackedExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface TrackedExternalLinkProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   linkType?: string;
   children: React.ReactNode;

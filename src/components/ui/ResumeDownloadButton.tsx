@@ -36,10 +36,8 @@ const resumeVersions: {
   },
 ];
 
-interface ResumeDownloadButtonProps extends Omit<
-  ButtonProps,
-  'asChild' | 'onClick'
-> {
+interface ResumeDownloadButtonProps
+  extends Omit<ButtonProps, 'asChild' | 'onClick'> {
   showIcon?: boolean;
   children?: React.ReactNode;
 }

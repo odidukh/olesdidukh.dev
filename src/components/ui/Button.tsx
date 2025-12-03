@@ -59,8 +59,7 @@ const buttonVariants = cva(
  * @property {'default' | 'sm' | 'lg' | 'xl' | 'icon'} [size='default'] - Button size.
  */
 interface ButtonProps
-  extends
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   /** When true, renders as a Slot to merge props with child element */
   asChild?: boolean;

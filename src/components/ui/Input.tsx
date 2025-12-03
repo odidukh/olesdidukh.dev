@@ -43,8 +43,7 @@ const inputVariants = cva(
  * @property {'sm' | 'md' | 'lg' | 'xl'} [size] - Input size (height and padding).
  */
 export interface InputProps
-  extends
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
     VariantProps<typeof inputVariants> {
   /** Icon displayed on the left side of the input */
   leftIcon?: React.ReactNode;
