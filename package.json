@@ -27,6 +27,7 @@
     "test:e2e:report": "playwright show-report",
     "budget": "node scripts/check-bundle-size.js",
     "build:check": "npm run build && npm run budget",
+    "ci:local": "bash scripts/ci-local.sh",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

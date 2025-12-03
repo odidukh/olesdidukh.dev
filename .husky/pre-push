@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "Running CI checks before push..."
+npm run ci:local
