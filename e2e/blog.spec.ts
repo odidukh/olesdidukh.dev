@@ -7,48 +7,47 @@ test.describe('Blog Page', () => {
 
   test('blog page loads correctly', async ({ page }) => {
     await expect(page).toHaveTitle(/Blog/);
+    // The page has h2 heading "Thoughts on Code & Career"
     await expect(
-      page.getByRole('heading', { name: /blog/i, level: 1 })
+      page.getByRole('heading', { name: /code.*career|blog/i })
     ).toBeVisible();
   });
 
   test('displays blog post cards', async ({ page }) => {
-    // Check that blog post cards are visible
-    const blogCards = page.locator('article');
+    // Blog cards are inside Card components with h3 titles
+    const blogCards = page.locator('[class*="card"]');
     await expect(blogCards.first()).toBeVisible();
   });
 
   test('blog cards show title and excerpt', async ({ page }) => {
-    const firstBlog = page.locator('article').first();
-
-    // Check for title
-    const title = firstBlog.locator('h2, h3').first();
+    // Cards have h3 titles and p excerpts
+    const title = page.locator('h3').first();
     await expect(title).toBeVisible();
 
     // Check for excerpt/description
-    const excerpt = firstBlog.locator('p').first();
+    const excerpt = page.locator('h3 + p, h3 ~ p').first();
     await expect(excerpt).toBeVisible();
   });
 
   test('blog cards show metadata', async ({ page }) => {
-    const firstBlog = page.locator('article').first();
-
-    // Check for date or reading time
-    const metadata = firstBlog.locator(
-      '[class*="text-muted"], [class*="text-sm"]'
-    );
-    await expect(metadata.first()).toBeVisible();
+    // Check for reading time (e.g., "5 min read" or "5 min")
+    const readingTime = page.getByText(/\d+\s*min/i).first();
+    await expect(readingTime).toBeVisible();
   });
 
   test('blog cards show category badges', async ({ page }) => {
-    const badge = page.locator('[class*="badge"]').first();
-    await expect(badge).toBeVisible();
+    // Categories are displayed in Badge components with specific category names
+    const categoryBadge = page
+      .locator('[class*="rounded"]')
+      .filter({ hasText: /React|TypeScript|Career|Performance|Next/i })
+      .first();
+    await expect(categoryBadge).toBeVisible();
   });
 
   test('category filter tabs are visible', async ({ page }) => {
-    // Look for category filter buttons/tabs
-    const allTab = page.getByRole('button', { name: /all/i });
-    await expect(allTab).toBeVisible();
+    // Look for the Filters button
+    const filtersButton = page.getByRole('button', { name: /filters/i });
+    await expect(filtersButton).toBeVisible();
   });
 
   test('category filter changes displayed posts', async ({ page }) => {

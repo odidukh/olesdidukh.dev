@@ -217,11 +217,11 @@ export function AboutSection() {
             <span className="text-sm font-medium text-primary">About Me</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Turning <span className="text-primary">Ideas</span> Into
             <br />
             Digital <span className="text-primary">Reality</span>
-          </h2>
+          </h1>
 
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Senior Front-End Engineer with 7+ years of experience crafting

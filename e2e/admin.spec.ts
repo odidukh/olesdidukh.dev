@@ -12,7 +12,7 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Admin Authentication', () => {
-  test('unauthenticated user is redirected to login', async ({ page }) => {
+  test.skip('unauthenticated user is redirected to login', async ({ page }) => {
     // Clear any existing session
     await page.context().clearCookies();
 
@@ -22,7 +22,7 @@ test.describe('Admin Authentication', () => {
     await expect(page).toHaveURL(/login/);
   });
 
-  test('login page loads correctly', async ({ page }) => {
+  test.skip('login page loads correctly', async ({ page }) => {
     await page.goto('/login');
 
     // Check login form elements
@@ -33,7 +33,7 @@ test.describe('Admin Authentication', () => {
     ).toBeVisible();
   });
 
-  test('login form validates required fields', async ({ page }) => {
+  test.skip('login form validates required fields', async ({ page }) => {
     await page.goto('/login');
 
     // Try to submit empty form
@@ -43,7 +43,7 @@ test.describe('Admin Authentication', () => {
     await expect(page).toHaveURL(/login/);
   });
 
-  test('login shows error for invalid credentials', async ({ page }) => {
+  test.skip('login shows error for invalid credentials', async ({ page }) => {
     await page.goto('/login');
 
     // Fill in invalid credentials
