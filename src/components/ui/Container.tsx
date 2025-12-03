@@ -40,7 +40,8 @@ const containerVariants = cva('mx-auto w-full', {
 });
 
 interface ContainerProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof containerVariants> {
   asChild?: boolean;
   as?: React.ElementType;

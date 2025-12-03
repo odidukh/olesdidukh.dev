@@ -270,9 +270,8 @@ describe('useUIPreferencesStore selector hooks', () => {
   });
 
   it('useReducedMotionPreference returns reduced motion setting', async () => {
-    const { useUIPreferencesStore, useReducedMotionPreference } = await import(
-      './useUIPreferencesStore'
-    );
+    const { useUIPreferencesStore, useReducedMotionPreference } =
+      await import('./useUIPreferencesStore');
 
     const { result: storeResult } = renderHook(() => useUIPreferencesStore());
     const { result: selectorResult } = renderHook(() =>
@@ -292,9 +291,8 @@ describe('useUIPreferencesStore selector hooks', () => {
   });
 
   it('useCompactLayoutPreference returns compact layout setting', async () => {
-    const { useUIPreferencesStore, useCompactLayoutPreference } = await import(
-      './useUIPreferencesStore'
-    );
+    const { useUIPreferencesStore, useCompactLayoutPreference } =
+      await import('./useUIPreferencesStore');
 
     const { result: storeResult } = renderHook(() => useUIPreferencesStore());
     const { result: selectorResult } = renderHook(() =>
@@ -314,9 +312,8 @@ describe('useUIPreferencesStore selector hooks', () => {
   });
 
   it('useFontSizePreference returns font size setting', async () => {
-    const { useUIPreferencesStore, useFontSizePreference } = await import(
-      './useUIPreferencesStore'
-    );
+    const { useUIPreferencesStore, useFontSizePreference } =
+      await import('./useUIPreferencesStore');
 
     const { result: storeResult } = renderHook(() => useUIPreferencesStore());
     const { result: selectorResult } = renderHook(() =>

@@ -54,7 +54,8 @@ const gridVariants = cva('grid', {
 });
 
 interface GridProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof gridVariants> {
   asChild?: boolean;
   as?: React.ElementType;
@@ -112,7 +113,8 @@ const gridItemVariants = cva('', {
 });
 
 interface GridItemProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof gridItemVariants> {
   asChild?: boolean;
   as?: React.ElementType;

@@ -64,7 +64,8 @@ const badgeVariants = cva(
  * @property {() => void} [onRemove] - Callback when remove button is clicked. Shows an X button when provided.
  */
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
   /** Icon to display before the badge text */
   icon?: React.ReactNode;
