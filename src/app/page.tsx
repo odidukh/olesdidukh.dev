@@ -34,20 +34,20 @@ import { SkillsPreviewSection } from '@/components/sections/SkillsPreviewSection
 import { PhilosophySection } from '@/components/sections/PhilosophySection';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import {
-  ProjectsErrorFallback,
+  // ProjectsErrorFallback,
   BlogErrorFallback,
   ContactErrorFallback,
   TestimonialsErrorFallback,
 } from '@/components/ui/SectionErrorFallback';
 
 // Lazy load below-the-fold heavy components
-const ProjectsSection = dynamic(
-  () =>
-    import('@/components/sections/ProjectsSection').then(
-      mod => mod.ProjectsSection
-    ),
-  { ssr: true }
-);
+// const ProjectsSection = dynamic(
+//   () =>
+//     import('@/components/sections/ProjectsSection').then(
+//       mod => mod.ProjectsSection
+//     ),
+//   { ssr: true }
+// );
 
 const BlogSection = dynamic(
   () =>
@@ -242,12 +242,12 @@ export default function HomePage() {
                 transition={{ delay: 0.8 }}
                 className="flex flex-wrap gap-4 justify-center mb-12"
               >
-                <Button size="lg" asChild>
+                {/* <Button size="lg" asChild>
                   <Link href="#projects">
                     View My Work
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
-                </Button>
+                </Button> */}
                 <Button size="lg" variant="outline" asChild>
                   <Link href="#contact">
                     Get In Touch
@@ -325,12 +325,12 @@ export default function HomePage() {
         <PhilosophySection />
 
         {/* Projects Section */}
-        <ErrorBoundary
+        {/* <ErrorBoundary
           sectionName="Projects"
           fallbackRender={ProjectsErrorFallback}
         >
           <ProjectsSection />
-        </ErrorBoundary>
+        </ErrorBoundary> */}
 
         {/* Testimonials Section */}
         <ErrorBoundary

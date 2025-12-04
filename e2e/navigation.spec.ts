@@ -24,8 +24,8 @@ test.describe('Navigation', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 
     // Navigate to Projects
-    await desktopNav.getByRole('link', { name: 'Projects' }).click();
-    await expect(page).toHaveURL('/projects');
+    // await desktopNav.getByRole('link', { name: 'Projects' }).click();
+    // await expect(page).toHaveURL('/projects');
 
     // Navigate to Blog
     await desktopNav.getByRole('link', { name: 'Blog' }).click();
@@ -70,9 +70,9 @@ test.describe('Navigation', () => {
     await expect(mobileNav).toBeVisible();
 
     await expect(mobileNav.getByRole('link', { name: 'About' })).toBeVisible();
-    await expect(
-      mobileNav.getByRole('link', { name: 'Projects' })
-    ).toBeVisible();
+    // await expect(
+    //   mobileNav.getByRole('link', { name: 'Projects' })
+    // ).toBeVisible();
     await expect(mobileNav.getByRole('link', { name: 'Blog' })).toBeVisible();
     await expect(
       mobileNav.getByRole('link', { name: 'Contact' })

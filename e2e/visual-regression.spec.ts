@@ -38,7 +38,7 @@ test.describe('Visual Regression - Desktop', () => {
     });
   });
 
-  test('projects page matches snapshot', async ({ page }) => {
+  test.skip('projects page matches snapshot', async ({ page }) => {
     await page.goto('/projects');
     await page.waitForTimeout(500);
 

@@ -6,8 +6,13 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
-import { ArrowRight, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
-import { TrackedLink } from '@/components/analytics';
+import {
+  /* ArrowRight, */ Github,
+  Linkedin,
+  Mail,
+  Sparkles,
+} from 'lucide-react';
+// import { TrackedLink } from '@/components/analytics';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -150,12 +155,12 @@ export function HeroSimple() {
             variants={itemVariants}
             className="flex flex-wrap gap-4 justify-center"
           >
-            <Button size="lg" className="group" asChild>
+            {/* <Button size="lg" className="group" asChild>
               <TrackedLink href="/projects" ctaName="hero_view_work">
                 View My Work
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </TrackedLink>
-            </Button>
+            </Button> */}
             <ResumeDownloadButton size="lg" variant="outline" />
           </motion.div>
 
