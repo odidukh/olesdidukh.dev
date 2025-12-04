@@ -1,16 +1,24 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Create mock function that can be referenced
-const mockSend = vi.fn();
+// Use vi.hoisted to create mocks that are available before vi.mock factory runs
+const { mockSend, mockEnv } = vi.hoisted(() => ({
+  mockSend: vi.fn(),
+  mockEnv: {
+    RESEND_API_KEY: 'test-resend-key',
+    CONTACT_EMAIL: 'test@example.com',
+    BUTTONDOWN_API_KEY: 'test-api-key',
+    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
+  },
+}));
 
 // Mock modules before any imports
 vi.mock('resend', () => {
-  const MockResend = vi.fn().mockImplementation(function (this: {
-    emails: { send: typeof mockSend };
-  }) {
-    this.emails = { send: mockSend };
-  });
-  return { Resend: MockResend };
+  return {
+    Resend: class MockResend {
+      emails = { send: mockSend };
+    },
+  };
 });
 
 vi.mock('@/lib/sentry', () => ({
@@ -32,15 +40,9 @@ vi.mock('@/lib/csrf', () => ({
   validateCsrf: vi.fn().mockReturnValue(null),
 }));
 
-// Mock env module
+// Mock env module - use hoisted mockEnv
 vi.mock('@/lib/env', () => ({
-  env: {
-    RESEND_API_KEY: 'test-resend-key',
-    CONTACT_EMAIL: 'test@example.com',
-    BUTTONDOWN_API_KEY: 'test-api-key',
-    NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co',
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test-anon-key',
-  },
+  env: mockEnv,
 }));
 
 // Dynamic import to ensure mocks are in place
