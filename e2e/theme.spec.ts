@@ -121,8 +121,9 @@ test.describe('Dark Mode', () => {
 
     const themeToggle = page.getByRole('button', { name: 'Toggle dark mode' });
 
-    // Focus the toggle
-    await themeToggle.focus();
+    // Wait for element to be visible and click to focus (more reliable than .focus())
+    await themeToggle.waitFor({ state: 'visible' });
+    await themeToggle.click();
     await expect(themeToggle).toBeFocused();
 
     // Get current state
