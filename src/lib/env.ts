@@ -6,7 +6,8 @@ import { z } from 'zod';
  */
 const serverSchema = z.object({
   // Email service (Resend)
-  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
+  // Made optional for build-time; runtime will check before use
+  RESEND_API_KEY: z.string().min(1).optional(),
   CONTACT_EMAIL: z.string().email().optional(),
 
   // Newsletter service (Buttondown)
@@ -31,13 +32,9 @@ const serverSchema = z.object({
  * These are prefixed with NEXT_PUBLIC_ and are exposed to the browser.
  */
 const clientSchema = z.object({
-  // Supabase
-  NEXT_PUBLIC_SUPABASE_URL: z
-    .string()
-    .url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL'),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z
-    .string()
-    .min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required'),
+  // Supabase - made optional for build-time; runtime will check before use
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
 
   // Analytics
   NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().optional(),

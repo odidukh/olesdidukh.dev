@@ -10,7 +10,17 @@ import {
 import { validateCsrf } from '@/lib/csrf';
 import { env } from '@/lib/env';
 
-const resend = new Resend(env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors when env vars are missing
+let resendClient: Resend | null = null;
+function getResendClient(): Resend {
+  if (!resendClient) {
+    if (!env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not configured');
+    }
+    resendClient = new Resend(env.RESEND_API_KEY);
+  }
+  return resendClient;
+}
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -171,6 +181,7 @@ ${message}
     `.trim();
 
     const contactEmail = env.CONTACT_EMAIL ?? 'oles.didukh@gmail.com';
+    const resend = getResendClient();
 
     await resend.emails.send({
       from: 'Portfolio Contact <contact@olesdidukh.dev>',
