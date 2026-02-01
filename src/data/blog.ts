@@ -59,7 +59,7 @@ export const blogPosts: BlogPost[] = [
     slug: 'vibe-coding-complete-guide-2025',
     title: 'Vibe Coding: The Complete Guide to AI-Assisted Development in 2025',
     excerpt:
-      'Explore the vibe coding revolution that\'s transforming software development. Learn what it is, best practices, pitfalls to avoid, and how to leverage AI tools effectively.',
+      "Explore the vibe coding revolution that's transforming software development. Learn what it is, best practices, pitfalls to avoid, and how to leverage AI tools effectively.",
     content: `
 # Vibe Coding: The Complete Guide to AI-Assisted Development in 2025
 
@@ -176,7 +176,8 @@ The developers who thrive will be those who:
 
 Vibe coding is real, it's here, and it's changing our industry. Embrace it thoughtfully, stay vigilant about quality, and remember: the AI is your pair programmer, not your replacement.
     `,
-    coverImage: 'https://images.unsplash.com/photo-1677442135136-760c813028c0?w=1200&q=80',
+    coverImage:
+      'https://images.unsplash.com/photo-1677442135136-760c813028c0?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-28',
     readingTime: 10,
@@ -189,7 +190,7 @@ Vibe coding is real, it's here, and it's changing our industry. Embrace it thoug
   {
     id: 'claude-code-workflow',
     slug: 'claude-code-workflow-senior-developer-guide',
-    title: 'Claude Code Workflow: A Senior Developer\'s Guide to Agentic Coding',
+    title: "Claude Code Workflow: A Senior Developer's Guide to Agentic Coding",
     excerpt:
       'Master Claude Code CLI with practical workflows for code exploration, refactoring, testing, and PR creation. Learn how to leverage CLAUDE.md and thinking modes effectively.',
     content: `
@@ -577,7 +578,8 @@ This is the React we've been waiting for.
   {
     id: 'inp-core-web-vital',
     slug: 'mastering-inp-core-web-vital-2025',
-    title: 'Mastering INP: The Core Web Vital That\'s Failing 50% of Mobile Sites',
+    title:
+      "Mastering INP: The Core Web Vital That's Failing 50% of Mobile Sites",
     excerpt:
       'INP replaced FID in March 2024, and only 49.7% of mobile sites pass. Learn practical techniques to optimize Interaction to Next Paint and boost your rankings.',
     content: `

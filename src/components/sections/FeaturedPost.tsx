@@ -59,7 +59,6 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   Featured
                 </Badge>
               </div>
-
               {/* Stats Overlay */}
               <div className="absolute bottom-4 left-4 flex gap-4 text-white/90 text-sm">
                 {post.views && (
@@ -137,7 +136,6 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                       </p>
                     </div>
                   </div>
-
                   {/* Trending Indicator */}
                   {post.views && post.views > 1000 && (
                     <div className="flex items-center gap-1 text-orange-500">
