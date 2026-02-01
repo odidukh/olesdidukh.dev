@@ -32,6 +32,25 @@ import {
 type ProficiencyLevel = 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
 type ViewMode = 'grid' | 'list' | 'radar';
 
+// Seeded PRNG for deterministic "random" values (same on server and client)
+function seededRandom(seed: number): () => number {
+  return () => {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed / 0x7fffffff;
+  };
+}
+
+// Pre-compute particle positions to avoid hydration mismatch
+function generateParticleData(count: number) {
+  const random = seededRandom(42); // Fixed seed for consistency
+  return Array.from({ length: count }, () => ({
+    left: random() * 100,
+    top: random() * 100,
+    duration: random() * 3 + 2,
+    delay: random() * 2,
+  }));
+}
+
 interface Skill {
   name: string;
   level: ProficiencyLevel;
@@ -299,6 +318,9 @@ const proficiencyPercentages: Record<ProficiencyLevel, number> = {
   Learning: 25,
 };
 
+// Pre-compute particle data at module level (same on server and client)
+const particleData = generateParticleData(ANIMATION.PARTICLE_COUNT);
+
 export default function SkillsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -359,22 +381,22 @@ export default function SkillsPage() {
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-10">
-            {[...Array(ANIMATION.PARTICLE_COUNT)].map((_, i) => (
+            {particleData.map((particle, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-primary rounded-full"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                 }}
                 animate={{
                   scale: [0, 1, 0],
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: Math.random() * 3 + 2,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 2,
+                  delay: particle.delay,
                 }}
               />
             ))}
