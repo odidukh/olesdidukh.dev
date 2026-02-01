@@ -35,6 +35,8 @@ interface UsesCategory {
     label: string;
     href: string;
     filename: string;
+    /** Installation instructions shown below the download button */
+    instructions?: string[];
   };
 }
 
@@ -140,6 +142,13 @@ const usesCategories: UsesCategory[] = [
       label: 'Download Extensions Pack',
       href: '/downloads/vscode-extensions.sh',
       filename: 'vscode-extensions.sh',
+      instructions: [
+        '1. Download the script and open Terminal',
+        '2. Navigate to the download folder: cd ~/Downloads',
+        '3. Make it executable: chmod +x vscode-extensions.sh',
+        '4. Run the script: ./vscode-extensions.sh',
+        '5. Restart VS Code to activate all extensions',
+      ],
     },
     items: [
       {
@@ -446,6 +455,22 @@ export default function UsesPage() {
                       </Button>
                     )}
                   </div>
+
+                  {/* Installation instructions */}
+                  {category.download?.instructions && (
+                    <div className="mb-6 p-4 rounded-lg bg-muted/50 border border-dashed">
+                      <p className="text-sm font-medium mb-2">
+                        Installation Instructions:
+                      </p>
+                      <ol className="text-sm text-muted-foreground space-y-1">
+                        {category.download.instructions.map((step, index) => (
+                          <li key={index} className="font-mono text-xs">
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
 
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {category.items.map((item, itemIndex) => (
