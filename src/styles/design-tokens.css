@@ -90,6 +90,14 @@
   --info-800: #1e40af;
 
   /* ==========================================
+     ACCENT COLORS
+     Brand highlight colors for gradients
+     ========================================== */
+  --accent-green: var(--success-500);
+  --accent-green-light: var(--success-400);
+  --accent-green-dark: var(--success-600);
+
+  /* ==========================================
      GRADIENTS
      Premium visual effects
      ========================================== */
@@ -242,6 +250,12 @@
   --shadow-mocha: 0 10px 30px -5px rgba(164, 120, 100, 0.3);
   --shadow-navy: 0 10px 30px -5px rgba(98, 125, 152, 0.3);
 
+  /* Glow shadows */
+  --shadow-glow:
+    0 0 20px rgba(164, 120, 100, 0.4), 0 0 40px rgba(164, 120, 100, 0.2);
+  --shadow-glow-strong:
+    0 0 30px rgba(164, 120, 100, 0.6), 0 0 60px rgba(164, 120, 100, 0.3);
+
   /* ==========================================
      ANIMATION SYSTEM
      Professional timing and easing
@@ -335,6 +349,49 @@
   --warning-foreground: #ffffff;
   --info: var(--info-500);
   --info-foreground: #ffffff;
+
+  /* ==========================================
+     TIMELINE COMPONENT TOKENS
+     Professional career visualization
+     ========================================== */
+  --timeline-line-gradient: linear-gradient(
+    to bottom,
+    var(--mocha-400),
+    var(--mocha-500),
+    var(--navy-500),
+    var(--success-500)
+  );
+  --timeline-icon-gradient: linear-gradient(
+    135deg,
+    var(--mocha-400),
+    var(--mocha-600),
+    var(--navy-500)
+  );
+  --timeline-icon-color: var(--mocha-600);
+  --timeline-icon-bg: #ffffff;
+  --timeline-icon-shadow: 0 4px 15px rgba(164, 120, 100, 0.3);
+  --timeline-card-border: rgba(164, 120, 100, 0.2);
+  --timeline-card-shadow: 0 4px 20px rgba(164, 120, 100, 0.1);
+  --timeline-card-bg: #ffffff;
+  --timeline-bullet-gradient: linear-gradient(
+    135deg,
+    var(--mocha-400),
+    var(--mocha-600)
+  );
+  --timeline-achievement-gradient: linear-gradient(
+    90deg,
+    var(--success-500),
+    var(--success-600)
+  );
+
+  /* ==========================================
+     CODE BLOCK TOKENS
+     Syntax highlighting surfaces
+     ========================================== */
+  --code-block-bg: var(--gray-800);
+  --code-inline-bg: var(--gray-200);
+  --code-inline-text: var(--gray-800);
+  --code-border: var(--gray-300);
 }
 
 /* ==========================================
@@ -389,4 +446,37 @@
     0 0 25px rgba(191, 165, 138, 0.5), 0 0 50px rgba(191, 165, 138, 0.25);
   --shadow-glow-strong:
     0 0 40px rgba(191, 165, 138, 0.7), 0 0 80px rgba(191, 165, 138, 0.35);
+
+  /* Accent colors - lighter for dark mode visibility */
+  --accent-green: var(--success-400);
+  --accent-green-light: var(--success-300);
+  --accent-green-dark: var(--success-500);
+
+  /* Timeline tokens - subtle glow theme for dark mode */
+  --timeline-line-gradient: linear-gradient(
+    to bottom,
+    var(--mocha-400),
+    var(--mocha-500),
+    var(--navy-400),
+    var(--success-400)
+  );
+  --timeline-icon-gradient: none;
+  --timeline-icon-bg: rgba(164, 120, 100, 0.15);
+  --timeline-icon-border: var(--mocha-400);
+  --timeline-icon-color: var(--mocha-300);
+  --timeline-icon-shadow: 0 0 15px rgba(164, 120, 100, 0.4);
+  --timeline-card-border: rgba(164, 120, 100, 0.3);
+  --timeline-card-shadow: 0 0 20px rgba(164, 120, 100, 0.15);
+  --timeline-card-bg: rgba(15, 23, 42, 0.9);
+  --timeline-bullet-gradient: var(--mocha-400);
+  --timeline-bullet-glow: 0 0 6px rgba(164, 120, 100, 0.5);
+  --timeline-achievement-gradient: none;
+  --timeline-achievement-color: var(--success-400);
+  --timeline-achievement-glow: 0 0 8px rgba(16, 185, 129, 0.4);
+
+  /* Code block tokens - dark mode */
+  --code-block-bg: var(--gray-900);
+  --code-inline-bg: var(--gray-700);
+  --code-inline-text: var(--gray-200);
+  --code-border: var(--gray-600);
 }
