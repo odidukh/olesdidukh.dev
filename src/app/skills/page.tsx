@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { ANIMATION } from '@/constants';
+import { generateParticleData } from '@/lib/random';
 import {
   Code2,
   Palette,
@@ -31,25 +32,6 @@ import {
 
 type ProficiencyLevel = 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
 type ViewMode = 'grid' | 'list' | 'radar';
-
-// Seeded PRNG for deterministic "random" values (same on server and client)
-function seededRandom(seed: number): () => number {
-  return () => {
-    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-    return seed / 0x7fffffff;
-  };
-}
-
-// Pre-compute particle positions to avoid hydration mismatch
-function generateParticleData(count: number) {
-  const random = seededRandom(42); // Fixed seed for consistency
-  return Array.from({ length: count }, () => ({
-    left: random() * 100,
-    top: random() * 100,
-    duration: random() * 3 + 2,
-    delay: random() * 2,
-  }));
-}
 
 interface Skill {
   name: string;
@@ -195,14 +177,16 @@ const skillCategories: SkillCategory[] = [
         name: 'Responsive Design',
         level: 'Expert',
         yearsOfExperience: 7,
-        description: 'Mobile-first approach, fluid layouts, breakpoint strategy',
+        description:
+          'Mobile-first approach, fluid layouts, breakpoint strategy',
         lastUsed: 'Currently',
       },
       {
         name: 'Cross-Browser',
         level: 'Expert',
         yearsOfExperience: 7,
-        description: 'Compatibility testing, polyfills, progressive enhancement',
+        description:
+          'Compatibility testing, polyfills, progressive enhancement',
         lastUsed: 'Currently',
       },
     ],
@@ -711,21 +695,28 @@ export default function SkillsPage() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <div className="font-medium">UNIT Factory (École 42 Network)</div>
+                  <div className="font-medium">
+                    UNIT Factory (École 42 Network)
+                  </div>
                   <div className="text-sm text-muted-foreground mb-2">
                     Kyiv, Ukraine · 2017–2019
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Selected from 13,000+ applicants for peer-to-peer programming education. Mastered C/C++, algorithms, and data structures through 20+ practical projects.
+                    Selected from 13,000+ applicants for peer-to-peer
+                    programming education. Mastered C/C++, algorithms, and data
+                    structures through 20+ practical projects.
                   </p>
                 </div>
                 <div>
-                  <div className="font-medium">Master&apos;s Degree in Physics</div>
+                  <div className="font-medium">
+                    Master&apos;s Degree in Physics
+                  </div>
                   <div className="text-sm text-muted-foreground mb-2">
                     Taras Shevchenko University of Kyiv · 2016–2018
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Computational Physics, Data Analysis. Co-authored 3 scientific publications.
+                    Computational Physics, Data Analysis. Co-authored 3
+                    scientific publications.
                   </p>
                 </div>
               </div>
@@ -757,7 +748,8 @@ export default function SkillsPage() {
                   <div>
                     <div className="font-medium">Enterprise Scale</div>
                     <div className="text-sm text-muted-foreground">
-                      Built platforms serving 1,000+ employees and 50,000+ customers
+                      Built platforms serving 1,000+ employees and 50,000+
+                      customers
                     </div>
                   </div>
                 </div>
@@ -766,7 +758,8 @@ export default function SkillsPage() {
                   <div>
                     <div className="font-medium">International Clients</div>
                     <div className="text-sm text-muted-foreground">
-                      Collaborated with enterprise clients across multiple countries
+                      Collaborated with enterprise clients across multiple
+                      countries
                     </div>
                   </div>
                 </div>
@@ -775,7 +768,8 @@ export default function SkillsPage() {
                   <div>
                     <div className="font-medium">Testing Champion</div>
                     <div className="text-sm text-muted-foreground">
-                      Built test suites with 85% coverage, reducing UI bugs by 60%
+                      Built test suites with 85% coverage, reducing UI bugs by
+                      60%
                     </div>
                   </div>
                 </div>

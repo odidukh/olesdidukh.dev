@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { PARTICLE_CONFIG } from '@/config/animations';
+import { createSeededRandom } from '@/lib/random';
 
 interface Particle {
   id: number;
@@ -14,40 +15,54 @@ interface Particle {
   opacity: number;
 }
 
+// Generate particles with seeded random for deterministic SSR
+function generateParticlesWithSeed(count: number, seed: number): Particle[] {
+  const random = createSeededRandom(seed);
+  const particles: Particle[] = [];
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      id: i,
+      x: random() * 100,
+      y: random() * 100,
+      size: random() * PARTICLE_CONFIG.SIZE_RANGE + PARTICLE_CONFIG.SIZE_MIN,
+      duration:
+        random() * PARTICLE_CONFIG.DURATION_RANGE +
+        PARTICLE_CONFIG.DURATION_MIN,
+      delay: random() * PARTICLE_CONFIG.MAX_DELAY,
+      opacity:
+        random() * PARTICLE_CONFIG.OPACITY_RANGE + PARTICLE_CONFIG.OPACITY_MIN,
+    });
+  }
+  return particles;
+}
+
+// Pre-compute initial particles for SSR (use desktop count as default)
+const initialParticles = generateParticlesWithSeed(
+  PARTICLE_CONFIG.DESKTOP_COUNT,
+  42
+);
+
 export function ParticleField() {
-  const [particles, setParticles] = React.useState<Particle[]>([]);
+  const [particles, setParticles] =
+    React.useState<Particle[]>(initialParticles);
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
 
-  // Generate random particles
+  // Adjust particle count based on viewport after hydration
   React.useEffect(() => {
-    const generateParticles = () => {
-      const newParticles: Particle[] = [];
+    const updateParticleCount = () => {
       const particleCount =
         window.innerWidth < PARTICLE_CONFIG.MOBILE_BREAKPOINT
           ? PARTICLE_CONFIG.MOBILE_COUNT
           : PARTICLE_CONFIG.DESKTOP_COUNT;
 
-      for (let i = 0; i < particleCount; i++) {
-        newParticles.push({
-          id: i,
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          size:
-            Math.random() * PARTICLE_CONFIG.SIZE_RANGE +
-            PARTICLE_CONFIG.SIZE_MIN,
-          duration:
-            Math.random() * PARTICLE_CONFIG.DURATION_RANGE +
-            PARTICLE_CONFIG.DURATION_MIN,
-          delay: Math.random() * PARTICLE_CONFIG.MAX_DELAY,
-          opacity:
-            Math.random() * PARTICLE_CONFIG.OPACITY_RANGE +
-            PARTICLE_CONFIG.OPACITY_MIN,
-        });
+      // Only regenerate if count changed and we need fewer particles
+      if (particleCount !== particles.length) {
+        setParticles(generateParticlesWithSeed(particleCount, 42));
       }
-      setParticles(newParticles);
     };
 
-    generateParticles();
+    updateParticleCount();
 
     // Debounced resize handler to prevent expensive particle regeneration on every resize event
     let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -56,7 +71,7 @@ export function ParticleField() {
         clearTimeout(resizeTimeout);
       }
       resizeTimeout = setTimeout(
-        generateParticles,
+        updateParticleCount,
         PARTICLE_CONFIG.RESIZE_DEBOUNCE_MS
       );
     };
@@ -68,7 +83,7 @@ export function ParticleField() {
         clearTimeout(resizeTimeout);
       }
     };
-  }, []);
+  }, [particles.length]);
 
   // Track mouse position for interactive effect
   React.useEffect(() => {

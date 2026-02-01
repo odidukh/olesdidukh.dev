@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { seededRandom } from '@/lib/random';
 
 interface CodeRainBackgroundProps {
   /** Character set to use */
@@ -32,24 +33,34 @@ export function CodeRainBackground({
 }: CodeRainBackgroundProps) {
   const chars = charsets[charset];
 
-  const getRandomChar = () => {
-    if (charset === 'code') {
-      const tokens = chars.split(' ');
-      return tokens[Math.floor(Math.random() * tokens.length)] || '';
-    }
-    return chars[Math.floor(Math.random() * chars.length)] || '';
-  };
-
   const rainColumns = React.useMemo(() => {
-    return Array.from({ length: columns }, (_, i) => ({
-      id: i,
-      x: (i / columns) * 100 + Math.random() * 5,
-      duration: (3 + Math.random() * 4) / speed,
-      delay: Math.random() * 5,
-      chars: Array.from({ length: 15 }, () => getRandomChar()),
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columns, charset, speed]);
+    return Array.from({ length: columns }, (_, colIndex) => {
+      // Use column-based seed for deterministic values
+      const colSeed = colIndex * 1000 + 333;
+
+      // Generate characters with seeded random
+      const columnChars = Array.from({ length: 15 }, (_, charIndex) => {
+        const charSeed = colSeed + 100 + charIndex;
+        if (charset === 'code') {
+          const tokens = chars.split(' ');
+          const tokenIndex = Math.floor(seededRandom(charSeed) * tokens.length);
+          return tokens[tokenIndex] || '';
+        }
+        const charIndexInSet = Math.floor(
+          seededRandom(charSeed) * chars.length
+        );
+        return chars[charIndexInSet] || '';
+      });
+
+      return {
+        id: colIndex,
+        x: (colIndex / columns) * 100 + seededRandom(colSeed + 1) * 5,
+        duration: (3 + seededRandom(colSeed + 2) * 4) / speed,
+        delay: seededRandom(colSeed + 3) * 5,
+        chars: columnChars,
+      };
+    });
+  }, [columns, charset, speed, chars]);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">

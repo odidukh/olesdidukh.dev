@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { generateRandomArray, selectRandom } from '@/lib/random';
 import {
   Heart,
   Brain,
@@ -311,6 +312,26 @@ function List({ items }) {
   },
 ];
 
+// Code keywords for the background animation
+const codeKeywords = [
+  'const',
+  'function',
+  'return',
+  'async',
+  'await',
+  '=>',
+  'class',
+  'import',
+] as const;
+
+// Pre-computed code rain data for deterministic SSR rendering
+const codeRainParticles = generateRandomArray(20, 123, random => ({
+  left: random() * 100,
+  duration: random() * 10 + 10,
+  delay: random() * 10,
+  keyword: selectRandom(codeKeywords, random),
+}));
+
 export default function PhilosophyPage() {
   const [selectedPrinciple, setSelectedPrinciple] = useState<number | null>(
     null
@@ -329,36 +350,25 @@ export default function PhilosophyPage() {
         <div className="absolute inset-0">
           <div className="absolute inset-0">
             {/* Code Rain Effect */}
-            {[...Array(20)].map((_, i) => (
+            {codeRainParticles.map((particle, i) => (
               <motion.div
                 key={i}
                 className="absolute text-primary/20 font-mono text-xs"
                 style={{
-                  left: `${Math.random() * 100}%`,
+                  left: `${particle.left}%`,
                   top: `-20px`,
                 }}
                 animate={{
                   y: ['0vh', '100vh'],
                 }}
                 transition={{
-                  duration: Math.random() * 10 + 10,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 10,
+                  delay: particle.delay,
                   ease: 'linear',
                 }}
               >
-                {
-                  [
-                    'const',
-                    'function',
-                    'return',
-                    'async',
-                    'await',
-                    '=>',
-                    'class',
-                    'import',
-                  ][Math.floor(Math.random() * 8)]
-                }
+                {particle.keyword}
               </motion.div>
             ))}
           </div>

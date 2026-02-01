@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { generateRandomArray } from '@/lib/random';
 import {
   GraduationCap,
   Trophy,
@@ -456,6 +457,14 @@ const mentors: Mentor[] = [
   },
 ];
 
+// Pre-computed particle data for deterministic SSR rendering
+const heroParticles = generateRandomArray(30, 42, random => ({
+  left: random() * 100,
+  top: random() * 100,
+  duration: random() * 5 + 5,
+  delay: random() * 5,
+}));
+
 export default function JourneyPage() {
   const [selectedPhase, setSelectedPhase] = useState<string>('innovation');
   const [viewMode, setViewMode] = useState<'timeline' | 'phases'>('timeline');
@@ -476,22 +485,22 @@ export default function JourneyPage() {
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-5">
-            {[...Array(30)].map((_, i) => (
+            {heroParticles.map((particle, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 bg-primary rounded-full"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                 }}
                 animate={{
                   y: [0, -100, 0],
                   opacity: [0, 1, 0],
                 }}
                 transition={{
-                  duration: Math.random() * 5 + 5,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 5,
+                  delay: particle.delay,
                 }}
               />
             ))}
