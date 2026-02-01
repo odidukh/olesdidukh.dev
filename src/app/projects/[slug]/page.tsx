@@ -110,6 +110,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const projectSchema = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
+    '@id': `https://olesdidukh.dev/projects/${project.id}#project`,
     name: project.title,
     description: project.longDescription,
     author: {
@@ -121,7 +122,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     genre: project.category,
     keywords: project.technologies.join(', '),
     url: `https://olesdidukh.dev/projects/${project.id}`,
-    ...(project.liveUrl && { mainEntityOfPage: project.liveUrl }),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://olesdidukh.dev/projects/${project.id}`,
+    },
   };
 
   return (
