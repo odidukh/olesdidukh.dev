@@ -147,10 +147,7 @@ export const BlogCard = React.memo(function BlogCard({
 
               {/* Reading time and arrow */}
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {post.readingTime} min read
-                </span>
+                <MetaItem icon={Clock}>{post.readingTime} min read</MetaItem>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
