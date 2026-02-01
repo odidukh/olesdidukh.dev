@@ -20,7 +20,6 @@ import {
   Calendar,
   Clock,
   Phone,
-  ArrowUpRight,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -140,8 +139,8 @@ export function ContactSection() {
                 </CardContent>
               </Card>
 
-              {/* Preferred Contact Methods - Premium Horizontal Cards */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Preferred Contact Methods */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {preferredMethods.map((method, index) => {
                   const Icon = method.icon;
                   const isExternal = method.action.startsWith('http');
@@ -154,61 +153,33 @@ export function ContactSection() {
                       rel={isExternal ? 'noopener noreferrer' : undefined}
                       initial={{ opacity: 0, y: 20 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{
-                        delay: 0.2 + index * 0.1,
-                        type: 'spring',
-                        stiffness: 300,
-                        damping: 30,
-                      }}
-                      whileHover={{ y: -4, scale: 1.02 }}
+                      transition={{ delay: 0.2 + index * 0.1 }}
+                      whileHover={{ y: -4 }}
                       whileTap={{ scale: 0.98 }}
-                      className="group relative block"
+                      className="group block"
                     >
-                      {/* Card Container */}
-                      <div className="relative h-full overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 backdrop-blur-sm shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
-                        {/* Gradient overlay on hover */}
+                      <div className="h-full rounded-xl border border-border bg-card p-6 text-center transition-all duration-300 hover:shadow-lg hover:border-primary/20">
+                        {/* Icon */}
                         <div
-                          className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-[0.03] dark:group-hover:opacity-[0.08] transition-opacity duration-300`}
-                        />
-
-                        {/* Gradient border glow on hover */}
-                        <div
-                          className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
-                          style={{
-                            background: `linear-gradient(135deg, ${method.color.includes('mocha') ? 'rgba(164, 120, 100, 0.15)' : method.color.includes('navy') ? 'rgba(98, 125, 152, 0.15)' : 'rgba(59, 130, 246, 0.15)'}, transparent)`,
-                          }}
-                        />
-
-                        {/* Content */}
-                        <div className="relative p-5 flex items-center gap-4">
-                          {/* Icon Container */}
-                          <div
-                            className={`shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br ${method.color} p-3.5 text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
-                          >
-                            <Icon className="w-full h-full" />
-                          </div>
-
-                          {/* Text Content */}
-                          <div className="min-w-0 flex-1">
-                            {/* Title Row */}
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                                {method.title}
-                              </h4>
-                              <ArrowUpRight className="w-4 h-4 text-gray-400 dark:text-gray-500 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                            </div>
-
-                            {/* Contact Value - The Hero */}
-                            <p className="text-base font-medium text-primary dark:text-mocha-400 group-hover:text-mocha-600 dark:group-hover:text-mocha-300 transition-colors duration-300">
-                              {method.value}
-                            </p>
-
-                            {/* Description */}
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                              {method.description}
-                            </p>
-                          </div>
+                          className={`inline-flex w-14 h-14 rounded-xl bg-gradient-to-br ${method.color} p-3 text-white shadow-md mb-4 transition-transform duration-300 group-hover:scale-110`}
+                        >
+                          <Icon className="w-full h-full" />
                         </div>
+
+                        {/* Title */}
+                        <h4 className="font-semibold text-foreground mb-1">
+                          {method.title}
+                        </h4>
+
+                        {/* Description */}
+                        <p className="text-xs text-muted-foreground mb-3">
+                          {method.description}
+                        </p>
+
+                        {/* Contact Value */}
+                        <p className="text-sm font-medium text-primary break-all leading-relaxed">
+                          {method.value}
+                        </p>
                       </div>
                     </motion.a>
                   );
