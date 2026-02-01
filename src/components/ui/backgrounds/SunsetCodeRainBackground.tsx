@@ -117,7 +117,9 @@ export function SunsetCodeRainBackground({
         duration: (12 + seededRandom(seed + 2) * 8) / rainSpeed,
         delay: seededRandom(seed + 3) * 10,
         chars: Array.from({ length: 12 }, (_, j) => {
-          const charIndex = Math.floor(seededRandom(seed + 100 + j) * codeKeywords.length);
+          const charIndex = Math.floor(
+            seededRandom(seed + 100 + j) * codeKeywords.length
+          );
           return codeKeywords[charIndex] || '';
         }),
       };
