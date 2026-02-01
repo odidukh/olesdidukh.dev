@@ -61,10 +61,10 @@ const usesCategories: UsesCategory[] = [
         link: 'https://www.apple.com/mac-mini/',
       },
       {
-        name: 'Monitor iiyama 32" 4K',
+        name: 'Monitor iiyama 32" 4K IPS',
         description:
           'Providing massive screen real estate and crystal-clear 4K resolution for multitasking.',
-        link: 'https://iiyama.com/gl_en/products/prolite-xb3288uhsu-b5/',
+        link: 'https://iiyama.com/gl_en/products/prolite-xub3293uhsn-b5/',
       },
       {
         name: 'Logitech Ergo K860',
