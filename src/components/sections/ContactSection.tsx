@@ -175,7 +175,7 @@ export function ContactSection() {
                           <p className="text-xs text-muted-foreground mt-1">
                             {method.description}
                           </p>
-                          <p className="text-sm font-medium mt-2 text-primary group-hover:underline">
+                          <p className="text-sm font-medium mt-2 text-primary group-hover:underline break-all">
                             {method.value}
                           </p>
                         </CardContent>
