@@ -12,7 +12,6 @@ import { ANIMATION } from '@/constants';
 import {
   Code2,
   Palette,
-  Server,
   Settings,
   Star,
   TrendingUp,
@@ -24,8 +23,7 @@ import {
   Layers,
   Terminal,
   Globe,
-  Smartphone,
-  Monitor,
+  Users,
   Package,
   Clock,
   type LucideIcon,
@@ -56,274 +54,231 @@ interface SkillCategory {
 
 const skillCategories: SkillCategory[] = [
   {
-    id: 'frontend',
-    title: 'Frontend Development',
-    description: 'Modern web technologies and frameworks',
-    icon: Monitor,
+    id: 'languages',
+    title: 'Languages',
+    description: 'Core programming languages and markup',
+    icon: Code2,
     color: 'from-blue-500/20 to-cyan-500/20',
     skills: [
       {
-        name: 'JavaScript ES6+',
+        name: 'JavaScript',
         level: 'Expert',
         yearsOfExperience: 7,
         description:
-          'Modern JavaScript, async patterns, functional programming',
-        projects: 30,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'React.js',
-        level: 'Expert',
-        yearsOfExperience: 6,
-        description:
-          'Component-based architecture, hooks, context, performance optimization',
-        projects: 25,
+          'ES6+, async/await, functional programming, DOM manipulation',
         lastUsed: 'Currently',
       },
       {
         name: 'TypeScript',
         level: 'Advanced',
         yearsOfExperience: 4,
-        description: 'Type-safe development, generics, advanced patterns',
-        projects: 15,
+        description:
+          'Type-safe development, generics, utility types, strict mode',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'HTML5',
+        level: 'Expert',
+        yearsOfExperience: 7,
+        description: 'Semantic markup, accessibility, SEO best practices',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'CSS3',
+        level: 'Expert',
+        yearsOfExperience: 7,
+        description: 'Flexbox, Grid, animations, custom properties',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'SASS/SCSS',
+        level: 'Expert',
+        yearsOfExperience: 6,
+        description: 'Mixins, variables, nesting, modular architecture',
+        lastUsed: 'Currently',
+      },
+    ],
+  },
+  {
+    id: 'frameworks',
+    title: 'Frameworks & Libraries',
+    description: 'Modern front-end frameworks and state management',
+    icon: Layers,
+    color: 'from-purple-500/20 to-pink-500/20',
+    skills: [
+      {
+        name: 'React.js',
+        level: 'Expert',
+        yearsOfExperience: 6,
+        description:
+          'Hooks, context, performance optimization, component architecture',
         lastUsed: 'Currently',
       },
       {
         name: 'Next.js',
         level: 'Advanced',
         yearsOfExperience: 3,
-        description: 'SSR/SSG, App Router, API routes, optimization',
-        projects: 8,
+        description: 'App Router, SSR/SSG, API routes, middleware',
         lastUsed: 'Currently',
       },
       {
-        name: 'HTML5/CSS3',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description: 'Semantic HTML, modern CSS, animations, responsive design',
-        projects: 40,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'SASS/SCSS',
-        level: 'Expert',
+        name: 'Redux',
+        level: 'Advanced',
         yearsOfExperience: 5,
-        description:
-          'CSS preprocessor, mixins, variables, nested rules, modular architecture',
-        projects: 20,
+        description: 'Redux Toolkit, middleware, selectors, normalization',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Zustand',
+        level: 'Advanced',
+        yearsOfExperience: 2,
+        description: 'Lightweight state management, middleware, devtools',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'React Native',
+        level: 'Intermediate',
+        yearsOfExperience: 2,
+        description: 'Cross-platform mobile apps, native modules, MVP delivery',
+        lastUsed: '2021',
+      },
+    ],
+  },
+  {
+    id: 'ui-ux',
+    title: 'UI/UX',
+    description: 'Design systems and user interface development',
+    icon: Palette,
+    color: 'from-indigo-500/20 to-violet-500/20',
+    skills: [
+      {
+        name: 'Material-UI',
+        level: 'Advanced',
+        yearsOfExperience: 3,
+        description: 'Component customization, theming, responsive layouts',
         lastUsed: 'Currently',
       },
       {
         name: 'Tailwind CSS',
         level: 'Advanced',
         yearsOfExperience: 2,
-        description:
-          'Utility-first CSS, custom configurations, component patterns',
-        projects: 10,
+        description: 'Utility-first CSS, custom configurations, design systems',
         lastUsed: 'Currently',
       },
       {
-        name: 'Redux/Zustand',
-        level: 'Advanced',
-        yearsOfExperience: 5,
-        description: 'State management, middleware, performance optimization',
-        projects: 15,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Framer Motion',
-        level: 'Intermediate',
-        yearsOfExperience: 1,
-        description: 'Animation library, gestures, scroll-triggered animations',
-        projects: 5,
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'backend',
-    title: 'Backend & APIs',
-    description: 'Server-side technologies and API development',
-    icon: Server,
-    color: 'from-green-500/20 to-emerald-500/20',
-    skills: [
-      {
-        name: 'Node.js',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description: 'Express, middleware, async operations, performance',
-        projects: 15,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'GraphQL',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'Apollo, schemas, resolvers, subscriptions',
-        projects: 5,
-        lastUsed: '2024',
-      },
-      {
-        name: 'REST APIs',
-        level: 'Advanced',
-        yearsOfExperience: 5,
-        description: 'RESTful design, authentication, documentation',
-        projects: 20,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'PostgreSQL',
-        level: 'Intermediate',
-        yearsOfExperience: 3,
-        description: 'SQL queries, optimization, migrations',
-        projects: 8,
-        lastUsed: '2024',
-      },
-      {
-        name: 'MongoDB',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'NoSQL design, aggregation, indexing',
-        projects: 6,
-        lastUsed: '2023',
-      },
-      {
-        name: 'Redis',
-        level: 'Learning',
-        yearsOfExperience: 1,
-        description: 'Caching strategies, pub/sub, session management',
-        projects: 3,
-        lastUsed: '2024',
-      },
-    ],
-  },
-  {
-    id: 'mobile',
-    title: 'Mobile Development',
-    description: 'Cross-platform mobile application development',
-    icon: Smartphone,
-    color: 'from-purple-500/20 to-pink-500/20',
-    skills: [
-      {
-        name: 'React Native',
-        level: 'Advanced',
-        yearsOfExperience: 2,
-        description: 'Cross-platform apps, native modules, MVP delivery',
-        projects: 3,
-        lastUsed: '2021',
-      },
-      {
-        name: 'Expo',
-        level: 'Intermediate',
-        yearsOfExperience: 1,
-        description: 'Managed workflow, EAS, OTA updates',
-        projects: 2,
-        lastUsed: '2021',
-      },
-      {
-        name: 'PWA',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'Service workers, offline functionality, app manifest',
-        projects: 4,
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'tools',
-    title: 'Tools & DevOps',
-    description: 'Development tools and deployment technologies',
-    icon: Settings,
-    color: 'from-orange-500/20 to-red-500/20',
-    skills: [
-      {
-        name: 'Git/GitHub',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description: 'Version control, branching strategies, CI/CD',
-        projects: 50,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Docker',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'Containerization, Docker Compose, optimization',
-        projects: 6,
-        lastUsed: '2024',
-      },
-      {
-        name: 'AWS',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'EC2, S3, CloudFront, Lambda',
-        projects: 5,
-        lastUsed: '2024',
-      },
-      {
-        name: 'Vercel',
-        level: 'Advanced',
-        yearsOfExperience: 2,
-        description: 'Deployment, edge functions, analytics',
-        projects: 10,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Webpack/Vite',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description: 'Build optimization, code splitting, plugins',
-        projects: 15,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Jest/Testing',
+        name: 'Storybook',
         level: 'Advanced',
         yearsOfExperience: 3,
-        description: 'Unit testing, integration testing, TDD',
-        projects: 12,
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'design',
-    title: 'Design & UX',
-    description: 'Design tools and user experience principles',
-    icon: Palette,
-    color: 'from-indigo-500/20 to-purple-500/20',
-    skills: [
-      {
-        name: 'Figma',
-        level: 'Intermediate',
-        yearsOfExperience: 3,
-        description: 'Design systems, prototyping, developer handoff',
-        projects: 15,
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'UI/UX Principles',
-        level: 'Advanced',
-        yearsOfExperience: 5,
-        description: 'User research, wireframing, usability testing',
-        projects: 20,
+        description: 'Component documentation, visual testing, design systems',
         lastUsed: 'Currently',
       },
       {
         name: 'Responsive Design',
         level: 'Expert',
         yearsOfExperience: 7,
-        description: 'Mobile-first, breakpoints, fluid typography',
-        projects: 40,
+        description: 'Mobile-first approach, fluid layouts, breakpoint strategy',
         lastUsed: 'Currently',
       },
       {
-        name: 'Accessibility',
+        name: 'Cross-Browser',
+        level: 'Expert',
+        yearsOfExperience: 7,
+        description: 'Compatibility testing, polyfills, progressive enhancement',
+        lastUsed: 'Currently',
+      },
+    ],
+  },
+  {
+    id: 'testing',
+    title: 'Testing & Tools',
+    description: 'Quality assurance and development tooling',
+    icon: Settings,
+    color: 'from-green-500/20 to-emerald-500/20',
+    skills: [
+      {
+        name: 'Jest',
         level: 'Advanced',
         yearsOfExperience: 4,
-        description: 'WCAG compliance, ARIA, screen reader optimization',
-        projects: 15,
+        description: 'Unit testing, mocking, snapshot testing, coverage',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'React Testing Library',
+        level: 'Advanced',
+        yearsOfExperience: 3,
+        description: 'Component testing, user-centric queries, async testing',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Cypress',
+        level: 'Intermediate',
+        yearsOfExperience: 2,
+        description: 'E2E testing, component testing, visual regression',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Webpack',
+        level: 'Advanced',
+        yearsOfExperience: 5,
+        description: 'Bundle optimization, code splitting, custom loaders',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Vite',
+        level: 'Advanced',
+        yearsOfExperience: 2,
+        description: 'Fast builds, HMR, plugin ecosystem',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'ESLint/Prettier',
+        level: 'Expert',
+        yearsOfExperience: 5,
+        description: 'Code quality, custom rules, CI integration',
+        lastUsed: 'Currently',
+      },
+    ],
+  },
+  {
+    id: 'performance',
+    title: 'Performance & DevOps',
+    description: 'Optimization and deployment workflows',
+    icon: TrendingUp,
+    color: 'from-orange-500/20 to-red-500/20',
+    skills: [
+      {
+        name: 'Web Vitals',
+        level: 'Expert',
+        yearsOfExperience: 4,
+        description: 'LCP, FID, CLS optimization, Core Web Vitals monitoring',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Lighthouse',
+        level: 'Expert',
+        yearsOfExperience: 4,
+        description: 'Performance audits, accessibility, SEO optimization',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Bundle Optimization',
+        level: 'Advanced',
+        yearsOfExperience: 4,
+        description: 'Code splitting, tree shaking, lazy loading',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'Git',
+        level: 'Expert',
+        yearsOfExperience: 7,
+        description: 'Branching strategies, rebasing, conflict resolution',
+        lastUsed: 'Currently',
+      },
+      {
+        name: 'CI/CD',
+        level: 'Advanced',
+        yearsOfExperience: 4,
+        description: 'GitHub Actions, automated testing, deployment pipelines',
         lastUsed: 'Currently',
       },
     ],
@@ -494,15 +449,19 @@ export default function SkillsPage() {
                 size="sm"
                 variant={viewMode === 'grid' ? 'default' : 'outline'}
                 onClick={() => setViewMode('grid')}
+                aria-label="Grid view"
+                aria-pressed={viewMode === 'grid'}
               >
-                <Layers className="w-4 h-4" />
+                <Layers className="w-4 h-4" aria-hidden="true" />
               </Button>
               <Button
                 size="sm"
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 onClick={() => setViewMode('list')}
+                aria-label="List view"
+                aria-pressed={viewMode === 'list'}
               >
-                <BarChart3 className="w-4 h-4" />
+                <BarChart3 className="w-4 h-4" aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -542,15 +501,17 @@ export default function SkillsPage() {
                   {viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {category.skills.map(skill => (
-                        <motion.div
+                        <motion.button
                           key={skill.name}
+                          type="button"
                           whileHover={{ scale: 1.02 }}
-                          className="bg-card border border-border rounded-xl p-6 cursor-pointer"
+                          className="bg-card border border-border rounded-xl p-6 cursor-pointer text-left w-full"
                           onClick={() =>
                             setShowDetails(
                               showDetails === skill.name ? null : skill.name
                             )
                           }
+                          aria-expanded={showDetails === skill.name}
                         >
                           {/* Skill Header */}
                           <div className="flex justify-between items-start mb-4">
@@ -645,7 +606,7 @@ export default function SkillsPage() {
                                 </motion.div>
                               )}
                           </AnimatePresence>
-                        </motion.div>
+                        </motion.button>
                       ))}
                     </div>
                   ) : (
@@ -715,7 +676,7 @@ export default function SkillsPage() {
       <section className="py-20 bg-muted/30">
         <Container size="lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Learning Path */}
+            {/* Education & Background */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -724,29 +685,31 @@ export default function SkillsPage() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <BookOpen className="w-6 h-6 text-primary" />
-                <h3 className="text-2xl font-bold">Currently Learning</h3>
+                <h3 className="text-2xl font-bold">Education</h3>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Three.js / WebGL</span>
-                  <Badge variant="outline">In Progress</Badge>
+              <div className="space-y-6">
+                <div>
+                  <div className="font-medium">UNIT Factory (École 42 Network)</div>
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Kyiv, Ukraine · 2017–2019
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Selected from 13,000+ applicants for peer-to-peer programming education. Mastered C/C++, algorithms, and data structures through 20+ practical projects.
+                  </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Rust</span>
-                  <Badge variant="outline">Planned</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Web3 / Blockchain</span>
-                  <Badge variant="outline">Research</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Machine Learning</span>
-                  <Badge variant="outline">Exploring</Badge>
+                <div>
+                  <div className="font-medium">Master&apos;s Degree in Physics</div>
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Taras Shevchenko University of Kyiv · 2016–2018
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Computational Physics, Data Analysis. Co-authored 3 scientific publications.
+                  </p>
                 </div>
               </div>
             </motion.div>
 
-            {/* Certifications & Achievements */}
+            {/* Key Achievements */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -759,29 +722,38 @@ export default function SkillsPage() {
               </div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Zap className="w-5 h-5 text-primary mt-0.5" />
+                  <Zap className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium">Performance Expert</div>
                     <div className="text-sm text-muted-foreground">
-                      Achieved 95+ Lighthouse scores on multiple projects
+                      Achieved 95+ Lighthouse scores, reducing load times by 50%
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Globe className="w-5 h-5 text-primary mt-0.5" />
+                  <Users className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="font-medium">International Experience</div>
+                    <div className="font-medium">Enterprise Scale</div>
                     <div className="text-sm text-muted-foreground">
-                      Worked with clients from 5+ countries
+                      Built platforms serving 1,000+ employees and 50,000+ customers
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Terminal className="w-5 h-5 text-primary mt-0.5" />
+                  <Globe className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="font-medium">Full-Stack Capable</div>
+                    <div className="font-medium">International Clients</div>
                     <div className="text-sm text-muted-foreground">
-                      End-to-end application development expertise
+                      Collaborated with enterprise clients across multiple countries
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Terminal className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <div className="font-medium">Testing Champion</div>
+                    <div className="text-sm text-muted-foreground">
+                      Built test suites with 85% coverage, reducing UI bugs by 60%
                     </div>
                   </div>
                 </div>
