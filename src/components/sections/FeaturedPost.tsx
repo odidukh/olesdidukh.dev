@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import type { BlogPost } from '@/data/blog';
-import { Clock, Eye, Heart, ArrowRight, Star, TrendingUp } from 'lucide-react';
+import { Clock, ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -58,23 +58,6 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                   <Star className="mr-1 h-3 w-3 fill-current" />
                   Featured
                 </Badge>
-              </div>
-              {/* Stats Overlay */}
-              <div className="absolute bottom-4 left-4 flex gap-4 text-white/90 text-sm">
-                {post.views && (
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {post.views > 1000
-                      ? `${(post.views / 1000).toFixed(1)}k views`
-                      : `${post.views} views`}
-                  </span>
-                )}
-                {post.likes && (
-                  <span className="flex items-center gap-1">
-                    <Heart className="h-4 w-4" />
-                    {post.likes} likes
-                  </span>
-                )}
               </div>
             </div>
 
@@ -136,13 +119,6 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                       </p>
                     </div>
                   </div>
-                  {/* Trending Indicator */}
-                  {post.views && post.views > 1000 && (
-                    <div className="flex items-center gap-1 text-orange-500">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="text-xs font-medium">Trending</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Read More Button */}
