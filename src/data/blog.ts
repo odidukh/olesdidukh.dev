@@ -368,7 +368,7 @@ Claude Code isn't about replacing your expertise—it's about amplifying it. The
 
 The future belongs to developers who can effectively collaborate with AI while maintaining the judgment that comes from experience.
     `,
-    coverImage: '/images/blog/typescript.png',
+    coverImage: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-20',
     readingTime: 12,
@@ -565,7 +565,7 @@ The React Compiler represents React's maturity. We've moved from "you must optim
 
 This is the React we've been waiting for.
     `,
-    coverImage: '/images/blog/nextjs.png',
+    coverImage: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-15',
     readingTime: 11,
@@ -796,7 +796,7 @@ INP is the most demanding Core Web Vital, but it's also the most impactful for u
 
 The 50% of sites failing INP represents an opportunity—fix this, and you'll stand out from half your competition.
     `,
-    coverImage: '/images/blog/modern-css.png',
+    coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-10',
     readingTime: 10,
@@ -1044,7 +1044,7 @@ The migration doesn't have to be all-or-nothing. Start with new features in Zust
 
 After our migration at Emerline, we reduced state management code by 60% while maintaining the same functionality.
     `,
-    coverImage: '/images/blog/react-perf.png',
+    coverImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-05',
     readingTime: 13,
@@ -1304,7 +1304,7 @@ After 8 months of incremental migration:
 
 The migration took longer than a rewrite would have, but we shipped value continuously and never risked the business.
     `,
-    coverImage: '/images/blog/career-journey.png',
+    coverImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2024-12-20',
     readingTime: 14,
@@ -1557,7 +1557,7 @@ async function DashboardHeader() {
 
 Performance optimization is a continuous process. We now run Lighthouse in CI and alert on regressions.
     `,
-    coverImage: '/images/blog/nextjs.png',
+    coverImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2024-12-10',
     readingTime: 12,
@@ -1717,7 +1717,7 @@ That curiosity I had as a physics student? It never went away. It just found a n
 
 *If you're considering a career change into tech, or you're early in your journey, feel free to reach out. I'm always happy to chat.*
     `,
-    coverImage: '/images/blog/career-journey.png',
+    coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2024-11-15',
     readingTime: 11,
@@ -1954,7 +1954,7 @@ These patterns have saved countless hours of debugging and made our codebases mo
 
 Remember: TypeScript is most valuable when it catches bugs at compile time that would otherwise reach production.
     `,
-    coverImage: '/images/blog/typescript.png',
+    coverImage: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2024-10-20',
     readingTime: 13,
