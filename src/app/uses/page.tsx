@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { Button } from '@/components/ui/Button';
 import {
   Code2,
   Palette,
@@ -13,6 +14,7 @@ import {
   Package,
   Wrench,
   Cloud,
+  Download,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -28,6 +30,12 @@ interface UsesCategory {
   description: string;
   icon: LucideIcon;
   items: UsesItem[];
+  /** Optional download link for the entire category */
+  download?: {
+    label: string;
+    href: string;
+    filename: string;
+  };
 }
 
 const usesCategories: UsesCategory[] = [
@@ -128,6 +136,11 @@ const usesCategories: UsesCategory[] = [
     title: 'VS Code Extensions',
     description: 'Must-have extensions for productivity',
     icon: Package,
+    download: {
+      label: 'Download Extensions Pack',
+      href: '/downloads/vscode-extensions.sh',
+      filename: 'vscode-extensions.sh',
+    },
     items: [
       {
         name: 'ESLint + Prettier',
@@ -409,16 +422,29 @@ export default function UsesPage() {
                   transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
                   id={category.id}
                 >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-lg bg-mocha-100 dark:bg-mocha-900/30">
-                      <Icon className="h-5 w-5 text-mocha-600 dark:text-mocha-400" />
+                  <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-mocha-100 dark:bg-mocha-900/30">
+                        <Icon className="h-5 w-5 text-mocha-600 dark:text-mocha-400" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold">{category.title}</h2>
+                        <p className="text-sm text-muted-foreground">
+                          {category.description}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold">{category.title}</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {category.description}
-                      </p>
-                    </div>
+                    {category.download && (
+                      <Button variant="outline" size="sm" asChild>
+                        <a
+                          href={category.download.href}
+                          download={category.download.filename}
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          {category.download.label}
+                        </a>
+                      </Button>
+                    )}
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

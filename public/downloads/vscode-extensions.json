@@ -1,0 +1,153 @@
+{
+  "name": "Oles Didukh - VS Code Extensions Pack",
+  "description": "Curated VS Code extensions for modern web development",
+  "version": "1.0.0",
+  "author": "Oles Didukh",
+  "website": "https://olesdidukh.dev/uses",
+  "extensions": {
+    "core": [
+      {
+        "id": "dbaeumer.vscode-eslint",
+        "name": "ESLint",
+        "description": "Integrates ESLint into VS Code"
+      },
+      {
+        "id": "esbenp.prettier-vscode",
+        "name": "Prettier",
+        "description": "Code formatter using Prettier"
+      },
+      {
+        "id": "bradlc.vscode-tailwindcss",
+        "name": "Tailwind CSS IntelliSense",
+        "description": "Intelligent Tailwind CSS tooling"
+      },
+      {
+        "id": "yoavbls.pretty-ts-errors",
+        "name": "Pretty TypeScript Errors",
+        "description": "Human-readable TypeScript errors"
+      }
+    ],
+    "ai": [
+      {
+        "id": "github.copilot",
+        "name": "GitHub Copilot",
+        "description": "AI pair programmer"
+      },
+      {
+        "id": "github.copilot-chat",
+        "name": "GitHub Copilot Chat",
+        "description": "Chat interface for Copilot"
+      }
+    ],
+    "git": [
+      {
+        "id": "waderyan.gitblame",
+        "name": "Git Blame",
+        "description": "See git blame in the status bar"
+      },
+      {
+        "id": "github.vscode-pull-request-github",
+        "name": "GitHub Pull Requests",
+        "description": "Review and manage PRs in VS Code"
+      },
+      {
+        "id": "github.vscode-github-actions",
+        "name": "GitHub Actions",
+        "description": "Manage GitHub Actions workflows"
+      }
+    ],
+    "database": [
+      {
+        "id": "prisma.prisma",
+        "name": "Prisma",
+        "description": "Prisma schema file support"
+      }
+    ],
+    "testing": [
+      {
+        "id": "ms-playwright.playwright",
+        "name": "Playwright Test",
+        "description": "Run Playwright tests from VS Code"
+      }
+    ],
+    "editor": [
+      {
+        "id": "vscodevim.vim",
+        "name": "Vim",
+        "description": "Vim keybindings"
+      },
+      {
+        "id": "streetsidesoftware.code-spell-checker",
+        "name": "Code Spell Checker",
+        "description": "Spelling checker for code"
+      },
+      {
+        "id": "nhoizey.gremlins",
+        "name": "Gremlins",
+        "description": "Reveal invisible characters"
+      }
+    ],
+    "visual": [
+      {
+        "id": "eliverlara.andromeda",
+        "name": "Andromeda",
+        "description": "Dark theme with vibrant colors"
+      },
+      {
+        "id": "pkief.material-icon-theme",
+        "name": "Material Icon Theme",
+        "description": "Material Design icons for files"
+      },
+      {
+        "id": "johnpapa.vscode-peacock",
+        "name": "Peacock",
+        "description": "Color-code your workspaces"
+      },
+      {
+        "id": "oderwat.indent-rainbow",
+        "name": "Indent Rainbow",
+        "description": "Colorize indentation levels"
+      },
+      {
+        "id": "naumovs.color-highlight",
+        "name": "Color Highlight",
+        "description": "Highlight color values in code"
+      }
+    ],
+    "tools": [
+      {
+        "id": "rangav.vscode-thunder-client",
+        "name": "Thunder Client",
+        "description": "REST API client"
+      },
+      {
+        "id": "mikestead.dotenv",
+        "name": "DotENV",
+        "description": ".env file syntax highlighting"
+      },
+      {
+        "id": "shd101wyy.markdown-preview-enhanced",
+        "name": "Markdown Preview Enhanced",
+        "description": "Rich markdown preview"
+      }
+    ],
+    "fileTypes": [
+      {
+        "id": "jock.svg",
+        "name": "SVG",
+        "description": "SVG language support"
+      },
+      {
+        "id": "mechatroner.rainbow-csv",
+        "name": "Rainbow CSV",
+        "description": "CSV syntax highlighting"
+      },
+      {
+        "id": "redhat.vscode-xml",
+        "name": "XML",
+        "description": "XML language support"
+      }
+    ]
+  },
+  "installCommand": "Run: chmod +x vscode-extensions.sh && ./vscode-extensions.sh"
+}
