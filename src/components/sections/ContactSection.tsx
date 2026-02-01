@@ -9,7 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
-import { decodeEmail, ENCODED_EMAIL } from '@/lib/obfuscate';
+import {
+  decodeEmail,
+  decodeString,
+  ENCODED_EMAIL,
+  ENCODED_PHONE,
+  ENCODED_PHONE_DISPLAY,
+} from '@/lib/obfuscate';
 import { ContactForm } from './ContactForm';
 import { ContactInfo } from './ContactInfo';
 import { FAQ } from './FAQ';
@@ -66,10 +72,14 @@ export function ContactSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const [email, setEmail] = React.useState<string | null>(null);
+  const [phone, setPhone] = React.useState<string | null>(null);
+  const [phoneDisplay, setPhoneDisplay] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    // Decode email only on client side
+    // Decode contact info only on client side
     setEmail(decodeEmail(ENCODED_EMAIL));
+    setPhone(decodeString(ENCODED_PHONE));
+    setPhoneDisplay(decodeString(ENCODED_PHONE_DISPLAY));
   }, []);
 
   const preferredMethods = [
@@ -85,8 +95,8 @@ export function ContactSection() {
       icon: Phone,
       title: 'Phone',
       description: 'For urgent matters',
-      value: '+38 067 88 99 570',
-      action: 'tel:+380678899570',
+      value: phoneDisplay || 'Loading...',
+      action: phone ? `tel:${phone}` : '#',
       color: 'from-navy-500 to-navy-600',
     },
     {

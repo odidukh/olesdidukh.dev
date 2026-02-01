@@ -8,6 +8,7 @@ import {
   ObfuscatedEmail,
   ObfuscatedEmailLink,
 } from '@/components/ObfuscatedEmail';
+import { ObfuscatedPhone } from '@/components/ObfuscatedPhone';
 import {
   Github,
   Linkedin,
@@ -15,7 +16,6 @@ import {
   Heart,
   ExternalLink,
   MapPin,
-  Phone,
   AtSign,
 } from 'lucide-react';
 
@@ -73,8 +73,11 @@ export function Footer({ className }: FooterProps) {
                 <NewsletterForm />
               </div>
 
-              {/* Location & Contact */}
-              <div className="space-y-2 text-sm text-muted-foreground">
+              {/* Location & Contact - Protected from scraping */}
+              <div
+                className="space-y-2 text-sm text-muted-foreground"
+                data-protected
+              >
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4" />
                   <span>Vinnytsia, Ukraine</span>
@@ -83,10 +86,10 @@ export function Footer({ className }: FooterProps) {
                   className="flex items-center space-x-2 hover:text-primary transition-colors"
                   iconClassName="h-4 w-4"
                 />
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+38 067 88 99 570</span>
-                </div>
+                <ObfuscatedPhone
+                  className="flex items-center space-x-2 hover:text-primary transition-colors"
+                  iconClassName="h-4 w-4"
+                />
               </div>
             </div>
 
