@@ -31,8 +31,33 @@ declare const self: ServiceWorkerGlobalScope;
  * - CacheFirst: Best for static assets that rarely change (fonts, icons)
  * - StaleWhileRevalidate: Good for assets that can be slightly stale (images)
  * - NetworkFirst: Best for dynamic content (API calls, pages)
+ * - NetworkOnly: For paths that should never be cached (analytics, monitoring)
  */
 const customRuntimeCaching: RuntimeCaching[] = [
+  // Skip caching for Vercel internal paths (analytics, speed insights)
+  // These should always go to network and not be intercepted
+  {
+    matcher: ({ url }) =>
+      url.pathname.startsWith('/_vercel/') ||
+      url.pathname.startsWith('/monitoring'),
+    handler: new NetworkFirst({
+      cacheName: 'vercel-internal',
+      networkTimeoutSeconds: 5,
+      plugins: [
+        {
+          // Don't cache failed responses
+          cacheWillUpdate: async ({ response }) => {
+            return response?.status === 200 ? response : null;
+          },
+          // On error, don't throw - let the request fail gracefully
+          handlerDidError: async () => {
+            return undefined;
+          },
+        },
+      ],
+    }),
+  },
+
   // Google Fonts stylesheets
   {
     matcher: ({ url }) =>
@@ -83,12 +108,28 @@ const customRuntimeCaching: RuntimeCaching[] = [
     }),
   },
 
-  // Static JS and CSS (cache first)
+  // Static JS and CSS (stale-while-revalidate with error handling)
   {
-    matcher: ({ request }) =>
-      request.destination === 'script' || request.destination === 'style',
+    matcher: ({ request, url }) =>
+      (request.destination === 'script' || request.destination === 'style') &&
+      // Exclude third-party scripts that might be blocked by ad blockers
+      !url.pathname.includes('/_vercel/') &&
+      !url.pathname.includes('/monitoring'),
     handler: new StaleWhileRevalidate({
       cacheName: 'static-resources',
+      plugins: [
+        {
+          cacheWillUpdate: async ({ response }) => {
+            // Only cache successful responses
+            return response?.status === 200 ? response : null;
+          },
+          handlerDidError: async () => {
+            // Return undefined to let the request fail gracefully
+            // This prevents the "no-response" error from breaking the page
+            return undefined;
+          },
+        },
+      ],
     }),
   },
 
@@ -118,6 +159,14 @@ const customRuntimeCaching: RuntimeCaching[] = [
     handler: new NetworkFirst({
       cacheName: 'pages-cache',
       networkTimeoutSeconds: 10,
+      plugins: [
+        {
+          cacheWillUpdate: async ({ response }) => {
+            // Only cache successful responses
+            return response?.status === 200 ? response : null;
+          },
+        },
+      ],
     }),
   },
 
