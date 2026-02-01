@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Container } from './Container';
 import { Badge } from './Badge';
