@@ -65,15 +65,15 @@ const stats: Stat[] = [
     color: 'text-blue-500',
   },
   {
-    label: 'Projects Completed',
-    value: '50+',
-    icon: Briefcase,
+    label: 'Users Impacted',
+    value: '60K+',
+    icon: Users,
     color: 'text-green-500',
   },
   {
-    label: 'Happy Clients',
-    value: '30+',
-    icon: Users,
+    label: 'Companies',
+    value: '4',
+    icon: Briefcase,
     color: 'text-purple-500',
   },
   {
@@ -139,26 +139,32 @@ const skillCategories: SkillCategory[] = [
 const timeline: Timeline[] = [
   {
     year: '2017',
-    title: 'Started Journey',
-    description: 'Began learning web development',
-    type: 'milestone',
+    title: 'UNIT Factory',
+    description: 'Peer-to-peer programming education',
+    type: 'education',
   },
   {
     year: '2018',
     title: 'First Developer Role',
-    description: 'Junior Front-End at Inango Systems',
+    description: 'Junior Front-End at Helios Technologies',
     type: 'work',
   },
   {
-    year: '2020',
-    title: 'Level Up',
-    description: 'Front-End Developer at Emerline',
+    year: '2019',
+    title: 'Inango Systems',
+    description: 'Middle Front-End Developer',
     type: 'work',
   },
   {
-    year: '2023',
-    title: 'Senior Engineer',
-    description: 'Leading projects at Safebooks AI',
+    year: '2021',
+    title: 'Senior at Emerline',
+    description: 'Leading enterprise front-end architecture',
+    type: 'work',
+  },
+  {
+    year: '2024',
+    title: 'Safebooks AI',
+    description: 'Senior Front-End Engineer, Remote',
     type: 'work',
   },
 ];
@@ -407,7 +413,7 @@ export function AboutSection() {
                   </div>
                   <div className="flex-1 pt-2">
                     <div className="text-sm text-primary font-medium mb-1">
-                      2024+
+                      2025+
                     </div>
                     <h4 className="text-lg font-semibold mb-1">
                       The Journey Continues

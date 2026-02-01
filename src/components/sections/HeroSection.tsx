@@ -49,8 +49,8 @@ export function HeroSection() {
 
   const stats = [
     { label: 'Years Experience', value: '7+' },
-    { label: 'Projects Completed', value: '50+' },
-    { label: 'Happy Clients', value: '30+' },
+    { label: 'Users Impacted', value: '60K+' },
+    { label: 'Companies', value: '4' },
   ];
 
   const skills = ['React', 'TypeScript', 'Next.js', 'Node.js', 'AWS'];

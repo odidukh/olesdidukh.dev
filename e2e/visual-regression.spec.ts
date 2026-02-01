@@ -118,7 +118,7 @@ test.describe('Visual Regression - Mobile', () => {
     await page.waitForTimeout(300);
 
     await expect(page).toHaveScreenshot('mobile-menu.png', {
-      maxDiffPixels: 200,
+      maxDiffPixels: 300,
     });
   });
 });

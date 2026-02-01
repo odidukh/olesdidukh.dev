@@ -258,13 +258,13 @@ test.describe('Interaction Performance', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const startTime = Date.now();
-    await page.getByRole('link', { name: 'Projects' }).first().click();
-    await page.waitForURL('/projects');
+    await page.getByRole('link', { name: 'About' }).first().click();
+    await page.waitForURL('/about');
     const navTime = Date.now() - startTime;
 
     // Navigation should complete within 2 seconds (generous for CI/dev server)
     expect(navTime).toBeLessThan(2000);
-    console.log(`Navigation to /projects: ${navTime}ms`);
+    console.log(`Navigation to /about: ${navTime}ms`);
   });
 
   test('form interactions are responsive', async ({ page }) => {

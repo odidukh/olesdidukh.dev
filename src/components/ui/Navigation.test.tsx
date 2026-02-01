@@ -33,7 +33,7 @@ describe('Navigation', () => {
     const expectedLinks = [
       'About',
       'Experience',
-      'Projects',
+      // 'Projects',
       'Skills',
       'Uses',
       'Blog',

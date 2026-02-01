@@ -38,29 +38,39 @@ const usesCategories: UsesCategory[] = [
     icon: Laptop,
     items: [
       {
-        name: 'MacBook Pro 14" (M3 Pro)',
+        name: 'Macbook Air 15" 2023',
         description:
-          'My primary development machine. The M3 chip handles everything from running dev servers to video calls without breaking a sweat.',
+          'A lightweight and powerful companion for on-the-go development and daily tasks.',
       },
       {
-        name: 'Dell UltraSharp 27" 4K',
+        name: 'Mac Mini Pro 2025',
         description:
-          'External display for extended screen real estate when working on complex layouts or multi-file editing.',
+          'The central powerhouse of my setup, handling heavy workloads and complex builds with ease.',
       },
       {
-        name: 'Keychron K2 (Gateron Brown)',
+        name: 'Monitor iiyama 32" 4K',
         description:
-          'Wireless mechanical keyboard with tactile switches. Perfect balance of feedback and quiet operation.',
+          'Providing massive screen real estate and crystal-clear 4K resolution for multitasking.',
       },
       {
-        name: 'Logitech MX Master 3',
+        name: 'Logitech Ergo K860',
         description:
-          'Ergonomic mouse with customizable buttons. The horizontal scroll wheel is a game-changer for code review.',
+          'An ergonomic split keyboard that ensures comfort during long coding sessions.',
       },
       {
-        name: 'Sony WH-1000XM4',
+        name: 'Magic Trackpad 3',
         description:
-          'Noise-canceling headphones for focused deep work sessions. Essential for open office environments.',
+          'For precise control and smooth macOS gestures that enhance my workflow.',
+      },
+      {
+        name: 'AirPods Pro 2',
+        description:
+          'Superior noise cancellation and seamless integration for focused work and calls.',
+      },
+      {
+        name: 'Airpulse A80',
+        description:
+          'High-fidelity active speakers that deliver exceptional audio quality for music and media.',
       },
     ],
   },
@@ -409,7 +419,7 @@ export default function UsesPage() {
             <p className="text-muted-foreground">
               This page is regularly updated as my workflow evolves. Last
               updated:{' '}
-              <span className="font-medium text-foreground">November 2025</span>
+              <span className="font-medium text-foreground">December 2025</span>
             </p>
           </motion.div>
         </Container>
