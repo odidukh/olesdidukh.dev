@@ -852,6 +852,28 @@
 }
 
 /* ==========================================
+   CONTENT PROTECTION
+   Prevent selection on sensitive content
+   ========================================== */
+
+/* Protect sensitive content from selection */
+[data-protected] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection on interactive elements within protected areas */
+[data-protected] a,
+[data-protected] button,
+[data-protected] input,
+[data-protected] textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* ==========================================
    BASE STYLES
    ========================================== */
 body {

@@ -6,6 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
+import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
 import {
   /* ArrowRight, */ Github,
   Linkedin,
@@ -209,9 +210,9 @@ export function HeroSimple() {
                 className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
                 asChild
               >
-                <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
+                <ObfuscatedEmailLink ariaLabel="Email">
                   <Mail className="h-5 w-5" />
-                </a>
+                </ObfuscatedEmailLink>
               </Button>
             </div>
           </motion.div>

@@ -5,6 +5,10 @@ import { Badge } from './Badge';
 import { NewsletterForm } from './NewsletterForm';
 import { ResumeDownloadLink } from './ResumeDownloadButton';
 import {
+  ObfuscatedEmail,
+  ObfuscatedEmailLink,
+} from '@/components/ObfuscatedEmail';
+import {
   Github,
   Linkedin,
   Mail,
@@ -32,7 +36,6 @@ const navigationLinks: FooterLink[] = [
 
 const resourceLinks: FooterLink[] = [
   { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Testimonials', href: '/testimonials' },
   { label: 'Privacy Policy', href: '/privacy' },
 ];
 
@@ -76,15 +79,10 @@ export function Footer({ className }: FooterProps) {
                   <MapPin className="h-4 w-4" />
                   <span>Vinnytsia, Ukraine</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
-                  <a
-                    href="mailto:oles.didukh@gmail.com"
-                    className="hover:text-primary transition-colors"
-                  >
-                    oles.didukh@gmail.com
-                  </a>
-                </div>
+                <ObfuscatedEmail
+                  className="flex items-center space-x-2 hover:text-primary transition-colors"
+                  iconClassName="h-4 w-4"
+                />
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
                   <span>+38 067 88 99 570</span>
@@ -218,9 +216,9 @@ export function Footer({ className }: FooterProps) {
                   asChild
                   className="h-9 w-9 hover:text-primary"
                 >
-                  <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
+                  <ObfuscatedEmailLink ariaLabel="Email">
                     <Mail className="h-4 w-4" />
-                  </a>
+                  </ObfuscatedEmailLink>
                 </Button>
               </div>
             </div>

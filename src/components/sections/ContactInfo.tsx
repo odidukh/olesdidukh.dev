@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { MapPin, Clock, Globe, Mail, Phone, Calendar } from 'lucide-react';
+import { ObfuscatedEmail } from '@/components/ObfuscatedEmail';
+import { MapPin, Clock, Globe, Phone, Calendar } from 'lucide-react';
 
 export function ContactInfo() {
   const contactDetails = [
@@ -147,13 +148,10 @@ export function ContactInfo() {
 
         {/* Direct Contact */}
         <div className="pt-4 border-t space-y-2">
-          <a
-            href="mailto:oles.didukh@gmail.com"
+          <ObfuscatedEmail
             className="flex items-center gap-2 text-sm hover:text-primary transition-colors"
-          >
-            <Mail className="h-4 w-4" />
-            oles.didukh@gmail.com
-          </a>
+            iconClassName="h-4 w-4"
+          />
           <a
             href="tel:+380678899570"
             className="flex items-center gap-2 text-sm hover:text-primary transition-colors"

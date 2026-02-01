@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { TypeAnimation } from '@/components/ui/TypeAnimation';
 import { SunsetCodeRainBackground } from '@/components/ui/backgrounds';
+import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
 import {
   // ArrowRight,
   Github,
@@ -187,9 +188,9 @@ export function HeroSection() {
                     className="hover:text-mocha-600 dark:hover:text-mocha-400"
                     asChild
                   >
-                    <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
+                    <ObfuscatedEmailLink ariaLabel="Email">
                       <Mail className="h-5 w-5" />
-                    </a>
+                    </ObfuscatedEmailLink>
                   </Button>
                 </div>
               </motion.div>

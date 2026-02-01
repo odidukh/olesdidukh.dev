@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
+import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
+import { decodeEmail, ENCODED_EMAIL } from '@/lib/obfuscate';
 import { ContactForm } from './ContactForm';
 import { ContactInfo } from './ContactInfo';
 import { FAQ } from './FAQ';
@@ -63,14 +65,20 @@ const itemVariants = {
 export function ContactSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [email, setEmail] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    // Decode email only on client side
+    setEmail(decodeEmail(ENCODED_EMAIL));
+  }, []);
 
   const preferredMethods = [
     {
       icon: Mail,
       title: 'Email',
       description: 'Best for project inquiries',
-      value: 'oles.didukh@gmail.com',
-      action: 'mailto:oles.didukh@gmail.com',
+      value: email || 'Loading...',
+      action: email ? `mailto:${email}` : '#',
       color: 'from-mocha-500 to-mocha-600',
     },
     {
@@ -272,10 +280,10 @@ export function ContactSection() {
             </p>
             <div className="flex justify-center gap-4">
               <Button size="lg" asChild>
-                <a href="mailto:oles.didukh@gmail.com">
+                <ObfuscatedEmailLink ariaLabel="Start the Conversation">
                   <Mail className="mr-2 h-4 w-4" />
                   Start the Conversation
-                </a>
+                </ObfuscatedEmailLink>
               </Button>
             </div>
           </motion.div>
