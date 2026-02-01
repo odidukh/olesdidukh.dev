@@ -140,7 +140,7 @@ export function ContactSection() {
               </Card>
 
               {/* Preferred Contact Methods - Horizontal Cards */}
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {preferredMethods.map((method, index) => {
                   const Icon = method.icon;
                   const isExternal = method.action.startsWith('http');
@@ -151,77 +151,48 @@ export function ContactSection() {
                       href={method.action}
                       target={isExternal ? '_blank' : undefined}
                       rel={isExternal ? 'noopener noreferrer' : undefined}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{
-                        delay: 0.2 + index * 0.1,
-                        type: 'spring',
-                        stiffness: 100,
-                      }}
-                      whileHover={{ scale: 1.02, x: 8 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group block"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.2 + index * 0.1 }}
+                      whileHover={{ x: 4 }}
+                      className="group flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:bg-muted/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-card to-card/80 p-5 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/30">
-                        {/* Animated gradient background */}
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-r ${method.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-                        />
-
-                        {/* Shine effect on hover */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                        </div>
-
-                        {/* Content */}
-                        <div className="relative flex items-center gap-5">
-                          {/* Icon Container */}
-                          <div
-                            className={`relative shrink-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${method.color} p-4 text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-xl`}
-                          >
-                            <Icon className="w-full h-full drop-shadow-sm" />
-                            {/* Icon glow */}
-                            <div
-                              className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${method.color} blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10`}
-                            />
-                          </div>
-
-                          {/* Text Content */}
-                          <div className="flex-1 min-w-0">
-                            {/* Title & Description Row */}
-                            <div className="flex items-baseline gap-3 mb-1">
-                              <h4 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors duration-300">
-                                {method.title}
-                              </h4>
-                              <span className="text-xs text-muted-foreground font-medium px-2 py-0.5 rounded-full bg-muted/50">
-                                {method.description}
-                              </span>
-                            </div>
-
-                            {/* Contact Value - Hero */}
-                            <p className="text-xl font-semibold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/70 transition-all duration-300">
-                              {method.value}
-                            </p>
-                          </div>
-
-                          {/* Arrow indicator */}
-                          <div className="shrink-0 w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:bg-primary/10">
-                            <svg
-                              className="w-5 h-5 text-primary transform group-hover:translate-x-1 transition-transform duration-300"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17 8l4 4m0 0l-4 4m4-4H3"
-                              />
-                            </svg>
-                          </div>
-                        </div>
+                      {/* Icon */}
+                      <div
+                        className={`shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br ${method.color} p-2.5 text-white shadow-md group-hover:scale-105 group-hover:shadow-lg transition-all duration-300`}
+                      >
+                        <Icon className="w-full h-full" />
                       </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-semibold text-foreground">
+                            {method.title}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            · {method.description}
+                          </span>
+                        </div>
+                        <p className="text-lg font-medium text-primary">
+                          {method.value}
+                        </p>
+                      </div>
+
+                      {/* Arrow */}
+                      <svg
+                        className="shrink-0 w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                     </motion.a>
                   );
                 })}
