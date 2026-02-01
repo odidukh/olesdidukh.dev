@@ -88,7 +88,7 @@ const usesCategories: UsesCategory[] = [
         name: 'Airpulse A80',
         description:
           'High-fidelity active speakers that deliver exceptional audio quality for music and media.',
-        link: 'https://www.airpulse.com/product/a80/',
+        link: 'https://airpulse.com/collections/airpulse-speakers/products/airpulse-a80-hi-res-active-speaker-system',
       },
     ],
   },
