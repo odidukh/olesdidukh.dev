@@ -71,7 +71,7 @@ export function ContactSection() {
       icon: MessageSquare,
       title: 'LinkedIn',
       description: 'Professional networking',
-      value: 'linkedin.com/in/oles-didukh',
+      value: '@oles-didukh',
       action: 'https://linkedin.com/in/oles-didukh',
       color: 'from-info-500 to-info-600',
     },
@@ -175,7 +175,7 @@ export function ContactSection() {
                           <p className="text-xs text-muted-foreground mt-1">
                             {method.description}
                           </p>
-                          <p className="text-sm font-medium mt-2 text-primary group-hover:underline break-all">
+                          <p className="text-sm font-medium mt-2 text-primary group-hover:underline truncate" title={method.value}>
                             {method.value}
                           </p>
                         </CardContent>
