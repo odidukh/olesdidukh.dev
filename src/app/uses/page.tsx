@@ -87,10 +87,22 @@ const usesCategories: UsesCategory[] = [
         link: 'https://code.visualstudio.com',
       },
       {
-        name: 'Cursor',
+        name: 'Claude Code',
         description:
-          'AI-powered code editor built on VS Code. Great for AI-assisted development and code generation.',
-        link: 'https://cursor.com',
+          'Agentic coding tool from Anthropic. Handles complex multi-file refactoring and understands entire codebases.',
+        link: 'https://claude.ai/code',
+      },
+      {
+        name: 'Gemini',
+        description:
+          'Google\'s multimodal AI assistant for research, code review, and problem-solving.',
+        link: 'https://gemini.google.com',
+      },
+      {
+        name: 'NotebookLM',
+        description:
+          'Google\'s AI-powered research assistant. Great for analyzing documentation and generating insights.',
+        link: 'https://notebooklm.google.com',
       },
       {
         name: 'iTerm2 + Oh My Zsh',
@@ -419,7 +431,7 @@ export default function UsesPage() {
             <p className="text-muted-foreground">
               This page is regularly updated as my workflow evolves. Last
               updated:{' '}
-              <span className="font-medium text-foreground">December 2025</span>
+              <span className="font-medium text-foreground">February 2026</span>
             </p>
           </motion.div>
         </Container>
