@@ -135,29 +135,68 @@ const usesCategories: UsesCategory[] = [
           'Code linting and formatting. Format on save keeps code consistent across the team.',
       },
       {
-        name: 'TypeScript Importer',
-        description: 'Automatically adds import statements as you type.',
-      },
-      {
-        name: 'GitLens',
-        description:
-          'Git blame annotations, file history, and powerful diff views.',
-        link: 'https://gitlens.amod.io',
-      },
-      {
-        name: 'Error Lens',
-        description:
-          'Inline error and warning highlights. See issues without hovering.',
-      },
-      {
         name: 'Tailwind CSS IntelliSense',
         description:
-          'Autocomplete for Tailwind classes with preview of applied styles.',
+          'Autocomplete for Tailwind classes. Configured with custom regex for cn() and cva() utilities.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss',
       },
       {
-        name: 'One Dark Pro',
+        name: 'Pretty TypeScript Errors',
         description:
-          "Color theme based on Atom's One Dark. Easy on the eyes for long coding sessions.",
+          'Makes TypeScript errors human-readable with syntax highlighting and better formatting.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=yoavbls.pretty-ts-errors',
+      },
+      {
+        name: 'Git Blame + GitHub PR',
+        description:
+          'Inline git blame annotations and seamless GitHub pull request integration.',
+      },
+      {
+        name: 'Prisma',
+        description:
+          'Schema highlighting, formatting, and jump-to-definition for Prisma ORM.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=Prisma.prisma',
+      },
+      {
+        name: 'Playwright Test',
+        description:
+          'Run and debug Playwright tests directly from VS Code with built-in trace viewer.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright',
+      },
+      {
+        name: 'Vim',
+        description:
+          'Vim keybindings for efficient text editing. Essential for keyboard-driven workflow.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=vscodevim.vim',
+      },
+      {
+        name: 'Andromeda + Material Icons',
+        description:
+          'Dark theme with vibrant syntax colors paired with Material file icons for better navigation.',
+      },
+      {
+        name: 'Peacock',
+        description:
+          'Color-codes VS Code workspaces. Instantly identify which project you\'re working on.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock',
+      },
+      {
+        name: 'Code Spell Checker',
+        description:
+          'Catches typos in code, comments, and strings. Supports camelCase and custom dictionaries.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker',
+      },
+      {
+        name: 'Thunder Client',
+        description:
+          'Lightweight REST API client built into VS Code. Alternative to Postman.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client',
+      },
+      {
+        name: 'Gremlins',
+        description:
+          'Highlights invisible and confusing characters that can break code silently.',
+        link: 'https://marketplace.visualstudio.com/items?itemName=nhoizey.gremlins',
       },
     ],
   },
