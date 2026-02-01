@@ -56,3 +56,6 @@ Sentry.init({
     return event;
   },
 });
+
+// Export hook for instrumenting navigations
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
