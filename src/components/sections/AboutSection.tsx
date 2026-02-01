@@ -29,6 +29,7 @@ import {
   Quote,
   type LucideIcon,
 } from 'lucide-react';
+import { StatusIndicator } from '@/components/ui/StatusIndicator';
 
 interface Stat {
   label: string;
@@ -339,12 +340,7 @@ export function AboutSection() {
                     <MapPin className="w-4 h-4" />
                     <span>Vinnytsia, Ukraine</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-green-500">
-                      Available for opportunities
-                    </span>
-                  </div>
+                  <StatusIndicator variant="available" />
                 </div>
 
                 {/* CTA Buttons */}
@@ -548,11 +544,12 @@ export function AboutSection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 rounded-full mb-6">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-green-500">
-              Open to opportunities
-            </span>
+          <div className="inline-flex items-center px-4 py-2 bg-green-500/10 rounded-full mb-6">
+            <StatusIndicator
+              variant="available"
+              label="Open to opportunities"
+              labelClassName="font-medium"
+            />
           </div>
 
           <h3 className="text-3xl font-bold mb-4">

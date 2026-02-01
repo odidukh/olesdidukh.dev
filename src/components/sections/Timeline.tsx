@@ -14,6 +14,7 @@ import {
   MapPin,
   type LucideIcon,
 } from 'lucide-react';
+import { MetaItem } from '@/components/ui/MetaItem';
 
 interface TimelineItem {
   id: number;
@@ -228,15 +229,9 @@ function TimelineCard({ item }: { item: TimelineItem }) {
             <p className="timeline-company text-mocha-600 dark:text-mocha-400 font-medium">
               {item.company}
             </p>
-            <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {item.period}
-              </span>
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
-                {item.location}
-              </span>
+            <div className="flex items-center gap-4 mt-1">
+              <MetaItem icon={Calendar}>{item.period}</MetaItem>
+              <MetaItem icon={MapPin}>{item.location}</MetaItem>
             </div>
           </div>
           <Badge

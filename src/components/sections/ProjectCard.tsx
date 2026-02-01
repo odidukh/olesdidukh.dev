@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Star,
 } from 'lucide-react';
+import { MetaItem } from '@/components/ui/MetaItem';
 import Image from 'next/image';
 
 interface ProjectCardProps {
@@ -103,20 +104,11 @@ export const ProjectCard = React.memo(function ProjectCard({
                 </div>
 
                 {/* Metadata */}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {project.year}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {project.duration}
-                  </span>
+                <div className="flex flex-wrap items-center gap-4">
+                  <MetaItem icon={Calendar}>{project.year}</MetaItem>
+                  <MetaItem icon={Clock}>{project.duration}</MetaItem>
                   {project.team && (
-                    <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
-                      {project.team}
-                    </span>
+                    <MetaItem icon={Users}>{project.team}</MetaItem>
                   )}
                 </div>
 
@@ -292,14 +284,8 @@ export const ProjectCard = React.memo(function ProjectCard({
           <CardFooter className="pt-0">
             <div className="w-full flex items-center justify-between text-sm text-muted-foreground">
               <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {project.year}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  {project.duration}
-                </span>
+                <MetaItem icon={Calendar}>{project.year}</MetaItem>
+                <MetaItem icon={Clock}>{project.duration}</MetaItem>
               </div>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </div>

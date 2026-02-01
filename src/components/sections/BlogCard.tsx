@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import type { BlogPost } from '@/data/blog';
 import { Clock, ArrowRight, BookOpen } from 'lucide-react';
+import { MetaItem } from '@/components/ui/MetaItem';
 import Link from 'next/link';
 import Image from 'next/image';
 
