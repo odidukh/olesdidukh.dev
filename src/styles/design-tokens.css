@@ -285,6 +285,56 @@
   --transition-opacity: opacity var(--duration-base) var(--ease-in-out);
   --transition-transform: transform var(--duration-base) var(--ease-smooth);
   --transition-all: all var(--duration-base) var(--ease-in-out);
+
+  /* ==========================================
+     SEMANTIC UI TOKENS - LIGHT MODE
+     Bridges primitives to component implementations
+     ========================================== */
+
+  /* Core backgrounds and foregrounds */
+  --background: var(--gray-50);
+  --foreground: var(--gray-900);
+
+  /* Card surfaces */
+  --card: #ffffff;
+  --card-foreground: var(--gray-900);
+
+  /* Popover surfaces */
+  --popover: #ffffff;
+  --popover-foreground: var(--gray-900);
+
+  /* Primary - Mocha brand color */
+  --primary: var(--mocha-500);
+  --primary-foreground: #ffffff;
+
+  /* Secondary - Navy accent */
+  --secondary: var(--navy-100);
+  --secondary-foreground: var(--navy-900);
+
+  /* Muted - Subdued elements */
+  --muted: var(--gray-100);
+  --muted-foreground: var(--gray-500);
+
+  /* Accent - Highlighted elements */
+  --accent: var(--mocha-100);
+  --accent-foreground: var(--mocha-900);
+
+  /* Destructive - Error/danger states */
+  --destructive: var(--error-500);
+  --destructive-foreground: #ffffff;
+
+  /* Border, Input, and Ring */
+  --border: var(--gray-200);
+  --input: var(--gray-200);
+  --ring: var(--mocha-500);
+
+  /* Status semantic tokens */
+  --success: var(--success-500);
+  --success-foreground: #ffffff;
+  --warning: var(--warning-500);
+  --warning-foreground: #ffffff;
+  --info: var(--info-500);
+  --info-foreground: #ffffff;
 }
 
 /* ==========================================
@@ -292,6 +342,51 @@
    Manual theme switching
    ========================================== */
 .dark {
-  /* No color inversions here - all dark mode colors are handled
-     via Tailwind's dark: variant utilities in globals.css */
+  /* ==========================================
+     SEMANTIC UI TOKENS - DARK MODE
+     Overrides light mode tokens for dark theme
+     ========================================== */
+
+  /* Core backgrounds and foregrounds */
+  --background: var(--gray-900);
+  --foreground: var(--gray-50);
+
+  /* Card surfaces */
+  --card: var(--gray-800);
+  --card-foreground: var(--gray-50);
+
+  /* Popover surfaces */
+  --popover: var(--gray-800);
+  --popover-foreground: var(--gray-50);
+
+  /* Primary - Mocha brand (lighter for dark mode) */
+  --primary: var(--mocha-400);
+  --primary-foreground: var(--gray-900);
+
+  /* Secondary - Navy accent */
+  --secondary: var(--navy-800);
+  --secondary-foreground: var(--navy-100);
+
+  /* Muted - Subdued elements */
+  --muted: var(--gray-800);
+  --muted-foreground: var(--gray-400);
+
+  /* Accent - Highlighted elements */
+  --accent: var(--mocha-800);
+  --accent-foreground: var(--mocha-100);
+
+  /* Destructive - Error/danger states */
+  --destructive: var(--error-600);
+  --destructive-foreground: #ffffff;
+
+  /* Border, Input, and Ring */
+  --border: var(--gray-700);
+  --input: var(--gray-700);
+  --ring: var(--mocha-400);
+
+  /* Glow shadows - more vibrant in dark mode */
+  --shadow-glow:
+    0 0 25px rgba(191, 165, 138, 0.5), 0 0 50px rgba(191, 165, 138, 0.25);
+  --shadow-glow-strong:
+    0 0 40px rgba(191, 165, 138, 0.7), 0 0 80px rgba(191, 165, 138, 0.35);
 }
