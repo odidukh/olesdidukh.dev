@@ -6,6 +6,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { ContactForm } from './ContactForm';
 import { ContactInfo } from './ContactInfo';
@@ -20,8 +21,21 @@ import {
   Calendar,
   Clock,
   Phone,
+  type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
+
+/**
+ * Contact method configuration for the LinkCard components
+ */
+interface ContactMethod {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  value: string;
+  href: string;
+  gradient: IconBoxGradient;
+}
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -139,63 +153,21 @@ export function ContactSection() {
                 </CardContent>
               </Card>
 
-              {/* Preferred Contact Methods - Horizontal Cards */}
+              {/* Preferred Contact Methods - Using LinkCard atomic component */}
               <div className="space-y-3">
-                {preferredMethods.map((method, index) => {
-                  const Icon = method.icon;
-                  const isExternal = method.action.startsWith('http');
-
-                  return (
-                    <motion.a
-                      key={method.title}
-                      href={method.action}
-                      target={isExternal ? '_blank' : undefined}
-                      rel={isExternal ? 'noopener noreferrer' : undefined}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ delay: 0.2 + index * 0.1 }}
-                      whileHover={{ x: 4 }}
-                      className="group flex items-center gap-4 p-4 rounded-xl border border-border bg-card hover:bg-muted/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
-                    >
-                      {/* Icon */}
-                      <div
-                        className={`shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br ${method.color} p-2.5 text-white shadow-md group-hover:scale-105 group-hover:shadow-lg transition-all duration-300`}
-                      >
-                        <Icon className="w-full h-full" />
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-foreground">
-                            {method.title}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            · {method.description}
-                          </span>
-                        </div>
-                        <p className="text-lg font-medium text-primary">
-                          {method.value}
-                        </p>
-                      </div>
-
-                      {/* Arrow */}
-                      <svg
-                        className="shrink-0 w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </motion.a>
-                  );
-                })}
+                {preferredMethods.map((method, index) => (
+                  <LinkCard
+                    key={method.title}
+                    icon={method.icon}
+                    title={method.title}
+                    description={`${method.description}`}
+                    value={method.value}
+                    href={method.href}
+                    gradient={method.gradient}
+                    animate={isInView}
+                    animationDelay={0.2 + index * 0.1}
+                  />
+                ))}
               </div>
             </motion.div>
 
