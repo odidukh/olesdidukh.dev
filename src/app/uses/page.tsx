@@ -234,24 +234,6 @@ const usesCategories: UsesCategory[] = [
           'Primary design tool for UI work. Great for design handoffs and collaboration with designers.',
         link: 'https://figma.com',
       },
-      {
-        name: 'Excalidraw',
-        description:
-          'Whiteboard for quick diagrams, architecture sketches, and brainstorming.',
-        link: 'https://excalidraw.com',
-      },
-      {
-        name: 'ImageOptim',
-        description:
-          'Image compression for web assets. Reduces file sizes without visible quality loss.',
-        link: 'https://imageoptim.com',
-      },
-      {
-        name: 'Lucide Icons',
-        description:
-          'Beautiful, consistent icon set used throughout this website.',
-        link: 'https://lucide.dev',
-      },
     ],
   },
   {
