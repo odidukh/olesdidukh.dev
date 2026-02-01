@@ -82,30 +82,31 @@ export function ContactSection() {
     setPhoneDisplay(decodeString(ENCODED_PHONE_DISPLAY));
   }, []);
 
-  const preferredMethods = [
+  // Build contact methods with obfuscated values
+  const preferredMethods: ContactMethod[] = [
     {
       icon: Mail,
       title: 'Email',
       description: 'Best for project inquiries',
       value: email || 'Loading...',
-      action: email ? `mailto:${email}` : '#',
-      color: 'from-mocha-500 to-mocha-600',
+      href: email ? `mailto:${email}` : '#',
+      gradient: 'mocha',
     },
     {
       icon: Phone,
       title: 'Phone',
       description: 'For urgent matters',
       value: phoneDisplay || 'Loading...',
-      action: phone ? `tel:${phone}` : '#',
-      color: 'from-navy-500 to-navy-600',
+      href: phone ? `tel:${phone}` : '#',
+      gradient: 'navy',
     },
     {
       icon: MessageSquare,
       title: 'LinkedIn',
       description: 'Professional networking',
       value: '@oles-didukh',
-      action: 'https://linkedin.com/in/oles-didukh',
-      color: 'from-info-500 to-info-600',
+      href: 'https://linkedin.com/in/oles-didukh',
+      gradient: 'info',
     },
   ];
 

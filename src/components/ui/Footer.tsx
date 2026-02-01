@@ -1,13 +1,10 @@
 import Link from 'next/link';
 import { Container } from './Container';
-import { Button } from './Button';
 import { Badge } from './Badge';
 import { NewsletterForm } from './NewsletterForm';
 import { ResumeDownloadLink } from './ResumeDownloadButton';
-import {
-  ObfuscatedEmail,
-  ObfuscatedEmailLink,
-} from '@/components/ObfuscatedEmail';
+import { SocialIconButton } from './SocialIconButton';
+import { ObfuscatedEmail } from '@/components/ObfuscatedEmail';
 import { ObfuscatedPhone } from '@/components/ObfuscatedPhone';
 import {
   Github,
@@ -168,61 +165,26 @@ export function Footer({ className }: FooterProps) {
                 Connect
               </h4>
               <div className="flex space-x-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://github.com/odidukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="GitHub"
-                  >
-                    <Github className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://linkedin.com/in/oles-didukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://www.threads.com/@oles.o.didukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Threads"
-                  >
-                    <AtSign className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <ObfuscatedEmailLink ariaLabel="Email">
-                    <Mail className="h-4 w-4" />
-                  </ObfuscatedEmailLink>
-                </Button>
+                <SocialIconButton
+                  icon={Github}
+                  href="https://github.com/odidukh"
+                  aria-label="GitHub"
+                />
+                <SocialIconButton
+                  icon={Linkedin}
+                  href="https://linkedin.com/in/oles-didukh"
+                  aria-label="LinkedIn"
+                />
+                <SocialIconButton
+                  icon={AtSign}
+                  href="https://www.threads.com/@oles.o.didukh"
+                  aria-label="Threads"
+                />
+                <SocialIconButton
+                  icon={Mail}
+                  aria-label="Email"
+                  obfuscateEmail
+                />
               </div>
             </div>
           </div>

@@ -3,10 +3,9 @@
 import * as React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
-import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
+import { SocialIconButton } from '@/components/ui/SocialIconButton';
 import {
   /* ArrowRight, */ Github,
   Linkedin,
@@ -174,46 +173,27 @@ export function HeroSimple() {
               Connect with me:
             </span>
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
-                asChild
-              >
-                <a
-                  href="https://github.com/odidukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                >
-                  <Github className="h-5 w-5" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
-                asChild
-              >
-                <a
-                  href="https://linkedin.com/in/oles-didukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </a>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:text-mocha-600 dark:hover:text-mocha-400 transition-colors"
-                asChild
-              >
-                <ObfuscatedEmailLink ariaLabel="Email">
-                  <Mail className="h-5 w-5" />
-                </ObfuscatedEmailLink>
-              </Button>
+              <SocialIconButton
+                icon={Github}
+                href="https://github.com/odidukh"
+                aria-label="GitHub"
+                variant="subtle"
+                size="lg"
+              />
+              <SocialIconButton
+                icon={Linkedin}
+                href="https://linkedin.com/in/oles-didukh"
+                aria-label="LinkedIn"
+                variant="subtle"
+                size="lg"
+              />
+              <SocialIconButton
+                icon={Mail}
+                aria-label="Email"
+                variant="subtle"
+                size="lg"
+                obfuscateEmail
+              />
             </div>
           </motion.div>
 

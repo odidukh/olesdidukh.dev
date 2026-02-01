@@ -113,13 +113,13 @@ const usesCategories: UsesCategory[] = [
       {
         name: 'Gemini',
         description:
-          'Google\'s multimodal AI assistant for research, code review, and problem-solving.',
+          "Google's multimodal AI assistant for research, code review, and problem-solving.",
         link: 'https://gemini.google.com',
       },
       {
         name: 'NotebookLM',
         description:
-          'Google\'s AI-powered research assistant. Great for analyzing documentation and generating insights.',
+          "Google's AI-powered research assistant. Great for analyzing documentation and generating insights.",
         link: 'https://notebooklm.google.com',
       },
       {
@@ -207,7 +207,7 @@ const usesCategories: UsesCategory[] = [
       {
         name: 'Peacock',
         description:
-          'Color-codes VS Code workspaces. Instantly identify which project you\'re working on.',
+          "Color-codes VS Code workspaces. Instantly identify which project you're working on.",
         link: 'https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock',
       },
       {
