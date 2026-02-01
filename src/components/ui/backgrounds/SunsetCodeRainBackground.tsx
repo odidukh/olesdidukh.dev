@@ -77,6 +77,12 @@ const codeKeywords = [
   'reduce',
 ];
 
+// Seeded random number generator for consistent SSR/client values
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
 export function SunsetCodeRainBackground({
   gradientSpeed = 1,
   rainSpeed = 1,
@@ -101,29 +107,35 @@ export function SunsetCodeRainBackground({
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
-  const getRandomKeyword = () => {
-    return codeKeywords[Math.floor(Math.random() * codeKeywords.length)] || '';
-  };
-
+  // Use seeded random for consistent SSR/client rendering
   const rainColumns = React.useMemo(() => {
-    return Array.from({ length: columns }, (_, i) => ({
-      id: i,
-      x: (i / columns) * 100 + (Math.random() - 0.5) * 5,
-      duration: (12 + Math.random() * 8) / rainSpeed,
-      delay: Math.random() * 10,
-      chars: Array.from({ length: 12 }, () => getRandomKeyword()),
-    }));
+    return Array.from({ length: columns }, (_, i) => {
+      const seed = i * 1000;
+      return {
+        id: i,
+        x: (i / columns) * 100 + (seededRandom(seed + 1) - 0.5) * 5,
+        duration: (12 + seededRandom(seed + 2) * 8) / rainSpeed,
+        delay: seededRandom(seed + 3) * 10,
+        chars: Array.from({ length: 12 }, (_, j) => {
+          const charIndex = Math.floor(seededRandom(seed + 100 + j) * codeKeywords.length);
+          return codeKeywords[charIndex] || '';
+        }),
+      };
+    });
   }, [columns, rainSpeed]);
 
   const blobs = React.useMemo(() => {
-    return sunsetColors.map((color, i) => ({
-      id: i,
-      color,
-      size: 350 + Math.random() * 200,
-      initialX: 20 + Math.random() * 60,
-      initialY: 20 + Math.random() * 60,
-      duration: (18 + Math.random() * 10) / gradientSpeed,
-    }));
+    return sunsetColors.map((color, i) => {
+      const seed = i * 500 + 7777;
+      return {
+        id: i,
+        color,
+        size: 350 + seededRandom(seed + 1) * 200,
+        initialX: 20 + seededRandom(seed + 2) * 60,
+        initialY: 20 + seededRandom(seed + 3) * 60,
+        duration: (18 + seededRandom(seed + 4) * 10) / gradientSpeed,
+      };
+    });
   }, [gradientSpeed]);
 
   return (
