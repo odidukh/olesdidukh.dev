@@ -184,6 +184,7 @@ export function NewsletterSignup() {
                         className={`pl-10 ${error ? 'border-destructive' : ''}`}
                         disabled={status === 'loading'}
                         size="lg"
+                        aria-label="Email address"
                       />
                     </div>
                     {error && (

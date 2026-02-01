@@ -173,6 +173,7 @@ export function BlogSection() {
                     onChange={e => setSearchQuery(e.target.value)}
                     className="pl-10"
                     size="lg"
+                    aria-label="Search articles"
                   />
                 </div>
               </div>

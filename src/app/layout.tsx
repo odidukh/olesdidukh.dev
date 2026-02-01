@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     title: 'Oles Didukh',
   },
   alternates: {
+    canonical: 'https://olesdidukh.dev',
     types: {
       'application/rss+xml': [
         { url: '/feed.xml', title: 'Oles Didukh - Blog RSS Feed' },
