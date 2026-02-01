@@ -52,36 +52,43 @@ const usesCategories: UsesCategory[] = [
         name: 'Macbook Air 15" 2023',
         description:
           'A lightweight and powerful companion for on-the-go development and daily tasks.',
+        link: 'https://www.apple.com/macbook-air/',
       },
       {
         name: 'Mac Mini Pro 2025',
         description:
           'The central powerhouse of my setup, handling heavy workloads and complex builds with ease.',
+        link: 'https://www.apple.com/mac-mini/',
       },
       {
         name: 'Monitor iiyama 32" 4K',
         description:
           'Providing massive screen real estate and crystal-clear 4K resolution for multitasking.',
+        link: 'https://iiyama.com/gl_en/products/prolite-xb3288uhsu-b5/',
       },
       {
         name: 'Logitech Ergo K860',
         description:
           'An ergonomic split keyboard that ensures comfort during long coding sessions.',
+        link: 'https://www.logitech.com/products/keyboards/k860-split-ergonomic.html',
       },
       {
         name: 'Magic Trackpad 3',
         description:
           'For precise control and smooth macOS gestures that enhance my workflow.',
+        link: 'https://www.apple.com/shop/product/MK2D3AM/A/magic-trackpad-white-multi-touch-surface',
       },
       {
         name: 'AirPods Pro 2',
         description:
           'Superior noise cancellation and seamless integration for focused work and calls.',
+        link: 'https://www.apple.com/airpods-pro/',
       },
       {
         name: 'Airpulse A80',
         description:
           'High-fidelity active speakers that deliver exceptional audio quality for music and media.',
+        link: 'https://www.airpulse.com/product/a80/',
       },
     ],
   },
