@@ -176,7 +176,7 @@ The developers who thrive will be those who:
 
 Vibe coding is real, it's here, and it's changing our industry. Embrace it thoughtfully, stay vigilant about quality, and remember: the AI is your pair programmer, not your replacement.
     `,
-    coverImage: '/images/blog/react-perf.png',
+    coverImage: 'https://images.unsplash.com/photo-1677442135136-760c813028c0?w=1200&q=80',
     author: DEFAULT_AUTHOR,
     publishedAt: '2025-01-28',
     readingTime: 10,
