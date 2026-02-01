@@ -76,7 +76,7 @@ const usesCategories: UsesCategory[] = [
         name: 'Magic Trackpad 3',
         description:
           'For precise control and smooth macOS gestures that enhance my workflow.',
-        link: 'https://www.apple.com/shop/product/MK2D3AM/A/magic-trackpad-white-multi-touch-surface',
+        link: 'https://www.apple.com/shop/product/mxka3am/a/magic-trackpad-usb%E2%80%91c-black-multi-touch-surface',
       },
       {
         name: 'AirPods Pro 2',
