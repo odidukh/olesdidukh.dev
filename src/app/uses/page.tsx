@@ -144,9 +144,9 @@ const usesCategories: UsesCategory[] = [
       filename: 'vscode-extensions.sh',
       instructions: [
         '1. Download the script and open Terminal',
-        '2. Navigate to the download folder: cd ~/Downloads',
-        '3. Make it executable: chmod +x vscode-extensions.sh',
-        '4. Run the script: ./vscode-extensions.sh',
+        '2. Navigate to the download folder: `cd ~/Downloads`',
+        '3. Make it executable: `chmod +x vscode-extensions.sh`',
+        '4. Run the script: `./vscode-extensions.sh`',
         '5. Restart VS Code to activate all extensions',
       ],
     },
@@ -462,10 +462,22 @@ export default function UsesPage() {
                       <p className="text-sm font-medium mb-2">
                         Installation Instructions:
                       </p>
-                      <ol className="text-sm text-muted-foreground space-y-1">
+                      <ol className="text-sm text-muted-foreground space-y-1.5">
                         {category.download.instructions.map((step, index) => (
-                          <li key={index} className="font-mono text-xs">
-                            {step}
+                          <li key={index} className="text-xs">
+                            {step.split(/(`[^`]+`)/).map((part, partIndex) => {
+                              if (part.startsWith('`') && part.endsWith('`')) {
+                                return (
+                                  <code
+                                    key={partIndex}
+                                    className="px-1.5 py-0.5 rounded bg-navy-100 dark:bg-navy-900 text-navy-700 dark:text-navy-300 font-mono text-[11px]"
+                                  >
+                                    {part.slice(1, -1)}
+                                  </code>
+                                );
+                              }
+                              return <span key={partIndex}>{part}</span>;
+                            })}
                           </li>
                         ))}
                       </ol>
