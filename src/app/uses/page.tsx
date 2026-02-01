@@ -15,6 +15,7 @@ import {
   Wrench,
   Cloud,
   Download,
+  ExternalLink,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -461,38 +462,49 @@ export default function UsesPage() {
                   )}
 
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {category.items.map((item, itemIndex) => (
-                      <motion.div
-                        key={item.name}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.3,
-                          delay: categoryIndex * 0.1 + itemIndex * 0.05,
-                        }}
-                        className="group p-4 rounded-xl border bg-card hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <h3 className="font-semibold group-hover:text-mocha-600 dark:group-hover:text-mocha-400 transition-colors">
-                            {item.name}
-                          </h3>
-                          {item.link && (
-                            <a
-                              href={item.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label={`Visit ${item.name} website`}
-                            >
-                              <Globe className="h-4 w-4" />
-                            </a>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {item.description}
-                        </p>
-                      </motion.div>
-                    ))}
+                    {category.items.map((item, itemIndex) => {
+                      const CardWrapper = item.link ? 'a' : 'div';
+                      const cardProps = item.link
+                        ? {
+                            href: item.link,
+                            target: '_blank' as const,
+                            rel: 'noopener noreferrer',
+                          }
+                        : {};
+
+                      return (
+                        <motion.div
+                          key={item.name}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: categoryIndex * 0.1 + itemIndex * 0.05,
+                          }}
+                        >
+                          <CardWrapper
+                            {...cardProps}
+                            className={`group block p-4 rounded-xl border bg-card transition-all duration-200 h-full ${
+                              item.link
+                                ? 'hover:bg-muted/50 hover:border-mocha-300 dark:hover:border-mocha-700 hover:shadow-md cursor-pointer'
+                                : ''
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <h3 className="font-semibold group-hover:text-mocha-600 dark:group-hover:text-mocha-400 transition-colors">
+                                {item.name}
+                              </h3>
+                              {item.link && (
+                                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-mocha-500 transition-colors flex-shrink-0" />
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {item.description}
+                            </p>
+                          </CardWrapper>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </motion.section>
               );
