@@ -11,8 +11,6 @@ import { sanitizeHtml } from '@/lib/sanitize';
 import {
   Calendar,
   Clock,
-  Eye,
-  Heart,
   Share2,
   Bookmark,
   ArrowLeft,
@@ -43,7 +41,6 @@ export function BlogPostContent({
   relatedPosts,
   mdxContent,
 }: BlogPostContentProps) {
-  const [liked, setLiked] = React.useState(false);
   const [bookmarked, setBookmarked] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
   const [showShareMenu, setShowShareMenu] = React.useState(false);
@@ -184,14 +181,6 @@ export function BlogPostContent({
                   <Clock className="h-4 w-4" />
                   {post.readingTime} min read
                 </span>
-                {post.views && (
-                  <span className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    {post.views > 1000
-                      ? `${(post.views / 1000).toFixed(1)}k views`
-                      : `${post.views} views`}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -241,21 +230,6 @@ export function BlogPostContent({
               className="lg:col-span-2"
             >
               <div className="sticky top-24 space-y-4">
-                {/* Like */}
-                <button
-                  onClick={() => setLiked(!liked)}
-                  className={`flex items-center gap-2 w-full p-3 rounded-lg border transition-all ${
-                    liked
-                      ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-600'
-                      : 'hover:bg-muted'
-                  }`}
-                >
-                  <Heart className={`h-5 w-5 ${liked ? 'fill-current' : ''}`} />
-                  <span className="text-sm font-medium">
-                    {post.likes ? post.likes + (liked ? 1 : 0) : 'Like'}
-                  </span>
-                </button>
-
                 {/* Bookmark */}
                 <button
                   onClick={() => setBookmarked(!bookmarked)}

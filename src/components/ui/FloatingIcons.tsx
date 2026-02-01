@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { motion } from 'framer-motion';
 import {
   Code2,
@@ -17,6 +16,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
+import { createSeededRandom } from '@/lib/random';
 
 interface FloatingIconData {
   id: number;
@@ -28,34 +28,38 @@ interface FloatingIconData {
   scale: number;
 }
 
-export function FloatingIcons() {
-  const icons = [
-    Code2,
-    Database,
-    Globe,
-    Server,
-    Smartphone,
-    Cloud,
-    GitBranch,
-    Terminal,
-    Cpu,
-    Layers,
-    Package,
-    Zap,
-  ];
+const icons = [
+  Code2,
+  Database,
+  Globe,
+  Server,
+  Smartphone,
+  Cloud,
+  GitBranch,
+  Terminal,
+  Cpu,
+  Layers,
+  Package,
+  Zap,
+];
 
-  const [floatingIcons] = React.useState<FloatingIconData[]>(() => {
-    const iconCount = 12;
-    return Array.from({ length: iconCount }, (_, i) => ({
-      id: i,
-      Icon: icons[i % icons.length]!,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      duration: 15 + Math.random() * 15,
-      delay: Math.random() * 10,
-      scale: 0.6 + Math.random() * 0.4,
-    }));
-  });
+// Pre-compute floating icon data for deterministic SSR rendering
+const floatingIconsData: FloatingIconData[] = (() => {
+  const random = createSeededRandom(77);
+  const iconCount = 12;
+  return Array.from({ length: iconCount }, (_, i) => ({
+    id: i,
+    Icon: icons[i % icons.length]!,
+    x: random() * 100,
+    y: random() * 100,
+    duration: 15 + random() * 15,
+    delay: random() * 10,
+    scale: 0.6 + random() * 0.4,
+  }));
+})();
+
+export function FloatingIcons() {
+  const floatingIcons = floatingIconsData;
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">

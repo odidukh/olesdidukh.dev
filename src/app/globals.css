@@ -88,6 +88,48 @@
   --color-info-700: var(--info-700);
   --color-info-800: var(--info-800);
   --color-info-900: rgba(37, 99, 235, 0.2);
+
+  /* Accent Green colors for gradients */
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-light: var(--accent-green-light);
+  --color-accent-green-dark: var(--accent-green-dark);
+
+  /* ==========================================
+     SEMANTIC UI COLORS
+     Component-level color tokens for Tailwind
+     ========================================== */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  /* ==========================================
+     SHADOW TOKENS
+     Glow effects for premium UI elements
+     ========================================== */
+  --shadow-glow: var(--shadow-glow);
+  --shadow-glow-strong: var(--shadow-glow-strong);
 }
 
 /* ==========================================
@@ -602,6 +644,29 @@
   }
 
   /* ==========================================
+     ACCENT GREEN UTILITIES
+     For gradient text and backgrounds
+     ========================================== */
+  .text-accent-green {
+    color: var(--accent-green);
+  }
+  .bg-accent-green {
+    background-color: var(--accent-green);
+  }
+  .border-accent-green {
+    border-color: var(--accent-green);
+  }
+  .to-accent-green {
+    --tw-gradient-to: var(--accent-green) var(--tw-gradient-to-position);
+  }
+  .from-accent-green {
+    --tw-gradient-from: var(--accent-green) var(--tw-gradient-from-position);
+  }
+  .via-accent-green {
+    --tw-gradient-via: var(--accent-green) var(--tw-gradient-via-position);
+  }
+
+  /* ==========================================
      DARK MODE VARIANTS
      Manual dark: variant generation for custom utilities
      ========================================== */
@@ -714,141 +779,25 @@
 }
 
 /* ==========================================
-   DARK MODE VARIANTS
-   Override gray colors for dark mode with !important
+   CONTENT PROTECTION
+   Prevent selection on sensitive content
    ========================================== */
-.dark .dark\:bg-gray-50 {
-  background-color: #0f172a !important;
-}
-.dark .dark\:bg-gray-100 {
-  background-color: #1e293b !important;
-}
-.dark .dark\:bg-gray-800 {
-  background-color: #1e293b !important;
-}
-.dark .dark\:bg-gray-900 {
-  background-color: #0f172a !important;
+
+/* Protect sensitive content from selection */
+[data-protected] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-.dark .dark\:text-gray-50 {
-  color: #f8fafc !important;
-}
-.dark .dark\:text-gray-100 {
-  color: #f1f5f9 !important;
-}
-.dark .dark\:text-gray-200 {
-  color: #e2e8f0 !important;
-}
-.dark .dark\:text-gray-300 {
-  color: #cbd5e1 !important;
-}
-.dark .dark\:text-gray-400 {
-  color: #94a3b8 !important;
-}
-.dark .dark\:text-gray-500 {
-  color: #64748b !important;
-}
-.dark .dark\:text-gray-600 {
-  color: #475569 !important;
-}
-.dark .dark\:text-gray-700 {
-  color: #334155 !important;
-}
-.dark .dark\:text-gray-800 {
-  color: #1e293b !important;
-}
-.dark .dark\:text-gray-900 {
-  color: #0f172a !important;
-}
-
-.dark .dark\:text-white {
-  color: #ffffff !important;
-}
-
-.dark .dark\:border-gray-200 {
-  border-color: #cbd5e1 !important;
-}
-.dark .dark\:border-gray-700 {
-  border-color: #334155 !important;
-}
-.dark .dark\:border-gray-800 {
-  border-color: #1e293b !important;
-}
-
-.dark .dark\:bg-success-900 {
-  background-color: rgba(5, 150, 105, 0.2) !important;
-}
-.dark .dark\:border-success-800 {
-  border-color: #065f46 !important;
-}
-.dark .dark\:text-success-400 {
-  color: #34d399 !important;
-}
-.dark .dark\:text-success-500 {
-  color: #10b981 !important;
-}
-.dark .dark\:text-success-600 {
-  color: #059669 !important;
-}
-.dark .dark\:text-success-700 {
-  color: #047857 !important;
-}
-
-.dark .dark\:bg-warning-900 {
-  background-color: rgba(217, 119, 6, 0.2) !important;
-}
-.dark .dark\:border-warning-800 {
-  border-color: #92400e !important;
-}
-.dark .dark\:text-warning-400 {
-  color: #fbbf24 !important;
-}
-.dark .dark\:text-warning-500 {
-  color: #f59e0b !important;
-}
-.dark .dark\:text-warning-600 {
-  color: #d97706 !important;
-}
-.dark .dark\:text-warning-700 {
-  color: #b45309 !important;
-}
-
-.dark .dark\:bg-error-900 {
-  background-color: rgba(220, 38, 38, 0.2) !important;
-}
-.dark .dark\:border-error-800 {
-  border-color: #991b1b !important;
-}
-.dark .dark\:text-error-400 {
-  color: #f87171 !important;
-}
-.dark .dark\:text-error-500 {
-  color: #ef4444 !important;
-}
-.dark .dark\:text-error-600 {
-  color: #dc2626 !important;
-}
-.dark .dark\:text-error-700 {
-  color: #b91c1c !important;
-}
-
-.dark .dark\:bg-info-900 {
-  background-color: rgba(37, 99, 235, 0.2) !important;
-}
-.dark .dark\:border-info-800 {
-  border-color: #1e40af !important;
-}
-.dark .dark\:text-info-400 {
-  color: #60a5fa !important;
-}
-.dark .dark\:text-info-500 {
-  color: #3b82f6 !important;
-}
-.dark .dark\:text-info-600 {
-  color: #2563eb !important;
-}
-.dark .dark\:text-info-700 {
-  color: #1d4ed8 !important;
+/* Allow selection on interactive elements within protected areas */
+[data-protected] a,
+[data-protected] button,
+[data-protected] input,
+[data-protected] textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
 }
 
 /* ==========================================
@@ -986,18 +935,19 @@ code[data-line-numbers] > [data-line]::before {
   color: var(--gray-500);
 }
 
-/* Code block background - consistent dark theme for better readability */
+/* Code block background - uses design tokens */
 [data-rehype-pretty-code-figure] pre {
-  background-color: #1e293b !important;
+  background-color: var(--code-block-bg);
 }
 
-/* Inline code - dark background for both themes */
+/* Inline code - theme-aware styling */
 :not(pre) > code {
-  background-color: #334155;
+  background-color: var(--code-inline-bg);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.9375em;
-  color: #e2e8f0;
+  color: var(--code-inline-text);
+  border: 1px solid var(--code-border);
 }
 
 /* ==========================================
@@ -1029,133 +979,106 @@ html.theme-transition *::after {
 
 /* ==========================================
    TIMELINE COMPONENT - ADAPTIVE THEME DESIGN
-   Light: Gradient Accent with round icons
-   Dark: Neon Glow effect
+   Uses design tokens for brand consistency
    ========================================== */
 
-/* Timeline Line - Light Theme (Gradient) */
+/* Timeline Line */
 .timeline-line {
-  background: linear-gradient(to bottom, #ec4899, #8b5cf6, #3b82f6, #10b981);
+  background: var(--timeline-line-gradient);
   width: 4px;
   border-radius: 2px;
 }
 
-/* Timeline Line - Dark Theme (Neon Glow) */
 .dark .timeline-line {
-  background: #0ff;
-  width: 2px;
-  box-shadow:
-    0 0 10px #0ff,
-    0 0 20px #0ff,
-    0 0 40px #0ff;
+  width: 3px;
+  box-shadow: var(--timeline-icon-shadow);
 }
 
-/* Timeline Icon Container - Light Theme (Gradient Border) */
+/* Timeline Icon Container */
 .timeline-icon {
   position: relative;
   border: 3px solid transparent;
   background:
-    linear-gradient(white, white) padding-box,
-    linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6) border-box;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    linear-gradient(var(--timeline-icon-bg), var(--timeline-icon-bg))
+      padding-box,
+    var(--timeline-icon-gradient) border-box;
+  box-shadow: var(--timeline-icon-shadow);
   transition: all 0.3s ease;
 }
 
 .timeline-icon:hover {
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: var(--timeline-card-shadow);
   transform: scale(1.05);
 }
 
-/* Timeline Icon - Light Theme */
 .timeline-icon svg {
-  color: #8b5cf6;
+  color: var(--timeline-icon-color);
 }
 
-/* Timeline Icon Container - Dark Theme (Neon Glow) */
 .dark .timeline-icon {
-  border: 3px solid #0ff;
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow:
-    0 0 15px #0ff,
-    0 0 30px rgba(0, 255, 255, 0.5),
-    inset 0 0 15px rgba(0, 255, 255, 0.2);
+  border: 2px solid var(--timeline-icon-border);
+  background: var(--timeline-icon-bg);
 }
 
 .dark .timeline-icon:hover {
-  box-shadow:
-    0 0 20px #0ff,
-    0 0 40px rgba(0, 255, 255, 0.6),
-    inset 0 0 20px rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(164, 120, 100, 0.5);
 }
 
-/* Timeline Icon - Dark Theme */
 .dark .timeline-icon svg {
-  color: #0ff;
-  filter: drop-shadow(0 0 6px #0ff);
+  filter: drop-shadow(0 0 4px rgba(164, 120, 100, 0.4));
 }
 
-/* Timeline Card - Light Theme */
+/* Timeline Card */
 .timeline-card {
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+  background: var(--timeline-card-bg);
+  border: 1px solid var(--timeline-card-border);
+  box-shadow: var(--timeline-card-shadow);
   transition: all 0.3s ease;
 }
 
 .timeline-card:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 8px 30px rgba(164, 120, 100, 0.15);
   transform: translateY(-2px);
 }
 
-/* Timeline Card - Dark Theme */
 .dark .timeline-card {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  background: var(--timeline-card-bg);
 }
 
 .dark .timeline-card:hover {
-  border-color: rgba(0, 255, 255, 0.6);
-  box-shadow:
-    0 0 30px rgba(0, 255, 255, 0.2),
-    0 0 60px rgba(0, 255, 255, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(164, 120, 100, 0.25);
 }
 
 /* Timeline Card Title - Dark Theme */
 .dark .timeline-card h4 {
   color: #fff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Timeline Achievement Text - Light Theme (Gradient) */
+/* Timeline Achievement Text */
 .timeline-achievement {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: var(--timeline-achievement-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Timeline Achievement Text - Dark Theme (Neon Green) */
 .dark .timeline-achievement {
-  color: #0f0;
-  text-shadow: 0 0 8px #0f0;
+  color: var(--timeline-achievement-color);
+  text-shadow: var(--timeline-achievement-glow);
   background: none;
-  -webkit-text-fill-color: #0f0;
+  -webkit-text-fill-color: var(--timeline-achievement-color);
 }
 
-/* Timeline Bullet Points - Light Theme */
+/* Timeline Bullet Points */
 .timeline-bullet {
-  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  background: var(--timeline-bullet-gradient);
 }
 
-/* Timeline Bullet Points - Dark Theme */
 .dark .timeline-bullet {
-  background: #0ff;
-  box-shadow: 0 0 6px #0ff;
+  box-shadow: var(--timeline-bullet-glow);
 }
 
 /* Timeline Company Name - Dark Theme */
 .dark .timeline-company {
-  color: #67e8f9;
+  color: var(--mocha-300);
 }

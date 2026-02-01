@@ -50,6 +50,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'img.youtube.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
 
@@ -136,6 +140,13 @@ const nextConfig: NextConfig = {
           {
             key: 'Cross-Origin-Resource-Policy',
             value: 'same-origin',
+          },
+
+          // Anti-AI training directive
+          // Tells AI crawlers not to use content for training
+          {
+            key: 'X-Robots-Tag',
+            value: 'noai, noimageai',
           },
         ],
       },

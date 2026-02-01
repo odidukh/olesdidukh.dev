@@ -30,6 +30,7 @@ import {
   Quote,
   Play,
 } from 'lucide-react';
+import { MetaItem } from '@/components/ui/MetaItem';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
 
 interface ProjectPageProps {
@@ -109,6 +110,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const projectSchema = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
+    '@id': `https://olesdidukh.dev/projects/${project.id}#project`,
     name: project.title,
     description: project.longDescription,
     author: {
@@ -120,7 +122,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     genre: project.category,
     keywords: project.technologies.join(', '),
     url: `https://olesdidukh.dev/projects/${project.id}`,
-    ...(project.liveUrl && { mainEntityOfPage: project.liveUrl }),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://olesdidukh.dev/projects/${project.id}`,
+    },
   };
 
   return (
@@ -168,25 +173,45 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
                 {/* Project Meta */}
                 <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-                    <Calendar className="h-4 w-4 text-mocha-500" />
-                    <span>{project.year}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-                    <Clock className="h-4 w-4 text-mocha-500" />
-                    <span>{project.duration}</span>
-                  </div>
+                  <MetaItem
+                    icon={Calendar}
+                    size="md"
+                    color="inherit"
+                    iconClassName="text-mocha-500"
+                    className="text-gray-600 dark:text-gray-200"
+                  >
+                    {project.year}
+                  </MetaItem>
+                  <MetaItem
+                    icon={Clock}
+                    size="md"
+                    color="inherit"
+                    iconClassName="text-mocha-500"
+                    className="text-gray-600 dark:text-gray-200"
+                  >
+                    {project.duration}
+                  </MetaItem>
                   {project.team && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-                      <Users className="h-4 w-4 text-mocha-500" />
-                      <span>{project.team}</span>
-                    </div>
+                    <MetaItem
+                      icon={Users}
+                      size="md"
+                      color="inherit"
+                      iconClassName="text-mocha-500"
+                      className="text-gray-600 dark:text-gray-200"
+                    >
+                      {project.team}
+                    </MetaItem>
                   )}
                   {project.client && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-200">
-                      <Building className="h-4 w-4 text-mocha-500" />
-                      <span>{project.client}</span>
-                    </div>
+                    <MetaItem
+                      icon={Building}
+                      size="md"
+                      color="inherit"
+                      iconClassName="text-mocha-500"
+                      className="text-gray-600 dark:text-gray-200"
+                    >
+                      {project.client}
+                    </MetaItem>
                   )}
                 </div>
 

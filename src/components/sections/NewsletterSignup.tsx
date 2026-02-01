@@ -105,7 +105,7 @@ export function NewsletterSignup() {
               <div>
                 <h3 className="text-2xl font-bold">Stay Updated</h3>
                 <p className="text-sm text-muted-foreground">
-                  Join {Math.floor(Math.random() * 500 + 500)}+ developers
+                  Join 500+ developers
                 </p>
               </div>
             </div>
@@ -184,6 +184,7 @@ export function NewsletterSignup() {
                         className={`pl-10 ${error ? 'border-destructive' : ''}`}
                         disabled={status === 'loading'}
                         size="lg"
+                        aria-label="Email address"
                       />
                     </div>
                     {error && (

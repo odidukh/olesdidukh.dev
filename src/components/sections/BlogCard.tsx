@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import type { BlogPost } from '@/data/blog';
-import { Clock, Eye, Heart, ArrowRight, BookOpen } from 'lucide-react';
+import { Clock, ArrowRight, BookOpen } from 'lucide-react';
+import { MetaItem } from '@/components/ui/MetaItem';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -20,7 +21,6 @@ export const BlogCard = React.memo(function BlogCard({
 }: BlogCardProps) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [imageError, setImageError] = React.useState(false);
-  const [liked, setLiked] = React.useState(false);
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     month: 'short',
@@ -146,39 +146,9 @@ export const BlogCard = React.memo(function BlogCard({
                 </div>
               </div>
 
-              {/* Stats */}
+              {/* Reading time and arrow */}
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center gap-3">
-                  {post.views && (
-                    <span className="flex items-center gap-1">
-                      <Eye className="h-3 w-3" />
-                      {post.views > 1000
-                        ? `${(post.views / 1000).toFixed(1)}k`
-                        : post.views}
-                    </span>
-                  )}
-                  {post.likes && (
-                    <button
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setLiked(!liked);
-                      }}
-                      className={`flex items-center gap-1 hover:text-red-500 transition-colors ${
-                        liked ? 'text-red-500' : ''
-                      }`}
-                    >
-                      <Heart
-                        className={`h-3 w-3 ${liked ? 'fill-current' : ''}`}
-                      />
-                      {post.likes + (liked ? 1 : 0)}
-                    </button>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {post.readingTime} min
-                  </span>
-                </div>
+                <MetaItem icon={Clock}>{post.readingTime} min read</MetaItem>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
             </div>

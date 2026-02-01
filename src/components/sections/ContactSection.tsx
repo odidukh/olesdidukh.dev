@@ -6,7 +6,16 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
+import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
+import {
+  decodeEmail,
+  decodeString,
+  ENCODED_EMAIL,
+  ENCODED_PHONE,
+  ENCODED_PHONE_DISPLAY,
+} from '@/lib/obfuscate';
 import { ContactForm } from './ContactForm';
 import { ContactInfo } from './ContactInfo';
 import { FAQ } from './FAQ';
@@ -20,8 +29,21 @@ import {
   Calendar,
   Clock,
   Phone,
+  type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
+
+/**
+ * Contact method configuration for the LinkCard components
+ */
+interface ContactMethod {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  value: string;
+  href: string;
+  gradient: IconBoxGradient;
+}
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -49,31 +71,42 @@ const itemVariants = {
 export function ContactSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [email, setEmail] = React.useState<string | null>(null);
+  const [phone, setPhone] = React.useState<string | null>(null);
+  const [phoneDisplay, setPhoneDisplay] = React.useState<string | null>(null);
 
-  const preferredMethods = [
+  React.useEffect(() => {
+    // Decode contact info only on client side
+    setEmail(decodeEmail(ENCODED_EMAIL));
+    setPhone(decodeString(ENCODED_PHONE));
+    setPhoneDisplay(decodeString(ENCODED_PHONE_DISPLAY));
+  }, []);
+
+  // Build contact methods with obfuscated values
+  const preferredMethods: ContactMethod[] = [
     {
       icon: Mail,
       title: 'Email',
       description: 'Best for project inquiries',
-      value: 'oles.didukh@gmail.com',
-      action: 'mailto:oles.didukh@gmail.com',
-      color: 'from-mocha-500 to-mocha-600',
+      value: email || 'Loading...',
+      href: email ? `mailto:${email}` : '#',
+      gradient: 'mocha',
     },
     {
       icon: Phone,
       title: 'Phone',
       description: 'For urgent matters',
-      value: '+38 067 88 99 570',
-      action: 'tel:+380678899570',
-      color: 'from-navy-500 to-navy-600',
+      value: phoneDisplay || 'Loading...',
+      href: phone ? `tel:${phone}` : '#',
+      gradient: 'navy',
     },
     {
       icon: MessageSquare,
       title: 'LinkedIn',
       description: 'Professional networking',
-      value: 'linkedin.com/in/oles-didukh',
-      action: 'https://linkedin.com/in/oles-didukh',
-      color: 'from-info-500 to-info-600',
+      value: '@oles-didukh',
+      href: 'https://linkedin.com/in/oles-didukh',
+      gradient: 'info',
     },
   ];
 
@@ -139,50 +172,21 @@ export function ContactSection() {
                 </CardContent>
               </Card>
 
-              {/* Preferred Contact Methods */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {preferredMethods.map((method, index) => {
-                  const Icon = method.icon;
-                  const isExternal = method.action.startsWith('http');
-
-                  return (
-                    <motion.div
-                      key={method.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ delay: 0.2 + index * 0.1 }}
-                      className="h-full"
-                    >
-                      <Card className="h-full relative hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden group">
-                        <a
-                          href={method.action}
-                          target={isExternal ? '_blank' : undefined}
-                          rel={isExternal ? 'noopener noreferrer' : undefined}
-                          className="absolute inset-0 z-10"
-                        >
-                          <span className="sr-only">{method.title}</span>
-                        </a>
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-br ${method.color} opacity-0 group-hover:opacity-5 transition-opacity`}
-                        />
-                        <CardContent className="pt-6 relative pointer-events-none">
-                          <div
-                            className={`w-12 h-12 rounded-lg bg-gradient-to-br ${method.color} p-2.5 text-white mb-3`}
-                          >
-                            <Icon className="w-full h-full" />
-                          </div>
-                          <h4 className="font-semibold">{method.title}</h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {method.description}
-                          </p>
-                          <p className="text-sm font-medium mt-2 text-primary group-hover:underline">
-                            {method.value}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
+              {/* Preferred Contact Methods - Using LinkCard atomic component */}
+              <div className="space-y-3">
+                {preferredMethods.map((method, index) => (
+                  <LinkCard
+                    key={method.title}
+                    icon={method.icon}
+                    title={method.title}
+                    description={`${method.description}`}
+                    value={method.value}
+                    href={method.href}
+                    gradient={method.gradient}
+                    animate={isInView}
+                    animationDelay={0.2 + index * 0.1}
+                  />
+                ))}
               </div>
             </motion.div>
 
@@ -287,10 +291,10 @@ export function ContactSection() {
             </p>
             <div className="flex justify-center gap-4">
               <Button size="lg" asChild>
-                <a href="mailto:oles.didukh@gmail.com">
+                <ObfuscatedEmailLink ariaLabel="Start the Conversation">
                   <Mail className="mr-2 h-4 w-4" />
                   Start the Conversation
-                </a>
+                </ObfuscatedEmailLink>
               </Button>
             </div>
           </motion.div>

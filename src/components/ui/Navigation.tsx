@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/stores';
 import { Button } from './Button';
 import { Container } from './Container';
+import { SocialIconButton } from './SocialIconButton';
+import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
 import { Menu, X, Github, Linkedin, Mail, Moon, Sun } from 'lucide-react';
 
 interface NavItem {
@@ -94,31 +96,17 @@ export function Navigation({ className }: NavigationProps) {
           <div className="flex items-center space-x-4">
             {/* Social Links */}
             <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <a
-                  href="https://github.com/odidukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                >
-                  <Github className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <a
-                  href="https://linkedin.com/in/oles-didukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
-                  <Mail className="h-4 w-4" />
-                </a>
-              </Button>
+              <SocialIconButton
+                icon={Github}
+                href="https://github.com/odidukh"
+                aria-label="GitHub"
+              />
+              <SocialIconButton
+                icon={Linkedin}
+                href="https://linkedin.com/in/oles-didukh"
+                aria-label="LinkedIn"
+              />
+              <SocialIconButton icon={Mail} aria-label="Email" obfuscateEmail />
             </div>
 
             {/* Dark Mode Toggle */}
@@ -193,13 +181,12 @@ export function Navigation({ className }: NavigationProps) {
                 >
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a
-                  href="mailto:oles.didukh@gmail.com"
+                <ObfuscatedEmailLink
                   className="text-muted-foreground hover:text-primary"
-                  aria-label="Email"
+                  ariaLabel="Email"
                 >
                   <Mail className="h-5 w-5" />
-                </a>
+                </ObfuscatedEmailLink>
               </div>
             </div>
           </div>

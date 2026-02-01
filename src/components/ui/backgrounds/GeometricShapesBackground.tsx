@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { seededRandom } from '@/lib/random';
 
 interface GeometricShapesBackgroundProps {
   /** Shape type */
@@ -108,16 +109,20 @@ export function GeometricShapesBackground({
   const shapeKeys = getShapeKeys();
 
   const floatingShapes = React.useMemo(() => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      shapeKey: shapeKeys[i % shapeKeys.length] as ShapeKey,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: 40 + Math.random() * 60,
-      duration: 15 + Math.random() * 20,
-      delay: Math.random() * 5,
-      rotation: Math.random() * 360,
-    }));
+    return Array.from({ length: count }, (_, i) => {
+      // Use index-based seeds for deterministic values
+      const seed = i * 100 + 777;
+      return {
+        id: i,
+        shapeKey: shapeKeys[i % shapeKeys.length] as ShapeKey,
+        x: seededRandom(seed + 1) * 100,
+        y: seededRandom(seed + 2) * 100,
+        size: 40 + seededRandom(seed + 3) * 60,
+        duration: 15 + seededRandom(seed + 4) * 20,
+        delay: seededRandom(seed + 5) * 5,
+        rotation: seededRandom(seed + 6) * 360,
+      };
+    });
   }, [count, shapeKeys]);
 
   return (

@@ -7,7 +7,7 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 export const metadata: Metadata = {
   title: 'Contact Oles Didukh | Get In Touch',
   description:
-    'Get in touch with Oles Didukh for freelance projects, full-time opportunities, or collaboration. Available for web development projects using React, TypeScript, and Next.js.',
+    'Get in touch with Oles Didukh for freelance projects, full-time roles, or collaboration. Available for React and Next.js projects.',
   openGraph: {
     title: 'Contact Oles Didukh | Get In Touch',
     description:

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { SkipLink } from '@/components/ui/SkipLink';
 import { JsonLd } from '@/components/JsonLd';
+import { ContentProtection } from '@/components/ContentProtection';
 import { getNonce } from '@/lib/nonce';
 import './globals.css';
 
@@ -43,6 +44,7 @@ export const metadata: Metadata = {
     title: 'Oles Didukh',
   },
   alternates: {
+    canonical: 'https://olesdidukh.dev',
     types: {
       'application/rss+xml': [
         { url: '/feed.xml', title: 'Oles Didukh - Blog RSS Feed' },
@@ -106,9 +108,12 @@ export default async function RootLayout({
 }>) {
   const nonce = await getNonce();
 
+  // JSON-LD structured data for SEO
+  // Note: Email is intentionally omitted to prevent scraping
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': 'https://olesdidukh.dev/#person',
     name: 'Oles Didukh',
     alternateName: 'Oles',
     jobTitle: 'Senior Front-End Engineer',
@@ -116,10 +121,10 @@ export default async function RootLayout({
       'Senior Front-End Engineer specializing in React, TypeScript, and Next.js with 7+ years of experience building high-performance web applications.',
     url: 'https://olesdidukh.dev',
     image: 'https://olesdidukh.dev/og-image.png',
-    email: 'oles.didukh@gmail.com',
     sameAs: [
       'https://github.com/odidukh',
       'https://linkedin.com/in/oles-didukh',
+      'https://www.threads.com/@oles.o.didukh',
     ],
     knowsAbout: [
       'React',
@@ -173,6 +178,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ContentProtection />
         <SkipLink />
         {children}
         <Providers />

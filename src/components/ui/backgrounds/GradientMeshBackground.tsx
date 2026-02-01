@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { seededRandom } from '@/lib/random';
 
 interface GradientMeshBackgroundProps {
   /** Color scheme preset */
@@ -47,14 +48,18 @@ export function GradientMeshBackground({
   const colors = colorSchemes[colorScheme];
 
   const blobs = React.useMemo(() => {
-    return Array.from({ length: Math.min(blobCount, 4) }, (_, i) => ({
-      id: i,
-      color: colors[i % colors.length],
-      size: 300 + Math.random() * 200,
-      initialX: Math.random() * 100,
-      initialY: Math.random() * 100,
-      duration: (20 + Math.random() * 10) / speed,
-    }));
+    return Array.from({ length: Math.min(blobCount, 4) }, (_, i) => {
+      // Use index-based seeds for deterministic values
+      const seed = i * 1000 + 500;
+      return {
+        id: i,
+        color: colors[i % colors.length],
+        size: 300 + seededRandom(seed + 1) * 200,
+        initialX: seededRandom(seed + 2) * 100,
+        initialY: seededRandom(seed + 3) * 100,
+        duration: (20 + seededRandom(seed + 4) * 10) / speed,
+      };
+    });
   }, [blobCount, colors, speed]);
 
   return (

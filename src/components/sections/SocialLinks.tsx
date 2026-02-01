@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAnalytics } from '@/hooks';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -8,6 +9,7 @@ import {
   RESUME_COMPACT_PATH,
   RESUME_EXTENDED_PATH,
 } from '@/components/ui/ResumeDownloadButton';
+import { decodeEmail, ENCODED_EMAIL } from '@/lib/obfuscate';
 import {
   Github,
   Linkedin,
@@ -31,7 +33,8 @@ interface SocialLink {
   description: string;
 }
 
-const socialLinks: SocialLink[] = [
+// Static social links (email is handled separately for obfuscation)
+const staticSocialLinks: SocialLink[] = [
   {
     name: 'GitHub',
     icon: Github,
@@ -55,14 +58,6 @@ const socialLinks: SocialLink[] = [
     username: '@oles.o.didukh',
     color: 'hover:text-gray-900 dark:hover:text-gray-100',
     description: 'Tech thoughts & updates',
-  },
-  {
-    name: 'Email',
-    icon: Mail,
-    url: 'mailto:oles.didukh@gmail.com',
-    username: 'oles.didukh@gmail.com',
-    color: 'hover:text-red-600',
-    description: 'Direct contact',
   },
   {
     name: 'Portfolio',
@@ -152,9 +147,30 @@ function ResumeDropdownItem({ index }: { index: number }) {
 
 export function SocialLinks() {
   const { trackSocialClick } = useAnalytics();
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Decode email only on client side
+    setEmail(decodeEmail(ENCODED_EMAIL));
+  }, []);
+
   const handleSocialClick = (name: string, url: string) => {
     trackSocialClick(name.toLowerCase(), url);
   };
+
+  // Build social links with obfuscated email
+  const socialLinks: SocialLink[] = [
+    ...staticSocialLinks.slice(0, 3), // GitHub, LinkedIn, Threads
+    {
+      name: 'Email',
+      icon: Mail,
+      url: email ? `mailto:${email}` : '#',
+      username: email || 'Loading...',
+      color: 'hover:text-red-600',
+      description: 'Direct contact',
+    },
+    ...staticSocialLinks.slice(3), // Portfolio
+  ];
 
   return (
     <div className="space-y-3">

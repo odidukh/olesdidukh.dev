@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     description: 'Privacy policy for olesdidukh.dev',
     url: 'https://olesdidukh.dev/privacy',
     type: 'website',
+    images: [
+      {
+        url: '/api/og?title=Privacy%20Policy&subtitle=olesdidukh.dev',
+        width: 1200,
+        height: 630,
+        alt: 'Privacy Policy',
+      },
+    ],
   },
   alternates: {
     canonical: 'https://olesdidukh.dev/privacy',

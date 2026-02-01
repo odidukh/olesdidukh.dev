@@ -111,6 +111,7 @@ export function NewsletterForm() {
             }}
             className={`pl-10 ${error ? 'border-destructive' : ''}`}
             disabled={status === 'loading'}
+            aria-label="Email address"
           />
         </div>
         <Button

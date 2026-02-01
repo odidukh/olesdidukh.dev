@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Container } from './Container';
-import { Button } from './Button';
 import { Badge } from './Badge';
 import { NewsletterForm } from './NewsletterForm';
 import { ResumeDownloadLink } from './ResumeDownloadButton';
+import { SocialIconButton } from './SocialIconButton';
+import { ObfuscatedEmail } from '@/components/ObfuscatedEmail';
+import { ObfuscatedPhone } from '@/components/ObfuscatedPhone';
 import {
   Github,
   Linkedin,
@@ -11,7 +13,6 @@ import {
   Heart,
   ExternalLink,
   MapPin,
-  Phone,
   AtSign,
 } from 'lucide-react';
 
@@ -32,7 +33,6 @@ const navigationLinks: FooterLink[] = [
 
 const resourceLinks: FooterLink[] = [
   { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Testimonials', href: '/testimonials' },
   { label: 'Privacy Policy', href: '/privacy' },
 ];
 
@@ -70,25 +70,23 @@ export function Footer({ className }: FooterProps) {
                 <NewsletterForm />
               </div>
 
-              {/* Location & Contact */}
-              <div className="space-y-2 text-sm text-muted-foreground">
+              {/* Location & Contact - Protected from scraping */}
+              <div
+                className="space-y-2 text-sm text-muted-foreground"
+                data-protected
+              >
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4" />
                   <span>Vinnytsia, Ukraine</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
-                  <a
-                    href="mailto:oles.didukh@gmail.com"
-                    className="hover:text-primary transition-colors"
-                  >
-                    oles.didukh@gmail.com
-                  </a>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+38 067 88 99 570</span>
-                </div>
+                <ObfuscatedEmail
+                  className="flex items-center space-x-2 hover:text-primary transition-colors"
+                  iconClassName="h-4 w-4"
+                />
+                <ObfuscatedPhone
+                  className="flex items-center space-x-2 hover:text-primary transition-colors"
+                  iconClassName="h-4 w-4"
+                />
               </div>
             </div>
 
@@ -167,61 +165,26 @@ export function Footer({ className }: FooterProps) {
                 Connect
               </h4>
               <div className="flex space-x-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://github.com/odidukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="GitHub"
-                  >
-                    <Github className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://linkedin.com/in/oles-didukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a
-                    href="https://www.threads.com/@oles.o.didukh"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Threads"
-                  >
-                    <AtSign className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 hover:text-primary"
-                >
-                  <a href="mailto:oles.didukh@gmail.com" aria-label="Email">
-                    <Mail className="h-4 w-4" />
-                  </a>
-                </Button>
+                <SocialIconButton
+                  icon={Github}
+                  href="https://github.com/odidukh"
+                  aria-label="GitHub"
+                />
+                <SocialIconButton
+                  icon={Linkedin}
+                  href="https://linkedin.com/in/oles-didukh"
+                  aria-label="LinkedIn"
+                />
+                <SocialIconButton
+                  icon={AtSign}
+                  href="https://www.threads.com/@oles.o.didukh"
+                  aria-label="Threads"
+                />
+                <SocialIconButton
+                  icon={Mail}
+                  aria-label="Email"
+                  obfuscateEmail
+                />
               </div>
             </div>
           </div>

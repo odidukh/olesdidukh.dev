@@ -95,10 +95,6 @@ export function BlogSection() {
 
   // Blog stats
   const totalPosts = blogPosts.length;
-  const totalViews = blogPosts.reduce(
-    (sum, post) => sum + (post.views || 0),
-    0
-  );
   const totalReadingTime = blogPosts.reduce(
     (sum, post) => sum + post.readingTime,
     0
@@ -140,12 +136,6 @@ export function BlogSection() {
                 <div className="text-xs text-muted-foreground">Articles</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-navy-600 dark:text-navy-400">
-                  {Math.floor(totalViews / 1000)}k+
-                </div>
-                <div className="text-xs text-muted-foreground">Views</div>
-              </div>
-              <div className="text-center">
                 <div className="text-2xl font-bold text-success-600 dark:text-success-400">
                   {totalReadingTime}
                 </div>
@@ -183,6 +173,7 @@ export function BlogSection() {
                     onChange={e => setSearchQuery(e.target.value)}
                     className="pl-10"
                     size="lg"
+                    aria-label="Search articles"
                   />
                 </div>
               </div>

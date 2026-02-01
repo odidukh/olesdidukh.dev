@@ -106,6 +106,7 @@ export function ProjectsSection() {
                   onChange={e => setSearchQuery(e.target.value)}
                   className="pl-10"
                   size="lg"
+                  aria-label="Search projects"
                 />
               </div>
             </div>

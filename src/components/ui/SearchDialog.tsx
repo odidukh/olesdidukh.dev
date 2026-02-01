@@ -180,6 +180,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                     onChange={e => setQuery(e.target.value)}
                     placeholder="Search pages, projects, blog posts..."
                     className="flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+                    aria-label="Search"
                   />
                   {query && (
                     <button
