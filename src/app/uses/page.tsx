@@ -243,22 +243,16 @@ const usesCategories: UsesCategory[] = [
     icon: Wrench,
     items: [
       {
-        name: 'Raycast',
-        description:
-          'Spotlight replacement with snippets, clipboard history, and custom scripts.',
-        link: 'https://raycast.com',
-      },
-      {
-        name: 'Arc Browser',
-        description:
-          'Modern browser with workspaces and vertical tabs. Changed how I organize web apps.',
-        link: 'https://arc.net',
-      },
-      {
         name: 'Notion',
         description:
           'Knowledge base, project planning, and documentation. Second brain for everything.',
         link: 'https://notion.so',
+      },
+      {
+        name: 'Todoist',
+        description:
+          'Task management with natural language input, recurring tasks, and project organization.',
+        link: 'https://todoist.com',
       },
       {
         name: 'Slack',
@@ -267,10 +261,10 @@ const usesCategories: UsesCategory[] = [
         link: 'https://slack.com',
       },
       {
-        name: '1Password',
+        name: 'Bitwarden',
         description:
-          'Password manager with developer features like SSH key management.',
-        link: 'https://1password.com',
+          'Open-source password manager with secure sharing and self-hosting options.',
+        link: 'https://bitwarden.com',
       },
     ],
   },
