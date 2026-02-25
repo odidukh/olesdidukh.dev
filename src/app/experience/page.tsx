@@ -62,10 +62,9 @@ const experiences: Experience[] = [
     description:
       'Architected real-time financial dashboards for an AI-powered accounting platform, delivering high-performance React applications with advanced data visualization for enterprise clients.',
     achievements: [
-      'Architected real-time financial dashboard using Next.js 14, React 18, TypeScript serving 9 enterprise clients',
-      'Implemented complex data visualization and interactive charts, improving user engagement by 35%',
-      'Achieved 95+ Lighthouse scores through performance optimization, reducing load time by 50%',
-      'Built comprehensive test suite with 85% coverage, reducing UI bugs by 60%',
+      'Architected Next.js/React financial governance platform processing 1M+ daily transactions, reducing manual data reconciliation by 40%.',
+      'Engineered a real-time anomaly detection dashboard visualizing 50,000+ data points with sub-200ms render times.',
+      'Built type-safe data pipelines using advanced TypeScript Generics, reducing runtime errors by 95% and saving ~15 QA hours per sprint.',
     ],
     technologies: [
       'Next.js',
@@ -88,7 +87,7 @@ const experiences: Experience[] = [
     id: 'emerline',
     company: 'Emerline',
     position: 'Senior Front-End Developer',
-    location: 'Vinnytsia, Ukraine',
+    location: 'Remote',
     duration: 'May 2021 - Jan 2024',
     startDate: '2021-05',
     endDate: '2024-01',
@@ -97,10 +96,9 @@ const experiences: Experience[] = [
     description:
       'Led front-end architecture for enterprise platforms, designing scalable component libraries and mentoring junior developers while delivering high-impact solutions for international clients.',
     achievements: [
-      'Led front-end architecture for enterprise platform serving 1,000+ employees, improving productivity by 30%',
-      'Designed scalable component library with React/TypeScript/Storybook, reducing development time by 40%',
-      'Mentored 2 junior developers and improved Core Web Vitals by 35% through performance optimization',
-      'Collaborated with international clients on complex enterprise solutions',
+      'Led front-end architecture for complex enterprise portals, delivering 3 major client apps under budget and increasing retention by 20%.',
+      'Deployed a white-label React/Storybook component library adopted by 5 teams, cutting UI dev time by 30%.',
+      'Streamlined Developer Experience workflows through custom tooling, reducing onboarding time by 50%.',
     ],
     technologies: [
       'React',
@@ -122,7 +120,7 @@ const experiences: Experience[] = [
     id: 'inango',
     company: 'Inango Systems',
     position: 'Middle Front-End Developer',
-    location: 'Vinnytsia, Ukraine',
+    location: 'Kyiv, Ukraine',
     duration: 'Mar 2019 - Apr 2021',
     startDate: '2019-03',
     endDate: '2021-04',
@@ -131,10 +129,9 @@ const experiences: Experience[] = [
     description:
       'Enhanced ISP web platforms using React/Redux, delivering significant UX improvements for large customer bases while leading migration initiatives from legacy systems.',
     achievements: [
-      'Enhanced ISP web platform using React/Redux, improving UX by 25% for 50,000+ customers',
-      'Migrated legacy jQuery application to React, achieving 40% performance boost and 50% less maintenance',
-      'Delivered React Native MVP 2 weeks ahead of schedule',
-      'Ensured cross-browser compatibility for 15+ devices and browsers',
+      'Developed real-time ISP network UIs monitoring 10,000+ nodes, improving client incident response by 35%.',
+      'Migrated legacy portals to modern React/Redux architectures, eliminating frame drops and boosting Lighthouse scores to 92.',
+      'Integrated front-end architectures with robust SQL/NoSQL backend systems, cutting client-side parsing overhead by 25%.',
     ],
     technologies: [
       'React.js',
@@ -156,7 +153,7 @@ const experiences: Experience[] = [
     id: 'helios',
     company: 'Helios Technologies',
     position: 'Junior Front-End Developer',
-    location: 'Vinnytsia, Ukraine',
+    location: 'Kyiv, Ukraine',
     duration: 'Jun 2018 - Feb 2019',
     startDate: '2018-06',
     endDate: '2019-02',
@@ -164,8 +161,7 @@ const experiences: Experience[] = [
     description:
       'Started professional development career creating responsive interfaces and implementing pixel-perfect designs for client projects, building a strong foundation in modern front-end technologies.',
     achievements: [
-      'Developed responsive interfaces for 5 client projects with pixel-perfect implementation',
-      'Implemented Figma designs with precise attention to detail and cross-browser compatibility',
+      'Developed responsive interfaces for 5 client projects, implementing pixel-perfect Figma designs.',
       'Built interactive components using JavaScript and React',
       'Collaborated with design team to ensure optimal user experience',
     ],

@@ -244,7 +244,7 @@ const journeyPhases: JourneyPhase[] = [
         ],
       },
       {
-        date: 'Jan 2023',
+        date: 'Apr 2024',
         title: 'Joined Safebooks AI',
         description:
           'Senior Front-End Engineer working on AI-powered accounting platform',
