@@ -37,7 +37,6 @@ import {
   // ProjectsErrorFallback,
   BlogErrorFallback,
   ContactErrorFallback,
-  TestimonialsErrorFallback,
 } from '@/components/ui/SectionErrorFallback';
 
 // Lazy load below-the-fold heavy components
@@ -59,14 +58,6 @@ const ContactSection = dynamic(
   () =>
     import('@/components/sections/ContactSection').then(
       mod => mod.ContactSection
-    ),
-  { ssr: true }
-);
-
-const TestimonialsCarousel = dynamic(
-  () =>
-    import('@/components/sections/TestimonialsCarousel').then(
-      mod => mod.TestimonialsCarousel
     ),
   { ssr: true }
 );
@@ -331,14 +322,6 @@ export default function HomePage() {
         >
           <ProjectsSection />
         </ErrorBoundary> */}
-
-        {/* Testimonials Section */}
-        <ErrorBoundary
-          sectionName="Testimonials"
-          fallbackRender={TestimonialsErrorFallback}
-        >
-          <TestimonialsCarousel />
-        </ErrorBoundary>
 
         {/* Blog Section */}
         <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>

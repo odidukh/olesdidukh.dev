@@ -123,16 +123,6 @@ describe('ProjectModal', () => {
     expect(screen.getByText('10k+')).toBeInTheDocument();
   });
 
-  it('should render testimonial', () => {
-    render(<ProjectModal project={mockProject} onClose={mockOnClose} />);
-
-    // The component uses &ldquo; and &rdquo; for quotes
-    expect(
-      screen.getByText(/Great work on this project!/i)
-    ).toBeInTheDocument();
-    expect(screen.getByText('John Smith')).toBeInTheDocument();
-  });
-
   it('should render featured badge for featured projects', () => {
     render(<ProjectModal project={mockProject} onClose={mockOnClose} />);
 

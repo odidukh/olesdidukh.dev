@@ -15,7 +15,6 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
-  Quote,
   Target,
   Lightbulb,
   TrendingUp,
@@ -309,23 +308,6 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </ul>
             </div>
           </div>
-
-          {/* Testimonial */}
-          {project.testimonial && (
-            <div className="relative p-6 bg-gradient-to-br from-mocha-50 to-navy-50 dark:from-mocha-900/20 dark:to-navy-900/20 rounded-xl">
-              <Quote className="absolute top-4 left-4 h-8 w-8 text-mocha-300 dark:text-mocha-700" />
-              <blockquote className="relative z-10 space-y-3">
-                <p className="text-lg italic pl-8">
-                  &ldquo;{project.testimonial.text}&rdquo;
-                </p>
-                <footer className="text-sm text-muted-foreground pl-8">
-                  <strong>{project.testimonial.author}</strong>
-                  <span className="mx-2">·</span>
-                  <span>{project.testimonial.role}</span>
-                </footer>
-              </blockquote>
-            </div>
-          )}
         </div>
       </motion.div>
     </motion.div>

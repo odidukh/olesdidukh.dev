@@ -14,7 +14,6 @@ import {
   Users,
   Target,
   TrendingUp,
-  Quote,
   Briefcase,
   Calendar,
 } from 'lucide-react';
@@ -136,8 +135,8 @@ function CaseStudyCard({
         </div>
       </div>
 
-      {/* Challenges, Solutions & Testimonial Section */}
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Challenges, Solutions Section */}
+      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Challenges */}
         <Card className="bg-error-50/50 dark:bg-error-900/20 border-error-200 dark:border-error-800">
           <CardContent className="pt-6">
@@ -187,36 +186,6 @@ function CaseStudyCard({
             </ul>
           </CardContent>
         </Card>
-
-        {/* Testimonial */}
-        {project.testimonial && (
-          <Card className="bg-primary/5 dark:bg-primary/10 border-primary/20">
-            <CardContent className="pt-6">
-              <Quote className="w-8 h-8 text-primary/40 mb-3" />
-              <blockquote className="text-sm text-muted-foreground italic mb-4">
-                &quot;{project.testimonial.text}&quot;
-              </blockquote>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-primary">
-                    {project.testimonial.author
-                      .split(' ')
-                      .map(n => n[0])
-                      .join('')}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">
-                    {project.testimonial.author}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {project.testimonial.role}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </motion.div>
   );

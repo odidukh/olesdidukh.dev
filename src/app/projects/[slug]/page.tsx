@@ -27,7 +27,6 @@ import {
   CheckCircle2,
   Lightbulb,
   Target,
-  Quote,
   Play,
 } from 'lucide-react';
 import { MetaItem } from '@/components/ui/MetaItem';
@@ -389,28 +388,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
           </div>
         </section>
-
-        {/* Testimonial Section */}
-        {project.testimonial && (
-          <section className="py-16 lg:py-24">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="mx-auto max-w-3xl text-center">
-                <Quote className="mx-auto mb-6 h-12 w-12 text-mocha-300 dark:text-mocha-600" />
-                <blockquote className="mb-6 text-xl text-gray-700 dark:text-gray-300 lg:text-2xl">
-                  &ldquo;{project.testimonial.text}&rdquo;
-                </blockquote>
-                <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">
-                    {project.testimonial.author}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {project.testimonial.role}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* My Role Section */}
         <section className="border-t border-gray-200 bg-white py-16 dark:border-gray-700 dark:bg-gray-900">
