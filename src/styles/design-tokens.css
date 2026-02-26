@@ -345,10 +345,24 @@
   /* Status semantic tokens */
   --success: var(--success-500);
   --success-foreground: #ffffff;
+  --status-success-bg: var(--success-50);
+  --status-success-border: var(--success-200);
+  --status-success-text: var(--success-600);
+
   --warning: var(--warning-500);
   --warning-foreground: #ffffff;
+  --status-warning-bg: var(--warning-50);
+  --status-warning-border: var(--warning-200);
+  --status-warning-text: var(--warning-600);
+
   --info: var(--info-500);
   --info-foreground: #ffffff;
+
+  --error: var(--error-500);
+  --error-foreground: #ffffff;
+  --status-error-bg: var(--error-50);
+  --status-error-border: var(--error-200);
+  --status-error-text: var(--error-600);
 
   /* ==========================================
      TIMELINE COMPONENT TOKENS
@@ -440,6 +454,19 @@
   --border: var(--gray-700);
   --input: var(--gray-700);
   --ring: var(--mocha-400);
+
+  /* Status Semantic Tokens - Dark Mode */
+  --status-success-bg: rgba(16, 185, 129, 0.15); /* Tailwind emerald-500 */
+  --status-success-border: rgba(16, 185, 129, 0.3);
+  --status-success-text: var(--success-400);
+
+  --status-warning-bg: rgba(245, 158, 11, 0.15); /* Tailwind amber-500 */
+  --status-warning-border: rgba(245, 158, 11, 0.3);
+  --status-warning-text: var(--warning-400);
+
+  --status-error-bg: rgba(239, 68, 68, 0.15); /* Tailwind red-500 */
+  --status-error-border: rgba(239, 68, 68, 0.3);
+  --status-error-text: var(--error-400);
 
   /* Glow shadows - more vibrant in dark mode */
   --shadow-glow:

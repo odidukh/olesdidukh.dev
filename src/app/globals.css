@@ -6,6 +6,9 @@
 /* Import Tailwind */
 @import 'tailwindcss';
 
+/* Configure class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Configure Tailwind theme with custom colors using @theme directive */
 @theme {
   /* Custom Mocha Mousse colors */
@@ -119,10 +122,24 @@
   --color-ring: var(--ring);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+
+  /* Semantic UI Tokens - Status Boxes */
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-success-border: var(--status-success-border);
+  --color-status-success-text: var(--status-success-text);
+
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-warning-border: var(--status-warning-border);
+  --color-status-warning-text: var(--status-warning-text);
+
+  --color-status-error-bg: var(--status-error-bg);
+  --color-status-error-border: var(--status-error-border);
+  --color-status-error-text: var(--status-error-text);
 
   /* ==========================================
      SHADOW TOKENS

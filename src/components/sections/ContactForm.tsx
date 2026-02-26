@@ -424,7 +424,7 @@ export function ContactForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center gap-2 p-3 bg-success-50 dark:bg-[var(--card)] border border-transparent dark:border-success-500 text-success-600 dark:text-success-500 rounded-lg"
+              className="flex items-center gap-2 p-3 bg-status-success-bg border border-status-success-border text-status-success-text rounded-lg"
             >
               <CheckCircle className="h-5 w-5" />
               <span className="text-sm font-medium">
@@ -439,7 +439,7 @@ export function ContactForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center gap-2 p-3 bg-error-50 dark:bg-[var(--card)] border border-transparent dark:border-error-500 text-error-600 dark:text-error-500 rounded-lg"
+              className="flex items-center gap-2 p-3 bg-status-error-bg border border-status-error-border text-status-error-text rounded-lg"
             >
               <AlertCircle className="h-5 w-5" />
               <span className="text-sm font-medium">
