@@ -23,7 +23,6 @@ import {
   BarChart3,
   Layers,
   Terminal,
-  Globe,
   Users,
   Package,
   Clock,
@@ -739,7 +738,8 @@ export default function SkillsPage() {
                   <div>
                     <div className="font-medium">Performance Expert</div>
                     <div className="text-sm text-muted-foreground">
-                      Achieved 95+ Lighthouse scores, reducing load times by 50%
+                      Engineered real-time dashboards with sub-200ms render
+                      times and 92+ Lighthouse scores.
                     </div>
                   </div>
                 </div>
@@ -748,28 +748,28 @@ export default function SkillsPage() {
                   <div>
                     <div className="font-medium">Enterprise Scale</div>
                     <div className="text-sm text-muted-foreground">
-                      Built platforms serving 1,000+ employees and 50,000+
-                      customers
+                      Architected platforms processing 1M+ daily transactions
+                      and monitoring 10,000+ nodes.
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Globe className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <Settings className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="font-medium">International Clients</div>
+                    <div className="font-medium">Developer Experience</div>
                     <div className="text-sm text-muted-foreground">
-                      Collaborated with enterprise clients across multiple
-                      countries
+                      Deployed component libraries and tooling that cut UI dev
+                      time by 30% and onboarding time by 50%.
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Terminal className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="font-medium">Testing Champion</div>
+                    <div className="font-medium">Quality & Stability</div>
                     <div className="text-sm text-muted-foreground">
-                      Built test suites with 85% coverage, reducing UI bugs by
-                      60%
+                      Built type-safe data pipelines, reducing runtime errors by
+                      95% and saving ~15 QA hours per sprint.
                     </div>
                   </div>
                 </div>
