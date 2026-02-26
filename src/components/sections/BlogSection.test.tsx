@@ -70,7 +70,7 @@ describe('BlogSection', () => {
 
     // Should show total posts count
     expect(screen.getByText('Articles')).toBeInTheDocument();
-    expect(screen.getByText('Views')).toBeInTheDocument();
+    expect(screen.getByText('Min Read')).toBeInTheDocument();
   });
 
   it('renders search input', () => {

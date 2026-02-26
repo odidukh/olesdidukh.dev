@@ -81,7 +81,7 @@ const stats = [
   },
   {
     label: 'Projects Completed',
-    value: '50+',
+    value: '15+',
     icon: Briefcase,
     color: 'text-green-500',
   },
@@ -93,7 +93,7 @@ const stats = [
   },
   {
     label: 'Happy Clients',
-    value: '30+',
+    value: '10+',
     icon: Users,
     color: 'text-orange-500',
   },

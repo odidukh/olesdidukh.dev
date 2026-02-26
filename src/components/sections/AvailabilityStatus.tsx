@@ -164,7 +164,7 @@ export function AvailabilityStatus() {
           <div className="pt-4 border-t flex flex-wrap gap-4 text-sm">
             <div className="flex items-center gap-1">
               <CheckCircle className="h-4 w-4 text-success-600" />
-              <span>50+ projects completed</span>
+              <span>15+ projects completed</span>
             </div>
             <div className="flex items-center gap-1">
               <CheckCircle className="h-4 w-4 text-success-600" />

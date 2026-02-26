@@ -102,7 +102,7 @@ export interface StatCardProps
  * />
  *
  * // Different sizes
- * <StatCard icon={Trophy} value="50+" label="Projects" size="lg" />
+ * <StatCard icon={Trophy} value="15+" label="Projects" size="lg" />
  *
  * // Left-aligned
  * <StatCard icon={Users} value="1K+" label="Users" align="left" />

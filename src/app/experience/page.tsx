@@ -186,7 +186,7 @@ export default function ExperiencePage() {
 
   const totalYears = new Date().getFullYear() - 2018;
   const companiesCount = experiences.length;
-  const projectsCompleted = 50; // You can calculate this dynamically
+  const projectsCompleted = 15; // You can calculate this dynamically
 
   const stats = [
     { label: 'Years Experience', value: `${totalYears}+`, icon: Calendar },

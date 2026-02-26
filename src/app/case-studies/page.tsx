@@ -226,9 +226,9 @@ export default function CaseStudiesPage() {
   const featuredProjects = getFeaturedProjects();
 
   const stats = [
-    { value: '50+', label: 'Projects Completed' },
+    { value: '15+', label: 'Projects Completed' },
     { value: '7+', label: 'Years Experience' },
-    { value: '30+', label: 'Happy Clients' },
+    { value: '10+', label: 'Happy Clients' },
     { value: '99%', label: 'Client Satisfaction' },
   ];
 

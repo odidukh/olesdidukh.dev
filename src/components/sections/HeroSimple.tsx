@@ -136,8 +136,8 @@ export function HeroSimple() {
           >
             {[
               { label: 'Years Experience', value: '7+' },
-              { label: 'Projects Completed', value: '50+' },
-              { label: 'Happy Clients', value: '30+' },
+              { label: 'Projects Completed', value: '15+' },
+              { label: 'Happy Clients', value: '10+' },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-mocha-600 dark:text-mocha-400">

@@ -472,7 +472,7 @@ export default function JourneyPage() {
   const selectedPhaseData = journeyPhases.find(p => p.id === selectedPhase);
 
   const totalYears = new Date().getFullYear() - 2018;
-  const totalProjects = 50;
+  const totalProjects = 15;
   const technologiesMastered = 25;
   const menteesTrained = 6;
 

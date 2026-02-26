@@ -44,11 +44,11 @@ describe('projectsData', () => {
 
 describe('getProjectBySlug', () => {
   it('returns project for valid slug', () => {
-    const project = getProjectBySlug('safebooks-ai');
+    const project = getProjectBySlug('safebooks-financial-dashboard');
 
     expect(project).toBeDefined();
-    expect(project?.id).toBe('safebooks-ai');
-    expect(project?.title).toBe('Safebooks AI Platform');
+    expect(project?.id).toBe('safebooks-financial-dashboard');
+    expect(project?.title).toBe('Safebooks AI - Financial Dashboard');
   });
 
   it('returns undefined for invalid slug', () => {
@@ -58,7 +58,7 @@ describe('getProjectBySlug', () => {
   });
 
   it('is case-sensitive', () => {
-    const project = getProjectBySlug('SAFEBOOKS-AI');
+    const project = getProjectBySlug('SAFEBOOKS-FINANCIAL-DASHBOARD');
 
     expect(project).toBeUndefined();
   });
@@ -83,11 +83,11 @@ describe('getFeaturedProjects', () => {
 
 describe('getRelatedProjects', () => {
   it('returns related projects for valid id', () => {
-    const related = getRelatedProjects('safebooks-ai', 3);
+    const related = getRelatedProjects('safebooks-financial-dashboard', 3);
 
     expect(related.length).toBeLessThanOrEqual(3);
     related.forEach(project => {
-      expect(project.id).not.toBe('safebooks-ai');
+      expect(project.id).not.toBe('safebooks-financial-dashboard');
     });
   });
 
@@ -98,16 +98,16 @@ describe('getRelatedProjects', () => {
   });
 
   it('respects limit parameter', () => {
-    const related1 = getRelatedProjects('safebooks-ai', 1);
-    const related2 = getRelatedProjects('safebooks-ai', 2);
+    const related1 = getRelatedProjects('safebooks-financial-dashboard', 1);
+    const related2 = getRelatedProjects('safebooks-financial-dashboard', 2);
 
     expect(related1.length).toBeLessThanOrEqual(1);
     expect(related2.length).toBeLessThanOrEqual(2);
   });
 
   it('returns projects with matching category or technologies', () => {
-    const currentProject = getProjectBySlug('safebooks-ai');
-    const related = getRelatedProjects('safebooks-ai', 5);
+    const currentProject = getProjectBySlug('safebooks-financial-dashboard');
+    const related = getRelatedProjects('safebooks-financial-dashboard', 5);
 
     related.forEach(project => {
       const sameCategory = project.category === currentProject?.category;
@@ -124,8 +124,8 @@ describe('getAllProjectSlugs', () => {
     const slugs = getAllProjectSlugs();
 
     expect(slugs.length).toBe(projectsData.length);
-    expect(slugs).toContain('safebooks-ai');
-    expect(slugs).toContain('ecommerce-platform');
+    expect(slugs).toContain('safebooks-financial-dashboard');
+    expect(slugs).toContain('emerline-enterprise-platform');
   });
 
   it('returns array of strings', () => {
@@ -145,11 +145,11 @@ describe('getProjectsByCategory', () => {
   });
 
   it('filters projects by category', () => {
-    const saasProjects = getProjectsByCategory('SaaS');
+    const enterpriseProjects = getProjectsByCategory('Enterprise');
 
-    expect(saasProjects.length).toBeGreaterThan(0);
-    saasProjects.forEach(project => {
-      expect(project.category).toBe('SaaS');
+    expect(enterpriseProjects.length).toBeGreaterThan(0);
+    enterpriseProjects.forEach(project => {
+      expect(project.category).toBe('Enterprise');
     });
   });
 
@@ -203,11 +203,13 @@ describe('getTestimonials', () => {
   it('maps testimonial data correctly', () => {
     const testimonials = getTestimonials();
     const safebooksTestimonial = testimonials.find(
-      t => t.projectId === 'safebooks-ai'
+      t => t.projectId === 'safebooks-financial-dashboard'
     );
 
     expect(safebooksTestimonial).toBeDefined();
-    expect(safebooksTestimonial?.author).toBe('Sarah Johnson');
-    expect(safebooksTestimonial?.projectTitle).toBe('Safebooks AI Platform');
+    expect(safebooksTestimonial?.author).toBe('Engineering Manager');
+    expect(safebooksTestimonial?.projectTitle).toBe(
+      'Safebooks AI - Financial Dashboard'
+    );
   });
 });

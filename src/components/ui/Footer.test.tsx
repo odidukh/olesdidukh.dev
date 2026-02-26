@@ -60,9 +60,6 @@ describe('Footer', () => {
       screen.getByRole('link', { name: /case studies/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: /testimonials/i })
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole('link', { name: /privacy policy/i })
     ).toBeInTheDocument();
   });
