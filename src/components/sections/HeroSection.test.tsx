@@ -134,10 +134,10 @@ describe('HeroSection', () => {
 
     expect(screen.getByText('7+')).toBeInTheDocument();
     expect(screen.getByText('Years Experience')).toBeInTheDocument();
-    expect(screen.getByText('60K+')).toBeInTheDocument();
-    expect(screen.getByText('Users Impacted')).toBeInTheDocument();
-    expect(screen.getByText('4')).toBeInTheDocument();
-    expect(screen.getByText('Companies')).toBeInTheDocument();
+    expect(screen.getByText('15+')).toBeInTheDocument();
+    expect(screen.getByText('Projects Completed')).toBeInTheDocument();
+    expect(screen.getByText('10+')).toBeInTheDocument();
+    expect(screen.getByText('Happy Clients')).toBeInTheDocument();
   });
 
   it('should render the code block with developer info', () => {
