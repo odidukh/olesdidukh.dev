@@ -507,3 +507,58 @@
   --code-inline-text: var(--gray-200);
   --code-border: var(--gray-600);
 }
+
+/* ==========================================
+   DYNAMIC THEME ACCENTS
+   Overrides --primary and --ring for different brand colors
+   ========================================== */
+.theme-mocha {
+  /* Default is already mocha, nothing needs to be overridden here unless switched back */
+  --primary: var(--mocha-500);
+  --ring: var(--mocha-500);
+}
+.dark.theme-mocha,
+.theme-mocha .dark {
+  --primary: var(--mocha-400);
+  --ring: var(--mocha-400);
+}
+
+.theme-navy {
+  --primary: var(--navy-500);
+  --ring: var(--navy-500);
+}
+.dark.theme-navy,
+.theme-navy .dark {
+  --primary: var(--navy-400);
+  --ring: var(--navy-400);
+}
+
+.theme-emerald {
+  --primary: var(--success-500);
+  --ring: var(--success-500);
+}
+.dark.theme-emerald,
+.theme-emerald .dark {
+  --primary: var(--success-400);
+  --ring: var(--success-400);
+}
+
+.theme-rose {
+  --primary: #f43f5e;
+  --ring: #f43f5e;
+}
+.dark.theme-rose,
+.theme-rose .dark {
+  --primary: #fb7185;
+  --ring: #fb7185;
+}
+
+.theme-amber {
+  --primary: #f59e0b;
+  --ring: #f59e0b;
+}
+.dark.theme-amber,
+.theme-amber .dark {
+  --primary: #fbbf24;
+  --ring: #fbbf24;
+}

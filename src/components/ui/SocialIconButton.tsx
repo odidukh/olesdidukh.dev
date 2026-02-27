@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Button } from './Button';
 import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
+import { MagneticEffect } from '@/components/ui/MagneticEffect';
 
 /**
  * SocialIconButton variant styles using class-variance-authority.
@@ -152,38 +153,42 @@ const SocialIconButton = React.forwardRef<
     // Handle obfuscated email
     if (obfuscateEmail) {
       return (
+        <MagneticEffect strength={30}>
+          <Button
+            variant={buttonVariant}
+            size="icon"
+            asChild
+            className={combinedClassName}
+          >
+            <ObfuscatedEmailLink ariaLabel={ariaLabel}>
+              {iconElement}
+            </ObfuscatedEmailLink>
+          </Button>
+        </MagneticEffect>
+      );
+    }
+
+    // Regular external link
+    return (
+      <MagneticEffect strength={30}>
         <Button
           variant={buttonVariant}
           size="icon"
           asChild
           className={combinedClassName}
         >
-          <ObfuscatedEmailLink ariaLabel={ariaLabel}>
+          <a
+            ref={ref}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={ariaLabel}
+            {...props}
+          >
             {iconElement}
-          </ObfuscatedEmailLink>
+          </a>
         </Button>
-      );
-    }
-
-    // Regular external link
-    return (
-      <Button
-        variant={buttonVariant}
-        size="icon"
-        asChild
-        className={combinedClassName}
-      >
-        <a
-          ref={ref}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={ariaLabel}
-          {...props}
-        >
-          {iconElement}
-        </a>
-      </Button>
+      </MagneticEffect>
     );
   }
 );

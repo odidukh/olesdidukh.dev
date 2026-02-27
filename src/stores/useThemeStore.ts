@@ -3,10 +3,13 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
 
 type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeAccent = 'mocha' | 'navy' | 'emerald' | 'rose' | 'amber';
 
 interface ThemeState {
   /** The selected theme mode: light, dark, or system */
   mode: ThemeMode;
+  /** The selected theme accent color */
+  accent: ThemeAccent;
   /** The resolved theme (always light or dark, based on mode and system preference) */
   resolvedTheme: 'light' | 'dark';
   /** Whether the store has been hydrated from localStorage */
@@ -14,6 +17,8 @@ interface ThemeState {
 
   /** Set theme mode */
   setMode: (mode: ThemeMode) => void;
+  /** Set theme accent */
+  setAccent: (accent: ThemeAccent) => void;
   /** Toggle between light and dark (skips system) */
   toggleTheme: () => void;
   /** Update resolved theme based on system preference */
@@ -35,7 +40,7 @@ function getSystemPreference(): 'light' | 'dark' {
 /**
  * Apply theme to DOM with smooth transition
  */
-function applyTheme(theme: 'light' | 'dark') {
+function applyTheme(theme: 'light' | 'dark', accent: ThemeAccent = 'mocha') {
   if (typeof document === 'undefined') return;
 
   const root = document.documentElement;
@@ -48,6 +53,17 @@ function applyTheme(theme: 'light' | 'dark') {
   } else {
     root.classList.remove('dark');
   }
+
+  // Remove all previous accent classes
+  root.classList.remove(
+    'theme-mocha',
+    'theme-navy',
+    'theme-emerald',
+    'theme-rose',
+    'theme-amber'
+  );
+  // Add new accent class
+  root.classList.add(`theme-${accent}`);
 
   // Remove transition class after animation completes
   // Using requestAnimationFrame to ensure the class is applied first
@@ -93,27 +109,33 @@ export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
       mode: 'system',
+      accent: 'mocha',
       resolvedTheme: 'light',
       hasHydrated: false,
 
       setMode: (mode: ThemeMode) => {
         const resolvedTheme = mode === 'system' ? getSystemPreference() : mode;
-        applyTheme(resolvedTheme);
+        applyTheme(resolvedTheme, get().accent);
         set({ mode, resolvedTheme });
       },
 
+      setAccent: (accent: ThemeAccent) => {
+        applyTheme(get().resolvedTheme, accent);
+        set({ accent });
+      },
+
       toggleTheme: () => {
-        const { resolvedTheme } = get();
+        const { resolvedTheme, accent } = get();
         const newTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
+        applyTheme(newTheme, accent);
         set({ mode: newTheme, resolvedTheme: newTheme });
       },
 
       updateResolvedTheme: () => {
-        const { mode } = get();
+        const { mode, accent } = get();
         if (mode === 'system') {
           const resolvedTheme = getSystemPreference();
-          applyTheme(resolvedTheme);
+          applyTheme(resolvedTheme, accent);
           set({ resolvedTheme });
         }
       },
@@ -133,7 +155,7 @@ export const useThemeStore = create<ThemeState>()(
         }
         return localStorage;
       }),
-      partialize: state => ({ mode: state.mode }),
+      partialize: state => ({ mode: state.mode, accent: state.accent }),
       onRehydrateStorage: () => (state, error) => {
         if (error) {
           captureException(error, {
@@ -147,7 +169,7 @@ export const useThemeStore = create<ThemeState>()(
           // Calculate and apply resolved theme
           const resolvedTheme =
             state.mode === 'system' ? getSystemPreference() : state.mode;
-          applyTheme(resolvedTheme);
+          applyTheme(resolvedTheme, state.accent);
           state.resolvedTheme = resolvedTheme;
 
           // Set up system preference listener

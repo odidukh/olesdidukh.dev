@@ -8,6 +8,7 @@ import {
   MicrosoftClarity,
 } from '@/components/analytics';
 import { PWAInstallPrompt } from '@/components/pwa';
+import { CommandMenu } from '@/components/ui/CommandMenu';
 
 /**
  * Dynamically import Vercel analytics with SSR disabled and no loading state.
@@ -27,6 +28,7 @@ export function Providers() {
   return (
     <>
       <Toaster position="top-right" richColors closeButton />
+      <CommandMenu />
       <Analytics />
       <SpeedInsights />
       <GoogleAnalytics />

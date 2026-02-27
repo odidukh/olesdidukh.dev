@@ -9,7 +9,17 @@ import { Button } from './Button';
 import { Container } from './Container';
 import { SocialIconButton } from './SocialIconButton';
 import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
-import { Menu, X, Github, Linkedin, Mail, Moon, Sun } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Github,
+  Linkedin,
+  Mail,
+  Moon,
+  Sun,
+  Search,
+} from 'lucide-react';
+import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
 
 interface NavItem {
   label: string;
@@ -38,6 +48,9 @@ export function Navigation({ className }: NavigationProps) {
   // Use global theme store
   const { resolvedTheme, toggleTheme } = useThemeStore();
   const isDark = resolvedTheme === 'dark';
+
+  // Command Menu store
+  const { toggle: toggleCommandMenu } = useCommandMenuStore();
 
   // Handle scroll effect
   React.useEffect(() => {
@@ -94,7 +107,6 @@ export function Navigation({ className }: NavigationProps) {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            {/* Social Links */}
             <div className="hidden md:flex items-center space-x-2">
               <SocialIconButton
                 icon={Github}
@@ -108,6 +120,21 @@ export function Navigation({ className }: NavigationProps) {
               />
               <SocialIconButton icon={Mail} aria-label="Email" obfuscateEmail />
             </div>
+
+            {/* Command Menu Toggle */}
+            <Button
+              variant="outline"
+              className="hidden md:flex relative h-9 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-56"
+              onClick={toggleCommandMenu}
+            >
+              <span className="hidden lg:inline-flex">Search...</span>
+              <span className="inline-flex lg:hidden">
+                <Search className="h-4 w-4" />
+              </span>
+              <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+                <span className="text-xs">⌘</span>K
+              </kbd>
+            </Button>
 
             {/* Dark Mode Toggle */}
             <Button
