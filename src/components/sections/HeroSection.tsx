@@ -56,7 +56,15 @@ export function HeroSection() {
   const skills = ['React', 'TypeScript', 'Next.js', 'Node.js', 'AWS'];
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <motion.section
+      className="relative min-h-screen flex items-center overflow-hidden"
+      style={
+        {
+          '--hero-y': y1,
+          '--hero-opacity': opacity,
+        } as React.CSSProperties & import('framer-motion').MotionStyle
+      }
+    >
       {/* Animated Background - Sunset Gradient + Code Rain */}
       <motion.div className="absolute inset-0 -z-10" style={{ opacity }}>
         <SunsetCodeRainBackground columns={16} rainOpacity={0.4} />
@@ -199,7 +207,6 @@ export function HeroSection() {
               </motion.div>
             </div>
 
-            {/* Right Content - 3D/Visual Element */}
             <motion.div
               variants={itemVariants}
               className="relative hidden lg:block"
@@ -396,6 +403,6 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
       </Container>
-    </section>
+    </motion.section>
   );
 }

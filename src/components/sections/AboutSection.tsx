@@ -185,10 +185,15 @@ export function AboutSection() {
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
   return (
-    <section
+    <motion.section
       ref={sectionRef}
       className="relative py-24 md:py-32 overflow-hidden"
       id="about"
+      style={
+        {
+          '--about-y': y,
+        } as React.CSSProperties & import('framer-motion').MotionStyle
+      }
     >
       {/* Animated Background */}
       <div className="absolute inset-0 -z-10">
@@ -585,6 +590,6 @@ export function AboutSection() {
           </div>
         </motion.div>
       </Container>
-    </section>
+    </motion.section>
   );
 }

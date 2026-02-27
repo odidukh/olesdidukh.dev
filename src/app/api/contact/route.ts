@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { Resend } from 'resend';
 import { z } from 'zod';
 import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';

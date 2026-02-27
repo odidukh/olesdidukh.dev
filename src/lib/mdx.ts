@@ -10,6 +10,7 @@ export interface BlogPostMeta {
   title: string;
   excerpt: string;
   coverImage: string;
+  blurDataURL?: string;
   author: {
     name: string;
     avatar: string;

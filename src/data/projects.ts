@@ -17,6 +17,7 @@ export interface Project {
   technologies: string[];
   image: string;
   images: string[];
+  blurDataURL?: string;
   demoUrl?: string;
   githubUrl?: string;
   liveUrl?: string;

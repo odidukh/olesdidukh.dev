@@ -5,13 +5,13 @@ import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import type { BlogPost } from '@/data/blog';
+import type { BlogPostMeta } from '@/lib/mdx';
 import { Clock, ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 interface FeaturedPostProps {
-  post: BlogPost;
+  post: BlogPostMeta;
 }
 
 export function FeaturedPost({ post }: FeaturedPostProps) {
@@ -42,6 +42,8 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                placeholder={post.blurDataURL ? 'blur' : 'empty'}
+                {...(post.blurDataURL ? { blurDataURL: post.blurDataURL } : {})}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className={`object-cover transition-all duration-700 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'

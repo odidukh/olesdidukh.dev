@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { BlogCard } from './BlogCard';
-import type { BlogPost } from '@/data/blog';
+import type { BlogPostMeta } from '@/lib/mdx';
 
 // Mock blog post data for stories
-const mockPost: BlogPost = {
-  id: 'demo-post',
+const mockPost: BlogPostMeta = {
   slug: 'demo-post',
   title: 'Building Modern Web Applications with React and TypeScript',
   excerpt:
     'Learn how to build scalable and maintainable web applications using React and TypeScript with best practices and modern patterns.',
-  content: '',
   coverImage: 'https://placehold.co/600x400/1a1a2e/ffffff?text=Blog+Post',
   author: {
     name: 'Oles Didukh',
@@ -21,25 +19,19 @@ const mockPost: BlogPost = {
   category: 'React',
   tags: ['React', 'TypeScript', 'Best Practices', 'Web Development'],
   featured: false,
-  views: 2500,
-  likes: 150,
 };
 
-const featuredPost: BlogPost = {
+const featuredPost: BlogPostMeta = {
   ...mockPost,
-  id: 'featured-post',
   slug: 'featured-post',
   title: 'The Complete Guide to React Performance Optimization',
   excerpt:
     'Master React performance optimization techniques including memoization, code splitting, lazy loading, and more.',
   featured: true,
-  views: 15000,
-  likes: 890,
 };
 
-const seriesPost: BlogPost = {
+const seriesPost: BlogPostMeta = {
   ...mockPost,
-  id: 'series-post',
   slug: 'series-post',
   title: 'TypeScript Deep Dive: Advanced Types',
   excerpt:
@@ -51,21 +43,16 @@ const seriesPost: BlogPost = {
     part: 2,
     total: 5,
   },
-  views: 5200,
-  likes: 320,
 };
 
-const shortPost: BlogPost = {
+const shortPost: BlogPostMeta = {
   ...mockPost,
-  id: 'short-post',
   slug: 'short-post',
   title: 'Quick Tip: CSS Grid Auto-Fill',
   excerpt: 'A quick tip on using CSS Grid auto-fill for responsive layouts.',
   readingTime: 3,
   category: 'Web Development',
   tags: ['CSS', 'Quick Tip'],
-  views: 800,
-  likes: 45,
 };
 
 const meta = {
@@ -135,8 +122,6 @@ export const HighEngagement: Story = {
   args: {
     post: {
       ...mockPost,
-      views: 50000,
-      likes: 2500,
     },
   },
 };
@@ -154,11 +139,11 @@ export const GridShowcase: Story = {
         <BlogCard post={seriesPost} index={2} />
         <BlogCard post={shortPost} index={3} />
         <BlogCard
-          post={{ ...mockPost, id: 'post-5', category: 'Performance' }}
+          post={{ ...mockPost, slug: 'post-5', category: 'Performance' }}
           index={4}
         />
         <BlogCard
-          post={{ ...mockPost, id: 'post-6', category: 'Career' }}
+          post={{ ...mockPost, slug: 'post-6', category: 'Career' }}
           index={5}
         />
       </div>
@@ -175,15 +160,15 @@ export const CategoryVariations: Story = {
     () => (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-[1200px]">
         <BlogCard
-          post={{ ...mockPost, id: 'react', category: 'React' }}
+          post={{ ...mockPost, slug: 'react', category: 'React' }}
           index={0}
         />
         <BlogCard
-          post={{ ...mockPost, id: 'typescript', category: 'TypeScript' }}
+          post={{ ...mockPost, slug: 'typescript', category: 'TypeScript' }}
           index={1}
         />
         <BlogCard
-          post={{ ...mockPost, id: 'performance', category: 'Performance' }}
+          post={{ ...mockPost, slug: 'performance', category: 'Performance' }}
           index={2}
         />
       </div>

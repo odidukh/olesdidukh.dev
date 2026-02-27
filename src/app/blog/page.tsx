@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
-import { BlogSectionWithErrorBoundary } from '@/components/sections/BlogSectionWithErrorBoundary';
+import { BlogSection } from '@/components/sections/BlogSection';
 
 export const metadata: Metadata = {
   title: 'Blog | Oles Didukh - Web Development Insights',
@@ -41,7 +41,7 @@ export default function BlogPage() {
       <BreadcrumbSchema page="blog" />
       <Navigation />
       <main id="main-content" className="pt-20">
-        <BlogSectionWithErrorBoundary />
+        <BlogSection />
       </main>
       <Footer />
     </>

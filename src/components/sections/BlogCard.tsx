@@ -4,14 +4,14 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import type { BlogPost } from '@/data/blog';
+import type { BlogPostMeta } from '@/lib/mdx';
 import { Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { MetaItem } from '@/components/ui/MetaItem';
 import Link from 'next/link';
 import Image from 'next/image';
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: BlogPostMeta;
   index: number;
 }
 
@@ -49,6 +49,10 @@ export const BlogCard = React.memo(function BlogCard({
                   src={post.coverImage}
                   alt={post.title}
                   fill
+                  placeholder={post.blurDataURL ? 'blur' : 'empty'}
+                  {...(post.blurDataURL
+                    ? { blurDataURL: post.blurDataURL }
+                    : {})}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className={`object-cover transition-all duration-500 group-hover:scale-110 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
