@@ -10,7 +10,15 @@ import { getPlaiceholder } from 'plaiceholder';
  */
 export async function getFallbackImageBlur(src: string): Promise<string> {
   try {
-    const buffer = await fs.readFile(path.join(process.cwd(), 'public', src));
+    let buffer: Buffer;
+    if (src.startsWith('http://') || src.startsWith('https://')) {
+      const res = await fetch(src);
+      if (!res.ok) throw new Error(`Failed to fetch image: ${res.statusText}`);
+      const arrayBuffer = await res.arrayBuffer();
+      buffer = Buffer.from(arrayBuffer);
+    } else {
+      buffer = await fs.readFile(path.join(process.cwd(), 'public', src));
+    }
     const { base64 } = await getPlaiceholder(buffer);
     return base64;
   } catch (err) {

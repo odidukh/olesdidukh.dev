@@ -2,7 +2,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
 // Create Redis client - will be undefined if env vars are not set
-const redis =
+export const redis =
   process.env['UPSTASH_REDIS_REST_URL'] &&
   process.env['UPSTASH_REDIS_REST_TOKEN']
     ? new Redis({
@@ -18,6 +18,26 @@ export const contactRateLimiter = redis
       limiter: Ratelimit.slidingWindow(5, '15 m'),
       analytics: true,
       prefix: 'ratelimit:contact',
+    })
+  : null;
+
+// Rate limiter for views: 1 request per post per 1 hour per IP
+export const viewsRateLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(1, '1 h'),
+      analytics: true,
+      prefix: 'ratelimit:views',
+    })
+  : null;
+
+// Rate limiter for reactions (claps): 50 requests per post per 1 hour per IP
+export const reactionsRateLimiter = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(50, '1 h'),
+      analytics: true,
+      prefix: 'ratelimit:reactions',
     })
   : null;
 

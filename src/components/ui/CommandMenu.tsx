@@ -16,13 +16,18 @@ import {
   Search,
   Palette,
 } from 'lucide-react';
-import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
 import { useThemeStore, ThemeAccent } from '@/stores/useThemeStore';
+import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
+import { useSoundPreference } from '@/stores/useUIPreferencesStore';
+import { useAppSounds } from '@/hooks/useAppSounds';
+import { Volume2, VolumeX } from 'lucide-react';
 
 export function CommandMenu() {
   const router = useRouter();
   const { isOpen, close, toggle } = useCommandMenuStore();
   const { mode, setMode, accent, setAccent } = useThemeStore();
+  const { soundEnabled, setSoundEnabled } = useSoundPreference();
+  const { playPop, playSwoosh } = useAppSounds();
 
   // Toggle the menu when ⌘K is pressed
   React.useEffect(() => {
@@ -30,19 +35,21 @@ export function CommandMenu() {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         toggle();
+        if (!isOpen) playSwoosh();
       }
     };
 
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, [toggle]);
+  }, [toggle, isOpen, playSwoosh]);
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
+      playPop();
       close();
       command();
     },
-    [close]
+    [close, playPop]
   );
 
   return (
@@ -194,6 +201,32 @@ export function CommandMenu() {
                   )}
                 </Command.Item>
               ))}
+            </Command.Group>
+
+            <Command.Separator className="-mx-1 h-px bg-border my-1" />
+
+            <Command.Group
+              heading="Preferences & Accessibility"
+              className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground mt-4"
+            >
+              <Command.Item
+                onSelect={() => {
+                  setSoundEnabled(!soundEnabled);
+                  if (!soundEnabled) playPop(); // Play sound if we just enabled it
+                }}
+                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                value="Toggle UI Sound Effects"
+              >
+                {soundEnabled ? (
+                  <Volume2 className="mr-2 h-4 w-4" />
+                ) : (
+                  <VolumeX className="mr-2 h-4 w-4" />
+                )}
+                <span>UI Sound Effects</span>
+                <span className="ml-auto text-xs text-muted-foreground">
+                  {soundEnabled ? 'On' : 'Off'}
+                </span>
+              </Command.Item>
             </Command.Group>
           </Command.List>
         </Command>

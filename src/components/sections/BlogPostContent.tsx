@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { BlogCard } from '@/components/sections/BlogCard';
+import { ViewCounter } from '@/components/ui/ViewCounter';
+import { ReactionButton } from '@/components/ui/ReactionButton';
 import { blogPosts, type BlogPost } from '@/data/blog';
 import type { BlogPostMeta } from '@/lib/mdx';
 import { sanitizeHtml } from '@/lib/sanitize';
@@ -181,6 +183,9 @@ export function BlogPostContent({
                   <Clock className="h-4 w-4" />
                   {post.readingTime} min read
                 </span>
+                <span className="flex items-center gap-1">
+                  <ViewCounter slug={postId} trackView />
+                </span>
               </div>
             </div>
 
@@ -244,6 +249,11 @@ export function BlogPostContent({
                   />
                   <span className="text-sm font-medium">Save</span>
                 </button>
+
+                {/* React / Clap */}
+                <div className="w-full flex justify-center py-2">
+                  <ReactionButton slug={postId} />
+                </div>
 
                 {/* Share */}
                 <div className="relative">

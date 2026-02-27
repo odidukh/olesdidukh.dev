@@ -23,6 +23,9 @@ interface UIPreferencesState {
   /** Preferred locale/language */
   locale: Locale | null;
 
+  /** Whether UI sounds are enabled */
+  soundEnabled: boolean;
+
   /** Set reduced motion preference */
   setReducedMotion: (reduced: boolean) => void;
   /** Set compact layout preference */
@@ -41,6 +44,8 @@ interface UIPreferencesState {
   shouldShowPWAInstall: () => boolean;
   /** Set locale preference */
   setLocale: (locale: Locale | null) => void;
+  /** Set sound enabled preference */
+  setSoundEnabled: (enabled: boolean) => void;
   /** Reset all preferences to defaults */
   resetPreferences: () => void;
 }
@@ -54,6 +59,7 @@ const initialState = {
   pwaInstallDismissed: false,
   pwaInstallDismissedAt: null as number | null,
   locale: null as Locale | null,
+  soundEnabled: false,
 };
 
 /**
@@ -137,6 +143,8 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
 
       setLocale: locale => set({ locale }),
 
+      setSoundEnabled: enabled => set({ soundEnabled: enabled }),
+
       resetPreferences: () =>
         set({
           reducedMotion: false,
@@ -145,6 +153,7 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
           sidebarCollapsed: false,
           showReadingProgress: true,
           locale: null,
+          soundEnabled: false,
           // Keep PWA dismissal state
         }),
     }),
@@ -187,6 +196,12 @@ export const useLocalePreference = () =>
   useUIPreferencesStore(state => ({
     locale: state.locale,
     setLocale: state.setLocale,
+  }));
+
+export const useSoundPreference = () =>
+  useUIPreferencesStore(state => ({
+    soundEnabled: state.soundEnabled,
+    setSoundEnabled: state.setSoundEnabled,
   }));
 
 export type { Locale };

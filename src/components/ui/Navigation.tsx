@@ -20,6 +20,7 @@ import {
   Search,
 } from 'lucide-react';
 import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
+import { useAppSounds } from '@/hooks/useAppSounds';
 
 interface NavItem {
   label: string;
@@ -52,6 +53,9 @@ export function Navigation({ className }: NavigationProps) {
   // Command Menu store
   const { toggle: toggleCommandMenu } = useCommandMenuStore();
 
+  // App sounds
+  const { playPop, playClick } = useAppSounds();
+
   // Handle scroll effect
   React.useEffect(() => {
     const handleScroll = () => {
@@ -79,7 +83,10 @@ export function Navigation({ className }: NavigationProps) {
             href="/"
             className="group flex items-center space-x-2 text-xl font-bold"
           >
-            <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent transition-all group-hover:from-mocha-600 group-hover:to-accent-green">
+            <span
+              className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent transition-all group-hover:from-mocha-600 group-hover:to-accent-green"
+              onClick={() => playPop()}
+            >
               Oles Didukh
             </span>
           </Link>
@@ -90,6 +97,7 @@ export function Navigation({ className }: NavigationProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => playPop()}
                 className={cn(
                   'relative text-sm font-medium transition-colors hover:text-primary',
                   pathname === item.href
@@ -140,7 +148,10 @@ export function Navigation({ className }: NavigationProps) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleTheme}
+              onClick={() => {
+                playClick();
+                toggleTheme();
+              }}
               className="h-9 w-9"
               aria-label="Toggle dark mode"
             >
@@ -156,7 +167,10 @@ export function Navigation({ className }: NavigationProps) {
               variant="ghost"
               size="icon"
               className="lg:hidden h-9 w-9"
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                playClick();
+                setIsOpen(!isOpen);
+              }}
               aria-label="Toggle menu"
             >
               {isOpen ? (
@@ -176,7 +190,10 @@ export function Navigation({ className }: NavigationProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    playPop();
+                    setIsOpen(false);
+                  }}
                   className={cn(
                     'text-sm font-medium transition-colors hover:text-primary px-2 py-1',
                     pathname === item.href
