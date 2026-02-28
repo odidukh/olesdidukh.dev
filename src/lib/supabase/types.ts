@@ -223,6 +223,25 @@ export interface ContactSubmissionInsert {
   replied?: boolean;
 }
 
+// Guestbook Entry types
+export interface GuestbookEntry {
+  id: string;
+  created_at: string;
+  user_id: string;
+  full_name: string;
+  avatar_url: string;
+  message: string;
+}
+
+export interface GuestbookEntryInsert {
+  id?: string;
+  created_at?: string;
+  user_id: string;
+  full_name: string;
+  avatar_url: string;
+  message: string;
+}
+
 // Database type for Supabase client
 export interface Database {
   public: {
@@ -256,6 +275,11 @@ export interface Database {
         Row: ContactSubmission;
         Insert: ContactSubmissionInsert;
         Update: Partial<ContactSubmissionInsert>;
+      };
+      guestbook_entries: {
+        Row: GuestbookEntry;
+        Insert: GuestbookEntryInsert;
+        Update: Partial<GuestbookEntryInsert>;
       };
     };
     Views: Record<string, never>;

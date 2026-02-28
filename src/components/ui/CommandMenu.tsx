@@ -15,6 +15,7 @@ import {
   Monitor,
   Search,
   Palette,
+  BookOpen,
 } from 'lucide-react';
 import { useThemeStore, ThemeAccent } from '@/stores/useThemeStore';
 import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
@@ -119,6 +120,14 @@ export function CommandMenu() {
               >
                 <FileText className="mr-2 h-4 w-4" />
                 <span>Blog</span>
+              </Command.Item>
+              <Command.Item
+                onSelect={() => runCommand(() => router.push('/guestbook'))}
+                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                value="Guestbook Hall of Fame Messages"
+              >
+                <BookOpen className="mr-2 h-4 w-4" />
+                <span>Guestbook</span>
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/contact'))}

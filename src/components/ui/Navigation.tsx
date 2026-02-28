@@ -34,6 +34,7 @@ const navItems: NavItem[] = [
   { label: 'Skills', href: '/skills' },
   { label: 'Uses', href: '/uses' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Guestbook', href: '/guestbook' },
   { label: 'Contact', href: '/contact' },
 ];
 
