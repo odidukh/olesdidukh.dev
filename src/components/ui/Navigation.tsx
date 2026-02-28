@@ -30,7 +30,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'About', href: '/about' },
   { label: 'Experience', href: '/experience' },
-  { label: 'Projects', href: '/projects' },
+  // { label: 'Projects', href: '/projects' },
   { label: 'Skills', href: '/skills' },
   { label: 'Uses', href: '/uses' },
   { label: 'Blog', href: '/blog' },
@@ -70,7 +70,7 @@ export function Navigation({ className }: NavigationProps) {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 w-full overflow-hidden transition-all duration-300',
+        'fixed top-0 z-50 w-full transition-all duration-300',
         isScrolled
           ? 'bg-background/80 backdrop-blur-lg shadow-sm'
           : 'bg-transparent',
@@ -90,28 +90,17 @@ export function Navigation({ className }: NavigationProps) {
             >
               Oles Didukh
             </span>
-            {/* Availability dot — links to contact */}
-            <Link
-              href="/contact"
-              aria-label="Available for new opportunities — contact me"
-              title="Available for new opportunities"
-              className="relative flex h-2 w-2 ml-0.5"
-              onClick={e => e.stopPropagation()}
-            >
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-500 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-success-500" />
-            </Link>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-5 xl:space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {navItems.map(item => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => playPop()}
                 className={cn(
-                  'relative text-xs xl:text-sm font-medium transition-colors hover:text-primary whitespace-nowrap',
+                  'relative text-sm font-medium transition-colors hover:text-primary',
                   pathname === item.href
                     ? 'text-primary'
                     : 'text-muted-foreground'
