@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { Container } from '@/components/ui/Container';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Badge } from '@/components/ui/Badge';
 import { GuestbookForm } from '@/components/sections/GuestbookForm';
 import { GuestbookList } from '@/components/sections/GuestbookList';
@@ -74,6 +75,12 @@ export default function GuestbookPage() {
     <>
       <Navigation />
       <main id="main-content" className="min-h-screen pt-20">
+        {/* Breadcrumb */}
+        <div className="pt-4">
+          <Container size="xl">
+            <Breadcrumb items={[{ label: 'Guestbook' }]} />
+          </Container>
+        </div>
         {/* Hero Section */}
         <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-muted/40 to-background py-20">
           {/* Decorative background blobs */}

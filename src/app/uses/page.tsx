@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Button } from '@/components/ui/Button';
 import {
   Code2,
@@ -371,6 +372,8 @@ export default function UsesPage() {
       <Navigation />
       <main id="main-content" className="min-h-screen pt-24 pb-16">
         <Container size="wide" padding="lg">
+          {/* Breadcrumb */}
+          <Breadcrumb items={[{ label: 'Uses & Stack' }]} />
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

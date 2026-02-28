@@ -57,6 +57,14 @@ export const breadcrumbConfigs = {
     { name: 'Home', url: 'https://olesdidukh.dev' },
     { name: 'Contact', url: 'https://olesdidukh.dev/contact' },
   ],
+  guestbook: [
+    { name: 'Home', url: 'https://olesdidukh.dev' },
+    { name: 'Guestbook', url: 'https://olesdidukh.dev/guestbook' },
+  ],
+  uses: [
+    { name: 'Home', url: 'https://olesdidukh.dev' },
+    { name: 'Uses', url: 'https://olesdidukh.dev/uses' },
+  ],
 };
 
 /**
