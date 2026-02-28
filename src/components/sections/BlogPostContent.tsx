@@ -84,11 +84,13 @@ export function BlogPostContent({
 
   const postId = post.slug;
 
-  // Find previous and next posts
+  // Find previous post (chronological) and next post (topically related)
   const currentIndex = blogPosts.findIndex(p => p.slug === postId);
   const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
+  // Prefer topically related post for forward navigation; fall back to positional
   const nextPost =
-    currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
+    (relatedPosts[0] as BlogPost | null) ??
+    (currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null);
 
   const { scrollYProgress } = useScroll();
   const prefersReducedMotion = React.useMemo(
@@ -415,10 +417,13 @@ export function BlogPostContent({
                 </Link>
               )}
               {nextPost && (
-                <Link href={`/blog/${nextPost.slug}`}>
+                <Link
+                  href={`/blog/${nextPost.slug}`}
+                  className={!prevPost ? 'md:col-start-2' : ''}
+                >
                   <div className="p-4 border rounded-lg hover:bg-muted transition-all group text-right">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2 justify-end">
-                      Next Article
+                      Continue reading
                       <ArrowRight className="h-4 w-4" />
                     </div>
                     <h4 className="font-semibold group-hover:text-primary transition-colors line-clamp-2">

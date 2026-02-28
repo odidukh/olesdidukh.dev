@@ -30,7 +30,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'About', href: '/about' },
   { label: 'Experience', href: '/experience' },
-  // { label: 'Projects', href: '/projects' },
+  { label: 'Projects', href: '/projects' },
   { label: 'Skills', href: '/skills' },
   { label: 'Uses', href: '/uses' },
   { label: 'Blog', href: '/blog' },
@@ -90,6 +90,17 @@ export function Navigation({ className }: NavigationProps) {
             >
               Oles Didukh
             </span>
+            {/* Availability dot — links to contact */}
+            <Link
+              href="/contact"
+              aria-label="Available for new opportunities — contact me"
+              title="Available for new opportunities"
+              className="relative flex h-2 w-2 ml-0.5"
+              onClick={e => e.stopPropagation()}
+            >
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-500 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-success-500" />
+            </Link>
           </Link>
 
           {/* Desktop Navigation */}

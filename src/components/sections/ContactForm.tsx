@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useAnalytics } from '@/hooks';
 import { trackContactFormConversion } from '@/lib/conversions';
 import { captureException } from '@/lib/sentry';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
 import { Badge } from '@/components/ui/Badge';
@@ -19,8 +20,12 @@ import {
   CheckCircle,
   AlertCircle,
   Sparkles,
+  Clock,
+  Calendar,
 } from 'lucide-react';
 import { PROJECT_TYPES, BUDGET_RANGES, TIMELINES } from '@/config/contact-form';
+
+const MESSAGE_MAX_LENGTH = 2000;
 
 interface FormData {
   name: string;
@@ -61,6 +66,7 @@ export function ContactForm() {
   const [submitStatus, setSubmitStatus] = React.useState<
     'idle' | 'success' | 'error'
   >('idle');
+  const [submittedName, setSubmittedName] = React.useState('');
   const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -162,9 +168,8 @@ export function ContactForm() {
       }
 
       setSubmitStatus('success');
-      toast.success('Message sent successfully!', {
-        description: "I'll get back to you within 24 hours.",
-      });
+      setSubmittedName(formData.name.trim());
+      // Remove success toast — the persistent success screen replaces it
 
       // Track successful form submission
       trackFormSubmission('contact_form', 'success', {
@@ -194,7 +199,7 @@ export function ContactForm() {
           message: '',
           website: '',
         });
-        setSubmitStatus('idle');
+        // Keep status as 'success' — user sees the confirmation screen
       }, 3000);
     } catch (error) {
       captureException(error, {
@@ -211,6 +216,46 @@ export function ContactForm() {
       setIsSubmitting(false);
     }
   };
+
+  // UX-8: Persistent success screen
+  if (submitStatus === 'success') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center py-12 space-y-5"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+        >
+          <CheckCircle className="h-16 w-16 text-success-600 mx-auto" />
+        </motion.div>
+        <h3 className="text-2xl font-bold">
+          Message sent{submittedName ? `, ${submittedName}` : ''}!
+        </h3>
+        <p className="text-muted-foreground max-w-sm mx-auto">
+          I&apos;ll get back to you within 24 hours on weekdays. Talk soon!
+        </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <Button variant="outline" onClick={() => setSubmitStatus('idle')}>
+            Send another message
+          </Button>
+          <Button asChild>
+            <a
+              href="https://calendly.com/oles-didukh"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule a call
+            </a>
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -390,14 +435,38 @@ export function ContactForm() {
           disabled={isSubmitting}
           rows={4}
         />
-        <p className="text-xs text-muted-foreground mt-1">
-          Please provide as much detail as possible so I can better understand
-          your needs.
-        </p>
+        {/* UX-4: Live character counter */}
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs text-muted-foreground">
+            Please provide as much detail as possible so I can better understand
+            your needs.
+          </p>
+          <span
+            className={cn(
+              'text-xs shrink-0 ml-3',
+              formData.message.length > MESSAGE_MAX_LENGTH * 0.95
+                ? 'text-error-600 font-semibold'
+                : formData.message.length > MESSAGE_MAX_LENGTH * 0.8
+                  ? 'text-warning-600'
+                  : 'text-muted-foreground'
+            )}
+          >
+            {formData.message.length}/{MESSAGE_MAX_LENGTH}
+          </span>
+        </div>
       </div>
 
       {/* Submit Button & Status */}
       <div className="space-y-4">
+        {/* UX-6: Response-time trust signal */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Clock className="h-4 w-4 text-success-600 shrink-0" />
+          <span>
+            Average response:{' '}
+            <strong className="text-foreground">under 24 hours</strong> on
+            weekdays
+          </span>
+        </div>
         <Button
           type="submit"
           size="lg"
@@ -417,23 +486,8 @@ export function ContactForm() {
           )}
         </Button>
 
-        {/* Status Messages */}
+        {/* Status Messages — error only; success is handled by the full screen above */}
         <AnimatePresence>
-          {submitStatus === 'success' && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex items-center gap-2 p-3 bg-status-success-bg border border-status-success-border text-status-success-text rounded-lg"
-            >
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm font-medium">
-                Message sent successfully! I&apos;ll get back to you within 24
-                hours.
-              </span>
-            </motion.div>
-          )}
-
           {submitStatus === 'error' && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}

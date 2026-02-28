@@ -103,10 +103,16 @@ export function TypeAnimation({
   ]);
 
   return (
-    <Wrapper className={className}>
+    <Wrapper
+      className={className}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       <span>{displayText}</span>
       {cursor && (
         <motion.span
+          aria-hidden="true"
           className={`inline-block w-0.5 h-[1.1em] bg-current ml-1 ${cursorClassName}`}
           animate={{
             opacity: [1, 1, 0, 0],

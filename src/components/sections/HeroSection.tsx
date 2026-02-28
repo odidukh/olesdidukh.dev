@@ -8,6 +8,7 @@ import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { TypeAnimation } from '@/components/ui/TypeAnimation';
 import { SunsetCodeRainBackground } from '@/components/ui/backgrounds';
 import { SocialIconButton } from '@/components/ui/SocialIconButton';
+import { AvailabilityStatus } from '@/components/sections/AvailabilityStatus';
 import Link from 'next/link';
 import {
   // ArrowRight,
@@ -91,6 +92,11 @@ export function HeroSection() {
                   <Sparkles className="mr-2 h-3 w-3 text-mocha-600" />
                   Available for new opportunities
                 </Badge>
+              </motion.div>
+
+              {/* Availability Status Card */}
+              <motion.div variants={itemVariants}>
+                <AvailabilityStatus />
               </motion.div>
 
               {/* Main Heading */}

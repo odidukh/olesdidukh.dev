@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createBrowserClient } from '@supabase/ssr';
 import { clientEnv } from '@/lib/env';
@@ -14,6 +15,7 @@ interface GuestbookFormProps {
 }
 
 export function GuestbookForm({ user }: GuestbookFormProps) {
+  const router = useRouter();
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
@@ -42,7 +44,7 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    window.location.reload();
+    router.refresh();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,10 +77,10 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
     } else {
       setSuccess(true);
       setMessage('');
-      setTimeout(() => {
-        setSuccess(false);
-        window.location.reload();
-      }, 2000);
+      // Refresh server components (GuestbookList) without a full page reload
+      router.refresh();
+      // Auto-hide success banner after 3 s
+      setTimeout(() => setSuccess(false), 3000);
     }
 
     setSubmitting(false);
@@ -205,7 +207,7 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
               className="flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400"
             >
               <CheckCircle2 className="h-4 w-4 shrink-0" />
-              Message posted! Reloading…
+              Message posted! The list will update shortly.
             </motion.p>
           )}
         </AnimatePresence>
