@@ -95,7 +95,6 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
     }
 
     return posts;
-     
   }, [selectedCategory, searchQuery, sortBy]);
 
   // Blog stats
@@ -228,20 +227,50 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
           {/* Blog Grid */}
           <motion.div variants={itemVariants}>
             {filteredPosts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPosts.map((post: BlogPost, index: number) => (
-                  <BlogCard key={post.slug} post={post} index={index} />
-                ))}
-              </div>
+              filteredPosts.length >= 3 ? (
+                /* Bento layout: first post spans 2 columns */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredPosts.map((post: BlogPost, index: number) =>
+                    index === 0 ? (
+                      /* Featured wide card */
+                      <div
+                        key={post.slug}
+                        className="md:col-span-2 lg:col-span-2"
+                      >
+                        <BlogCard post={post} index={0} featured />
+                      </div>
+                    ) : (
+                      <BlogCard key={post.slug} post={post} index={index} />
+                    )
+                  )}
+                </div>
+              ) : (
+                /* Uniform grid for < 3 results */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredPosts.map((post: BlogPost, index: number) => (
+                    <BlogCard key={post.slug} post={post} index={index} />
+                  ))}
+                </div>
+              )
             ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  No articles found matching your criteria.
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center justify-center py-20 text-center"
+              >
+                <BookOpen className="h-12 w-12 text-muted-foreground/30 mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  No posts found
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {searchQuery
+                    ? `Nothing matched "${searchQuery}".`
+                    : `No posts in this category yet.`}
                 </p>
                 <Button variant="outline" onClick={clearFilters}>
                   Clear filters
                 </Button>
-              </div>
+              </motion.div>
             )}
           </motion.div>
 

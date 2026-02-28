@@ -3,10 +3,12 @@
 import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { TypeAnimation } from '@/components/ui/TypeAnimation';
 import { SunsetCodeRainBackground } from '@/components/ui/backgrounds';
 import { SocialIconButton } from '@/components/ui/SocialIconButton';
+import Link from 'next/link';
 import {
   // ArrowRight,
   Github,
@@ -15,8 +17,8 @@ import {
   Sparkles,
   Code2,
   Zap,
+  ArrowRight,
 } from 'lucide-react';
-// import { TrackedLink } from '@/components/analytics';
 
 const heroVariants: Variants = {
   hidden: { opacity: 0 },
@@ -143,12 +145,12 @@ export function HeroSection() {
                 variants={itemVariants}
                 className="flex flex-wrap gap-4"
               >
-                {/* <Button size="lg" className="group" asChild>
-                  <TrackedLink href="/projects" ctaName="hero_view_work">
+                <Button size="lg" className="group" asChild>
+                  <Link href="/projects">
                     View My Work
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </TrackedLink>
-                </Button> */}
+                  </Link>
+                </Button>
                 <ResumeDownloadButton size="lg" variant="outline" />
               </motion.div>
 

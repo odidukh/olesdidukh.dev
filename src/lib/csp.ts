@@ -45,7 +45,7 @@ export function buildCSP(nonce: string, isDev: boolean): string {
     "style-src 'self' 'unsafe-inline'",
 
     // Images - allow self, data URIs, and placeholder services
-    "img-src 'self' data: blob: https://via.placeholder.com https://img.youtube.com https://*.supabase.co",
+    "img-src 'self' data: blob: https://via.placeholder.com https://img.youtube.com https://*.supabase.co https://avatars.githubusercontent.com https://lh3.googleusercontent.com https://images.unsplash.com",
 
     // Fonts - allow self and data URIs
     "font-src 'self' data:",

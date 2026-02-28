@@ -9,6 +9,7 @@ import {
 } from '@/components/analytics';
 import { PWAInstallPrompt } from '@/components/pwa';
 import { CommandMenu } from '@/components/ui/CommandMenu';
+import { BackToTop } from '@/components/ui/BackToTop';
 
 /**
  * Dynamically import Vercel analytics with SSR disabled and no loading state.
@@ -35,6 +36,7 @@ export function Providers() {
       <MicrosoftClarity />
       <PerformanceMonitor />
       <PWAInstallPrompt />
+      <BackToTop />
     </>
   );
 }

@@ -11,12 +11,18 @@ export default defineConfig({
   reporter: isCI ? 'github' : 'html',
   timeout: 60000, // Increase default timeout to 60s
   expect: {
-    timeout: 10000, // Increase expect timeout to 10s
+    timeout: 10000,
+    toHaveScreenshot: {
+      maxDiffPixels: 100,
+      threshold: 0.2,
+      animations: 'disabled',
+    },
   },
   use: {
     baseURL: 'http://localhost:3001',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
+    video: 'off',
     // Wait for network idle to ensure hydration completes
     navigationTimeout: 30000,
     actionTimeout: 15000,

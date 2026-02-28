@@ -30,6 +30,7 @@ const navigationLinks: FooterLink[] = [
   { label: 'Projects', href: '/projects' },
   { label: 'Skills', href: '/skills' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Guestbook', href: '/guestbook' },
   { label: 'Contact', href: '/contact' },
 ];
 

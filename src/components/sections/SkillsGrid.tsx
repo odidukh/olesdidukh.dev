@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { cn } from '@/lib/utils';
 import {
   Code2,
   Layout,
@@ -15,9 +15,11 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 
+type SkillLevel = 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
+
 interface Skill {
   name: string;
-  level: number; // 0-100
+  level: SkillLevel;
   years?: number;
   category: string;
 }
@@ -30,6 +32,27 @@ interface SkillCategory {
   skills: Skill[];
 }
 
+const TIER_DOTS: Record<SkillLevel, number> = {
+  Expert: 4,
+  Advanced: 3,
+  Intermediate: 2,
+  Learning: 1,
+};
+
+const TIER_COLORS: Record<SkillLevel, string> = {
+  Expert: 'from-mocha-400 to-mocha-600',
+  Advanced: 'from-navy-400 to-navy-600',
+  Intermediate: 'from-success-400 to-success-600',
+  Learning: 'from-warning-400 to-warning-600',
+};
+
+const TIER_DESCRIPTIONS: Record<SkillLevel, string> = {
+  Expert: 'Deep expertise — go-to choice for production systems',
+  Advanced: 'Strong proficiency — comfortable in complex scenarios',
+  Intermediate: 'Solid working knowledge — used in real projects',
+  Learning: 'Actively growing — side projects & exploration',
+};
+
 const skillCategories: SkillCategory[] = [
   {
     id: 'frontend',
@@ -37,12 +60,22 @@ const skillCategories: SkillCategory[] = [
     icon: Code2,
     color: 'from-mocha-400 to-mocha-600',
     skills: [
-      { name: 'React.js', level: 95, years: 5, category: 'frontend' },
-      { name: 'TypeScript', level: 90, years: 3, category: 'frontend' },
-      { name: 'Next.js', level: 85, years: 2, category: 'frontend' },
-      { name: 'JavaScript ES6+', level: 95, years: 7, category: 'frontend' },
-      { name: 'HTML5/CSS3', level: 95, years: 7, category: 'frontend' },
-      { name: 'Redux/Zustand', level: 90, years: 4, category: 'frontend' },
+      { name: 'React.js', level: 'Expert', years: 5, category: 'frontend' },
+      { name: 'TypeScript', level: 'Expert', years: 3, category: 'frontend' },
+      { name: 'Next.js', level: 'Advanced', years: 2, category: 'frontend' },
+      {
+        name: 'JavaScript ES6+',
+        level: 'Expert',
+        years: 7,
+        category: 'frontend',
+      },
+      { name: 'HTML5/CSS3', level: 'Expert', years: 7, category: 'frontend' },
+      {
+        name: 'Redux/Zustand',
+        level: 'Expert',
+        years: 4,
+        category: 'frontend',
+      },
     ],
   },
   {
@@ -51,12 +84,22 @@ const skillCategories: SkillCategory[] = [
     icon: Layout,
     color: 'from-navy-400 to-navy-600',
     skills: [
-      { name: 'Tailwind CSS', level: 90, years: 3, category: 'styling' },
-      { name: 'SASS/SCSS', level: 85, years: 5, category: 'styling' },
-      { name: 'Material UI', level: 85, years: 4, category: 'styling' },
-      { name: 'Framer Motion', level: 80, years: 2, category: 'styling' },
-      { name: 'Responsive Design', level: 95, years: 7, category: 'styling' },
-      { name: 'Figma', level: 75, years: 3, category: 'styling' },
+      { name: 'Tailwind CSS', level: 'Expert', years: 3, category: 'styling' },
+      { name: 'SASS/SCSS', level: 'Advanced', years: 5, category: 'styling' },
+      { name: 'Material UI', level: 'Advanced', years: 4, category: 'styling' },
+      {
+        name: 'Framer Motion',
+        level: 'Advanced',
+        years: 2,
+        category: 'styling',
+      },
+      {
+        name: 'Responsive Design',
+        level: 'Expert',
+        years: 7,
+        category: 'styling',
+      },
+      { name: 'Figma', level: 'Intermediate', years: 3, category: 'styling' },
     ],
   },
   {
@@ -65,12 +108,22 @@ const skillCategories: SkillCategory[] = [
     icon: Database,
     color: 'from-success-400 to-success-600',
     skills: [
-      { name: 'Node.js', level: 80, years: 4, category: 'backend' },
-      { name: 'Express.js', level: 75, years: 3, category: 'backend' },
-      { name: 'PostgreSQL', level: 70, years: 3, category: 'backend' },
-      { name: 'MongoDB', level: 65, years: 2, category: 'backend' },
-      { name: 'GraphQL', level: 70, years: 2, category: 'backend' },
-      { name: 'RESTful APIs', level: 90, years: 5, category: 'backend' },
+      { name: 'Node.js', level: 'Advanced', years: 4, category: 'backend' },
+      {
+        name: 'Express.js',
+        level: 'Intermediate',
+        years: 3,
+        category: 'backend',
+      },
+      {
+        name: 'PostgreSQL',
+        level: 'Intermediate',
+        years: 3,
+        category: 'backend',
+      },
+      { name: 'MongoDB', level: 'Intermediate', years: 2, category: 'backend' },
+      { name: 'GraphQL', level: 'Intermediate', years: 2, category: 'backend' },
+      { name: 'RESTful APIs', level: 'Expert', years: 5, category: 'backend' },
     ],
   },
   {
@@ -79,15 +132,38 @@ const skillCategories: SkillCategory[] = [
     icon: Wrench,
     color: 'from-warning-400 to-warning-600',
     skills: [
-      { name: 'Git/GitHub', level: 90, years: 7, category: 'tools' },
-      { name: 'Docker', level: 70, years: 2, category: 'tools' },
-      { name: 'CI/CD', level: 75, years: 3, category: 'tools' },
-      { name: 'Webpack/Vite', level: 80, years: 4, category: 'tools' },
-      { name: 'Jest/Testing', level: 85, years: 4, category: 'tools' },
-      { name: 'AWS Basics', level: 65, years: 2, category: 'tools' },
+      { name: 'Git/GitHub', level: 'Expert', years: 7, category: 'tools' },
+      { name: 'Docker', level: 'Intermediate', years: 2, category: 'tools' },
+      { name: 'CI/CD', level: 'Intermediate', years: 3, category: 'tools' },
+      { name: 'Webpack/Vite', level: 'Advanced', years: 4, category: 'tools' },
+      { name: 'Jest/Testing', level: 'Advanced', years: 4, category: 'tools' },
+      { name: 'AWS Basics', level: 'Learning', years: 2, category: 'tools' },
     ],
   },
 ];
+
+function SkillTierIndicator({ level }: { level: SkillLevel }) {
+  const filled = TIER_DOTS[level];
+  return (
+    <div className="flex items-center gap-1.5" title={TIER_DESCRIPTIONS[level]}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <span
+          key={i}
+          className={cn(
+            'h-2 w-2 rounded-full transition-all duration-300',
+            i < filled
+              ? `bg-gradient-to-br ${TIER_COLORS[level]}`
+              : 'bg-muted border border-border'
+          )}
+          aria-hidden="true"
+        />
+      ))}
+      <span className="text-xs font-medium text-muted-foreground ml-1">
+        {level}
+      </span>
+    </div>
+  );
+}
 
 export function SkillsGrid() {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -95,33 +171,58 @@ export function SkillsGrid() {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
     null
   );
-  const [hoveredSkill, setHoveredSkill] = React.useState<string | null>(null);
 
   const filteredCategories = selectedCategory
     ? skillCategories.filter(cat => cat.id === selectedCategory)
     : skillCategories;
 
+  const filterItems = [
+    { id: null, title: 'All Skills' },
+    ...skillCategories.map(c => ({ id: c.id, title: c.title })),
+  ];
+
+  const handleFilterKeyDown = (e: React.KeyboardEvent, currentIdx: number) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const next = (currentIdx + 1) % filterItems.length;
+      setSelectedCategory(filterItems[next]!.id);
+      (e.currentTarget.parentElement?.children[next] as HTMLElement)?.focus();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prev = (currentIdx - 1 + filterItems.length) % filterItems.length;
+      setSelectedCategory(filterItems[prev]!.id);
+      (e.currentTarget.parentElement?.children[prev] as HTMLElement)?.focus();
+    }
+  };
+
   return (
     <div ref={ref} className="space-y-8">
       {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 justify-center">
-        <Badge
-          variant={selectedCategory === null ? 'default' : 'outline'}
-          className="cursor-pointer transition-all hover:scale-105"
-          onClick={() => setSelectedCategory(null)}
-        >
-          All Skills
-        </Badge>
-        {skillCategories.map(category => (
-          <Badge
-            key={category.id}
-            variant={selectedCategory === category.id ? 'default' : 'outline'}
-            className="cursor-pointer transition-all hover:scale-105"
-            onClick={() => setSelectedCategory(category.id)}
-          >
-            {category.title}
-          </Badge>
-        ))}
+      <div
+        role="tablist"
+        aria-label="Filter skills by category"
+        className="flex flex-wrap gap-2 justify-center"
+      >
+        {filterItems.map((item, idx) => {
+          const isSelected = selectedCategory === item.id;
+          return (
+            <button
+              key={String(item.id)}
+              role="tab"
+              aria-selected={isSelected}
+              onClick={() => setSelectedCategory(item.id)}
+              onKeyDown={e => handleFilterKeyDown(e, idx)}
+              className={cn(
+                'rounded-full px-3 py-1 text-sm font-medium transition-all hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                isSelected
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border border-border text-muted-foreground hover:text-foreground'
+              )}
+            >
+              {item.title}
+            </button>
+          );
+        })}
       </div>
 
       {/* Skills Grid */}
@@ -157,55 +258,19 @@ export function SkillsGrid() {
                       transition={{
                         delay: categoryIndex * 0.1 + skillIndex * 0.05,
                       }}
-                      onMouseEnter={() => setHoveredSkill(skill.name)}
-                      onMouseLeave={() => setHoveredSkill(null)}
-                      className="space-y-2"
+                      className="flex items-center justify-between gap-3"
                     >
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">
-                            {skill.name}
-                          </span>
-                          {skill.years && (
-                            <span className="text-xs text-muted-foreground">
-                              ({skill.years}y)
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-sm font-semibold text-muted-foreground">
-                          {skill.level}%
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-sm font-medium truncate">
+                          {skill.name}
                         </span>
+                        {skill.years && (
+                          <span className="text-xs text-muted-foreground shrink-0">
+                            {skill.years}y
+                          </span>
+                        )}
                       </div>
-
-                      <div className="relative h-2 bg-muted rounded-full overflow-hidden">
-                        <motion.div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${category.color} rounded-full`}
-                          initial={{ width: 0 }}
-                          animate={
-                            isInView
-                              ? { width: `${skill.level}%` }
-                              : { width: 0 }
-                          }
-                          transition={{
-                            duration: 1,
-                            delay: categoryIndex * 0.1 + skillIndex * 0.05,
-                            ease: 'easeOut',
-                          }}
-                        >
-                          {hoveredSkill === skill.name && (
-                            <motion.div
-                              className="absolute inset-0 bg-white/20"
-                              initial={{ x: '-100%' }}
-                              animate={{ x: '100%' }}
-                              transition={{
-                                duration: 1,
-                                repeat: Infinity,
-                                ease: 'linear',
-                              }}
-                            />
-                          )}
-                        </motion.div>
-                      </div>
+                      <SkillTierIndicator level={skill.level} />
                     </motion.div>
                   ))}
                 </CardContent>

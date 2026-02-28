@@ -75,9 +75,13 @@ export const ProjectCard = React.memo(function ProjectCard({
                   </div>
                 )}
                 {project.featured && (
-                  <div className="absolute top-2 right-2 bg-yellow-500 text-yellow-900 rounded-full p-1">
+                  <Badge
+                    variant="secondary"
+                    className="absolute top-2 right-2 gap-1 bg-warning-500/90 text-warning-900 text-xs"
+                  >
                     <Star className="h-3 w-3 fill-current" />
-                  </div>
+                    Featured
+                  </Badge>
                 )}
               </div>
 
@@ -217,9 +221,13 @@ export const ProjectCard = React.memo(function ProjectCard({
 
             {/* Featured Badge */}
             {project.featured && (
-              <div className="absolute top-3 right-3 bg-yellow-500 text-yellow-900 rounded-full p-1.5 shadow-lg">
+              <Badge
+                variant="secondary"
+                className="absolute top-3 right-3 gap-1 bg-warning-500/90 text-warning-900 text-xs shadow-lg"
+              >
                 <Star className="h-3 w-3 fill-current" />
-              </div>
+                Featured
+              </Badge>
             )}
 
             {/* Quick Actions */}

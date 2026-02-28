@@ -13,11 +13,13 @@ import Image from 'next/image';
 interface BlogCardProps {
   post: BlogPostMeta;
   index: number;
+  featured?: boolean;
 }
 
 export const BlogCard = React.memo(function BlogCard({
   post,
   index,
+  featured = false,
 }: BlogCardProps) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [imageError, setImageError] = React.useState(false);
@@ -39,7 +41,9 @@ export const BlogCard = React.memo(function BlogCard({
       <Link href={`/blog/${post.slug}`}>
         <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
           {/* Cover Image */}
-          <div className="relative h-48 bg-muted overflow-hidden">
+          <div
+            className={`relative bg-muted overflow-hidden ${featured ? 'h-72' : 'h-48'}`}
+          >
             {!imageError ? (
               <>
                 {!imageLoaded && (
@@ -109,7 +113,9 @@ export const BlogCard = React.memo(function BlogCard({
             </h3>
 
             {/* Excerpt */}
-            <p className="text-sm text-muted-foreground line-clamp-3">
+            <p
+              className={`text-sm text-muted-foreground ${featured ? 'line-clamp-4' : 'line-clamp-3'}`}
+            >
               {post.excerpt}
             </p>
 

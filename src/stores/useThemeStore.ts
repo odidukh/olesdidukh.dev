@@ -166,11 +166,30 @@ export const useThemeStore = create<ThemeState>()(
         }
 
         if (state) {
-          // Calculate and apply resolved theme
+          // Calculate resolved theme
           const resolvedTheme =
             state.mode === 'system' ? getSystemPreference() : state.mode;
-          applyTheme(resolvedTheme, state.accent);
           state.resolvedTheme = resolvedTheme;
+
+          // Only call applyTheme if the DOM doesn't already match.
+          // The inline <script> in layout.tsx sets the correct dark/light class
+          // before React hydrates, so calling applyTheme() unconditionally causes
+          // a second class mutation that triggers the theme-transition animation
+          // (the flash). We skip the full apply and only set the accent class.
+          const domIsDark =
+            typeof document !== 'undefined' &&
+            document.documentElement.classList.contains('dark');
+          const shouldBeDark = resolvedTheme === 'dark';
+
+          if (domIsDark !== shouldBeDark) {
+            // DOM is wrong — fix it (shouldn't happen normally)
+            applyTheme(resolvedTheme, state.accent);
+          } else {
+            // DOM already has the right light/dark class — only apply accent
+            if (typeof document !== 'undefined') {
+              document.documentElement.classList.add(`theme-${state.accent}`);
+            }
+          }
 
           // Set up system preference listener
           if (typeof window !== 'undefined') {
