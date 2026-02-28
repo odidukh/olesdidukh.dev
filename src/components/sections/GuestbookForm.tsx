@@ -73,7 +73,23 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
     const { error } = await supabase.from('guestbook_entries').insert(payload);
 
     if (error) {
-      setError(error.message);
+      // Detect rate-limit or RLS policy errors and show a friendly message
+      const msg = error.message.toLowerCase();
+      if (
+        msg.includes('rate') ||
+        msg.includes('too many') ||
+        error.code === '429'
+      ) {
+        setError(
+          'You\u2019re posting too fast — please wait a minute and try again.'
+        );
+      } else if (msg.includes('policy') || msg.includes('permission')) {
+        setError(
+          'Something went wrong with permissions. Try signing out and back in.'
+        );
+      } else {
+        setError(error.message);
+      }
     } else {
       setSuccess(true);
       setMessage('');
