@@ -32,9 +32,10 @@ vi.mock('framer-motion', async () => {
 
 const mockProject: Project = {
   id: 'test-project',
+  permalink: '/projects/test-project',
   title: 'Test Project',
   description: 'A test project description',
-  longDescription: 'This is a longer description of the test project.',
+  content: 'This is a longer description of the test project.',
   category: 'Web App',
   technologies: ['React', 'TypeScript', 'Next.js'],
   image: '/images/test.jpg',

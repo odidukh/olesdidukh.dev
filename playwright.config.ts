@@ -20,6 +20,10 @@ export default defineConfig({
     // Wait for network idle to ensure hydration completes
     navigationTimeout: 30000,
     actionTimeout: 15000,
+    colorScheme: 'light',
+    contextOptions: {
+      reducedMotion: 'reduce',
+    },
   },
   projects: [
     {

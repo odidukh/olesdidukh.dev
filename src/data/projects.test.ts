@@ -21,7 +21,7 @@ describe('projectsData', () => {
       expect(project.id).toBeDefined();
       expect(project.title).toBeDefined();
       expect(project.description).toBeDefined();
-      expect(project.longDescription).toBeDefined();
+      expect(project.content).toBeDefined();
       expect(project.category).toBeDefined();
       expect(project.technologies).toBeDefined();
       expect(Array.isArray(project.technologies)).toBe(true);

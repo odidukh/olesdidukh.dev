@@ -13,7 +13,7 @@ test.describe('Visual Regression - Desktop', () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   // Skip homepage test due to flaky animations - needs CSS animations disabled
-  test.skip('homepage matches snapshot', async ({ page }) => {
+  test('homepage matches snapshot', async ({ page }) => {
     await page.goto('/');
     // Wait for animations to complete
     await page.waitForTimeout(2000);
@@ -36,7 +36,7 @@ test.describe('Visual Regression - Desktop', () => {
   });
 
   // Skip about page - visual changes may cause snapshot mismatch
-  test.skip('about page matches snapshot', async ({ page }) => {
+  test('about page matches snapshot', async ({ page }) => {
     await page.goto('/about');
     await waitForHydration(page);
 
@@ -45,7 +45,7 @@ test.describe('Visual Regression - Desktop', () => {
     });
   });
 
-  test.skip('projects page matches snapshot', async ({ page }) => {
+  test('projects page matches snapshot', async ({ page }) => {
     await page.goto('/projects');
     await waitForHydration(page);
 
@@ -55,7 +55,7 @@ test.describe('Visual Regression - Desktop', () => {
   });
 
   // Skip blog page - dynamic content may change
-  test.skip('blog page matches snapshot', async ({ page }) => {
+  test('blog page matches snapshot', async ({ page }) => {
     await page.goto('/blog');
     await waitForHydration(page);
 
@@ -65,7 +65,7 @@ test.describe('Visual Regression - Desktop', () => {
   });
 
   // Skip contact page - animations cause flakiness
-  test.skip('contact page matches snapshot', async ({ page }) => {
+  test('contact page matches snapshot', async ({ page }) => {
     await page.goto('/contact');
     await waitForHydration(page);
 
@@ -75,7 +75,7 @@ test.describe('Visual Regression - Desktop', () => {
   });
 
   // Skip skills page - animation causes flakiness
-  test.skip('skills page matches snapshot', async ({ page }) => {
+  test('skills page matches snapshot', async ({ page }) => {
     await page.goto('/skills');
     await waitForHydration(page);
 
@@ -89,7 +89,7 @@ test.describe('Visual Regression - Mobile', () => {
   test.use({ viewport: { width: 375, height: 667 } });
 
   // Skip homepage test due to flaky animations
-  test.skip('homepage mobile matches snapshot', async ({ page }) => {
+  test('homepage mobile matches snapshot', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(2000);
 
@@ -100,7 +100,7 @@ test.describe('Visual Regression - Mobile', () => {
   });
 
   // Skip about mobile - visual changes
-  test.skip('about page mobile matches snapshot', async ({ page }) => {
+  test('about page mobile matches snapshot', async ({ page }) => {
     await page.goto('/about');
     await waitForHydration(page);
 
@@ -110,7 +110,7 @@ test.describe('Visual Regression - Mobile', () => {
   });
 
   // Skip contact page test due to flaky animations
-  test.skip('contact page mobile matches snapshot', async ({ page }) => {
+  test('contact page mobile matches snapshot', async ({ page }) => {
     await page.goto('/contact');
     await page.waitForTimeout(1000);
 
@@ -120,7 +120,7 @@ test.describe('Visual Regression - Mobile', () => {
   });
 
   // Skip mobile navigation menu - hydration issues
-  test.skip('mobile navigation menu matches snapshot', async ({ page }) => {
+  test('mobile navigation menu matches snapshot', async ({ page }) => {
     await page.goto('/');
     await waitForHydration(page);
 
@@ -139,7 +139,7 @@ test.describe('Visual Regression - Dark Mode', () => {
   test.use({ viewport: { width: 1280, height: 720 } });
 
   // Skip homepage test due to flaky animations
-  test.skip('homepage dark mode matches snapshot', async ({ page }) => {
+  test('homepage dark mode matches snapshot', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(2000);
 
@@ -155,7 +155,7 @@ test.describe('Visual Regression - Dark Mode', () => {
   });
 
   // Skip about dark mode - visual changes
-  test.skip('about page dark mode matches snapshot', async ({ page }) => {
+  test('about page dark mode matches snapshot', async ({ page }) => {
     await page.goto('/about');
     await waitForHydration(page);
 
@@ -169,7 +169,7 @@ test.describe('Visual Regression - Dark Mode', () => {
   });
 
   // Skip contact page test due to flaky animations
-  test.skip('contact page dark mode matches snapshot', async ({ page }) => {
+  test('contact page dark mode matches snapshot', async ({ page }) => {
     await page.goto('/contact');
     await page.waitForTimeout(1000);
 
@@ -185,7 +185,7 @@ test.describe('Visual Regression - Dark Mode', () => {
 
 test.describe('Visual Regression - Components', () => {
   // Skip footer test due to flaky animations on scroll
-  test.skip('footer matches snapshot', async ({ page }) => {
+  test('footer matches snapshot', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(2000);
 
@@ -200,7 +200,7 @@ test.describe('Visual Regression - Components', () => {
   });
 
   // Skip navigation test - hydration issues
-  test.skip('navigation matches snapshot', async ({ page }) => {
+  test('navigation matches snapshot', async ({ page }) => {
     await page.goto('/');
     await waitForHydration(page);
 
@@ -211,7 +211,7 @@ test.describe('Visual Regression - Components', () => {
   });
 
   // Skip contact form test - hydration issues
-  test.skip('contact form matches snapshot', async ({ page }) => {
+  test('contact form matches snapshot', async ({ page }) => {
     await page.goto('/contact');
     await waitForHydration(page);
 
@@ -232,7 +232,7 @@ test.describe('Visual Regression - Responsive Breakpoints', () => {
 
   for (const bp of breakpoints) {
     // Skip responsive homepage tests due to flaky animations
-    test.skip(`homepage at ${bp.name} (${bp.width}x${bp.height})`, async ({
+    test(`homepage at ${bp.name} (${bp.width}x${bp.height})`, async ({
       page,
     }) => {
       await page.setViewportSize({ width: bp.width, height: bp.height });
@@ -249,7 +249,7 @@ test.describe('Visual Regression - Responsive Breakpoints', () => {
 
 test.describe('Visual Regression - Interactive States', () => {
   // Skip button hover test due to flaky animations
-  test.skip('button hover state', async ({ page }) => {
+  test('button hover state', async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(2000);
 
@@ -264,7 +264,7 @@ test.describe('Visual Regression - Interactive States', () => {
   });
 
   // Skip input focus test - hydration issues
-  test.skip('input focus state', async ({ page }) => {
+  test('input focus state', async ({ page }) => {
     await page.goto('/contact');
     await waitForHydration(page);
 
@@ -278,7 +278,7 @@ test.describe('Visual Regression - Interactive States', () => {
   });
 
   // Skip form error state test - hydration issues
-  test.skip('form error state', async ({ page }) => {
+  test('form error state', async ({ page }) => {
     await page.goto('/contact');
     await waitForHydration(page);
 
