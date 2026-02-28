@@ -23,9 +23,9 @@ export function CtaSectionClient() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 rounded-full mb-6">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-green-500">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-success-500/10 rounded-full mb-6">
+            <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-success-500">
               Open to opportunities
             </span>
           </div>
@@ -72,15 +72,15 @@ export function CtaSectionClient() {
           {/* Social Proof */}
           <div className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-yellow-500" />
+              <Star className="w-4 h-4 text-warning-500" />
               <span>5.0 Client Rating</span>
             </div>
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-blue-500" />
+              <Globe className="w-4 h-4 text-navy-500" />
               <span>International Clients</span>
             </div>
             <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-green-500" />
+              <Award className="w-4 h-4 text-success-500" />
               <span>100% Project Success</span>
             </div>
           </div>

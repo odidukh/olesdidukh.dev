@@ -63,25 +63,25 @@ const stats: Stat[] = [
     label: 'Years Experience',
     value: '7+',
     icon: Calendar,
-    color: 'text-blue-500',
+    color: 'text-navy-500',
   },
   {
     label: 'Users Impacted',
     value: '60K+',
     icon: Users,
-    color: 'text-green-500',
+    color: 'text-success-500',
   },
   {
     label: 'Companies',
     value: '4',
     icon: Briefcase,
-    color: 'text-purple-500',
+    color: 'text-mocha-500',
   },
   {
     label: 'Technologies',
     value: '25+',
     icon: Code2,
-    color: 'text-orange-500',
+    color: 'text-warning-500',
   },
 ];
 

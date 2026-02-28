@@ -8,7 +8,15 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ProjectCard } from './ProjectCard';
 import { useProjectsFilterStore } from '@/stores';
-import { Search, Filter, Grid3x3, List, Sparkles, X } from 'lucide-react';
+import {
+  Search,
+  Filter,
+  Grid3x3,
+  List,
+  Sparkles,
+  X,
+  Briefcase,
+} from 'lucide-react';
 import {
   PROJECT_CATEGORIES,
   PROJECT_TECHNOLOGIES,
@@ -172,18 +180,21 @@ export function ProjectsSectionClient({
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {PROJECT_CATEGORIES.map(category => (
-                        <Badge
+                        <button
                           key={category}
-                          variant={
+                          type="button"
+                          role="tab"
+                          aria-selected={selectedCategory === category}
+                          tabIndex={0}
+                          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all cursor-pointer hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                             selectedCategory === category
-                              ? 'default'
-                              : 'outline'
-                          }
-                          className="cursor-pointer transition-all hover:scale-105"
+                              ? 'bg-primary text-primary-foreground border-transparent'
+                              : 'border-border text-foreground hover:bg-accent'
+                          }`}
                           onClick={() => setSelectedCategory(category)}
                         >
                           {category}
-                        </Badge>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -195,18 +206,21 @@ export function ProjectsSectionClient({
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {PROJECT_TECHNOLOGIES.map(tech => (
-                        <Badge
+                        <button
                           key={tech}
-                          variant={
+                          type="button"
+                          role="tab"
+                          aria-selected={selectedTechnologies.includes(tech)}
+                          tabIndex={0}
+                          className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all cursor-pointer hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                             selectedTechnologies.includes(tech)
-                              ? 'default'
-                              : 'outline'
-                          }
-                          className="cursor-pointer transition-all hover:scale-105"
+                              ? 'bg-primary text-primary-foreground border-transparent'
+                              : 'border-border text-foreground hover:bg-accent'
+                          }`}
                           onClick={() => toggleTechnology(tech)}
                         >
                           {tech}
-                        </Badge>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -304,18 +318,20 @@ export function ProjectsSectionClient({
               </motion.div>
             ) : (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-12"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center justify-center py-20 text-center"
               >
-                <p className="text-muted-foreground">
-                  No projects found matching your criteria.
+                <Briefcase className="h-12 w-12 text-muted-foreground/30 mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  No projects found
+                </h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {searchQuery
+                    ? `Nothing matched "${searchQuery}".`
+                    : 'No projects match the selected filters.'}
                 </p>
-                <Button
-                  variant="outline"
-                  onClick={clearFilters}
-                  className="mt-4"
-                >
+                <Button variant="outline" onClick={clearFilters}>
                   Clear filters
                 </Button>
               </motion.div>

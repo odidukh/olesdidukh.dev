@@ -152,7 +152,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
           {featuredPosts.length > 0 && (
             <motion.div variants={itemVariants} className="space-y-4">
               <h3 className="text-2xl font-semibold flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-yellow-500" />
+                <Sparkles className="h-6 w-6 text-warning-500" />
                 Featured Articles
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

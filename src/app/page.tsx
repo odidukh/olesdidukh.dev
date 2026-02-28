@@ -13,6 +13,7 @@ import { AboutSection } from '@/components/sections/AboutSection';
 import { JourneySection } from '@/components/sections/JourneySection';
 import { SkillsPreviewSection } from '@/components/sections/SkillsPreviewSection';
 import { PhilosophySection } from '@/components/sections/PhilosophySection';
+import { ProjectsSection } from '@/components/sections/ProjectsSection';
 
 // Lazy load below-the-fold heavy components (Only needed for Client components, Server components are fine natively)
 // We import Server components directly instead of dynamic because Next.js handles Server Component splitting.
@@ -40,12 +41,12 @@ export default function HomePage() {
         <PhilosophySection />
 
         {/* Projects Section */}
-        {/* <ErrorBoundary
+        <ErrorBoundary
           sectionName="Projects"
-          fallbackRender={ProjectsErrorFallback}
+          fallbackRender={BlogErrorFallback}
         >
           <ProjectsSection />
-        </ErrorBoundary> */}
+        </ErrorBoundary>
 
         {/* Blog Section */}
         <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>

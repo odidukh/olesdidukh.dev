@@ -21,7 +21,7 @@ import { useThemeStore, ThemeAccent } from '@/stores/useThemeStore';
 import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
 import { useSoundPreference } from '@/stores/useUIPreferencesStore';
 import { useAppSounds } from '@/hooks/useAppSounds';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Wrench, Zap } from 'lucide-react';
 
 export function CommandMenu() {
   const router = useRouter();
@@ -98,11 +98,19 @@ export function CommandMenu() {
                 <span>Home</span>
               </Command.Item>
               <Command.Item
+                onSelect={() => runCommand(() => router.push('/about'))}
+                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                value="About Me Profile"
+              >
+                <User className="mr-2 h-4 w-4" />
+                <span>About</span>
+              </Command.Item>
+              <Command.Item
                 onSelect={() => runCommand(() => router.push('/experience'))}
                 className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
                 value="Experience and Resume"
               >
-                <User className="mr-2 h-4 w-4" />
+                <Briefcase className="mr-2 h-4 w-4" />
                 <span>Experience</span>
               </Command.Item>
               <Command.Item
@@ -128,6 +136,22 @@ export function CommandMenu() {
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 <span>Guestbook</span>
+              </Command.Item>
+              <Command.Item
+                onSelect={() => runCommand(() => router.push('/skills'))}
+                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                value="Skills Technologies Expertise"
+              >
+                <Zap className="mr-2 h-4 w-4" />
+                <span>Skills</span>
+              </Command.Item>
+              <Command.Item
+                onSelect={() => runCommand(() => router.push('/uses'))}
+                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                value="Uses Developer Setup Stack Tools"
+              >
+                <Wrench className="mr-2 h-4 w-4" />
+                <span>Uses</span>
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/contact'))}

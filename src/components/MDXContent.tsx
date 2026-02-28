@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as runtime from 'react/jsx-runtime';
 import { useMDXComponents } from '@/mdx-components';
@@ -10,7 +12,7 @@ interface MDXProps {
 
 export function MDXContent({ code, components }: MDXProps) {
   const sharedComponents = useMDXComponents({});
-  
+
   const Component = React.useMemo(() => {
     // Generate a React component from the compiled string code provided by velite
     const fn = new Function(code);

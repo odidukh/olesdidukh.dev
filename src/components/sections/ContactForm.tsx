@@ -434,6 +434,7 @@ export function ContactForm() {
           error={errors.message}
           disabled={isSubmitting}
           rows={4}
+          maxLength={MESSAGE_MAX_LENGTH}
         />
         {/* UX-4: Live character counter */}
         <div className="flex items-center justify-between mt-1">
