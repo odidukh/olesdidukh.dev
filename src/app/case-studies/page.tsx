@@ -74,9 +74,8 @@ function CaseStudyCard({
           {/* Title */}
           <h2 className="text-3xl font-bold mb-4">{project.title}</h2>
 
-          {/* Description */}
           <p className="text-lg text-muted-foreground mb-6">
-            {project.longDescription}
+            {project.description}
           </p>
 
           {/* Meta Info */}

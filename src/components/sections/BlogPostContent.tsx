@@ -82,13 +82,10 @@ export function BlogPostContent({
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`,
   };
 
-  // Get post identifier (id for legacy, slug for MDX)
-  const postId = 'id' in post ? post.id : post.slug;
+  const postId = post.slug;
 
   // Find previous and next posts
-  const currentIndex = blogPosts.findIndex(
-    p => p.id === postId || p.slug === postId
-  );
+  const currentIndex = blogPosts.findIndex(p => p.slug === postId);
   const prevPost = currentIndex > 0 ? blogPosts[currentIndex - 1] : null;
   const nextPost =
     currentIndex < blogPosts.length - 1 ? blogPosts[currentIndex + 1] : null;
@@ -424,7 +421,7 @@ export function BlogPostContent({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost, index) => (
                 <BlogCard
-                  key={'id' in relatedPost ? relatedPost.id : relatedPost.slug}
+                  key={relatedPost.slug}
                   post={relatedPost as BlogPost}
                   index={index}
                 />

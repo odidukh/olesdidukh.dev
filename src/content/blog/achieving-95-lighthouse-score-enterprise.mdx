@@ -1,0 +1,259 @@
+---
+id: "achieving-95-lighthouse"
+slug: "achieving-95-lighthouse-score-enterprise"
+title: "Achieving 95+ Lighthouse Score on an Enterprise Dashboard"
+excerpt: "Real techniques we used at Safebooks AI to achieve 95+ Lighthouse scores on a data-heavy financial dashboard, reducing load time by 50%."
+coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80"
+author:
+  name: "Oles Didukh"
+  avatar: "/images/avatar.png"
+  role: "Senior Front-End Engineer"
+publishedAt: "2024-12-10"
+readingTime: 12
+category: "Performance"
+tags:
+  - "Performance"
+  - "Lighthouse"
+  - "Optimization"
+  - "Next.js"
+  - "Case Study"
+featured: false
+views: 1890
+likes: 145
+---
+
+# Achieving 95+ Lighthouse Score on an Enterprise Dashboard
+
+When I joined Safebooks AI, our financial dashboard scored 62 on Lighthouse. Six months later, we consistently hit 95+. Here's exactly how we did it.
+
+## The Starting Point
+
+Our dashboard displayed:
+- Real-time financial charts (updating every 5 seconds)
+- 50+ data tables with sorting/filtering
+- PDF report generation
+- Complex form wizards
+
+Initial metrics:
+- **Lighthouse**: 62
+- **LCP**: 4.2s
+- **INP**: 450ms
+- **CLS**: 0.25
+
+## The Optimization Journey
+
+### 1. JavaScript Bundle Analysis
+
+First, we analyzed what was actually being shipped:
+
+```bash
+npm run build -- --analyze
+```
+
+Findings:
+- Chart.js: 180KB (used on 3 pages)
+- PDF library: 340KB (used on 1 page)
+- Moment.js: 67KB (replaceable)
+- Lodash: 72KB (only using 5 functions)
+
+### 2. Code Splitting Strategy
+
+```typescript
+// Before: Everything loaded upfront
+import { Chart } from 'chart.js';
+import { PDFGenerator } from '@react-pdf/renderer';
+
+// After: Dynamic imports
+const Chart = dynamic(() => import('@/components/Chart'), {
+  loading: () => <ChartSkeleton />,
+  ssr: false,
+});
+
+const PDFGenerator = dynamic(
+  () => import('@/components/PDFGenerator'),
+  { ssr: false }
+);
+```
+
+### 3. Replace Heavy Dependencies
+
+```typescript
+// Moment.js (67KB) → date-fns (tree-shakeable)
+import { format, parseISO } from 'date-fns';
+
+// Full Lodash (72KB) → Individual imports
+import debounce from 'lodash/debounce';
+import groupBy from 'lodash/groupBy';
+```
+
+### 4. Image Optimization
+
+```typescript
+// Next.js Image with proper sizing
+<Image
+  src={chartScreenshot}
+  alt="Financial chart"
+  width={800}
+  height={400}
+  priority={isAboveFold}
+  placeholder="blur"
+  blurDataURL={shimmerDataUrl}
+/>
+```
+
+### 5. Font Loading Strategy
+
+```typescript
+// next.config.js
+const nextConfig = {
+  experimental: {
+    optimizeFonts: true,
+  },
+};
+
+// _app.tsx - Preload critical fonts
+<link
+  rel="preload"
+  href="/fonts/inter-var.woff2"
+  as="font"
+  type="font/woff2"
+  crossOrigin="anonymous"
+/>
+```
+
+### 6. Critical CSS Inlining
+
+```typescript
+// Extract critical CSS for above-the-fold content
+// next.config.js
+const nextConfig = {
+  experimental: {
+    optimizeCss: true,
+  },
+};
+```
+
+### 7. Data Fetching Optimization
+
+```typescript
+// Before: Waterfall requests
+useEffect(() => {
+  fetchUser().then(user => {
+    fetchAccounts(user.id).then(accounts => {
+      fetchTransactions(accounts[0].id);
+    });
+  });
+}, []);
+
+// After: Parallel with React Query
+function Dashboard() {
+  const { data: user } = useQuery(['user'], fetchUser);
+  const { data: accounts } = useQuery(
+    ['accounts', user?.id],
+    () => fetchAccounts(user!.id),
+    { enabled: !!user }
+  );
+
+  // Prefetch likely next data
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (accounts?.[0]) {
+      queryClient.prefetchQuery(
+        ['transactions', accounts[0].id],
+        () => fetchTransactions(accounts[0].id)
+      );
+    }
+  }, [accounts]);
+}
+```
+
+### 8. Virtualization for Large Tables
+
+```typescript
+import { useVirtualizer } from '@tanstack/react-virtual';
+
+function TransactionTable({ transactions }) {
+  const parentRef = useRef(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: transactions.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 48,
+    overscan: 5,
+  });
+
+  return (
+    <div ref={parentRef} className="h-[600px] overflow-auto">
+      <div style={{ height: rowVirtualizer.getTotalSize() }}>
+        {rowVirtualizer.getVirtualItems().map(virtualRow => (
+          <TransactionRow
+            key={virtualRow.key}
+            style={{
+              position: 'absolute',
+              top: virtualRow.start,
+              height: virtualRow.size,
+            }}
+            transaction={transactions[virtualRow.index]}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### 9. Layout Shift Prevention
+
+```css
+/* Reserve space for dynamic content */
+.chart-container {
+  aspect-ratio: 16 / 9;
+  min-height: 300px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+
+/* Skeleton that matches final content */
+.table-skeleton {
+  height: 48px; /* Matches actual row height */
+}
+```
+
+### 10. Server Components for Static Content
+
+```typescript
+// Header with user info - Server Component
+async function DashboardHeader() {
+  const user = await getUser(); // Runs on server
+
+  return (
+    <header>
+      <h1>Welcome, {user.name}</h1>
+      <ClientSideNotifications /> {/* Only this is client */}
+    </header>
+  );
+}
+```
+
+## Results
+
+| Metric | Before | After | Target |
+|--------|--------|-------|--------|
+| Lighthouse | 62 | 96 | 95+ ✅ |
+| LCP | 4.2s | 1.3s | &lt;1.5s ✅ |
+| INP | 450ms | 85ms | &lt;200ms ✅ |
+| CLS | 0.25 | 0.02 | &lt;0.1 ✅ |
+| Bundle | 1.8MB | 420KB | - |
+
+## Lessons Learned
+
+1. **Measure first** - Profile before optimizing
+2. **Bundle size matters** - Every KB counts on mobile
+3. **Virtualize everything large** - Tables, lists, grids
+4. **Prefetch intelligently** - Anticipate user actions
+5. **Server Components are powerful** - Use them for static content
+
+Performance optimization is a continuous process. We now run Lighthouse in CI and alert on regressions.

@@ -15,10 +15,15 @@ const mockPost: BlogPostMeta = {
     role: 'Senior Front-End Engineer',
   },
   publishedAt: '2024-03-15',
-  readingTime: 8,
-  category: 'React',
-  tags: ['React', 'TypeScript', 'Best Practices', 'Web Development'],
+  readingTime: 5,
+  category: 'Career',
+  tags: ['Next.js', 'React', 'TypeScript', 'Performance'],
   featured: false,
+  id: 'mastering-react-19',
+  permalink: '/blog/mastering-react-19',
+  views: 120,
+  likes: 45,
+  content: 'Mock content',
 };
 
 const featuredPost: BlogPostMeta = {

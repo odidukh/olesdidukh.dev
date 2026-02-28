@@ -15,8 +15,8 @@ import {
   getFeaturedPosts,
   getPostsByCategory,
   searchPosts,
+  type BlogPost,
 } from '@/data/blog';
-import { BlogPostMeta } from '@/lib/mdx';
 import { useBlogFilterStore } from '@/stores';
 import {
   Search,
@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 
 interface BlogSectionClientProps {
-  initialPosts: BlogPostMeta[];
+  initialPosts: BlogPost[];
 }
 
 const sectionVariants = {
@@ -101,7 +101,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
   // Blog stats
   const totalPosts = initialPosts.length;
   const totalReadingTime = initialPosts.reduce(
-    (sum, post) => sum + post.readingTime,
+    (sum, post) => sum + (post.readingTime || 5),
     0
   );
 
@@ -158,7 +158,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {featuredPosts.slice(0, 2).map(post => (
-                  <FeaturedPost key={post.id} post={post} />
+                  <FeaturedPost key={post.slug} post={post} />
                 ))}
               </div>
             </motion.div>
@@ -229,8 +229,8 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
           <motion.div variants={itemVariants}>
             {filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPosts.map((post, index) => (
-                  <BlogCard key={post.id} post={post} index={index} />
+                {filteredPosts.map((post: BlogPost, index: number) => (
+                  <BlogCard key={post.slug} post={post} index={index} />
                 ))}
               </div>
             ) : (

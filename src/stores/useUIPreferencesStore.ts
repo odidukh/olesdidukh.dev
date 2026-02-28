@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import { PWA_DISMISS_COOLDOWN_MS, type FontSize } from '@/config/ui';
 
 /** Supported locales */
@@ -186,22 +187,22 @@ export const useFontSizePreference = () =>
   useUIPreferencesStore(state => state.fontSize);
 
 export const usePWAInstallState = () =>
-  useUIPreferencesStore(state => ({
+  useUIPreferencesStore(useShallow(state => ({
     dismissed: state.pwaInstallDismissed,
     shouldShow: state.shouldShowPWAInstall(),
     dismiss: state.dismissPWAInstall,
-  }));
+  })));
 
 export const useLocalePreference = () =>
-  useUIPreferencesStore(state => ({
+  useUIPreferencesStore(useShallow(state => ({
     locale: state.locale,
     setLocale: state.setLocale,
-  }));
+  })));
 
 export const useSoundPreference = () =>
-  useUIPreferencesStore(state => ({
+  useUIPreferencesStore(useShallow(state => ({
     soundEnabled: state.soundEnabled,
     setSoundEnabled: state.setSoundEnabled,
-  }));
+  })));
 
 export type { Locale };

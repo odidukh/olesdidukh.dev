@@ -1,13 +1,10 @@
 import { notFound } from 'next/navigation';
 import {
-  blogPosts,
-  getRelatedPosts as getLegacyRelatedPosts,
-} from '@/data/blog';
-import {
-  getAllPostSlugs,
+  getRelatedPosts,
   getPostBySlug,
-  getRelatedPosts as getMdxRelatedPosts,
-} from '@/lib/mdx';
+  blogPosts,
+  type BlogPost as BlogPostType,
+} from '@/data/blog';
 import { BlogPostContent } from '@/components/sections/BlogPostContent';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
@@ -16,9 +13,7 @@ import {
   generateBreadcrumbSchema,
   getBlogPostBreadcrumbs,
 } from '@/lib/breadcrumbs';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import rehypePrettyCode from 'rehype-pretty-code';
-import { useMDXComponents as getMDXComponents } from '@/mdx-components';
+import { MDXContent } from '@/components/MDXContent';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -26,15 +21,11 @@ interface BlogPostPageProps {
   }>;
 }
 
-// Generate static params for all blog posts (MDX + legacy)
+// Generate static params for all blog posts
 export async function generateStaticParams() {
-  const mdxSlugs = getAllPostSlugs();
-  const legacySlugs = blogPosts.map(post => post.slug);
+  const mdxSlugs = blogPosts.map(p => p.slug);
 
-  // Combine and dedupe slugs
-  const allSlugs = [...new Set([...mdxSlugs, ...legacySlugs])];
-
-  return allSlugs.map(slug => ({ slug }));
+  return mdxSlugs.map(slug => ({ slug }));
 }
 
 // Generate metadata for SEO
@@ -43,74 +34,37 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 
   // Try MDX first
   const mdxPost = getPostBySlug(slug);
-  if (mdxPost) {
-    const ogImageUrl = `/api/og?title=${encodeURIComponent(mdxPost.title)}&type=blog&description=${encodeURIComponent(mdxPost.excerpt.slice(0, 100))}`;
-
-    return {
-      title: `${mdxPost.title} | Oles Didukh Blog`,
-      description: mdxPost.excerpt,
-      openGraph: {
-        title: mdxPost.title,
-        description: mdxPost.excerpt,
-        images: [
-          {
-            url: ogImageUrl,
-            width: 1200,
-            height: 630,
-            alt: mdxPost.title,
-          },
-        ],
-        type: 'article',
-        publishedTime: mdxPost.publishedAt,
-        authors: [mdxPost.author.name],
-        tags: mdxPost.tags,
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: mdxPost.title,
-        description: mdxPost.excerpt,
-        images: [ogImageUrl],
-      },
-      alternates: {
-        canonical: `https://olesdidukh.dev/blog/${slug}`,
-      },
-    };
-  }
-
-  // Fall back to legacy
-  const post = blogPosts.find(p => p.slug === slug);
-
-  if (!post) {
+  if (!mdxPost) {
     return {
       title: 'Post Not Found',
     };
   }
 
-  const ogImageUrl = `/api/og?title=${encodeURIComponent(post.title)}&type=blog&description=${encodeURIComponent(post.excerpt.slice(0, 100))}`;
+  const ogImageUrl = `/api/og?title=${encodeURIComponent(mdxPost.title)}&type=blog&description=${encodeURIComponent(mdxPost.excerpt.slice(0, 100))}`;
 
   return {
-    title: `${post.title} | Oles Didukh Blog`,
-    description: post.excerpt,
+    title: `${mdxPost.title} | Oles Didukh Blog`,
+    description: mdxPost.excerpt,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: mdxPost.title,
+      description: mdxPost.excerpt,
       images: [
         {
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: mdxPost.title,
         },
       ],
       type: 'article',
-      publishedTime: post.publishedAt,
-      authors: [post.author.name],
-      tags: post.tags,
+      publishedTime: mdxPost.publishedAt,
+      authors: [mdxPost.author.name],
+      tags: mdxPost.tags,
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
+      title: mdxPost.title,
+      description: mdxPost.excerpt,
       images: [ogImageUrl],
     },
     alternates: {
@@ -119,119 +73,32 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   };
 }
 
-// MDX options with syntax highlighting
-// Using 'any' due to complex rehype plugin typing that doesn't align with SerializeOptions
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mdxOptions: any = {
-  mdxOptions: {
-    rehypePlugins: [
-      [
-        rehypePrettyCode,
-        {
-          // Use dark theme for both modes for better code readability
-          theme: 'github-dark',
-          keepBackground: true,
-        },
-      ],
-    ],
-  },
-};
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
 
   // Try MDX first
   const mdxPost = getPostBySlug(slug);
 
-  if (mdxPost) {
-    const relatedPosts = getMdxRelatedPosts(slug);
-
-    // Article structured data for SEO
-    const articleJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: mdxPost.title,
-      description: mdxPost.excerpt,
-      image: mdxPost.coverImage,
-      datePublished: mdxPost.publishedAt,
-      dateModified: mdxPost.updatedAt ?? mdxPost.publishedAt,
-      author: {
-        '@type': 'Person',
-        name: mdxPost.author.name,
-        url: 'https://olesdidukh.dev',
-        jobTitle: mdxPost.author.role,
-      },
-      publisher: {
-        '@type': 'Person',
-        name: 'Oles Didukh',
-        url: 'https://olesdidukh.dev',
-      },
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': `https://olesdidukh.dev/blog/${mdxPost.slug}`,
-      },
-      keywords: mdxPost.tags.join(', '),
-      articleSection: mdxPost.category,
-      timeRequired: `PT${mdxPost.readingTime}M`,
-    };
-
-    // Breadcrumb structured data for navigation
-    const breadcrumbJsonLd = generateBreadcrumbSchema(
-      getBlogPostBreadcrumbs(mdxPost.title, mdxPost.slug)
-    );
-
-    // MDX components for RSC
-    const mdxComponents = getMDXComponents({});
-
-    // MDX content rendered as RSC
-    const mdxContent = (
-      <MDXRemote
-        source={mdxPost.content}
-        components={mdxComponents}
-        options={mdxOptions}
-      />
-    );
-
-    return (
-      <>
-        <JsonLd data={articleJsonLd} />
-        <JsonLd data={breadcrumbJsonLd} />
-        <Navigation />
-        <main id="main-content" className="pt-20">
-          <BlogPostContent
-            post={mdxPost}
-            relatedPosts={relatedPosts}
-            mdxContent={mdxContent}
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-  // Fall back to legacy posts
-  const post = blogPosts.find(p => p.slug === slug);
-
-  if (!post) {
+  if (!mdxPost) {
     notFound();
   }
 
-  const relatedPosts = getLegacyRelatedPosts(post.id);
+  const relatedPosts = getRelatedPosts(slug);
 
   // Article structured data for SEO
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: post.title,
-    description: post.excerpt,
-    image: post.coverImage,
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt ?? post.publishedAt,
+    headline: mdxPost.title,
+    description: mdxPost.excerpt,
+    image: mdxPost.coverImage,
+    datePublished: mdxPost.publishedAt,
+    dateModified: mdxPost.updatedAt ?? mdxPost.publishedAt,
     author: {
       '@type': 'Person',
-      name: post.author.name,
+      name: mdxPost.author.name,
       url: 'https://olesdidukh.dev',
-      jobTitle: post.author.role,
+      jobTitle: mdxPost.author.role,
     },
     publisher: {
       '@type': 'Person',
@@ -240,17 +107,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://olesdidukh.dev/blog/${post.slug}`,
+      '@id': `https://olesdidukh.dev/blog/${mdxPost.slug}`,
     },
-    keywords: post.tags.join(', '),
-    articleSection: post.category,
-    wordCount: post.content.split(/\s+/).length,
-    timeRequired: `PT${post.readingTime}M`,
+    keywords: mdxPost.tags.join(', '),
+    articleSection: mdxPost.category,
+    timeRequired: `PT${mdxPost.readingTime || 5}M`,
   };
 
   // Breadcrumb structured data for navigation
   const breadcrumbJsonLd = generateBreadcrumbSchema(
-    getBlogPostBreadcrumbs(post.title, post.slug)
+    getBlogPostBreadcrumbs(mdxPost.title, mdxPost.slug)
+  );
+
+  // MDX content rendered as RSC
+  const mdxContent = (
+    <MDXContent code={mdxPost.content} />
   );
 
   return (
@@ -259,7 +130,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <JsonLd data={breadcrumbJsonLd} />
       <Navigation />
       <main id="main-content" className="pt-20">
-        <BlogPostContent post={post} relatedPosts={relatedPosts} />
+        <BlogPostContent
+          post={mdxPost as unknown as BlogPostType}
+          relatedPosts={relatedPosts as unknown as BlogPostType[]}
+          mdxContent={mdxContent}
+        />
       </main>
       <Footer />
     </>

@@ -1,0 +1,266 @@
+---
+id: "jquery-to-react-migration"
+slug: "jquery-to-react-migration-50000-users"
+title: "jQuery to React: How We Migrated a Platform Serving 50,000+ Users"
+excerpt: "A real-world case study of migrating a legacy jQuery application to React at Inango Systems, achieving 40% performance improvement while maintaining zero downtime."
+coverImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80"
+author:
+  name: "Oles Didukh"
+  avatar: "/images/avatar.png"
+  role: "Senior Front-End Engineer"
+publishedAt: "2024-12-20"
+readingTime: 14
+category: "Tutorial"
+tags:
+  - "React"
+  - "jQuery"
+  - "Migration"
+  - "Case Study"
+  - "Legacy Code"
+featured: false
+views: 2456
+likes: 178
+---
+
+# jQuery to React: How We Migrated a Platform Serving 50,000+ Users
+
+At Inango Systems, we faced a challenge many teams know well: a legacy jQuery application that worked but was increasingly difficult to maintain. Here's how we migrated to React while serving 50,000+ ISP customers.
+
+## The Starting Point
+
+Our jQuery application had grown organically over 5 years:
+- 45,000 lines of JavaScript
+- Spaghetti DOM manipulation
+- Global state scattered everywhere
+- 2-3 bugs per feature addition
+- 8-second initial page load
+
+## The Strategy: Strangler Fig Pattern
+
+Instead of a risky big-bang rewrite, we used the Strangler Fig pattern—gradually replacing jQuery components with React while both coexist.
+
+```
+Phase 1: React Container
+┌──────────────────────────────────┐
+│         jQuery App               │
+│  ┌────────────┐                  │
+│  │React Island│ (new features)   │
+│  └────────────┘                  │
+└──────────────────────────────────┘
+
+Phase 2: Growing React
+┌──────────────────────────────────┐
+│  ┌─────────────────────────────┐ │
+│  │      React Components       │ │
+│  └─────────────────────────────┘ │
+│  jQuery (shrinking)              │
+└──────────────────────────────────┘
+
+Phase 3: React Primary
+┌──────────────────────────────────┐
+│         React App                │
+│  ┌──────┐                        │
+│  │jQuery│ (legacy, isolated)     │
+│  └──────┘                        │
+└──────────────────────────────────┘
+```
+
+## Technical Implementation
+
+### Step 1: React Mount Points
+
+```html
+<!-- In existing jQuery templates -->
+<div id="legacy-header">...</div>
+
+<div id="react-dashboard"></div>  <!-- New React component -->
+
+<div id="legacy-footer">...</div>
+```
+
+```typescript
+// Mount React into jQuery page
+const container = document.getElementById('react-dashboard');
+if (container) {
+  const root = createRoot(container);
+  root.render(<Dashboard />);
+}
+```
+
+### Step 2: Shared State Bridge
+
+jQuery and React needed to share some state during migration:
+
+```typescript
+// state-bridge.ts
+class StateBridge {
+  private listeners: Map<string, Set<Function>> = new Map();
+  private state: Record<string, any> = {};
+
+  // jQuery can set state
+  setState(key: string, value: any) {
+    this.state[key] = value;
+    this.notify(key, value);
+  }
+
+  // React can subscribe
+  subscribe(key: string, callback: Function) {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+    this.listeners.get(key)!.add(callback);
+
+    return () => this.listeners.get(key)!.delete(callback);
+  }
+
+  private notify(key: string, value: any) {
+    this.listeners.get(key)?.forEach(cb => cb(value));
+  }
+}
+
+export const bridge = new StateBridge();
+
+// jQuery side
+$('#user-menu').on('change', function() {
+  bridge.setState('selectedUser', $(this).val());
+});
+
+// React side
+function UserDisplay() {
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    return bridge.subscribe('selectedUser', setUserId);
+  }, []);
+
+  return <UserCard userId={userId} />;
+}
+```
+
+### Step 3: Incremental Component Migration
+
+We prioritized components by:
+1. **Highest bug frequency** - Fix pain points first
+2. **Most changed** - Reduce ongoing maintenance
+3. **Isolated functionality** - Fewer dependencies
+
+```typescript
+// Before: jQuery component
+$('.customer-table').each(function() {
+  const $table = $(this);
+  const data = JSON.parse($table.attr('data-customers'));
+
+  data.forEach(customer => {
+    $table.append(`
+      <tr>
+        <td>${customer.name}</td>
+        <td>${customer.plan}</td>
+        <td><button class="edit-btn" data-id="${customer.id}">Edit</button></td>
+      </tr>
+    `);
+  });
+
+  $table.on('click', '.edit-btn', function() {
+    const id = $(this).data('id');
+    openEditModal(id);
+  });
+});
+
+// After: React component
+function CustomerTable({ customers }: { customers: Customer[] }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  return (
+    <>
+      <table>
+        <tbody>
+          {customers.map(customer => (
+            <tr key={customer.id}>
+              <td>{customer.name}</td>
+              <td>{customer.plan}</td>
+              <td>
+                <button onClick={() => setEditingId(customer.id)}>
+                  Edit
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {editingId && (
+        <EditModal
+          customerId={editingId}
+          onClose={() => setEditingId(null)}
+        />
+      )}
+    </>
+  );
+}
+```
+
+## Challenges We Faced
+
+### 1. jQuery Plugins
+Some jQuery plugins had no React equivalent. We wrapped them:
+
+```typescript
+function LegacyDatePicker({ value, onChange }) {
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const $el = $(ref.current);
+    $el.datepicker({
+      onSelect: (date) => onChange(date),
+    });
+
+    return () => $el.datepicker('destroy');
+  }, [onChange]);
+
+  return <input ref={ref} value={value} readOnly />;
+}
+```
+
+### 2. Global CSS Conflicts
+jQuery used global CSS; React components needed isolation:
+
+```css
+/* Scope React components */
+.react-root {
+  /* Reset inherited styles */
+  all: initial;
+  font-family: inherit;
+}
+
+.react-root * {
+  box-sizing: border-box;
+}
+```
+
+### 3. Team Knowledge Gap
+Not everyone knew React. We:
+- Paired junior devs with React-experienced engineers
+- Created internal documentation and patterns
+- Started with simpler components
+
+## Results
+
+After 8 months of incremental migration:
+
+| Metric | Before | After | Change |
+|--------|--------|-------|--------|
+| Initial load | 8.2s | 2.1s | -74% |
+| Bundle size | 1.2MB | 340KB | -72% |
+| Bug rate | 2.3/week | 0.4/week | -83% |
+| Maintenance time | 40% | 15% | -62% |
+| Developer satisfaction | 3.2/5 | 4.6/5 | +44% |
+
+## Key Takeaways
+
+1. **Don't rewrite, strangle** - Incremental migration reduces risk
+2. **Bridge state carefully** - Plan how jQuery and React communicate
+3. **Migrate by value** - Start with highest-pain components
+4. **Invest in team learning** - The technology shift requires skill building
+5. **Measure everything** - Prove the value with metrics
+
+The migration took longer than a rewrite would have, but we shipped value continuously and never risked the business.

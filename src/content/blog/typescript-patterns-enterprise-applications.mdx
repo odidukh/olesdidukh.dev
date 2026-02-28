@@ -1,0 +1,243 @@
+---
+id: "typescript-patterns-enterprise"
+slug: "typescript-patterns-enterprise-applications"
+title: "TypeScript Patterns for Enterprise React Applications"
+excerpt: "Battle-tested TypeScript patterns from building enterprise platforms. Generics, utility types, and type-safe API layers that scale."
+coverImage: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=80"
+author:
+  name: "Oles Didukh"
+  avatar: "/images/avatar.png"
+  role: "Senior Front-End Engineer"
+publishedAt: "2024-10-20"
+readingTime: 13
+category: "TypeScript"
+tags:
+  - "TypeScript"
+  - "React"
+  - "Patterns"
+  - "Enterprise"
+  - "Best Practices"
+featured: false
+views: 1654
+likes: 123
+---
+
+# TypeScript Patterns for Enterprise React Applications
+
+After building enterprise platforms at Emerline and Safebooks AI, I've developed patterns that make TypeScript work for you instead of against you.
+
+## Pattern 1: Branded Types for Domain Safety
+
+IDs that look the same but mean different things:
+
+```typescript
+// Without branding - easy to mix up
+function getUser(userId: string) { ... }
+function getAccount(accountId: string) { ... }
+
+getUser(accountId); // Compiles! But wrong.
+
+// With branding - compile-time safety
+type UserId = string & { readonly brand: unique symbol };
+type AccountId = string & { readonly brand: unique symbol };
+
+function createUserId(id: string): UserId {
+  return id as UserId;
+}
+
+function getUser(userId: UserId) { ... }
+function getAccount(accountId: AccountId) { ... }
+
+getUser(accountId); // Error! Type 'AccountId' is not assignable
+```
+
+## Pattern 2: Type-Safe API Layer
+
+```typescript
+// Define API contract
+interface APIEndpoints {
+  '/users': {
+    GET: { response: User[] };
+    POST: { body: CreateUserDTO; response: User };
+  };
+  '/users/:id': {
+    GET: { params: { id: string }; response: User };
+    PUT: { params: { id: string }; body: UpdateUserDTO; response: User };
+    DELETE: { params: { id: string }; response: void };
+  };
+}
+
+// Type-safe fetch wrapper
+async function api<
+  Path extends keyof APIEndpoints,
+  Method extends keyof APIEndpoints[Path]
+>(
+  path: Path,
+  method: Method,
+  options?: APIEndpoints[Path][Method] extends { body: infer B } ? { body: B } : never
+): Promise<APIEndpoints[Path][Method] extends { response: infer R } ? R : never> {
+  // Implementation
+}
+
+// Usage - fully typed!
+const users = await api('/users', 'GET'); // User[]
+const user = await api('/users', 'POST', { body: { name: 'John' } }); // User
+```
+
+## Pattern 3: Discriminated Unions for State
+
+```typescript
+// Instead of multiple booleans
+interface BadState {
+  loading: boolean;
+  error: Error | null;
+  data: User[] | null;
+}
+// Problem: Can have loading=true AND error AND data
+
+// Use discriminated unions
+type AsyncState<T> =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'error'; error: Error }
+  | { status: 'success'; data: T };
+
+function UserList() {
+  const [state, setState] = useState<AsyncState<User[]>>({ status: 'idle' });
+
+  switch (state.status) {
+    case 'idle':
+      return <button onClick={load}>Load Users</button>;
+    case 'loading':
+      return <Spinner />;
+    case 'error':
+      return <Error message={state.error.message} />;
+    case 'success':
+      return <List users={state.data} />; // data is User[], guaranteed
+  }
+}
+```
+
+## Pattern 4: Builder Pattern for Complex Objects
+
+```typescript
+class QueryBuilder<T extends Record<string, unknown>> {
+  private query: Partial<T> = {};
+
+  where<K extends keyof T>(key: K, value: T[K]): this {
+    this.query[key] = value;
+    return this;
+  }
+
+  build(): Partial<T> {
+    return { ...this.query };
+  }
+}
+
+interface UserQuery {
+  role: 'admin' | 'user';
+  active: boolean;
+  createdAfter: Date;
+}
+
+const query = new QueryBuilder<UserQuery>()
+  .where('role', 'admin')
+  .where('active', true)
+  .build();
+// Type: Partial<UserQuery>
+```
+
+## Pattern 5: Props Inference from Data
+
+```typescript
+// Infer component props from data structure
+const columns = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'email', label: 'Email', sortable: true },
+  { key: 'role', label: 'Role', sortable: false },
+] as const;
+
+type ColumnKey = typeof columns[number]['key']; // 'name' | 'email' | 'role'
+
+interface TableProps<T extends Record<ColumnKey, unknown>> {
+  data: T[];
+  columns: typeof columns;
+  onSort?: (key: ColumnKey) => void;
+}
+
+function Table<T extends Record<ColumnKey, unknown>>({ data, columns, onSort }: TableProps<T>) {
+  // Implementation
+}
+
+// Usage
+<Table
+  data={users} // Must have name, email, role properties
+  columns={columns}
+  onSort={(key) => { /* key is 'name' | 'email' | 'role' */ }}
+/>
+```
+
+## Pattern 6: Exhaustive Switch Handling
+
+```typescript
+function assertNever(x: never): never {
+  throw new Error(`Unexpected value: ${x}`);
+}
+
+type Status = 'pending' | 'approved' | 'rejected';
+
+function getStatusColor(status: Status): string {
+  switch (status) {
+    case 'pending': return 'yellow';
+    case 'approved': return 'green';
+    case 'rejected': return 'red';
+    default: return assertNever(status); // Compile error if case missing
+  }
+}
+
+// If you add 'cancelled' to Status, TypeScript will error
+// until you handle it in the switch
+```
+
+## Pattern 7: Type-Safe Event Emitter
+
+```typescript
+type EventMap = {
+  userLoggedIn: { userId: string; timestamp: Date };
+  userLoggedOut: { userId: string };
+  dataUpdated: { entityType: string; entityId: string };
+};
+
+class TypedEventEmitter<T extends Record<string, unknown>> {
+  private handlers: Partial<{ [K in keyof T]: Set<(data: T[K]) => void> }> = {};
+
+  on<K extends keyof T>(event: K, handler: (data: T[K]) => void): void {
+    if (!this.handlers[event]) {
+      this.handlers[event] = new Set();
+    }
+    this.handlers[event]!.add(handler);
+  }
+
+  emit<K extends keyof T>(event: K, data: T[K]): void {
+    this.handlers[event]?.forEach(handler => handler(data));
+  }
+}
+
+const emitter = new TypedEventEmitter<EventMap>();
+
+emitter.on('userLoggedIn', (data) => {
+  console.log(data.userId); // Typed!
+  console.log(data.timestamp); // Typed!
+});
+
+emitter.emit('userLoggedIn', {
+  userId: '123',
+  timestamp: new Date()
+}); // Type-checked!
+```
+
+## Conclusion
+
+These patterns have saved countless hours of debugging and made our codebases more maintainable. The initial investment in proper typing pays dividends as your application scales.
+
+Remember: TypeScript is most valuable when it catches bugs at compile time that would otherwise reach production.

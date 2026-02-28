@@ -6,6 +6,7 @@ import { useFocusTrap } from '@/hooks';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import type { Project } from '@/data/projects';
+import { MDXContent } from '@/components/MDXContent';
 import {
   X,
   ExternalLink,
@@ -209,9 +210,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </div>
             </div>
 
-            <p className="text-lg text-muted-foreground">
-              {project.longDescription}
-            </p>
+            <div className="text-gray-600 dark:text-gray-300 mb-6 prose prose-sm dark:prose-invert">
+              <MDXContent code={project.content} />
+            </div>
           </div>
 
           {/* Project Details Grid */}

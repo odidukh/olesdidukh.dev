@@ -1,0 +1,197 @@
+---
+id: "claude-code-workflow"
+slug: "claude-code-workflow-senior-developer-guide"
+title: "Claude Code Workflow: A Senior Developer's Guide to Agentic Coding"
+excerpt: "Master Claude Code CLI with practical workflows for code exploration, refactoring, testing, and PR creation. Learn how to leverage CLAUDE.md and thinking modes effectively."
+coverImage: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&q=80"
+author:
+  name: "Oles Didukh"
+  avatar: "/images/avatar.png"
+  role: "Senior Front-End Engineer"
+publishedAt: "2025-01-20"
+readingTime: 12
+category: "Tools"
+tags:
+  - "Claude Code"
+  - "AI"
+  - "CLI"
+  - "Productivity"
+  - "Development Tools"
+featured: true
+views: 1856
+likes: 142
+---
+
+# Claude Code Workflow: A Senior Developer's Guide to Agentic Coding
+
+Claude Code launched in February 2025 and reached $1B in annualized revenue by November. Here's how to make the most of this powerful agentic coding tool.
+
+## Getting Started
+
+```bash
+# Install globally
+npm install -g @anthropic-ai/claude-code
+
+# Start in your project directory
+cd your-project
+claude
+```
+
+You'll need a Claude Pro or Max subscription for authentication.
+
+## The Power of CLAUDE.md
+
+CLAUDE.md is your project's "memory"—a markdown file where you store context that persists across sessions.
+
+```markdown
+# CLAUDE.md
+
+## Project Overview
+React 18 + TypeScript application for financial dashboards.
+
+## Architecture
+- /src/components - Reusable UI components
+- /src/features - Feature-based modules
+- /src/lib - Utilities and helpers
+
+## Coding Standards
+- Use functional components with hooks
+- Prefer Zustand over Redux for new state
+- All components must have TypeScript interfaces
+- Tests required for business logic
+
+## Common Commands
+- npm run dev - Start development server
+- npm run test - Run Jest tests
+- npm run lint:fix - Auto-fix linting issues
+```
+
+Claude reads this automatically, giving it context about your specific project.
+
+## Essential Workflows
+
+### 1. Exploring Unfamiliar Code
+
+```
+"Explain how authentication works in this codebase.
+Show me the flow from login to protected routes."
+
+"Find all places where we make API calls and
+explain the error handling pattern."
+```
+
+### 2. Refactoring with Confidence
+
+```
+"Refactor the UserProfile component to use React Query
+instead of useEffect for data fetching. Maintain
+the same behavior and add proper loading/error states."
+```
+
+### 3. Test Generation
+
+```
+"Write comprehensive tests for the checkout flow.
+Include:
+- Happy path with valid payment
+- Invalid card handling
+- Network error scenarios
+- Empty cart edge case"
+```
+
+### 4. PR Creation
+
+```
+"Create a PR for the changes we just made.
+Include a clear description of what changed,
+why it changed, and how to test it."
+```
+
+## Thinking Modes
+
+Claude Code supports different thinking modes for complex tasks:
+
+```
+"Think step by step about how to implement
+real-time notifications using WebSockets.
+Consider our existing architecture."
+```
+
+For complex refactoring:
+```
+"Plan the migration from class components to
+functional components. Break it into phases
+that can be merged independently."
+```
+
+## Best Practices from 7+ Years Experience
+
+### 1. Give Rich Context
+
+```
+❌ "Fix the bug"
+
+✅ "There's a race condition in useDataFetch
+   when the component unmounts during a pending
+   request. The error shows in console as
+   'Cannot update unmounted component'.
+   Fix it with proper cleanup."
+```
+
+### 2. Iterate, Don't Retry
+
+When Claude's first attempt isn't right:
+```
+"Good start, but we need to handle the case
+where user.preferences is undefined. Also,
+use our existing ErrorBoundary component
+instead of a try-catch."
+```
+
+### 3. Leverage Multi-File Understanding
+
+Claude Code's strength is understanding your entire codebase:
+```
+"Look at how we handle forms in UserSettings
+and apply the same pattern to the new
+PaymentMethodForm component."
+```
+
+### 4. Use for Code Review
+
+```
+"Review my changes in the staged files.
+Look for:
+- Potential bugs
+- Performance issues
+- Accessibility problems
+- Deviations from our coding standards"
+```
+
+## Integrating with Your Workflow
+
+### Git Hooks
+```bash
+# In your pre-commit hook
+claude "Review staged changes for obvious issues"
+```
+
+### CI/CD Integration
+```
+"Generate a GitHub Action workflow that runs
+our tests, builds the app, and deploys to
+Vercel on merge to main."
+```
+
+## When NOT to Use Claude Code
+
+1. **Security-sensitive operations** - Manual review essential
+2. **Production deployments** - Keep human in the loop
+3. **Database migrations** - Too risky for autonomous execution
+4. **When you don't understand the output** - Never merge code you can't explain
+
+## Conclusion
+
+Claude Code isn't about replacing your expertise—it's about amplifying it. The developers getting the most value are those who provide clear context, iterate on outputs, and maintain their understanding of the codebase.
+
+The future belongs to developers who can effectively collaborate with AI while maintaining the judgment that comes from experience.

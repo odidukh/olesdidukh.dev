@@ -78,7 +78,7 @@ const staticPages: SearchResult[] = [
  */
 function blogToSearchResult(post: BlogPost): SearchResult {
   return {
-    id: post.id,
+    id: post.slug,
     type: 'blog',
     title: post.title,
     description: post.excerpt,

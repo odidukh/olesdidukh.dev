@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { MetaItem } from '@/components/ui/MetaItem';
 import { VideoPlayer } from '@/components/ui/VideoPlayer';
+import { MDXContent } from '@/components/MDXContent';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -111,7 +112,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     '@type': 'CreativeWork',
     '@id': `https://olesdidukh.dev/projects/${project.id}#project`,
     name: project.title,
-    description: project.longDescription,
+    description: project.description,
     author: {
       '@type': 'Person',
       name: 'Oles Didukh',
@@ -166,9 +167,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white lg:text-5xl">
                   {project.title}
                 </h1>
-                <p className="mb-6 text-lg text-gray-600 dark:text-gray-100">
-                  {project.longDescription}
-                </p>
+                <div className="mb-6 text-lg text-gray-600 dark:text-gray-100 prose prose-lg dark:prose-invert">
+                  <MDXContent code={project.content} />
+                </div>
 
                 {/* Project Meta */}
                 <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">

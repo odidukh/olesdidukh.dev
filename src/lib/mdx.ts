@@ -1,122 +1,47 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+// eslint-disable-next-line no-restricted-imports
+import { posts } from '../../.velite';
 import { ALL_FILTER } from '@/constants';
 
-const contentDirectory = path.join(process.cwd(), 'src/content/blog');
-
-export interface BlogPostMeta {
-  slug: string;
-  title: string;
-  excerpt: string;
-  coverImage: string;
-  blurDataURL?: string;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
-  publishedAt: string;
-  updatedAt?: string | undefined;
-  readingTime: number;
-  category: string;
-  tags: string[];
-  featured: boolean;
-  series?:
-    | {
-        name: string;
-        part: number;
-        total: number;
-      }
-    | undefined;
-}
-
-export interface BlogPost extends BlogPostMeta {
-  content: string;
-}
+// eslint-disable-next-line no-restricted-imports
+export type { Post as BlogPostMeta } from '../../.velite';
+// eslint-disable-next-line no-restricted-imports
+export type { Post as BlogPost } from '../../.velite';
 
 /**
- * Get all blog post slugs from MDX files
+ * Get all blog post slugs
  */
 export function getAllPostSlugs(): string[] {
-  if (!fs.existsSync(contentDirectory)) {
-    return [];
-  }
-
-  const files = fs.readdirSync(contentDirectory);
-  return files
-    .filter(file => file.endsWith('.mdx'))
-    .map(file => file.replace(/\.mdx$/, ''));
+  return posts.map(post => post.slug);
 }
 
 /**
  * Get a single blog post by slug
  */
-export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(contentDirectory, `${slug}.mdx`);
-
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
-
-  return {
-    slug,
-    title: data['title'] as string,
-    excerpt: data['excerpt'] as string,
-    coverImage: data['coverImage'] as string,
-    author: (data['author'] as BlogPostMeta['author']) || {
-      name: 'Oles Didukh',
-      avatar: '/images/avatar.png',
-      role: 'Senior Front-End Engineer',
-    },
-    publishedAt: data['publishedAt'] as string,
-    updatedAt: data['updatedAt'] as string | undefined,
-    readingTime:
-      (data['readingTime'] as number) || calculateReadingTime(content),
-    category: data['category'] as string,
-    tags: (data['tags'] as string[]) || [],
-    featured: (data['featured'] as boolean) || false,
-    series: data['series'] as BlogPostMeta['series'],
-    content,
-  };
+export function getPostBySlug(slug: string) {
+  return posts.find(post => post.slug === slug) || null;
 }
 
 /**
  * Get all blog posts with metadata
  */
-export function getAllPosts(): BlogPostMeta[] {
-  const slugs = getAllPostSlugs();
-  const posts = slugs
-    .map(slug => {
-      const post = getPostBySlug(slug);
-      if (!post) return null;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { content: _content, ...meta } = post;
-      return meta;
-    })
-    .filter((post): post is BlogPostMeta => post !== null)
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
-
-  return posts;
+export function getAllPosts() {
+  return posts.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
 }
 
 /**
  * Get featured posts
  */
-export function getFeaturedPosts(): BlogPostMeta[] {
+export function getFeaturedPosts() {
   return getAllPosts().filter(post => post.featured);
 }
 
 /**
  * Get posts by category
  */
-export function getPostsByCategory(category: string): BlogPostMeta[] {
+export function getPostsByCategory(category: string) {
   if (category === ALL_FILTER) return getAllPosts();
   return getAllPosts().filter(post => post.category === category);
 }
@@ -124,7 +49,7 @@ export function getPostsByCategory(category: string): BlogPostMeta[] {
 /**
  * Search posts by query
  */
-export function searchPosts(query: string): BlogPostMeta[] {
+export function searchPosts(query: string) {
   const lowercaseQuery = query.toLowerCase();
   return getAllPosts().filter(
     post =>
@@ -141,7 +66,7 @@ export function searchPosts(query: string): BlogPostMeta[] {
 export function getRelatedPosts(
   currentSlug: string,
   limit: number = 3
-): BlogPostMeta[] {
+) {
   const currentPost = getPostBySlug(currentSlug);
   if (!currentPost) return [];
 
@@ -166,19 +91,9 @@ export function getRelatedPosts(
 }
 
 /**
- * Calculate reading time based on content length
- */
-function calculateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
-}
-
-/**
  * Get all unique categories from posts
  */
 export function getAllCategories(): string[] {
-  const posts = getAllPosts();
   const categories = new Set(posts.map(post => post.category));
   return [ALL_FILTER, ...Array.from(categories)];
 }
@@ -187,7 +102,7 @@ export function getAllCategories(): string[] {
  * Get all unique tags from posts
  */
 export function getAllTags(): string[] {
-  const posts = getAllPosts();
   const tags = new Set(posts.flatMap(post => post.tags));
   return Array.from(tags);
 }
+

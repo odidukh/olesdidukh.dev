@@ -1,0 +1,254 @@
+---
+id: "redux-to-zustand-migration"
+slug: "redux-to-zustand-migration-guide"
+title: "From Redux to Zustand: A Practical Migration Guide"
+excerpt: "Redux is fading in the React ecosystem. Learn how to migrate to Zustand with real examples, patterns for complex state, and strategies for gradual adoption."
+coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80"
+author:
+  name: "Oles Didukh"
+  avatar: "/images/avatar.png"
+  role: "Senior Front-End Engineer"
+publishedAt: "2025-01-05"
+readingTime: 13
+category: "React"
+tags:
+  - "React"
+  - "State Management"
+  - "Redux"
+  - "Zustand"
+  - "Migration"
+featured: false
+views: 1234
+likes: 89
+---
+
+# From Redux to Zustand: A Practical Migration Guide
+
+Redux isn't dead, but it's increasingly seen as legacy for new React projects. Zustand offers the same predictable state management with 90% less boilerplate.
+
+## Why Teams Are Migrating
+
+| Aspect | Redux Toolkit | Zustand |
+|--------|--------------|---------|
+| Bundle size | 47KB | 8KB |
+| Boilerplate | Medium | Minimal |
+| Learning curve | Steep | Gentle |
+| DevTools | Excellent | Good |
+| TypeScript | Good | Excellent |
+
+## Core Concepts Comparison
+
+### Redux Way
+
+```typescript
+// store.ts
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState: { data: null, loading: false },
+  reducers: {
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setUser: (state, action) => {
+      state.data = action.payload;
+      state.loading = false;
+    },
+  },
+});
+
+export const store = configureStore({
+  reducer: { user: userSlice.reducer },
+});
+
+// Component
+function Profile() {
+  const user = useSelector(state => state.user.data);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    fetchUser().then(data => dispatch(setUser(data)));
+  }, [dispatch]);
+
+  return <div>{user?.name}</div>;
+}
+```
+
+### Zustand Way
+
+```typescript
+// store.ts
+import { create } from 'zustand';
+
+interface UserStore {
+  user: User | null;
+  loading: boolean;
+  fetchUser: () => Promise<void>;
+}
+
+const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  loading: false,
+  fetchUser: async () => {
+    set({ loading: true });
+    const user = await fetchUser();
+    set({ user, loading: false });
+  },
+}));
+
+// Component
+function Profile() {
+  const { user, fetchUser } = useUserStore();
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  return <div>{user?.name}</div>;
+}
+```
+
+## Migration Strategy
+
+### Phase 1: Add Zustand Alongside Redux
+
+```typescript
+// New features use Zustand
+const useNewFeatureStore = create((set) => ({
+  // new state
+}));
+
+// Legacy features still use Redux
+const legacyData = useSelector(state => state.legacy);
+```
+
+### Phase 2: Migrate Slice by Slice
+
+Start with isolated slices that don't have many dependencies.
+
+```typescript
+// Before: Redux slice
+const notificationsSlice = createSlice({
+  name: 'notifications',
+  initialState: [],
+  reducers: {
+    add: (state, action) => [...state, action.payload],
+    remove: (state, action) => state.filter(n => n.id !== action.payload),
+    clear: () => [],
+  },
+});
+
+// After: Zustand store
+const useNotificationStore = create<NotificationStore>((set) => ({
+  notifications: [],
+  add: (notification) =>
+    set((state) => ({
+      notifications: [...state.notifications, notification]
+    })),
+  remove: (id) =>
+    set((state) => ({
+      notifications: state.notifications.filter(n => n.id !== id)
+    })),
+  clear: () => set({ notifications: [] }),
+}));
+```
+
+### Phase 3: Handle Async Actions
+
+```typescript
+const useProductStore = create<ProductStore>((set, get) => ({
+  products: [],
+  loading: false,
+  error: null,
+
+  fetchProducts: async (category) => {
+    set({ loading: true, error: null });
+    try {
+      const products = await api.getProducts(category);
+      set({ products, loading: false });
+    } catch (error) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  // Accessing other state
+  addToCart: (productId) => {
+    const product = get().products.find(p => p.id === productId);
+    if (product) {
+      useCartStore.getState().add(product);
+    }
+  },
+}));
+```
+
+## Advanced Patterns
+
+### Middleware (Like Redux Middleware)
+
+```typescript
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+
+const useStore = create(
+  devtools(
+    persist(
+      (set) => ({
+        count: 0,
+        increment: () => set((state) => ({ count: state.count + 1 })),
+      }),
+      { name: 'counter-storage' }
+    )
+  )
+);
+```
+
+### Slices Pattern (Like Redux Slices)
+
+```typescript
+const createUserSlice = (set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+});
+
+const createCartSlice = (set) => ({
+  items: [],
+  addItem: (item) => set((state) => ({
+    items: [...state.items, item]
+  })),
+});
+
+const useStore = create((...a) => ({
+  ...createUserSlice(...a),
+  ...createCartSlice(...a),
+}));
+```
+
+### Selectors for Performance
+
+```typescript
+// Avoid re-renders with selectors
+const userName = useUserStore((state) => state.user?.name);
+const cartCount = useCartStore((state) => state.items.length);
+
+// Shallow comparison for objects
+import { shallow } from 'zustand/shallow';
+const { user, loading } = useUserStore(
+  (state) => ({ user: state.user, loading: state.loading }),
+  shallow
+);
+```
+
+## What to Keep from Redux
+
+- **DevTools pattern**: Zustand supports Redux DevTools
+- **Immutability**: Still important, use Immer if needed
+- **Selector patterns**: Zustand encourages granular selectors
+- **Action naming**: Keep descriptive action names in your methods
+
+## Conclusion
+
+The migration doesn't have to be all-or-nothing. Start with new features in Zustand, gradually migrate existing Redux slices, and enjoy cleaner, more maintainable code.
+
+After our migration at Emerline, we reduced state management code by 60% while maintaining the same functionality.
