@@ -97,6 +97,11 @@
   --color-accent-green-light: var(--accent-green-light);
   --color-accent-green-dark: var(--accent-green-dark);
 
+  /* Accent Mocha colors for gradients */
+  --color-accent-mocha: var(--accent-mocha);
+  --color-accent-mocha-light: var(--accent-mocha-light);
+  --color-accent-mocha-dark: var(--accent-mocha-dark);
+
   /* ==========================================
      SEMANTIC UI COLORS
      Component-level color tokens for Tailwind
@@ -684,115 +689,36 @@
   }
 
   /* ==========================================
+     ACCENT MOCHA UTILITIES
+     For gradient text and backgrounds
+     ========================================== */
+  .text-accent-mocha {
+    color: var(--accent-mocha);
+  }
+  .bg-accent-mocha {
+    background-color: var(--accent-mocha);
+  }
+  .border-accent-mocha {
+    border-color: var(--accent-mocha);
+  }
+  .from-accent-mocha {
+    --tw-gradient-from: var(--accent-mocha) var(--tw-gradient-from-position);
+  }
+  .to-accent-mocha {
+    --tw-gradient-to: var(--accent-mocha) var(--tw-gradient-to-position);
+  }
+  .via-accent-mocha {
+    --tw-gradient-via: var(--accent-mocha) var(--tw-gradient-via-position);
+  }
+  .from-accent-mocha-dark {
+    --tw-gradient-from: var(--accent-mocha-dark)
+      var(--tw-gradient-from-position);
+  }
+
+  /* ==========================================
      DARK MODE VARIANTS
      Manual dark: variant generation for custom utilities
      ========================================== */
-}
-
-/* ==========================================
-   GRAY COLOR UTILITIES (Light Mode)
-   Define outside @layer to work with dark: variants
-   ========================================== */
-
-/* White background (ensure it's defined) */
-.bg-white {
-  background-color: #ffffff;
-}
-
-/* Gray background colors */
-.bg-gray-50 {
-  background-color: var(--gray-50);
-}
-.bg-gray-100 {
-  background-color: var(--gray-100);
-}
-.bg-gray-200 {
-  background-color: var(--gray-200);
-}
-.bg-gray-300 {
-  background-color: var(--gray-300);
-}
-.bg-gray-400 {
-  background-color: var(--gray-400);
-}
-.bg-gray-500 {
-  background-color: var(--gray-500);
-}
-.bg-gray-600 {
-  background-color: var(--gray-600);
-}
-.bg-gray-700 {
-  background-color: var(--gray-700);
-}
-.bg-gray-800 {
-  background-color: var(--gray-800);
-}
-.bg-gray-900 {
-  background-color: var(--gray-900);
-}
-
-/* Gray text colors */
-.text-gray-50 {
-  color: var(--gray-50);
-}
-.text-gray-100 {
-  color: var(--gray-100);
-}
-.text-gray-200 {
-  color: var(--gray-200);
-}
-.text-gray-300 {
-  color: var(--gray-300);
-}
-.text-gray-400 {
-  color: var(--gray-400);
-}
-.text-gray-500 {
-  color: var(--gray-500);
-}
-.text-gray-600 {
-  color: var(--gray-600);
-}
-.text-gray-700 {
-  color: var(--gray-700);
-}
-.text-gray-800 {
-  color: var(--gray-800);
-}
-.text-gray-900 {
-  color: var(--gray-900);
-}
-
-/* Gray border colors */
-.border-gray-50 {
-  border-color: var(--gray-50);
-}
-.border-gray-100 {
-  border-color: var(--gray-100);
-}
-.border-gray-200 {
-  border-color: var(--gray-200);
-}
-.border-gray-300 {
-  border-color: var(--gray-300);
-}
-.border-gray-400 {
-  border-color: var(--gray-400);
-}
-.border-gray-500 {
-  border-color: var(--gray-500);
-}
-.border-gray-600 {
-  border-color: var(--gray-600);
-}
-.border-gray-700 {
-  border-color: var(--gray-700);
-}
-.border-gray-800 {
-  border-color: var(--gray-800);
-}
-.border-gray-900 {
-  border-color: var(--gray-900);
 }
 
 /* ==========================================
@@ -841,6 +767,24 @@ body {
 .dark body {
   background-color: var(--gray-900);
   color: var(--gray-50);
+}
+
+/* Dark mode prose overrides for readable blog text */
+.dark .prose p,
+.dark .prose li,
+.dark .prose blockquote {
+  color: #e2e8f0; /* slate-200 — high contrast on dark backgrounds */
+}
+
+.dark .prose strong {
+  color: #ffffff;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4 {
+  color: #ffffff;
 }
 
 /* ==========================================
