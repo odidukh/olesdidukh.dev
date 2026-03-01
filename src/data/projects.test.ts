@@ -44,11 +44,11 @@ describe('projectsData', () => {
 
 describe('getProjectBySlug', () => {
   it('returns project for valid slug', () => {
-    const project = getProjectBySlug('safebooks-financial-dashboard');
+    const project = getProjectBySlug('safebooks-revenue-platform');
 
     expect(project).toBeDefined();
-    expect(project?.id).toBe('safebooks-financial-dashboard');
-    expect(project?.title).toBe('Safebooks AI - Financial Dashboard');
+    expect(project?.id).toBe('safebooks-revenue-platform');
+    expect(project?.title).toBe('Safebooks AI - Revenue Intelligence Platform');
   });
 
   it('returns undefined for invalid slug', () => {
@@ -58,7 +58,7 @@ describe('getProjectBySlug', () => {
   });
 
   it('is case-sensitive', () => {
-    const project = getProjectBySlug('SAFEBOOKS-FINANCIAL-DASHBOARD');
+    const project = getProjectBySlug('SAFEBOOKS-REVENUE-PLATFORM');
 
     expect(project).toBeUndefined();
   });
@@ -83,11 +83,11 @@ describe('getFeaturedProjects', () => {
 
 describe('getRelatedProjects', () => {
   it('returns related projects for valid id', () => {
-    const related = getRelatedProjects('safebooks-financial-dashboard', 3);
+    const related = getRelatedProjects('safebooks-revenue-platform', 3);
 
     expect(related.length).toBeLessThanOrEqual(3);
     related.forEach(project => {
-      expect(project.id).not.toBe('safebooks-financial-dashboard');
+      expect(project.id).not.toBe('safebooks-revenue-platform');
     });
   });
 
@@ -98,16 +98,16 @@ describe('getRelatedProjects', () => {
   });
 
   it('respects limit parameter', () => {
-    const related1 = getRelatedProjects('safebooks-financial-dashboard', 1);
-    const related2 = getRelatedProjects('safebooks-financial-dashboard', 2);
+    const related1 = getRelatedProjects('safebooks-revenue-platform', 1);
+    const related2 = getRelatedProjects('safebooks-revenue-platform', 2);
 
     expect(related1.length).toBeLessThanOrEqual(1);
     expect(related2.length).toBeLessThanOrEqual(2);
   });
 
   it('returns projects with matching category or technologies', () => {
-    const currentProject = getProjectBySlug('safebooks-financial-dashboard');
-    const related = getRelatedProjects('safebooks-financial-dashboard', 5);
+    const currentProject = getProjectBySlug('safebooks-revenue-platform');
+    const related = getRelatedProjects('safebooks-revenue-platform', 5);
 
     related.forEach(project => {
       const sameCategory = project.category === currentProject?.category;
@@ -124,8 +124,8 @@ describe('getAllProjectSlugs', () => {
     const slugs = getAllProjectSlugs();
 
     expect(slugs.length).toBe(projectsData.length);
-    expect(slugs).toContain('safebooks-financial-dashboard');
-    expect(slugs).toContain('emerline-enterprise-platform');
+    expect(slugs).toContain('safebooks-revenue-platform');
+    expect(slugs).toContain('emerline-design-system');
   });
 
   it('returns array of strings', () => {
@@ -203,13 +203,13 @@ describe('getTestimonials', () => {
   it('maps testimonial data correctly', () => {
     const testimonials = getTestimonials();
     const safebooksTestimonial = testimonials.find(
-      t => t.projectId === 'safebooks-financial-dashboard'
+      t => t.projectId === 'safebooks-revenue-platform'
     );
 
     expect(safebooksTestimonial).toBeDefined();
     expect(safebooksTestimonial?.author).toBe('Engineering Manager');
     expect(safebooksTestimonial?.projectTitle).toBe(
-      'Safebooks AI - Financial Dashboard'
+      'Safebooks AI - Revenue Intelligence Platform'
     );
   });
 });
