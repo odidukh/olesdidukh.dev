@@ -82,9 +82,21 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
       case 'popular':
         posts = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0));
         break;
-      case 'trending':
-        posts = [...posts].sort((a, b) => (b.likes || 0) - (a.likes || 0));
+      case 'trending': {
+        const now = Date.now();
+        posts = [...posts].sort((a, b) => {
+          const daysA = Math.max(
+            1,
+            (now - new Date(a.publishedAt).getTime()) / 86_400_000
+          );
+          const daysB = Math.max(
+            1,
+            (now - new Date(b.publishedAt).getTime()) / 86_400_000
+          );
+          return (b.views || 0) / daysB - (a.views || 0) / daysA;
+        });
         break;
+      }
       case 'latest':
       default:
         posts = [...posts].sort(
@@ -105,12 +117,13 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
   );
 
   return (
-    <section className="py-20" id="blog">
+    <section className="py-20 md:py-28" id="blog">
       <Container size="wide" padding="lg">
         <motion.div
           variants={sectionVariants}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true }}
           className="space-y-12"
         >
           {/* Header */}
@@ -121,7 +134,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold">
               Thoughts on{' '}
-              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                 Code & Career
               </span>
             </h2>
@@ -208,6 +221,15 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
                     <TrendingUp className="h-4 w-4 mr-1" />
                     Popular
                   </Button>
+                  <Button
+                    variant={sortBy === 'trending' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setSortBy('trending')}
+                    className="px-3"
+                  >
+                    <Sparkles className="h-4 w-4 mr-1" />
+                    Trending
+                  </Button>
                 </div>
               </div>
             </div>
@@ -257,6 +279,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center justify-center py-20 text-center"
+                role="status"
               >
                 <BookOpen className="h-12 w-12 text-muted-foreground/30 mb-4" />
                 <h3 className="text-lg font-semibold text-foreground mb-2">

@@ -1,22 +1,22 @@
 ---
-id: "achieving-95-lighthouse"
-slug: "achieving-95-lighthouse-score-enterprise"
-title: "Achieving 95+ Lighthouse Score on an Enterprise Dashboard"
-excerpt: "Real techniques we used at Safebooks AI to achieve 95+ Lighthouse scores on a data-heavy financial dashboard, reducing load time by 50%."
-coverImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80"
+id: 'achieving-95-lighthouse'
+slug: 'achieving-95-lighthouse-score-enterprise'
+title: 'Achieving 95+ Lighthouse Score on an Enterprise Dashboard'
+excerpt: 'Real techniques we used at Safebooks AI to achieve 95+ Lighthouse scores on a data-heavy financial dashboard, reducing load time by 50%.'
+coverImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2024-12-10"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-12-10'
 readingTime: 12
-category: "Performance"
+category: 'Performance'
 tags:
-  - "Performance"
-  - "Lighthouse"
-  - "Optimization"
-  - "Next.js"
-  - "Case Study"
+  - 'Performance'
+  - 'Lighthouse'
+  - 'Optimization'
+  - 'Next.js'
+  - 'Case Study'
 featured: false
 views: 1890
 likes: 145
@@ -29,12 +29,14 @@ When I joined Safebooks AI, our financial dashboard scored 62 on Lighthouse. Six
 ## The Starting Point
 
 Our dashboard displayed:
+
 - Real-time financial charts (updating every 5 seconds)
 - 50+ data tables with sorting/filtering
 - PDF report generation
 - Complex form wizards
 
 Initial metrics:
+
 - **Lighthouse**: 62
 - **LCP**: 4.2s
 - **INP**: 450ms
@@ -51,6 +53,7 @@ npm run build -- --analyze
 ```
 
 Findings:
+
 - Chart.js: 180KB (used on 3 pages)
 - PDF library: 340KB (used on 1 page)
 - Moment.js: 67KB (replaceable)
@@ -158,9 +161,8 @@ function Dashboard() {
   const queryClient = useQueryClient();
   useEffect(() => {
     if (accounts?.[0]) {
-      queryClient.prefetchQuery(
-        ['transactions', accounts[0].id],
-        () => fetchTransactions(accounts[0].id)
+      queryClient.prefetchQuery(['transactions', accounts[0].id], () =>
+        fetchTransactions(accounts[0].id)
       );
     }
   }, [accounts]);
@@ -240,13 +242,13 @@ async function DashboardHeader() {
 
 ## Results
 
-| Metric | Before | After | Target |
-|--------|--------|-------|--------|
-| Lighthouse | 62 | 96 | 95+ ✅ |
-| LCP | 4.2s | 1.3s | &lt;1.5s ✅ |
-| INP | 450ms | 85ms | &lt;200ms ✅ |
-| CLS | 0.25 | 0.02 | &lt;0.1 ✅ |
-| Bundle | 1.8MB | 420KB | - |
+| Metric     | Before | After | Target       |
+| ---------- | ------ | ----- | ------------ |
+| Lighthouse | 62     | 96    | 95+ ✅       |
+| LCP        | 4.2s   | 1.3s  | &lt;1.5s ✅  |
+| INP        | 450ms  | 85ms  | &lt;200ms ✅ |
+| CLS        | 0.25   | 0.02  | &lt;0.1 ✅   |
+| Bundle     | 1.8MB  | 420KB | -            |
 
 ## Lessons Learned
 

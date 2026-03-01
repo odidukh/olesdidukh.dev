@@ -17,6 +17,7 @@ interface GuestbookFormProps {
 export function GuestbookForm({ user }: GuestbookFormProps) {
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const [lastMessage, setLastMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +93,7 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
       }
     } else {
       setSuccess(true);
+      setLastMessage(message.trim());
       setMessage('');
       // Refresh server components (GuestbookList) without a full page reload
       router.refresh();
@@ -210,6 +212,8 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               className="flex items-center gap-1.5 text-sm text-destructive"
+              role="alert"
+              aria-live="assertive"
             >
               <AlertCircle className="h-4 w-4 shrink-0" />
               {error}
@@ -220,10 +224,21 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400"
+              className="flex items-start gap-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-3"
+              role="status"
+              aria-live="polite"
             >
-              <CheckCircle2 className="h-4 w-4 shrink-0" />
-              Message posted! The list will update shortly.
+              <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
+                  Message posted!
+                </p>
+                {lastMessage && (
+                  <p className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mt-1 line-clamp-2">
+                    &ldquo;{lastMessage}&rdquo;
+                  </p>
+                )}
+              </div>
             </motion.p>
           )}
         </AnimatePresence>

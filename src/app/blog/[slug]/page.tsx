@@ -120,9 +120,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 
   // MDX content rendered as RSC
-  const mdxContent = (
-    <MDXContent code={mdxPost.content} />
-  );
+  const mdxContent = <MDXContent code={mdxPost.content} />;
 
   return (
     <>

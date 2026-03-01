@@ -97,6 +97,14 @@
   --accent-green-light: var(--success-400);
   --accent-green-dark: var(--success-600);
 
+  --accent-mocha: var(--mocha-700);
+  --accent-mocha-light: var(--mocha-600);
+  --accent-mocha-dark: var(--mocha-800);
+
+  /* Code rain colors - muted brown for light backgrounds */
+  --code-rain-color: 140, 80, 55;
+  --code-rain-glow: 140, 80, 55;
+
   /* ==========================================
      GRADIENTS
      Premium visual effects
@@ -327,7 +335,7 @@
 
   /* Muted - Subdued elements */
   --muted: var(--gray-100);
-  --muted-foreground: var(--gray-500);
+  --muted-foreground: var(--gray-600);
 
   /* Accent - Highlighted elements */
   --accent: var(--mocha-100);
@@ -479,6 +487,10 @@
   --accent-green-light: var(--success-300);
   --accent-green-dark: var(--success-500);
 
+  --accent-mocha: var(--mocha-400);
+  --accent-mocha-light: var(--mocha-300);
+  --accent-mocha-dark: var(--mocha-500);
+
   /* Timeline tokens - subtle glow theme for dark mode */
   --timeline-line-gradient: linear-gradient(
     to bottom,
@@ -500,6 +512,10 @@
   --timeline-achievement-gradient: none;
   --timeline-achievement-color: var(--success-400);
   --timeline-achievement-glow: 0 0 8px rgba(16, 185, 129, 0.4);
+
+  /* Code rain colors - bright for dark backgrounds */
+  --code-rain-color: 255, 140, 100;
+  --code-rain-glow: 255, 120, 100;
 
   /* Code block tokens - dark mode */
   --code-block-bg: var(--gray-900);

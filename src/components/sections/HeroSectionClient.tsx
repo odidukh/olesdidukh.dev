@@ -3,49 +3,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import {
-  Mail,
-  MousePointer2,
-  ChevronDown,
-  Calendar,
-  Briefcase,
-  Code2,
-  Users,
-} from 'lucide-react';
+import { Mail, MousePointer2, ChevronDown } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { HeroBackground } from '@/components/sections/HeroBackground';
-
-// Quick Stats Data
-const stats = [
-  {
-    label: 'Years Experience',
-    value: '7+',
-    icon: Calendar,
-    color: 'text-blue-500',
-  },
-  {
-    label: 'Projects Completed',
-    value: '15+',
-    icon: Briefcase,
-    color: 'text-green-500',
-  },
-  {
-    label: 'Technologies',
-    value: '25+',
-    icon: Code2,
-    color: 'text-purple-500',
-  },
-  {
-    label: 'Happy Clients',
-    value: '10+',
-    icon: Users,
-    color: 'text-orange-500',
-  },
-];
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // Featured Skills for Hero
 const featuredSkills = [
@@ -65,18 +30,36 @@ export function HeroSectionClient() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
+  const prefersReducedMotion = useReducedMotion();
 
-  // Parallax transforms
-  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
+  // Parallax transforms — zero-out when reduced motion preferred
+  const heroY = useTransform(
+    scrollY,
+    [0, 500],
+    prefersReducedMotion ? [0, 0] : [0, 150]
+  );
+  const heroOpacity = useTransform(
+    scrollY,
+    [0, 300],
+    prefersReducedMotion ? [1, 1] : [1, 0]
+  );
+  const heroScale = useTransform(
+    scrollY,
+    [0, 300],
+    prefersReducedMotion ? [1, 1] : [1, 0.95]
+  );
 
   // Typing animation text
   const [displayText, setDisplayText] = useState('');
   const fullText = 'Building Digital Excellence';
 
   useEffect(() => {
-    // Typing animation
+    // Skip typing animation if reduced motion preferred
+    if (prefersReducedMotion) {
+      setDisplayText(fullText);
+      return;
+    }
+
     let index = 0;
     const interval = setInterval(() => {
       if (index <= fullText.length) {
@@ -88,17 +71,19 @@ export function HeroSectionClient() {
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [prefersReducedMotion]);
 
-  // Mouse tracking for hero effects
+  // Mouse tracking for hero effects — skip if reduced motion preferred
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <section
@@ -119,10 +104,10 @@ export function HeroSectionClient() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-success-500/10 border border-success-500/20 rounded-full mb-8"
           >
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-green-500">
+            <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-success-500">
               Available for new opportunities
             </span>
           </motion.div>
@@ -184,40 +169,15 @@ export function HeroSectionClient() {
             transition={{ delay: 0.8 }}
             className="flex flex-wrap gap-4 justify-center mb-12"
           >
-            <Button size="lg" variant="outline" asChild>
-              <Link href="#contact">
-                Get In Touch
+            <Button size="lg" variant="gradient" asChild>
+              <Link href="/contact">
+                Let&apos;s Talk
                 <Mail className="ml-2 w-4 h-4" />
               </Link>
             </Button>
-            <ResumeDownloadButton size="lg" variant="ghost">
+            <ResumeDownloadButton size="lg" variant="outline">
               Resume
             </ResumeDownloadButton>
-          </motion.div>
-
-          {/* Quick Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-card/50 backdrop-blur border border-border rounded-xl p-4"
-              >
-                <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-xs text-muted-foreground">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
           </motion.div>
 
           {/* Scroll Indicator */}
@@ -233,8 +193,10 @@ export function HeroSectionClient() {
               aria-label="Scroll to about section"
             >
               <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={prefersReducedMotion ? {} : { y: [0, 10, 0] }}
+                transition={
+                  prefersReducedMotion ? {} : { duration: 2, repeat: Infinity }
+                }
                 className="text-muted-foreground"
               >
                 <MousePointer2 className="w-6 h-6 mx-auto mb-2" />

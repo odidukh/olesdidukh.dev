@@ -37,12 +37,6 @@ export const metadata: Metadata = {
   description:
     'Portfolio of Oles Didukh, a Senior Front-End Engineer specializing in React, TypeScript, and Next.js.',
   metadataBase: new URL('https://olesdidukh.dev'),
-  manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Oles Didukh',
-  },
   alternates: {
     canonical: 'https://olesdidukh.dev',
     types: {

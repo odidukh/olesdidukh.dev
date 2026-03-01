@@ -7,7 +7,6 @@ import {
   GoogleAnalytics,
   MicrosoftClarity,
 } from '@/components/analytics';
-import { PWAInstallPrompt } from '@/components/pwa';
 import { CommandMenu } from '@/components/ui/CommandMenu';
 import { BackToTop } from '@/components/ui/BackToTop';
 
@@ -35,7 +34,6 @@ export function Providers() {
       <GoogleAnalytics />
       <MicrosoftClarity />
       <PerformanceMonitor />
-      <PWAInstallPrompt />
       <BackToTop />
     </>
   );

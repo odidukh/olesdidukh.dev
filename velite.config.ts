@@ -32,27 +32,33 @@ export default defineConfig({
           // views and likes are dynamic data, typically shouldn't be in static MDX frontmatter, but let's keep them optional or default
           views: s.number().default(0),
           likes: s.number().default(0),
-          author: s.object({
-            name: s.string(),
-            avatar: s.string(),
-            role: s.string(),
-          }).default({
-            name: 'Oles Didukh',
-            avatar: '/images/avatar.png',
-            role: 'Senior Front-End Engineer',
-          }),
-          series: s.object({
-            name: s.string(),
-            part: s.number(),
-            total: s.number(),
-          }).optional(),
+          author: s
+            .object({
+              name: s.string(),
+              avatar: s.string(),
+              role: s.string(),
+            })
+            .default({
+              name: 'Oles Didukh',
+              avatar: '/images/avatar.png',
+              role: 'Senior Front-End Engineer',
+            }),
+          series: s
+            .object({
+              name: s.string(),
+              part: s.number(),
+              total: s.number(),
+            })
+            .optional(),
           content: s.mdx(), // transform MDX to HTML or generic JSX
         })
         .transform(data => ({
           ...data,
           id: data.slug,
           permalink: `/blog/\${data.slug}`,
-          readingTime: data.readingTime || Math.ceil(data.content.split(/\\s+/).length / 200),
+          readingTime:
+            data.readingTime ||
+            Math.ceil(data.content.split(/\\s+/).length / 200),
         })),
     },
     projects: {
@@ -79,24 +85,30 @@ export default defineConfig({
           client: s.string().optional(),
           challenges: s.array(s.string()).default([]),
           solutions: s.array(s.string()).default([]),
-          results: s.array(
-            s.object({
-              metric: s.string(),
-              value: s.string(),
+          results: s
+            .array(
+              s.object({
+                metric: s.string(),
+                value: s.string(),
+              })
+            )
+            .default([]),
+          testimonial: s
+            .object({
+              text: s.string(),
+              author: s.string(),
+              role: s.string(),
             })
-          ).default([]),
-          testimonial: s.object({
-            text: s.string(),
-            author: s.string(),
-            role: s.string(),
-          }).optional(),
-          video: s.object({
-            url: s.string(),
-            thumbnail: s.string().optional(),
-            type: s.enum(['local', 'youtube', 'vimeo']),
-            title: s.string().optional(),
-            duration: s.string().optional(),
-          }).optional(),
+            .optional(),
+          video: s
+            .object({
+              url: s.string(),
+              thumbnail: s.string().optional(),
+              type: s.enum(['local', 'youtube', 'vimeo']),
+              title: s.string().optional(),
+              duration: s.string().optional(),
+            })
+            .optional(),
           content: s.mdx(),
         })
         .transform(data => ({ ...data, permalink: `/projects/\${data.id}` })),

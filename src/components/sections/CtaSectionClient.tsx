@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/Button';
 
 export function CtaSectionClient() {
   return (
-    <section className="py-20 bg-gradient-to-t from-primary/10 via-background to-background">
+    <section className="py-20 md:py-28 bg-gradient-to-t from-primary/10 via-background to-background">
       <Container size="md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -31,18 +31,18 @@ export function CtaSectionClient() {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Build Something
-            <span className="text-primary"> Amazing?</span>
+            Ready to Start Your Next
+            <span className="text-primary"> Project?</span>
           </h2>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Let&apos;s collaborate on your next project and create exceptional
-            experiences together
+            Let&apos;s collaborate and create exceptional experiences that
+            delight users and drive results
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="#contact">
+              <Link href="/contact">
                 Start a Conversation
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Link>

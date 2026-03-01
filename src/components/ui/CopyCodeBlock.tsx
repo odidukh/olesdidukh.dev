@@ -32,8 +32,15 @@ export function CopyCodeBlock({
       <button
         onClick={handleCopy}
         aria-label={copied ? 'Copied!' : 'Copy code'}
-        className="absolute top-3 right-3 flex items-center gap-1 rounded-md border border-gray-600 bg-gray-700 px-2 py-1 text-xs text-gray-300 opacity-0 transition-opacity duration-150 group-hover/codeblock:opacity-100 hover:bg-gray-600 hover:text-white focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+        className={`absolute top-3 right-3 flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-all duration-200 opacity-0 group-hover/codeblock:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 ${
+          copied
+            ? 'border-green-500/50 bg-green-500/20 text-green-400'
+            : 'border-gray-600 bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+        }`}
       >
+        <span className="sr-only" aria-live="polite">
+          {copied ? 'Code copied to clipboard' : ''}
+        </span>
         {copied ? (
           <>
             <svg

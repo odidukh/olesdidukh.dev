@@ -1,22 +1,22 @@
 ---
-id: "inp-core-web-vital"
-slug: "mastering-inp-core-web-vital-2025"
+id: 'inp-core-web-vital'
+slug: 'mastering-inp-core-web-vital-2025'
 title: "Mastering INP: The Core Web Vital That's Failing 50% of Mobile Sites"
-excerpt: "INP replaced FID in March 2024, and only 49.7% of mobile sites pass. Learn practical techniques to optimize Interaction to Next Paint and boost your rankings."
-coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"
+excerpt: 'INP replaced FID in March 2024, and only 49.7% of mobile sites pass. Learn practical techniques to optimize Interaction to Next Paint and boost your rankings.'
+coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2025-01-10"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2025-01-10'
 readingTime: 10
-category: "Performance"
+category: 'Performance'
 tags:
-  - "Performance"
-  - "Core Web Vitals"
-  - "INP"
-  - "Optimization"
-  - "SEO"
+  - 'Performance'
+  - 'Core Web Vitals'
+  - 'INP'
+  - 'Optimization'
+  - 'SEO'
 featured: false
 views: 1567
 likes: 98
@@ -78,7 +78,7 @@ function handleSubmit(data) {
     setFormState({
       loading: true,
       error: null,
-      data
+      data,
     });
     submitToServer(data);
   });
@@ -150,7 +150,7 @@ function handleDataProcess(data) {
   worker.postMessage(data);
 }
 
-worker.onmessage = (e) => {
+worker.onmessage = e => {
   setResults(e.data);
   setProcessing(false);
 };
@@ -194,6 +194,7 @@ function VirtualList({ items }) {
 ## Measuring INP
 
 ### Chrome DevTools
+
 1. Open Performance panel
 2. Enable "Web Vitals" track
 3. Record user interactions
@@ -204,7 +205,7 @@ function VirtualList({ items }) {
 ```typescript
 import { onINP } from 'web-vitals';
 
-onINP((metric) => {
+onINP(metric => {
   console.log('INP:', metric.value);
 
   // Send to analytics
@@ -220,6 +221,7 @@ onINP((metric) => {
 ## Real-World Results
 
 After implementing these optimizations at Safebooks AI:
+
 - INP improved from 340ms to 89ms
 - Mobile pass rate: 67% → 94%
 - User engagement increased 12%

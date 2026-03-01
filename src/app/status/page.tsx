@@ -216,7 +216,7 @@ export default function StatusPage() {
                 </Badge>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
                   Status{' '}
-                  <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                     Dashboard
                   </span>
                 </h1>

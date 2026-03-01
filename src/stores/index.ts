@@ -42,5 +42,4 @@ export {
   useReducedMotionPreference,
   useCompactLayoutPreference,
   useFontSizePreference,
-  usePWAInstallState,
 } from './useUIPreferencesStore';

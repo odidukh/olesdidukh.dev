@@ -27,7 +27,7 @@ export default function ApiDocsPage() {
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold">
               API{' '}
-              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                 Documentation
               </span>
             </h1>

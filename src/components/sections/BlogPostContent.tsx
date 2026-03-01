@@ -26,11 +26,98 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePageEngagement } from '@/hooks';
+import { cn } from '@/lib/utils';
 
 // Support both legacy BlogPost and new BlogPostMeta
 type PostData =
   | BlogPost
   | (BlogPostMeta & { views?: number; likes?: number; id?: string });
+
+interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
+function DynamicTableOfContents() {
+  const [headings, setHeadings] = React.useState<TocItem[]>([]);
+  const [activeId, setActiveId] = React.useState<string>('');
+
+  React.useEffect(() => {
+    // Extract h2 and h3 elements from the article content
+    const article =
+      document.querySelector('[data-mdx-content]') ??
+      document.querySelector('article');
+    if (!article) return;
+
+    const elements = article.querySelectorAll('h2, h3');
+    const items: TocItem[] = Array.from(elements).map(el => {
+      // Ensure heading has an id for linking
+      if (!el.id) {
+        el.id =
+          el.textContent
+            ?.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '') ?? '';
+      }
+      return {
+        id: el.id,
+        text: el.textContent ?? '',
+        level: el.tagName === 'H2' ? 2 : 3,
+      };
+    });
+    setHeadings(items);
+
+    // Set up IntersectionObserver for active heading tracking
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-80px 0px -70% 0px', threshold: 0.1 }
+    );
+
+    elements.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  if (headings.length === 0) return null;
+
+  return (
+    <div className="sticky top-24">
+      <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-muted-foreground">
+        On this page
+      </h3>
+      <nav className="space-y-1 text-sm">
+        {headings.map(heading => (
+          <a
+            key={heading.id}
+            href={`#${heading.id}`}
+            onClick={e => {
+              e.preventDefault();
+              document.getElementById(heading.id)?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }}
+            className={cn(
+              'block py-1 transition-colors border-l-2',
+              heading.level === 3 ? 'pl-6' : 'pl-3',
+              activeId === heading.id
+                ? 'border-primary text-primary font-medium'
+                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground'
+            )}
+          >
+            {heading.text}
+          </a>
+        ))}
+      </nav>
+    </div>
+  );
+}
 
 interface BlogPostContentProps {
   post: PostData;
@@ -49,6 +136,7 @@ export function BlogPostContent({
   const copyTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
+  const shareRef = React.useRef<HTMLDivElement>(null);
 
   // Track scroll depth and time on page for blog posts
   usePageEngagement();
@@ -61,6 +149,18 @@ export function BlogPostContent({
       }
     };
   }, []);
+
+  // Close share menu when clicking outside
+  React.useEffect(() => {
+    if (!showShareMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (!shareRef.current?.contains(e.target as Node)) {
+        setShowShareMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showShareMenu]);
 
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     month: 'long',
@@ -273,7 +373,7 @@ export function BlogPostContent({
                   </div>
 
                   {/* Share */}
-                  <div className="relative">
+                  <div className="relative" ref={shareRef}>
                     <button
                       onClick={() => setShowShareMenu(!showShareMenu)}
                       className="flex items-center gap-2 w-full p-3 rounded-lg border hover:bg-muted transition-all"
@@ -339,7 +439,10 @@ export function BlogPostContent({
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="lg:col-span-8"
               >
-                <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-pre:p-0 prose-pre:bg-transparent">
+                <div
+                  data-mdx-content
+                  className="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-pre:p-0 prose-pre:bg-transparent dark:prose-p:text-gray-200 dark:prose-li:text-gray-200 dark:prose-strong:text-white dark:prose-blockquote:text-gray-300"
+                >
                   {mdxContent ? (
                     mdxContent
                   ) : 'content' in post ? (
@@ -352,48 +455,14 @@ export function BlogPostContent({
                 </div>
               </motion.div>
 
-              {/* Right Sidebar - TOC */}
+              {/* Right Sidebar - Dynamic TOC */}
               <motion.aside
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="lg:col-span-2 hidden xl:block"
+                className="lg:col-span-2 hidden lg:block"
               >
-                <div className="sticky top-24">
-                  <h3 className="font-semibold mb-4">Table of Contents</h3>
-                  <nav className="space-y-2 text-sm">
-                    <a
-                      href="#"
-                      className="block text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      Understanding React&apos;s Rendering
-                    </a>
-                    <a
-                      href="#"
-                      className="block text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      Code Splitting
-                    </a>
-                    <a
-                      href="#"
-                      className="block text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      Memoization Strategies
-                    </a>
-                    <a
-                      href="#"
-                      className="block text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      State Management
-                    </a>
-                    <a
-                      href="#"
-                      className="block text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      Performance Monitoring
-                    </a>
-                  </nav>
-                </div>
+                <DynamicTableOfContents />
               </motion.aside>
             </div>
           </Container>

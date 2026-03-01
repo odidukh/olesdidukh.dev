@@ -1,22 +1,22 @@
 ---
-id: "jquery-to-react-migration"
-slug: "jquery-to-react-migration-50000-users"
-title: "jQuery to React: How We Migrated a Platform Serving 50,000+ Users"
-excerpt: "A real-world case study of migrating a legacy jQuery application to React at Inango Systems, achieving 40% performance improvement while maintaining zero downtime."
-coverImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80"
+id: 'jquery-to-react-migration'
+slug: 'jquery-to-react-migration-50000-users'
+title: 'jQuery to React: How We Migrated a Platform Serving 50,000+ Users'
+excerpt: 'A real-world case study of migrating a legacy jQuery application to React at Inango Systems, achieving 40% performance improvement while maintaining zero downtime.'
+coverImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2024-12-20"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-12-20'
 readingTime: 14
-category: "Tutorial"
+category: 'Tutorial'
 tags:
-  - "React"
-  - "jQuery"
-  - "Migration"
-  - "Case Study"
-  - "Legacy Code"
+  - 'React'
+  - 'jQuery'
+  - 'Migration'
+  - 'Case Study'
+  - 'Legacy Code'
 featured: false
 views: 2456
 likes: 178
@@ -29,6 +29,7 @@ At Inango Systems, we faced a challenge many teams know well: a legacy jQuery ap
 ## The Starting Point
 
 Our jQuery application had grown organically over 5 years:
+
 - 45,000 lines of JavaScript
 - Spaghetti DOM manipulation
 - Global state scattered everywhere
@@ -73,7 +74,8 @@ Phase 3: React Primary
 <!-- In existing jQuery templates -->
 <div id="legacy-header">...</div>
 
-<div id="react-dashboard"></div>  <!-- New React component -->
+<div id="react-dashboard"></div>
+<!-- New React component -->
 
 <div id="legacy-footer">...</div>
 ```
@@ -140,6 +142,7 @@ function UserDisplay() {
 ### Step 3: Incremental Component Migration
 
 We prioritized components by:
+
 1. **Highest bug frequency** - Fix pain points first
 2. **Most changed** - Reduce ongoing maintenance
 3. **Isolated functionality** - Fewer dependencies
@@ -202,6 +205,7 @@ function CustomerTable({ customers }: { customers: Customer[] }) {
 ## Challenges We Faced
 
 ### 1. jQuery Plugins
+
 Some jQuery plugins had no React equivalent. We wrapped them:
 
 ```typescript
@@ -222,6 +226,7 @@ function LegacyDatePicker({ value, onChange }) {
 ```
 
 ### 2. Global CSS Conflicts
+
 jQuery used global CSS; React components needed isolation:
 
 ```css
@@ -238,7 +243,9 @@ jQuery used global CSS; React components needed isolation:
 ```
 
 ### 3. Team Knowledge Gap
+
 Not everyone knew React. We:
+
 - Paired junior devs with React-experienced engineers
 - Created internal documentation and patterns
 - Started with simpler components
@@ -247,13 +254,13 @@ Not everyone knew React. We:
 
 After 8 months of incremental migration:
 
-| Metric | Before | After | Change |
-|--------|--------|-------|--------|
-| Initial load | 8.2s | 2.1s | -74% |
-| Bundle size | 1.2MB | 340KB | -72% |
-| Bug rate | 2.3/week | 0.4/week | -83% |
-| Maintenance time | 40% | 15% | -62% |
-| Developer satisfaction | 3.2/5 | 4.6/5 | +44% |
+| Metric                 | Before   | After    | Change |
+| ---------------------- | -------- | -------- | ------ |
+| Initial load           | 8.2s     | 2.1s     | -74%   |
+| Bundle size            | 1.2MB    | 340KB    | -72%   |
+| Bug rate               | 2.3/week | 0.4/week | -83%   |
+| Maintenance time       | 40%      | 15%      | -62%   |
+| Developer satisfaction | 3.2/5    | 4.6/5    | +44%   |
 
 ## Key Takeaways
 

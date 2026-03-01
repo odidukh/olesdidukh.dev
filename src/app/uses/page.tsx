@@ -387,7 +387,7 @@ export default function UsesPage() {
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Uses{' '}
-              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                 & Stack
               </span>
             </h1>

@@ -33,9 +33,11 @@ export const BlogCard = React.memo(function BlogCard({
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -5 }}
+      whileTap={{ y: 0, scale: 0.98 }}
       className="h-full"
     >
       <Link href={`/blog/${post.slug}`}>
@@ -76,10 +78,7 @@ export const BlogCard = React.memo(function BlogCard({
 
             {/* Category Badge */}
             <div className="absolute top-3 left-3">
-              <Badge
-                variant="secondary"
-                className="bg-white/90 dark:bg-black/90"
-              >
+              <Badge variant="secondary" className="bg-background/90">
                 {post.category}
               </Badge>
             </div>
@@ -87,21 +86,20 @@ export const BlogCard = React.memo(function BlogCard({
             {/* Series Badge */}
             {post.series && (
               <div className="absolute top-3 right-3">
-                <Badge
-                  variant="outline"
-                  className="bg-white/90 dark:bg-black/90"
-                >
+                <Badge variant="outline" className="bg-background/90">
                   Part {post.series.part}/{post.series.total}
                 </Badge>
               </div>
             )}
 
-            {/* Reading Time */}
-            <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="flex items-center gap-1 text-white text-sm bg-black/50 backdrop-blur-sm px-2 py-1 rounded">
-                <BookOpen className="h-3 w-3" />
-                {post.readingTime} min read
-              </div>
+            {/* Reading length indicator bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
+              <div
+                className="h-full bg-primary/80 transition-all duration-300"
+                style={{
+                  width: `${Math.min(100, (post.readingTime / 15) * 100)}%`,
+                }}
+              />
             </div>
           </div>
 
@@ -136,28 +134,9 @@ export const BlogCard = React.memo(function BlogCard({
 
           {/* Footer */}
           <CardFooter className="pt-0">
-            <div className="w-full">
-              {/* Author */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden">
-                  <Image
-                    src={post.author.avatar}
-                    alt={post.author.name}
-                    fill
-                    sizes="32px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{post.author.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {formattedDate}
-                  </p>
-                </div>
-              </div>
-
-              {/* Reading time and arrow */}
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div className="w-full flex items-center justify-between text-sm text-muted-foreground">
+              <span>{formattedDate}</span>
+              <div className="flex items-center gap-2">
                 <MetaItem icon={Clock}>{post.readingTime} min read</MetaItem>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>

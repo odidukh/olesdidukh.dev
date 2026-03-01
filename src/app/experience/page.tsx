@@ -262,8 +262,13 @@ export default function ExperiencePage() {
                   transition={{ delay: index * 0.1 }}
                   className="bg-card border border-border rounded-xl p-6"
                 >
-                  <stat.icon className="w-8 h-8 text-primary mx-auto mb-3" />
-                  <div className="text-3xl font-bold mb-1">{stat.value}</div>
+                  <stat.icon
+                    className="w-8 h-8 text-accent-mocha mx-auto mb-3"
+                    aria-hidden="true"
+                  />
+                  <div className="text-3xl font-bold text-foreground mb-1">
+                    {stat.value}
+                  </div>
                   <div className="text-sm text-muted-foreground">
                     {stat.label}
                   </div>
@@ -281,12 +286,14 @@ export default function ExperiencePage() {
             <Button
               variant={viewMode === 'timeline' ? 'default' : 'outline'}
               onClick={() => setViewMode('timeline')}
+              aria-pressed={viewMode === 'timeline'}
             >
               Timeline View
             </Button>
             <Button
               variant={viewMode === 'cards' ? 'default' : 'outline'}
               onClick={() => setViewMode('cards')}
+              aria-pressed={viewMode === 'cards'}
             >
               Card View
             </Button>
@@ -314,11 +321,23 @@ export default function ExperiencePage() {
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     className="timeline-card bg-card rounded-xl p-6 cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={selectedExperience === exp.id}
+                    aria-controls={`exp-details-${exp.id}`}
                     onClick={() =>
                       setSelectedExperience(
                         selectedExperience === exp.id ? null : exp.id
                       )
                     }
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedExperience(
+                          selectedExperience === exp.id ? null : exp.id
+                        );
+                      }
+                    }}
                   >
                     {/* Header */}
                     <div className="flex items-start gap-4">
@@ -340,6 +359,7 @@ export default function ExperiencePage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-muted-foreground hover:text-primary"
+                              aria-label={`Visit ${exp.company} website`}
                               onClick={e => e.stopPropagation()}
                             >
                               <ExternalLink className="w-4 h-4" />
@@ -392,6 +412,7 @@ export default function ExperiencePage() {
                     {/* Expanded Content */}
                     {selectedExperience === exp.id && (
                       <motion.div
+                        id={`exp-details-${exp.id}`}
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
@@ -518,6 +539,7 @@ export default function ExperiencePage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-muted-foreground hover:text-primary"
+                            aria-label={`Visit ${exp.company} website`}
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>

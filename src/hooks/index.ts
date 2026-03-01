@@ -13,7 +13,6 @@ export { useAnalytics } from './useAnalytics';
 export { useWebVitals } from './useWebVitals';
 export { usePerformance } from './usePerformance';
 export { useFocusTrap } from './useFocusTrap';
-export { usePWAInstall } from './usePWAInstall';
 export { usePageEngagement } from './usePageEngagement';
 export { useSearch } from './useSearch';
 
@@ -34,8 +33,6 @@ export type {
   IntersectionObserverOptions,
   IntersectionResult,
 } from './useIntersectionObserver';
-
-export type { UsePWAInstallReturn } from './usePWAInstall';
 
 export type { UsePageEngagementOptions } from './usePageEngagement';
 

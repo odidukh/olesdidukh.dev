@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { cn } from '@/lib/utils';
 import {
   FileText,
   Home,
@@ -22,6 +23,9 @@ import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
 import { useSoundPreference } from '@/stores/useUIPreferencesStore';
 import { useAppSounds } from '@/hooks/useAppSounds';
 import { Volume2, VolumeX, Wrench, Zap } from 'lucide-react';
+
+const cmdItemClass =
+  'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors';
 
 export function CommandMenu() {
   const router = useRouter();
@@ -91,7 +95,7 @@ export function CommandMenu() {
             >
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Home Page"
               >
                 <Home className="mr-2 h-4 w-4" />
@@ -99,7 +103,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/about'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="About Me Profile"
               >
                 <User className="mr-2 h-4 w-4" />
@@ -107,7 +111,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/experience'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Experience and Resume"
               >
                 <Briefcase className="mr-2 h-4 w-4" />
@@ -115,7 +119,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/projects'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Projects and Portfolio"
               >
                 <Briefcase className="mr-2 h-4 w-4" />
@@ -123,7 +127,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/blog'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Blog and Articles"
               >
                 <FileText className="mr-2 h-4 w-4" />
@@ -131,7 +135,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/guestbook'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Guestbook Hall of Fame Messages"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
@@ -139,7 +143,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/skills'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Skills Technologies Expertise"
               >
                 <Zap className="mr-2 h-4 w-4" />
@@ -147,7 +151,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/uses'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Uses Developer Setup Stack Tools"
               >
                 <Wrench className="mr-2 h-4 w-4" />
@@ -155,7 +159,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push('/contact'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Contact Me Let's Talk"
               >
                 <Mail className="mr-2 h-4 w-4" />
@@ -171,7 +175,7 @@ export function CommandMenu() {
             >
               <Command.Item
                 onSelect={() => runCommand(() => setMode('light'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Light Theme Mode"
               >
                 <Sun className="mr-2 h-4 w-4" />
@@ -184,7 +188,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => setMode('dark'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Dark Theme Mode"
               >
                 <Moon className="mr-2 h-4 w-4" />
@@ -197,7 +201,7 @@ export function CommandMenu() {
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => setMode('system'))}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="System Theme Mode Auto"
               >
                 <Monitor className="mr-2 h-4 w-4" />
@@ -222,7 +226,7 @@ export function CommandMenu() {
                 <Command.Item
                   key={a}
                   onSelect={() => runCommand(() => setAccent(a))}
-                  className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors capitalize"
+                  className={cn(cmdItemClass, 'capitalize')}
                   value={`${a} Accent Color Theme`}
                 >
                   <Palette className="mr-2 h-4 w-4" />
@@ -247,7 +251,7 @@ export function CommandMenu() {
                   setSoundEnabled(!soundEnabled);
                   if (!soundEnabled) playPop(); // Play sound if we just enabled it
                 }}
-                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors"
+                className={cmdItemClass}
                 value="Toggle UI Sound Effects"
               >
                 {soundEnabled ? (

@@ -225,11 +225,11 @@ export function SunsetCodeRainBackground({
                 key={i}
                 className="block whitespace-nowrap"
                 style={{
-                  color: `rgba(255, 140, 100, ${rainOpacity * (1 - i * 0.05)})`,
+                  color: `rgba(var(--code-rain-color), ${rainOpacity * (1 - i * 0.05)})`,
                   textShadow:
                     i === 0
-                      ? '0 0 20px rgba(255, 120, 100, 0.9), 0 0 40px rgba(255, 120, 100, 0.5)'
-                      : '0 0 10px rgba(255, 120, 100, 0.3)',
+                      ? '0 0 20px rgba(var(--code-rain-glow), 0.9), 0 0 40px rgba(var(--code-rain-glow), 0.5)'
+                      : '0 0 10px rgba(var(--code-rain-glow), 0.3)',
                   marginBottom: '2px',
                   fontWeight: i === 0 ? 700 : 400,
                   fontSize: i === 0 ? '1rem' : '0.875rem',
@@ -247,6 +247,24 @@ export function SunsetCodeRainBackground({
           style={{
             background:
               'linear-gradient(to top, var(--background) 0%, transparent 100%)',
+          }}
+        />
+
+        {/* Left fade */}
+        <div
+          className="absolute inset-y-0 left-0 w-32 z-10"
+          style={{
+            background:
+              'linear-gradient(to right, var(--background) 0%, transparent 100%)',
+          }}
+        />
+
+        {/* Right fade */}
+        <div
+          className="absolute inset-y-0 right-0 w-32 z-10"
+          style={{
+            background:
+              'linear-gradient(to left, var(--background) 0%, transparent 100%)',
           }}
         />
       </div>

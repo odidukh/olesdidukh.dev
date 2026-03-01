@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { useShallow } from 'zustand/react/shallow';
-import { PWA_DISMISS_COOLDOWN_MS, type FontSize } from '@/config/ui';
+import type { FontSize } from '@/config/ui';
 
 /** Supported locales */
 type Locale = 'en' | 'uk' | 'pl';
@@ -17,10 +17,6 @@ interface UIPreferencesState {
   sidebarCollapsed: boolean;
   /** Whether to show reading progress indicator */
   showReadingProgress: boolean;
-  /** Whether PWA install banner was dismissed */
-  pwaInstallDismissed: boolean;
-  /** Timestamp when PWA install was dismissed */
-  pwaInstallDismissedAt: number | null;
   /** Preferred locale/language */
   locale: Locale | null;
 
@@ -39,10 +35,6 @@ interface UIPreferencesState {
   setSidebarCollapsed: (collapsed: boolean) => void;
   /** Set reading progress visibility */
   setShowReadingProgress: (show: boolean) => void;
-  /** Dismiss PWA install banner */
-  dismissPWAInstall: () => void;
-  /** Check if PWA install should be shown (after 7 days cooldown) */
-  shouldShowPWAInstall: () => boolean;
   /** Set locale preference */
   setLocale: (locale: Locale | null) => void;
   /** Set sound enabled preference */
@@ -57,8 +49,6 @@ const initialState = {
   fontSize: 'normal' as FontSize,
   sidebarCollapsed: false,
   showReadingProgress: true,
-  pwaInstallDismissed: false,
-  pwaInstallDismissedAt: null as number | null,
   locale: null as Locale | null,
   soundEnabled: false,
 };
@@ -70,13 +60,9 @@ const initialState = {
  * - Persists user UI preferences
  * - Respects reduced motion preferences
  * - Controls layout and accessibility options
- * - Manages PWA install prompt dismissal
- *
  * Invariants:
  * - fontSize is always one of: 'small' | 'normal' | 'large'
  * - locale is null (system default) or a valid Locale type
- * - PWA dismissal has a 7-day cooldown before shouldShowPWAInstall() returns true again
- * - resetPreferences() preserves PWA dismissal state
  *
  * @example
  * ```tsx
@@ -111,7 +97,7 @@ const initialState = {
  */
 export const useUIPreferencesStore = create<UIPreferencesState>()(
   persist(
-    (set, get) => ({
+    set => ({
       ...initialState,
 
       setReducedMotion: reduced => set({ reducedMotion: reduced }),
@@ -127,21 +113,6 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
 
       setShowReadingProgress: show => set({ showReadingProgress: show }),
 
-      dismissPWAInstall: () =>
-        set({
-          pwaInstallDismissed: true,
-          pwaInstallDismissedAt: Date.now(),
-        }),
-
-      shouldShowPWAInstall: () => {
-        const state = get();
-        if (!state.pwaInstallDismissed) return true;
-        if (!state.pwaInstallDismissedAt) return true;
-
-        const elapsed = Date.now() - state.pwaInstallDismissedAt;
-        return elapsed > PWA_DISMISS_COOLDOWN_MS;
-      },
-
       setLocale: locale => set({ locale }),
 
       setSoundEnabled: enabled => set({ soundEnabled: enabled }),
@@ -155,7 +126,6 @@ export const useUIPreferencesStore = create<UIPreferencesState>()(
           showReadingProgress: true,
           locale: null,
           soundEnabled: false,
-          // Keep PWA dismissal state
         }),
     }),
     {
@@ -186,23 +156,20 @@ export const useCompactLayoutPreference = () =>
 export const useFontSizePreference = () =>
   useUIPreferencesStore(state => state.fontSize);
 
-export const usePWAInstallState = () =>
-  useUIPreferencesStore(useShallow(state => ({
-    dismissed: state.pwaInstallDismissed,
-    shouldShow: state.shouldShowPWAInstall(),
-    dismiss: state.dismissPWAInstall,
-  })));
-
 export const useLocalePreference = () =>
-  useUIPreferencesStore(useShallow(state => ({
-    locale: state.locale,
-    setLocale: state.setLocale,
-  })));
+  useUIPreferencesStore(
+    useShallow(state => ({
+      locale: state.locale,
+      setLocale: state.setLocale,
+    }))
+  );
 
 export const useSoundPreference = () =>
-  useUIPreferencesStore(useShallow(state => ({
-    soundEnabled: state.soundEnabled,
-    setSoundEnabled: state.setSoundEnabled,
-  })));
+  useUIPreferencesStore(
+    useShallow(state => ({
+      soundEnabled: state.soundEnabled,
+      setSoundEnabled: state.setSoundEnabled,
+    }))
+  );
 
 export type { Locale };

@@ -1,22 +1,22 @@
 ---
-id: "react-compiler-guide"
-slug: "react-19-compiler-complete-guide"
-title: "React 19 & The React Compiler: The End of Manual Memoization"
-excerpt: "The React Compiler is production-ready and changing how we write React. Learn what it means for useMemo, useCallback, and React.memo—and how to prepare your codebase."
-coverImage: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&q=80"
+id: 'react-compiler-guide'
+slug: 'react-19-compiler-complete-guide'
+title: 'React 19 & The React Compiler: The End of Manual Memoization'
+excerpt: 'The React Compiler is production-ready and changing how we write React. Learn what it means for useMemo, useCallback, and React.memo—and how to prepare your codebase.'
+coverImage: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2025-01-15"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2025-01-15'
 readingTime: 11
-category: "React"
+category: 'React'
 tags:
-  - "React"
-  - "React Compiler"
-  - "Performance"
-  - "React 19"
-  - "Optimization"
+  - 'React'
+  - 'React Compiler'
+  - 'Performance'
+  - 'React 19'
+  - 'Optimization'
 featured: true
 views: 3210
 likes: 234
@@ -70,12 +70,15 @@ The compiler produces the same optimized output—but your code is cleaner and e
 ## What This Means for Your Codebase
 
 ### useMemo and useCallback
+
 These hooks aren't deprecated, but they're largely unnecessary for new code. The compiler handles:
+
 - Expensive calculations
 - Stable function references
 - Preventing unnecessary re-renders
 
 ### React.memo
+
 Still useful for explicit optimization boundaries, but the compiler reduces the need for most uses.
 
 ## How to Enable the React Compiler
@@ -93,9 +96,12 @@ module.exports = {
 // babel.config.js (other setups)
 module.exports = {
   plugins: [
-    ['babel-plugin-react-compiler', {
-      // options
-    }],
+    [
+      'babel-plugin-react-compiler',
+      {
+        // options
+      },
+    ],
   ],
 };
 ```
@@ -144,7 +150,9 @@ function GoodList({ items }) {
 // ❌ Bad: Conditional hook
 function BadComponent({ showExtra }) {
   if (showExtra) {
-    useEffect(() => { /* ... */ }); // Conditional hook!
+    useEffect(() => {
+      /* ... */
+    }); // Conditional hook!
   }
 }
 
@@ -161,6 +169,7 @@ function GoodComponent({ showExtra }) {
 ## Migration Strategy
 
 ### Phase 1: Audit Your Codebase
+
 Use the React Compiler's ESLint plugin to find violations:
 
 ```bash
@@ -168,9 +177,11 @@ npm install eslint-plugin-react-compiler
 ```
 
 ### Phase 2: Fix Violations
+
 Address any Rules of React violations before enabling the compiler.
 
 ### Phase 3: Enable Gradually
+
 Start with specific directories:
 
 ```javascript
@@ -186,11 +197,13 @@ Start with specific directories:
 ```
 
 ### Phase 4: Remove Manual Memoization
+
 Once stable, clean up unnecessary useMemo/useCallback calls.
 
 ## Performance Comparison
 
 In our testing at Safebooks AI:
+
 - **Bundle size**: Slightly larger (compiler output)
 - **Runtime performance**: 15-20% faster renders
 - **Developer experience**: Significantly improved

@@ -113,7 +113,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 relative overflow-hidden"
+      className="py-20 md:py-28 relative overflow-hidden"
       id="contact"
     >
       {/* Background Elements */}
@@ -137,7 +137,7 @@ export function ContactSection() {
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold">
               Let&apos;s Build Something{' '}
-              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                 Amazing Together
               </span>
             </h2>

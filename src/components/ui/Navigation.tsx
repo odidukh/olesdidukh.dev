@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -30,7 +31,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'About', href: '/about' },
   { label: 'Experience', href: '/experience' },
-  // { label: 'Projects', href: '/projects' },
+  { label: 'Projects', href: '/projects' },
   { label: 'Skills', href: '/skills' },
   { label: 'Uses', href: '/uses' },
   { label: 'Blog', href: '/blog' },
@@ -67,6 +68,18 @@ export function Navigation({ className }: NavigationProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   return (
     <header
       className={cn(
@@ -85,7 +98,7 @@ export function Navigation({ className }: NavigationProps) {
             className="group flex items-center space-x-2 text-xl font-bold"
           >
             <span
-              className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent transition-all group-hover:from-mocha-600 group-hover:to-accent-green"
+              className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent transition-all group-hover:from-accent-mocha-dark group-hover:to-accent-green"
               onClick={() => playPop()}
             >
               Oles Didukh
@@ -108,7 +121,7 @@ export function Navigation({ className }: NavigationProps) {
               >
                 {item.label}
                 {pathname === item.href && (
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-gradient-to-r from-mocha-500 to-accent-green" />
+                  <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-gradient-to-r from-accent-mocha to-accent-green" />
                 )}
               </Link>
             ))}
@@ -172,7 +185,8 @@ export function Navigation({ className }: NavigationProps) {
                 playClick();
                 setIsOpen(!isOpen);
               }}
-              aria-label="Toggle menu"
+              aria-expanded={isOpen}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
             >
               {isOpen ? (
                 <X className="h-5 w-5" />
@@ -183,59 +197,84 @@ export function Navigation({ className }: NavigationProps) {
           </div>
         </nav>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t">
-            <div className="flex flex-col space-y-4 pt-4">
-              {navItems.map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => {
-                    playPop();
-                    setIsOpen(false);
-                  }}
-                  className={cn(
-                    'text-sm font-medium transition-colors hover:text-primary px-2 py-1',
-                    pathname === item.href
-                      ? 'text-primary bg-primary/10 rounded'
-                      : 'text-muted-foreground'
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
+        {/* Mobile Navigation Backdrop */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[-1] bg-black/20 lg:hidden"
+              aria-hidden="true"
+              onClick={() => setIsOpen(false)}
+            />
+          )}
+        </AnimatePresence>
 
-              {/* Mobile Social Links */}
-              <div className="flex space-x-4 pt-4 border-t">
-                <a
-                  href="https://github.com/odidukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary"
-                  aria-label="GitHub"
-                >
-                  <Github className="h-5 w-5" />
-                </a>
-                <a
-                  href="https://linkedin.com/in/oles-didukh"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <ObfuscatedEmailLink
-                  className="text-muted-foreground hover:text-primary"
-                  ariaLabel="Email"
-                >
-                  <Mail className="h-5 w-5" />
-                </ObfuscatedEmailLink>
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              className="lg:hidden overflow-hidden"
+            >
+              <div className="mt-4 pb-4 border-t">
+                <div className="flex flex-col space-y-4 pt-4">
+                  {navItems.map(item => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => {
+                        playPop();
+                        setIsOpen(false);
+                      }}
+                      className={cn(
+                        'text-sm font-medium transition-colors hover:text-primary px-2 py-1',
+                        pathname === item.href
+                          ? 'text-primary bg-primary/10 rounded'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+
+                  {/* Mobile Social Links */}
+                  <div className="flex space-x-4 pt-4 border-t">
+                    <a
+                      href="https://github.com/odidukh"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary"
+                      aria-label="GitHub"
+                    >
+                      <Github className="h-5 w-5" />
+                    </a>
+                    <a
+                      href="https://linkedin.com/in/oles-didukh"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </a>
+                    <ObfuscatedEmailLink
+                      className="text-muted-foreground hover:text-primary"
+                      ariaLabel="Email"
+                    >
+                      <Mail className="h-5 w-5" />
+                    </ObfuscatedEmailLink>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Container>
     </header>
   );

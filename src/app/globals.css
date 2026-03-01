@@ -147,6 +147,22 @@
   --color-status-error-text: var(--status-error-text);
 
   /* ==========================================
+     FLUID TYPOGRAPHY TOKENS
+     Maps design-tokens clamp() values for Tailwind
+     ========================================== */
+  --font-size-fluid-xs: var(--text-xs);
+  --font-size-fluid-sm: var(--text-sm);
+  --font-size-fluid-base: var(--text-base);
+  --font-size-fluid-lg: var(--text-lg);
+  --font-size-fluid-xl: var(--text-xl);
+  --font-size-fluid-2xl: var(--text-2xl);
+  --font-size-fluid-3xl: var(--text-3xl);
+  --font-size-fluid-4xl: var(--text-4xl);
+  --font-size-fluid-5xl: var(--text-5xl);
+  --font-size-fluid-6xl: var(--text-6xl);
+  --font-size-fluid-7xl: var(--text-7xl);
+
+  /* ==========================================
      SHADOW TOKENS
      Glow effects for premium UI elements
      ========================================== */

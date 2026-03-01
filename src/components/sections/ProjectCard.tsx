@@ -40,6 +40,7 @@ export const ProjectCard = React.memo(function ProjectCard({
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.05 }}
         whileHover={{ x: 5 }}
+        whileTap={{ x: 0, scale: 0.98 }}
       >
         <Link href={`/projects/${project.id}`}>
           <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
@@ -181,6 +182,7 @@ export const ProjectCard = React.memo(function ProjectCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.98 }}
       className="h-full"
     >
       <Link href={`/projects/${project.id}`} className="h-full block">

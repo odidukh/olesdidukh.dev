@@ -1,22 +1,22 @@
 ---
-id: "redux-to-zustand-migration"
-slug: "redux-to-zustand-migration-guide"
-title: "From Redux to Zustand: A Practical Migration Guide"
-excerpt: "Redux is fading in the React ecosystem. Learn how to migrate to Zustand with real examples, patterns for complex state, and strategies for gradual adoption."
-coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80"
+id: 'redux-to-zustand-migration'
+slug: 'redux-to-zustand-migration-guide'
+title: 'From Redux to Zustand: A Practical Migration Guide'
+excerpt: 'Redux is fading in the React ecosystem. Learn how to migrate to Zustand with real examples, patterns for complex state, and strategies for gradual adoption.'
+coverImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2025-01-05"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2025-01-05'
 readingTime: 13
-category: "React"
+category: 'React'
 tags:
-  - "React"
-  - "State Management"
-  - "Redux"
-  - "Zustand"
-  - "Migration"
+  - 'React'
+  - 'State Management'
+  - 'Redux'
+  - 'Zustand'
+  - 'Migration'
 featured: false
 views: 1234
 likes: 89
@@ -28,13 +28,13 @@ Redux isn't dead, but it's increasingly seen as legacy for new React projects. Z
 
 ## Why Teams Are Migrating
 
-| Aspect | Redux Toolkit | Zustand |
-|--------|--------------|---------|
-| Bundle size | 47KB | 8KB |
-| Boilerplate | Medium | Minimal |
-| Learning curve | Steep | Gentle |
-| DevTools | Excellent | Good |
-| TypeScript | Good | Excellent |
+| Aspect         | Redux Toolkit | Zustand   |
+| -------------- | ------------- | --------- |
+| Bundle size    | 47KB          | 8KB       |
+| Boilerplate    | Medium        | Minimal   |
+| Learning curve | Steep         | Gentle    |
+| DevTools       | Excellent     | Good      |
+| TypeScript     | Good          | Excellent |
 
 ## Core Concepts Comparison
 
@@ -116,7 +116,7 @@ function Profile() {
 
 ```typescript
 // New features use Zustand
-const useNewFeatureStore = create((set) => ({
+const useNewFeatureStore = create(set => ({
   // new state
 }));
 
@@ -141,15 +141,15 @@ const notificationsSlice = createSlice({
 });
 
 // After: Zustand store
-const useNotificationStore = create<NotificationStore>((set) => ({
+const useNotificationStore = create<NotificationStore>(set => ({
   notifications: [],
-  add: (notification) =>
-    set((state) => ({
-      notifications: [...state.notifications, notification]
+  add: notification =>
+    set(state => ({
+      notifications: [...state.notifications, notification],
     })),
-  remove: (id) =>
-    set((state) => ({
-      notifications: state.notifications.filter(n => n.id !== id)
+  remove: id =>
+    set(state => ({
+      notifications: state.notifications.filter(n => n.id !== id),
     })),
   clear: () => set({ notifications: [] }),
 }));
@@ -163,7 +163,7 @@ const useProductStore = create<ProductStore>((set, get) => ({
   loading: false,
   error: null,
 
-  fetchProducts: async (category) => {
+  fetchProducts: async category => {
     set({ loading: true, error: null });
     try {
       const products = await api.getProducts(category);
@@ -174,7 +174,7 @@ const useProductStore = create<ProductStore>((set, get) => ({
   },
 
   // Accessing other state
-  addToCart: (productId) => {
+  addToCart: productId => {
     const product = get().products.find(p => p.id === productId);
     if (product) {
       useCartStore.getState().add(product);
@@ -194,9 +194,9 @@ import { devtools, persist } from 'zustand/middleware';
 const useStore = create(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         count: 0,
-        increment: () => set((state) => ({ count: state.count + 1 })),
+        increment: () => set(state => ({ count: state.count + 1 })),
       }),
       { name: 'counter-storage' }
     )
@@ -207,16 +207,17 @@ const useStore = create(
 ### Slices Pattern (Like Redux Slices)
 
 ```typescript
-const createUserSlice = (set) => ({
+const createUserSlice = set => ({
   user: null,
-  setUser: (user) => set({ user }),
+  setUser: user => set({ user }),
 });
 
-const createCartSlice = (set) => ({
+const createCartSlice = set => ({
   items: [],
-  addItem: (item) => set((state) => ({
-    items: [...state.items, item]
-  })),
+  addItem: item =>
+    set(state => ({
+      items: [...state.items, item],
+    })),
 });
 
 const useStore = create((...a) => ({
@@ -229,13 +230,13 @@ const useStore = create((...a) => ({
 
 ```typescript
 // Avoid re-renders with selectors
-const userName = useUserStore((state) => state.user?.name);
-const cartCount = useCartStore((state) => state.items.length);
+const userName = useUserStore(state => state.user?.name);
+const cartCount = useCartStore(state => state.items.length);
 
 // Shallow comparison for objects
 import { shallow } from 'zustand/shallow';
 const { user, loading } = useUserStore(
-  (state) => ({ user: state.user, loading: state.loading }),
+  state => ({ user: state.user, loading: state.loading }),
   shallow
 );
 ```

@@ -37,8 +37,6 @@ describe('useUIPreferencesStore', () => {
     expect(result.current.fontSize).toBe('normal');
     expect(result.current.sidebarCollapsed).toBe(false);
     expect(result.current.showReadingProgress).toBe(true);
-    expect(result.current.pwaInstallDismissed).toBe(false);
-    expect(result.current.pwaInstallDismissedAt).toBe(null);
     expect(result.current.locale).toBe(null);
   });
 
@@ -134,48 +132,6 @@ describe('useUIPreferencesStore', () => {
     expect(result.current.showReadingProgress).toBe(false);
   });
 
-  it('dismissPWAInstall sets dismissed flag and timestamp', async () => {
-    const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
-
-    const { result } = renderHook(() => useUIPreferencesStore());
-
-    const beforeDismiss = Date.now();
-
-    act(() => {
-      result.current.dismissPWAInstall();
-    });
-
-    const afterDismiss = Date.now();
-
-    expect(result.current.pwaInstallDismissed).toBe(true);
-    expect(result.current.pwaInstallDismissedAt).toBeGreaterThanOrEqual(
-      beforeDismiss
-    );
-    expect(result.current.pwaInstallDismissedAt).toBeLessThanOrEqual(
-      afterDismiss
-    );
-  });
-
-  it('shouldShowPWAInstall returns true when not dismissed', async () => {
-    const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
-
-    const { result } = renderHook(() => useUIPreferencesStore());
-
-    expect(result.current.shouldShowPWAInstall()).toBe(true);
-  });
-
-  it('shouldShowPWAInstall returns false immediately after dismissal', async () => {
-    const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
-
-    const { result } = renderHook(() => useUIPreferencesStore());
-
-    act(() => {
-      result.current.dismissPWAInstall();
-    });
-
-    expect(result.current.shouldShowPWAInstall()).toBe(false);
-  });
-
   it('setLocale updates locale preference', async () => {
     const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
 
@@ -200,7 +156,7 @@ describe('useUIPreferencesStore', () => {
     expect(result.current.locale).toBe(null);
   });
 
-  it('resetPreferences resets all preferences but keeps PWA dismissal', async () => {
+  it('resetPreferences resets all preferences to defaults', async () => {
     const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
 
     const { result } = renderHook(() => useUIPreferencesStore());
@@ -212,10 +168,7 @@ describe('useUIPreferencesStore', () => {
       result.current.setSidebarCollapsed(true);
       result.current.setShowReadingProgress(false);
       result.current.setLocale('uk');
-      result.current.dismissPWAInstall();
     });
-
-    const dismissedAt = result.current.pwaInstallDismissedAt;
 
     act(() => {
       result.current.resetPreferences();
@@ -227,9 +180,6 @@ describe('useUIPreferencesStore', () => {
     expect(result.current.sidebarCollapsed).toBe(false);
     expect(result.current.showReadingProgress).toBe(true);
     expect(result.current.locale).toBe(null);
-    // PWA dismissal should be preserved
-    expect(result.current.pwaInstallDismissed).toBe(true);
-    expect(result.current.pwaInstallDismissedAt).toBe(dismissedAt);
   });
 
   it('persists preferences to localStorage', async () => {
@@ -328,22 +278,6 @@ describe('useUIPreferencesStore selector hooks', () => {
 
     const { result: updatedResult } = renderHook(() => useFontSizePreference());
     expect(updatedResult.current).toBe('large');
-  });
-
-  it('usePWAInstallState returns PWA install state', async () => {
-    const { useUIPreferencesStore } = await import('./useUIPreferencesStore');
-
-    const { result } = renderHook(() => useUIPreferencesStore());
-
-    expect(result.current.pwaInstallDismissed).toBe(false);
-    expect(result.current.shouldShowPWAInstall()).toBe(true);
-
-    act(() => {
-      result.current.dismissPWAInstall();
-    });
-
-    expect(result.current.pwaInstallDismissed).toBe(true);
-    expect(result.current.shouldShowPWAInstall()).toBe(false);
   });
 
   it('useLocalePreference returns locale state', async () => {

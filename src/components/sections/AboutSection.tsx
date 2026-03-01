@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useInView,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
@@ -229,11 +235,11 @@ export function AboutSection() {
             <span className="text-sm font-medium text-primary">About Me</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Turning <span className="text-primary">Ideas</span> Into
             <br />
             Digital <span className="text-primary">Reality</span>
-          </h1>
+          </h2>
 
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Senior Front-End Engineer with 7+ years of experience crafting
@@ -277,10 +283,18 @@ export function AboutSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex justify-center mb-12"
         >
-          <div className="inline-flex p-1 bg-muted rounded-lg">
+          <div
+            className="inline-flex p-1 bg-muted rounded-lg"
+            role="tablist"
+            aria-label="About sections"
+          >
             {(['story', 'skills', 'values'] as const).map(tab => (
               <button
                 key={tab}
+                role="tab"
+                id={`tab-${tab}`}
+                aria-selected={activeTab === tab}
+                aria-controls={`tabpanel-${tab}`}
                 onClick={() => setActiveTab(tab)}
                 className={`
                   px-6 py-3 rounded-md font-medium transition-all capitalize
@@ -299,247 +313,267 @@ export function AboutSection() {
 
         {/* Tab Content */}
         <div className="max-w-6xl mx-auto">
-          {/* Story Tab */}
-          {activeTab === 'story' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-            >
-              {/* Left: Personal Story */}
-              <div className="space-y-6">
-                <div className="relative">
-                  <Quote className="absolute -top-4 -left-4 w-8 h-8 text-primary/20" />
-                  <h3 className="text-3xl font-bold mb-4">
-                    From <span className="text-primary">Physics</span> to{' '}
-                    <span className="text-primary">Pixels</span>
-                  </h3>
-                </div>
-
-                <div className="space-y-4 text-lg text-muted-foreground">
-                  <p>
-                    My journey began with a physics degree and a curiosity about
-                    how things work. That analytical mindset became my
-                    superpower in programming—breaking down complex problems
-                    into elegant solutions.
-                  </p>
-                  <p>
-                    Over 7+ years, I&apos;ve evolved from a curious beginner to
-                    a Senior Front-End Engineer, collaborating with startups and
-                    enterprises to build applications that serve thousands of
-                    users daily.
-                  </p>
-                  <p>
-                    Today, I specialize in React and TypeScript, creating
-                    performant, accessible web applications that push
-                    boundaries. Every project is an opportunity to innovate and
-                    create something meaningful.
-                  </p>
-                </div>
-
-                {/* Location & Availability */}
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    <span>Vinnytsia, Ukraine</span>
+          <AnimatePresence mode="wait">
+            {/* Story Tab */}
+            {activeTab === 'story' && (
+              <motion.div
+                key="story"
+                role="tabpanel"
+                id="tabpanel-story"
+                aria-labelledby="tab-story"
+                tabIndex={0}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+              >
+                {/* Left: Personal Story */}
+                <div className="space-y-6">
+                  <div className="relative">
+                    <Quote className="absolute -top-4 -left-4 w-8 h-8 text-primary/20" />
+                    <h3 className="text-3xl font-bold mb-4">
+                      From <span className="text-primary">Physics</span> to{' '}
+                      <span className="text-primary">Pixels</span>
+                    </h3>
                   </div>
-                  <StatusIndicator variant="available" />
+
+                  <div className="space-y-4 text-lg text-muted-foreground">
+                    <p>
+                      My journey began with a physics degree and a curiosity
+                      about how things work. That analytical mindset became my
+                      superpower in programming—breaking down complex problems
+                      into elegant solutions.
+                    </p>
+                    <p>
+                      Over 7+ years, I&apos;ve evolved from a curious beginner
+                      to a Senior Front-End Engineer, collaborating with
+                      startups and enterprises to build applications that serve
+                      thousands of users daily.
+                    </p>
+                    <p>
+                      Today, I specialize in React and TypeScript, creating
+                      performant, accessible web applications that push
+                      boundaries. Every project is an opportunity to innovate
+                      and create something meaningful.
+                    </p>
+                  </div>
+
+                  {/* Location & Availability */}
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      <span>Vinnytsia, Ukraine</span>
+                    </div>
+                    <StatusIndicator variant="available" />
+                  </div>
+
+                  {/* CTA Buttons */}
+                  <div className="flex gap-4 pt-4">
+                    <Button asChild>
+                      <Link href="/about/journey">
+                        Full Journey
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link href="/about/philosophy">My Philosophy</Link>
+                    </Button>
+                  </div>
                 </div>
 
-                {/* CTA Buttons */}
-                <div className="flex gap-4 pt-4">
-                  <Button asChild>
-                    <Link href="/about/journey">
-                      Full Journey
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="/about/philosophy">My Philosophy</Link>
-                  </Button>
-                </div>
-              </div>
+                {/* Right: Timeline */}
+                <div className="relative">
+                  <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
 
-              {/* Right: Timeline */}
-              <div className="relative">
-                <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+                  {timeline.map((event, index) => (
+                    <motion.div
+                      key={event.year}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                      className="relative flex items-start gap-6 mb-8"
+                    >
+                      <div className="relative z-10">
+                        <div className="w-16 h-16 bg-card border-2 border-primary rounded-full flex items-center justify-center">
+                          {event.type === 'work' ? (
+                            <Briefcase className="w-6 h-6 text-primary" />
+                          ) : event.type === 'education' ? (
+                            <GraduationCap className="w-6 h-6 text-primary" />
+                          ) : (
+                            <Star className="w-6 h-6 text-primary" />
+                          )}
+                        </div>
+                      </div>
 
-                {timeline.map((event, index) => (
+                      <div className="flex-1 pt-2">
+                        <div className="text-sm text-primary font-medium mb-1">
+                          {event.year}
+                        </div>
+                        <h4 className="text-lg font-semibold mb-1">
+                          {event.title}
+                        </h4>
+                        <p className="text-muted-foreground">
+                          {event.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {/* Continue Journey Link */}
                   <motion.div
-                    key={event.year}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                    className="relative flex items-start gap-6 mb-8"
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : {}}
+                    transition={{ duration: 0.5, delay: 1 }}
+                    className="relative flex items-start gap-6"
                   >
                     <div className="relative z-10">
-                      <div className="w-16 h-16 bg-card border-2 border-primary rounded-full flex items-center justify-center">
-                        {event.type === 'work' ? (
-                          <Briefcase className="w-6 h-6 text-primary" />
-                        ) : event.type === 'education' ? (
-                          <GraduationCap className="w-6 h-6 text-primary" />
-                        ) : (
-                          <Star className="w-6 h-6 text-primary" />
-                        )}
+                      <div className="w-16 h-16 bg-primary/10 border-2 border-primary/50 border-dashed rounded-full flex items-center justify-center">
+                        <Rocket className="w-6 h-6 text-primary animate-pulse" />
                       </div>
                     </div>
-
                     <div className="flex-1 pt-2">
                       <div className="text-sm text-primary font-medium mb-1">
-                        {event.year}
+                        2025+
                       </div>
                       <h4 className="text-lg font-semibold mb-1">
-                        {event.title}
+                        The Journey Continues
                       </h4>
                       <p className="text-muted-foreground">
-                        {event.description}
+                        Always learning, always growing...
                       </p>
                     </div>
                   </motion.div>
-                ))}
+                </div>
+              </motion.div>
+            )}
 
-                {/* Continue Journey Link */}
+            {/* Skills Tab */}
+            {activeTab === 'skills' && (
+              <motion.div
+                key="skills"
+                role="tabpanel"
+                id="tabpanel-skills"
+                aria-labelledby="tab-skills"
+                tabIndex={0}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-8"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {skillCategories.map((category, index) => (
+                    <motion.div
+                      key={category.name}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      whileHover={{ y: -5 }}
+                      className="relative group"
+                    >
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${category.color} rounded-xl opacity-10 group-hover:opacity-20 transition-opacity`}
+                      />
+                      <div className="relative bg-card border border-border rounded-xl p-6">
+                        <div
+                          className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${category.color} mb-4`}
+                        >
+                          <category.icon className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-3">
+                          {category.name}
+                        </h3>
+                        <div className="space-y-2">
+                          {category.skills.map(skill => (
+                            <div
+                              key={skill}
+                              className="flex items-center gap-2"
+                            >
+                              <CheckCircle className="w-4 h-4 text-primary" />
+                              <span className="text-sm">{skill}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Skills CTA */}
                 <motion.div
                   initial={{ opacity: 0 }}
-                  animate={isInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 1 }}
-                  className="relative flex items-start gap-6"
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="text-center pt-8"
                 >
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 bg-primary/10 border-2 border-primary/50 border-dashed rounded-full flex items-center justify-center">
-                      <Rocket className="w-6 h-6 text-primary animate-pulse" />
-                    </div>
-                  </div>
-                  <div className="flex-1 pt-2">
-                    <div className="text-sm text-primary font-medium mb-1">
-                      2025+
-                    </div>
-                    <h4 className="text-lg font-semibold mb-1">
-                      The Journey Continues
-                    </h4>
-                    <p className="text-muted-foreground">
-                      Always learning, always growing...
-                    </p>
+                  <p className="text-muted-foreground mb-6">
+                    And 20+ more technologies across the full stack
+                  </p>
+                  <div className="flex gap-4 justify-center">
+                    <Button variant="outline" asChild>
+                      <Link href="/skills">
+                        View All Skills
+                        <ChevronRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link href="/experience">
+                        Work Experience
+                        <ChevronRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </motion.div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
 
-          {/* Skills Tab */}
-          {activeTab === 'skills' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-8"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {skillCategories.map((category, index) => (
+            {/* Values Tab */}
+            {activeTab === 'values' && (
+              <motion.div
+                key="values"
+                role="tabpanel"
+                id="tabpanel-values"
+                aria-labelledby="tab-values"
+                tabIndex={0}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
+                {values.map((value, index) => (
                   <motion.div
-                    key={category.name}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    key={value.title}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -5 }}
-                    className="relative group"
+                    whileHover={{ scale: 1.02 }}
+                    className="group"
                   >
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${category.color} rounded-xl opacity-10 group-hover:opacity-20 transition-opacity`}
-                    />
-                    <div className="relative bg-card border border-border rounded-xl p-6">
-                      <div
-                        className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${category.color} mb-4`}
-                      >
-                        <category.icon className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-lg font-semibold mb-3">
-                        {category.name}
-                      </h3>
-                      <div className="space-y-2">
-                        {category.skills.map(skill => (
-                          <div key={skill} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-primary" />
-                            <span className="text-sm">{skill}</span>
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="relative bg-card border border-border rounded-xl p-8">
+                        <div className="flex items-start gap-4">
+                          <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                            <value.icon className="w-6 h-6 text-primary" />
                           </div>
-                        ))}
+                          <div className="flex-1">
+                            <h3 className="text-xl font-semibold mb-2">
+                              {value.title}
+                            </h3>
+                            <p className="text-muted-foreground">
+                              {value.description}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
                 ))}
-              </div>
-
-              {/* Skills CTA */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="text-center pt-8"
-              >
-                <p className="text-muted-foreground mb-6">
-                  And 20+ more technologies across the full stack
-                </p>
-                <div className="flex gap-4 justify-center">
-                  <Button variant="outline" asChild>
-                    <Link href="/skills">
-                      View All Skills
-                      <ChevronRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <Link href="/experience">
-                      Work Experience
-                      <ChevronRight className="ml-2 w-4 h-4" />
-                    </Link>
-                  </Button>
-                </div>
               </motion.div>
-            </motion.div>
-          )}
-
-          {/* Values Tab */}
-          {activeTab === 'values' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-              {values.map((value, index) => (
-                <motion.div
-                  key={value.title}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="group"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="relative bg-card border border-border rounded-xl p-8">
-                      <div className="flex items-start gap-4">
-                        <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                          <value.icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold mb-2">
-                            {value.title}
-                          </h3>
-                          <p className="text-muted-foreground">
-                            {value.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Bottom CTA Section */}
@@ -549,17 +583,9 @@ export function AboutSection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-20 text-center"
         >
-          <div className="inline-flex items-center px-4 py-2 bg-green-500/10 rounded-full mb-6">
-            <StatusIndicator
-              variant="available"
-              label="Open to opportunities"
-              labelClassName="font-medium"
-            />
-          </div>
-
           <h3 className="text-3xl font-bold mb-4">
-            Let&apos;s Build Something{' '}
-            <span className="text-primary">Amazing</span> Together
+            Curious About Working <span className="text-primary">Together</span>
+            ?
           </h3>
 
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">

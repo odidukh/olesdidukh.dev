@@ -232,7 +232,7 @@ export function ContactForm() {
         >
           <CheckCircle className="h-16 w-16 text-success-600 mx-auto" />
         </motion.div>
-        <h3 className="text-2xl font-bold">
+        <h3 className="text-2xl font-bold" aria-live="polite">
           Message sent{submittedName ? `, ${submittedName}` : ''}!
         </h3>
         <p className="text-muted-foreground max-w-sm mx-auto">
@@ -276,6 +276,7 @@ export function ContactForm() {
       {/* Personal Information */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput
+          id="contact-name"
           label="Full Name"
           required
           placeholder="John Doe"
@@ -287,6 +288,7 @@ export function ContactForm() {
         />
 
         <FormInput
+          id="contact-email"
           label="Email Address"
           type="email"
           required
@@ -301,6 +303,7 @@ export function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput
+          id="contact-phone"
           label="Phone Number"
           type="tel"
           optional
@@ -313,6 +316,7 @@ export function ContactForm() {
         />
 
         <FormInput
+          id="contact-company"
           label="Company/Organization"
           optional
           placeholder="Acme Inc."
@@ -325,10 +329,10 @@ export function ContactForm() {
 
       {/* Project Type */}
       <div>
-        <label className="text-sm font-medium mb-3 block">
+        <span className="text-sm font-medium mb-3 block">
           Project Type
           <span className="text-muted-foreground ml-1">(optional)</span>
-        </label>
+        </span>
         <div
           className="flex flex-wrap gap-2"
           role="group"
@@ -339,7 +343,12 @@ export function ContactForm() {
               key={type}
               variant={formData.projectType === type ? 'default' : 'outline'}
               className="cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              onClick={() => handleInputChange('projectType', type)}
+              onClick={() =>
+                handleInputChange(
+                  'projectType',
+                  formData.projectType === type ? '' : type
+                )
+              }
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
@@ -359,10 +368,10 @@ export function ContactForm() {
       {/* Budget & Timeline */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium mb-3 block">
+          <span className="text-sm font-medium mb-3 block">
             Budget Range
             <span className="text-muted-foreground ml-1">(optional)</span>
-          </label>
+          </span>
           <div
             className="grid grid-cols-2 gap-2"
             role="group"
@@ -373,7 +382,12 @@ export function ContactForm() {
                 key={range}
                 variant={formData.budget === range ? 'default' : 'outline'}
                 className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                onClick={() => handleInputChange('budget', range)}
+                onClick={() =>
+                  handleInputChange(
+                    'budget',
+                    formData.budget === range ? '' : range
+                  )
+                }
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -391,10 +405,10 @@ export function ContactForm() {
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-3 block">
+          <span className="text-sm font-medium mb-3 block">
             Timeline
             <span className="text-muted-foreground ml-1">(optional)</span>
-          </label>
+          </span>
           <div
             className="grid grid-cols-2 gap-2"
             role="group"
@@ -405,7 +419,12 @@ export function ContactForm() {
                 key={time}
                 variant={formData.timeline === time ? 'default' : 'outline'}
                 className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                onClick={() => handleInputChange('timeline', time)}
+                onClick={() =>
+                  handleInputChange(
+                    'timeline',
+                    formData.timeline === time ? '' : time
+                  )
+                }
                 onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -426,6 +445,7 @@ export function ContactForm() {
       {/* Message */}
       <div>
         <FormTextarea
+          id="contact-message"
           label="Project Details"
           required
           placeholder="Tell me about your project goals, target audience, and any specific requirements..."
@@ -495,6 +515,8 @@ export function ContactForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="flex items-center gap-2 p-3 bg-status-error-bg border border-status-error-border text-status-error-text rounded-lg"
+              role="alert"
+              aria-live="assertive"
             >
               <AlertCircle className="h-5 w-5" />
               <span className="text-sm font-medium">

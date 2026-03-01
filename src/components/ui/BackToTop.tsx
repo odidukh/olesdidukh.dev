@@ -28,12 +28,14 @@ export function BackToTop() {
       style={{ opacity, scale, pointerEvents }}
       onClick={handleClick}
       className={cn(
-        'fixed bottom-20 right-6 z-50 h-10 w-10 rounded-full',
-        'bg-primary text-primary-foreground shadow-lg shadow-primary/20',
+        'fixed bottom-24 right-6 z-50 h-11 w-11 rounded-full',
+        'bg-primary text-primary-foreground shadow-lg shadow-primary/25',
         'flex items-center justify-center',
-        'hover:bg-primary/90 transition-colors',
-        'sm:bottom-6' // On mobile push up above any bottom nav affordance
+        'hover:bg-primary/90 hover:shadow-xl transition-all duration-200',
+        'sm:bottom-8'
       )}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
       aria-label="Back to top"
       title="Back to top"
     >

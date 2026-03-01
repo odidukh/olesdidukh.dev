@@ -1,22 +1,22 @@
 ---
-id: "typescript-patterns-enterprise"
-slug: "typescript-patterns-enterprise-applications"
-title: "TypeScript Patterns for Enterprise React Applications"
-excerpt: "Battle-tested TypeScript patterns from building enterprise platforms. Generics, utility types, and type-safe API layers that scale."
-coverImage: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=80"
+id: 'typescript-patterns-enterprise'
+slug: 'typescript-patterns-enterprise-applications'
+title: 'TypeScript Patterns for Enterprise React Applications'
+excerpt: 'Battle-tested TypeScript patterns from building enterprise platforms. Generics, utility types, and type-safe API layers that scale.'
+coverImage: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=80'
 author:
-  name: "Oles Didukh"
-  avatar: "/images/avatar.png"
-  role: "Senior Front-End Engineer"
-publishedAt: "2024-10-20"
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2024-10-20'
 readingTime: 13
-category: "TypeScript"
+category: 'TypeScript'
 tags:
-  - "TypeScript"
-  - "React"
-  - "Patterns"
-  - "Enterprise"
-  - "Best Practices"
+  - 'TypeScript'
+  - 'React'
+  - 'Patterns'
+  - 'Enterprise'
+  - 'Best Practices'
 featured: false
 views: 1654
 likes: 123
@@ -70,12 +70,16 @@ interface APIEndpoints {
 // Type-safe fetch wrapper
 async function api<
   Path extends keyof APIEndpoints,
-  Method extends keyof APIEndpoints[Path]
+  Method extends keyof APIEndpoints[Path],
 >(
   path: Path,
   method: Method,
-  options?: APIEndpoints[Path][Method] extends { body: infer B } ? { body: B } : never
-): Promise<APIEndpoints[Path][Method] extends { response: infer R } ? R : never> {
+  options?: APIEndpoints[Path][Method] extends { body: infer B }
+    ? { body: B }
+    : never
+): Promise<
+  APIEndpoints[Path][Method] extends { response: infer R } ? R : never
+> {
   // Implementation
 }
 
@@ -188,10 +192,14 @@ type Status = 'pending' | 'approved' | 'rejected';
 
 function getStatusColor(status: Status): string {
   switch (status) {
-    case 'pending': return 'yellow';
-    case 'approved': return 'green';
-    case 'rejected': return 'red';
-    default: return assertNever(status); // Compile error if case missing
+    case 'pending':
+      return 'yellow';
+    case 'approved':
+      return 'green';
+    case 'rejected':
+      return 'red';
+    default:
+      return assertNever(status); // Compile error if case missing
   }
 }
 
@@ -225,14 +233,14 @@ class TypedEventEmitter<T extends Record<string, unknown>> {
 
 const emitter = new TypedEventEmitter<EventMap>();
 
-emitter.on('userLoggedIn', (data) => {
+emitter.on('userLoggedIn', data => {
   console.log(data.userId); // Typed!
   console.log(data.timestamp); // Typed!
 });
 
 emitter.emit('userLoggedIn', {
   userId: '123',
-  timestamp: new Date()
+  timestamp: new Date(),
 }); // Type-checked!
 ```
 

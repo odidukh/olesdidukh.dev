@@ -7,30 +7,36 @@
 
 import { ALL_FILTER } from '@/constants';
 
-/** Available project categories for filtering */
+/** Available project categories for filtering — must match MDX frontmatter */
 export const PROJECT_CATEGORIES = [
   ALL_FILTER,
   'Web Application',
-  'E-Commerce',
-  'SaaS',
-  'Mobile App',
-  'UI/UX Design',
+  'FinTech',
+  'Design System',
+  'Enterprise',
+  'Mobile',
+  'Data Visualization',
+  'Personal Project',
 ] as const;
 
-/** Available technologies for filtering */
+/** Available technologies for filtering — aligned with MDX projects */
 export const PROJECT_TECHNOLOGIES = [
   'React',
   'TypeScript',
   'Next.js',
-  'Node.js',
-  'GraphQL',
-  'PostgreSQL',
-  'MongoDB',
   'Redux',
-  'Tailwind CSS',
-  'AWS',
-  'Docker',
+  'JavaScript',
   'React Native',
+  'D3.js',
+  'Zustand',
+  'Material-UI',
+  'Storybook',
+  'SASS',
+  'Webpack',
+  'Tailwind CSS',
+  'Framer Motion',
+  'REST APIs',
+  'WebSocket',
 ] as const;
 
 /** Type for project categories */

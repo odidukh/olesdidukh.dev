@@ -63,10 +63,7 @@ export function searchPosts(query: string) {
 /**
  * Get related posts based on category and tags
  */
-export function getRelatedPosts(
-  currentSlug: string,
-  limit: number = 3
-) {
+export function getRelatedPosts(currentSlug: string, limit: number = 3) {
   const currentPost = getPostBySlug(currentSlug);
   if (!currentPost) return [];
 
@@ -105,4 +102,3 @@ export function getAllTags(): string[] {
   const tags = new Set(posts.flatMap(post => post.tags));
   return Array.from(tags);
 }
-

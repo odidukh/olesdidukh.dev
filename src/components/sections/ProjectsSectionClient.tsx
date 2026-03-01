@@ -96,7 +96,7 @@ export function ProjectsSectionClient({
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold">
               Featured{' '}
-              <span className="bg-gradient-to-r from-mocha-500 to-accent-green bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
                 Projects
               </span>
             </h2>
@@ -131,6 +131,7 @@ export function ProjectsSectionClient({
                 variant="outline"
                 onClick={toggleShowFilters}
                 className="relative"
+                aria-expanded={showFilters}
               >
                 <Filter className="mr-2 h-4 w-4" />
                 Filters
@@ -147,6 +148,8 @@ export function ProjectsSectionClient({
                   size="sm"
                   onClick={() => setViewMode('grid')}
                   className="px-3"
+                  aria-label="Grid view"
+                  aria-pressed={viewMode === 'grid'}
                 >
                   <Grid3x3 className="h-4 w-4" />
                 </Button>
@@ -155,6 +158,8 @@ export function ProjectsSectionClient({
                   size="sm"
                   onClick={() => setViewMode('list')}
                   className="px-3"
+                  aria-label="List view"
+                  aria-pressed={viewMode === 'list'}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -178,13 +183,17 @@ export function ProjectsSectionClient({
                     <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
                       Categories
                     </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div
+                      className="flex flex-wrap gap-2"
+                      role="radiogroup"
+                      aria-label="Project categories"
+                    >
                       {PROJECT_CATEGORIES.map(category => (
                         <button
                           key={category}
                           type="button"
-                          role="tab"
-                          aria-selected={selectedCategory === category}
+                          role="radio"
+                          aria-checked={selectedCategory === category}
                           tabIndex={0}
                           className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all cursor-pointer hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                             selectedCategory === category
@@ -204,13 +213,17 @@ export function ProjectsSectionClient({
                     <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wider">
                       Technologies
                     </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div
+                      className="flex flex-wrap gap-2"
+                      role="group"
+                      aria-label="Technology filters"
+                    >
                       {PROJECT_TECHNOLOGIES.map(tech => (
                         <button
                           key={tech}
                           type="button"
-                          role="tab"
-                          aria-selected={selectedTechnologies.includes(tech)}
+                          role="checkbox"
+                          aria-checked={selectedTechnologies.includes(tech)}
                           tabIndex={0}
                           className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-all cursor-pointer hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                             selectedTechnologies.includes(tech)
@@ -256,6 +269,7 @@ export function ProjectsSectionClient({
                   <button
                     onClick={() => setSelectedCategory(ALL_FILTER)}
                     className="ml-2 hover:text-destructive"
+                    aria-label={`Remove ${selectedCategory} filter`}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -267,6 +281,7 @@ export function ProjectsSectionClient({
                   <button
                     onClick={() => toggleTechnology(tech)}
                     className="ml-2 hover:text-destructive"
+                    aria-label={`Remove ${tech} filter`}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -278,6 +293,7 @@ export function ProjectsSectionClient({
                   <button
                     onClick={() => setSearchQuery('')}
                     className="ml-2 hover:text-destructive"
+                    aria-label="Clear search filter"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -287,7 +303,11 @@ export function ProjectsSectionClient({
           )}
 
           {/* Results Count */}
-          <div className="text-sm text-muted-foreground">
+          <div
+            className="text-sm text-muted-foreground"
+            role="status"
+            aria-live="polite"
+          >
             Showing {filteredProjects.length} of {initialProjects.length}{' '}
             projects
           </div>
@@ -321,6 +341,7 @@ export function ProjectsSectionClient({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center justify-center py-20 text-center"
+                role="status"
               >
                 <Briefcase className="h-12 w-12 text-muted-foreground/30 mb-4" />
                 <h3 className="text-lg font-semibold text-foreground mb-2">
