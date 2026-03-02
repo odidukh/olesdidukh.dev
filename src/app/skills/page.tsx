@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
-import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { ANIMATION } from '@/constants';
 import { generateParticleData } from '@/lib/random';
 import {
@@ -358,11 +358,8 @@ export default function SkillsPage() {
 
   return (
     <>
+      <BreadcrumbSchema page="skills" />
       <Navigation />
-
-      <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <Breadcrumb items={[{ label: 'Skills' }]} />
-      </div>
 
       {/* Hero Section */}
       <section className="relative min-h-[40vh] flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background overflow-hidden">
