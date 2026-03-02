@@ -99,7 +99,7 @@ export function Navigation({ className }: NavigationProps) {
             className="group flex items-center space-x-2 text-xl font-bold"
           >
             <span
-              className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent transition-all group-hover:from-accent-mocha-dark group-hover:to-accent-green"
+              className="text-foreground transition-colors group-hover:text-primary"
               onClick={() => playPop()}
             >
               Oles Didukh
