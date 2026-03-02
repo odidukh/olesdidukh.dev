@@ -11,9 +11,9 @@ import { useProjectsFilterStore } from '@/stores';
 import {
   Search,
   Filter,
+  FolderKanban,
   Grid3x3,
   List,
-  Sparkles,
   X,
   Briefcase,
 } from 'lucide-react';
@@ -90,17 +90,19 @@ export function ProjectsSectionClient({
         <div className="space-y-8">
           {/* Header */}
           <div className="text-center space-y-4">
-            <Badge variant="outline" className="mb-4">
-              <Sparkles className="mr-2 h-3 w-3" />
-              Portfolio
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <FolderKanban className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">
+                Portfolio
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Featured{' '}
-              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mocha-400">
                 Projects
               </span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               A showcase of my best work, from enterprise applications to
               innovative solutions. Each project demonstrates my commitment to
               quality, performance, and user experience.

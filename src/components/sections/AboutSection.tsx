@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/Button';
 import {
   ArrowRight,
   Code2,
-  Sparkles,
+  User,
   Users,
   Calendar,
   MapPin,
@@ -240,17 +240,18 @@ export function AboutSection() {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">About Me</span>
+            <User className="w-4 h-4 text-primary" />
+            <span className="text-sm font-semibold text-primary">About Me</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Turning <span className="text-primary">Ideas</span> Into
-            <br />
-            Digital <span className="text-primary">Reality</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            Turning Ideas Into{' '}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mocha-400">
+              Digital Reality
+            </span>
           </h2>
 
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Senior Front-End Engineer with 7+ years of experience crafting
             exceptional web experiences that delight users and drive business
             results

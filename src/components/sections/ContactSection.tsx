@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
@@ -131,17 +130,19 @@ export function ContactSection() {
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <Badge variant="outline" className="mb-4">
-              <MessageSquare className="mr-2 h-3 w-3" />
-              Contact
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <Mail className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">
+                Contact
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Let&apos;s Build Something{' '}
-              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mocha-400">
                 Amazing Together
               </span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               I&apos;m currently available for freelance projects and full-time
               opportunities. Whether you have a project in mind or just want to
               chat about possibilities, I&apos;d love to hear from you.

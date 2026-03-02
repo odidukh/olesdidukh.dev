@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { BlogCard } from './BlogCard';
@@ -20,6 +19,7 @@ import {
 import { useBlogFilterStore } from '@/stores';
 import {
   Search,
+  SearchX,
   BookOpen,
   TrendingUp,
   Calendar,
@@ -66,6 +66,7 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
     sortBy,
     setSortBy,
     clearFilters,
+    resetAll,
   } = useBlogFilterStore();
 
   // Get featured posts
@@ -128,17 +129,17 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center space-y-4">
-            <Badge variant="outline" className="mb-4">
-              <BookOpen className="mr-2 h-3 w-3" />
-              Blog
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Blog</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Thoughts on{' '}
-              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mocha-400">
                 Code & Career
               </span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Sharing insights on React, TypeScript, web development best
               practices, and lessons learned from my journey as a senior
               front-end engineer.
@@ -276,23 +277,30 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
               )
             ) : (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
                 className="flex flex-col items-center justify-center py-20 text-center"
                 role="status"
               >
-                <BookOpen className="h-12 w-12 text-muted-foreground/30 mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2">
-                  No posts found
+                <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+                  <SearchX className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">
+                  No articles found
                 </h3>
-                <p className="text-sm text-muted-foreground mb-6">
+                <p className="text-muted-foreground mb-6 max-w-md">
                   {searchQuery
-                    ? `Nothing matched "${searchQuery}".`
-                    : `No posts in this category yet.`}
+                    ? `No articles matched "${searchQuery}". Try adjusting your search or browse all posts.`
+                    : 'No articles match your current filters. Try adjusting your search or browse all posts.'}
                 </p>
-                <Button variant="outline" onClick={clearFilters}>
-                  Clear filters
-                </Button>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={clearFilters}>
+                    Clear Filters
+                  </Button>
+                  <Button variant="ghost" onClick={resetAll}>
+                    Browse All
+                  </Button>
+                </div>
               </motion.div>
             )}
           </motion.div>
