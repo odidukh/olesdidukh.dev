@@ -14,6 +14,7 @@ vi.mock('@/stores', () => ({
     resolvedTheme: 'light',
     toggleTheme: vi.fn(),
   })),
+  useThemeHydrated: vi.fn(() => true),
 }));
 
 describe('Navigation', () => {

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useThemeStore } from '@/stores';
+import { useThemeStore, useThemeHydrated } from '@/stores';
 import { Button } from './Button';
 import { Container } from './Container';
 import { SocialIconButton } from './SocialIconButton';
@@ -50,6 +50,7 @@ export function Navigation({ className }: NavigationProps) {
 
   // Use global theme store
   const { resolvedTheme, toggleTheme } = useThemeStore();
+  const hasHydrated = useThemeHydrated();
   const isDark = resolvedTheme === 'dark';
 
   // Command Menu store
@@ -169,10 +170,14 @@ export function Navigation({ className }: NavigationProps) {
               className="h-9 w-9"
               aria-label="Toggle dark mode"
             >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
+              {hasHydrated ? (
+                isDark ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )
               ) : (
-                <Moon className="h-4 w-4" />
+                <span className="h-4 w-4" />
               )}
             </Button>
 
