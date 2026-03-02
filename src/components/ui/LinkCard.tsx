@@ -194,7 +194,9 @@ const LinkCard = React.forwardRef<HTMLAnchorElement, LinkCardProps>(
             )}
           </div>
           {value && (
-            <p className="text-lg font-medium text-primary truncate">{value}</p>
+            <p className="text-sm sm:text-lg font-medium text-primary truncate">
+              {value}
+            </p>
           )}
         </div>
 

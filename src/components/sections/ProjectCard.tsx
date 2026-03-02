@@ -270,7 +270,7 @@ export const ProjectCard = React.memo(function ProjectCard({
             {/* Header */}
             <div className="space-y-2 flex-1">
               <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold text-lg line-clamp-1">
+                <h3 className="font-semibold text-lg line-clamp-2 sm:line-clamp-1">
                   {project.title}
                 </h3>
                 <Badge variant="outline" className="shrink-0">

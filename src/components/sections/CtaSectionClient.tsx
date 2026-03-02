@@ -70,7 +70,7 @@ export function CtaSectionClient() {
           </div>
 
           {/* Social Proof */}
-          <div className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-warning-500" />
               <span>5.0 Client Rating</span>

@@ -341,7 +341,7 @@ export function AboutSection() {
                 {/* Left: Personal Story */}
                 <div className="space-y-6">
                   <div className="relative">
-                    <Quote className="absolute -top-4 -left-4 w-8 h-8 text-primary/20" />
+                    <Quote className="absolute -top-4 -left-1 sm:-left-4 w-8 h-8 text-primary/20" />
                     <h3 className="text-3xl font-bold mb-4">
                       From <span className="text-primary">Atoms</span> to{' '}
                       <span className="text-primary">Pixels</span>
