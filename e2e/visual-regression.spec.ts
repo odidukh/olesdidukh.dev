@@ -125,7 +125,7 @@ test.describe('Visual Regression - Mobile', () => {
     await waitForHydration(page);
 
     // Open mobile menu
-    const menuButton = page.getByRole('button', { name: /toggle menu/i });
+    const menuButton = page.getByRole('button', { name: /open menu/i });
     await menuButton.click();
     await page.waitForTimeout(300);
 
@@ -254,7 +254,7 @@ test.describe('Visual Regression - Interactive States', () => {
     await page.waitForTimeout(2000);
 
     // Use first() to get the first matching button in the hero section
-    const button = page.getByRole('link', { name: /view my work/i }).first();
+    const button = page.getByRole('link', { name: /let's talk/i }).first();
     await button.hover();
     await page.waitForTimeout(500);
 

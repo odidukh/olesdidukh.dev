@@ -71,7 +71,7 @@ test.describe('Navigation', () => {
     await waitForHydration(page);
 
     // Open mobile menu using aria-label
-    const menuButton = page.getByRole('button', { name: /toggle menu/i });
+    const menuButton = page.getByRole('button', { name: /open menu/i });
     await menuButton.click();
 
     // Wait for menu to open
