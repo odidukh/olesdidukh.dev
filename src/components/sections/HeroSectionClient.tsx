@@ -8,6 +8,7 @@ import { ArrowRight, Mail, MousePointer2, ChevronDown } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { MagneticEffect } from '@/components/ui/MagneticEffect';
 import { HeroBackground } from '@/components/sections/HeroBackground';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -173,18 +174,22 @@ export function HeroSectionClient() {
             transition={{ delay: 0.8 }}
             className="flex flex-wrap gap-4 justify-center mb-12"
           >
-            <Button size="lg" variant="gradient" asChild>
-              <Link href="#projects">
-                View My Work
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/contact">
-                Get In Touch
-                <Mail className="ml-2 w-4 h-4" />
-              </Link>
-            </Button>
+            <MagneticEffect strength={10}>
+              <Button size="lg" variant="gradient" asChild>
+                <Link href="#projects">
+                  View My Work
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </MagneticEffect>
+            <MagneticEffect strength={10}>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/contact">
+                  Get In Touch
+                  <Mail className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </MagneticEffect>
           </motion.div>
 
           {/* Scroll Indicator */}
