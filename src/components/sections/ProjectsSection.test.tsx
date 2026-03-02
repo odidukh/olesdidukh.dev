@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { axe } from 'vitest-axe';
 import { render, screen } from '@/test/test-utils';
-import { ProjectsSection } from './ProjectsSection';
+import { ProjectsSectionClient } from './ProjectsSectionClient';
 
 // Mock the projects filter store
 const mockClearFilters = vi.fn();
@@ -42,39 +42,79 @@ vi.mock('./ProjectCard', () => ({
   ),
 }));
 
+// Mock project data for tests
+const mockProjects = [
+  {
+    id: 'project-1',
+    permalink: '/projects/project-1',
+    title: 'Project Alpha',
+    description: 'A React web application',
+    content: '',
+    category: 'Web Application',
+    technologies: ['React', 'TypeScript'],
+    image: '/images/project1.jpg',
+    images: ['/images/project1.jpg'],
+    featured: true,
+    year: 2024,
+    duration: '3 months',
+    role: 'Lead Developer',
+    challenges: [],
+    solutions: [],
+    results: [],
+  },
+  {
+    id: 'project-2',
+    permalink: '/projects/project-2',
+    title: 'Project Beta',
+    description: 'A mobile application',
+    content: '',
+    category: 'Mobile App',
+    technologies: ['React Native', 'TypeScript'],
+    image: '/images/project2.jpg',
+    images: ['/images/project2.jpg'],
+    featured: false,
+    year: 2023,
+    duration: '6 months',
+    role: 'Frontend Developer',
+    challenges: [],
+    solutions: [],
+    results: [],
+  },
+];
+
 describe('ProjectsSection', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders the section title', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     expect(screen.getByText('Featured')).toBeInTheDocument();
     expect(screen.getByText('Projects')).toBeInTheDocument();
   });
 
   it('renders portfolio badge', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     expect(screen.getByText('Portfolio')).toBeInTheDocument();
   });
 
   it('renders search input', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     expect(screen.getByPlaceholderText(/Search projects/i)).toBeInTheDocument();
   });
 
   it('renders filters button', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     // Categories are shown when showFilters is true, so we just check the filter button exists
     expect(screen.getByText('Filters')).toBeInTheDocument();
   });
 
   it('renders view mode toggle buttons', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     // View mode buttons are in a group with grid/list icons
     // They exist as buttons without explicit aria-labels
@@ -84,7 +124,7 @@ describe('ProjectsSection', () => {
   });
 
   it('renders project cards', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     // Should render project cards (articles)
     const articles = screen.getAllByRole('article');
@@ -92,7 +132,9 @@ describe('ProjectsSection', () => {
   });
 
   it('handles search input change', async () => {
-    const { user } = render(<ProjectsSection />);
+    const { user } = render(
+      <ProjectsSectionClient initialProjects={mockProjects} />
+    );
 
     const searchInput = screen.getByPlaceholderText(/Search projects/i);
     await user.type(searchInput, 'react');
@@ -117,7 +159,9 @@ describe('ProjectsSection', () => {
       clearFilters: mockClearFilters,
     });
 
-    const { user } = render(<ProjectsSection />);
+    const { user } = render(
+      <ProjectsSectionClient initialProjects={mockProjects} />
+    );
 
     // With showFilters: true, category buttons should be visible
     const allButton = screen.getByText('All');
@@ -127,7 +171,7 @@ describe('ProjectsSection', () => {
   });
 
   it('renders filter toggle button', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     expect(
       screen.getByRole('button', { name: /filters/i })
@@ -135,7 +179,9 @@ describe('ProjectsSection', () => {
   });
 
   it('handles filter toggle', async () => {
-    const { user } = render(<ProjectsSection />);
+    const { user } = render(
+      <ProjectsSectionClient initialProjects={mockProjects} />
+    );
 
     const filterButton = screen.getByRole('button', { name: /filters/i });
     await user.click(filterButton);
@@ -144,7 +190,7 @@ describe('ProjectsSection', () => {
   });
 
   it('has section id for navigation', () => {
-    render(<ProjectsSection />);
+    render(<ProjectsSectionClient initialProjects={mockProjects} />);
 
     const section = document.getElementById('projects');
     expect(section).toBeInTheDocument();
@@ -153,7 +199,9 @@ describe('ProjectsSection', () => {
   // Note: Skipping accessibility audit as the component has buttons without
   // accessible names that need to be fixed separately
   it.skip('passes accessibility audit', async () => {
-    const { container } = render(<ProjectsSection />);
+    const { container } = render(
+      <ProjectsSectionClient initialProjects={mockProjects} />
+    );
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();

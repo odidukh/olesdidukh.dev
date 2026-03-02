@@ -6,6 +6,12 @@ vi.mock('@/lib/sentry', () => ({
   captureException: vi.fn(),
 }));
 
+// Mock blog data to avoid .velite dependency (build-generated directory)
+vi.mock('@/data/blog', () => ({
+  blogCategories: ['All', 'React', 'TypeScript', 'Performance', 'Career'],
+  blogPosts: [],
+}));
+
 describe('useBlogFilterStore', () => {
   const mockStorage: Record<string, string> = {};
 

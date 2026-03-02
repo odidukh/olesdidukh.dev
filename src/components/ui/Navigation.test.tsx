@@ -65,14 +65,14 @@ describe('Navigation', () => {
     render(<Navigation />);
 
     expect(
-      screen.getByRole('button', { name: /toggle menu/i })
+      screen.getByRole('button', { name: /open menu/i })
     ).toBeInTheDocument();
   });
 
   it('toggles mobile menu when clicking menu button', async () => {
     const { user } = render(<Navigation />);
 
-    const menuButton = screen.getByRole('button', { name: /toggle menu/i });
+    const menuButton = screen.getByRole('button', { name: /open menu/i });
 
     // Mobile menu should be hidden initially
     expect(screen.queryByText('About')).toBeInTheDocument(); // Desktop links are always visible

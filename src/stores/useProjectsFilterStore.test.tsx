@@ -95,7 +95,7 @@ describe('useProjectsFilterStore', () => {
 
     const { result } = renderHook(() => useProjectsFilterStore());
 
-    const techs = ['React', 'TypeScript', 'Node.js'];
+    const techs = ['React', 'TypeScript', 'Next.js'];
     act(() => {
       result.current.setSelectedTechnologies(techs);
     });

@@ -4,6 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { ProjectModal } from './ProjectModal';
 import type { Project } from '@/data/projects';
 
+// Mock MDXContent to avoid new Function() on plain text content
+vi.mock('@/components/MDXContent', () => ({
+  MDXContent: ({ code }: { code: string }) => <div>{code}</div>,
+}));
+
 // Mock framer-motion
 vi.mock('framer-motion', async () => {
   const actual = await vi.importActual('framer-motion');

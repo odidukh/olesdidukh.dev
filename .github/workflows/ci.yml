@@ -54,6 +54,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate content data
+        run: npx velite
+
       - name: Run tests
         run: npm run test:run
 

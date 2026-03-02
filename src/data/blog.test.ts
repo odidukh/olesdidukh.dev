@@ -69,9 +69,10 @@ describe('blogPosts', () => {
   });
 
   it('each post has valid publishedAt date format', () => {
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    // Velite generates ISO 8601 date strings (e.g. '2025-01-28T00:00:00.000Z')
+    const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
     blogPosts.forEach(post => {
-      expect(post.publishedAt).toMatch(dateRegex);
+      expect(post.publishedAt).toMatch(isoDateRegex);
     });
   });
 
