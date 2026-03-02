@@ -36,12 +36,12 @@ export const BlogCard = React.memo(function BlogCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05 }}
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -8 }}
       whileTap={{ y: 0, scale: 0.98 }}
       className="h-full"
     >
       <Link href={`/blog/${post.slug}`}>
-        <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group">
+        <Card className="h-full flex flex-col overflow-hidden hover:shadow-xl hover:shadow-primary/5 dark:hover:shadow-primary/10 hover:border-primary/20 transition-shadow duration-300 cursor-pointer group">
           {/* Cover Image */}
           <div
             className={`relative bg-muted overflow-hidden ${featured ? 'h-72' : 'h-48'}`}
