@@ -257,7 +257,7 @@ test.describe('Visual Regression - Interactive States', () => {
     await page.waitForTimeout(2000);
 
     // Use first() to get the first matching button in the hero section
-    const button = page.getByRole('link', { name: /let's talk/i }).first();
+    const button = page.getByRole('link', { name: /get in touch/i }).first();
     await button.hover();
     await page.waitForTimeout(500);
 
