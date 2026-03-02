@@ -7,7 +7,7 @@ import { BlogSection } from '@/components/sections/BlogSection';
 export const metadata: Metadata = {
   title: 'Blog | Oles Didukh - Web Development Insights',
   description:
-    'Read articles about React, TypeScript, web performance, and modern front-end development. Tips, tutorials, and best practices from 7+ years of experience.',
+    'Read articles about React, TypeScript, web performance, and modern front-end development. Tips, tutorials, and best practices from 8+ years of experience.',
   openGraph: {
     title: 'Blog | Oles Didukh',
     description:

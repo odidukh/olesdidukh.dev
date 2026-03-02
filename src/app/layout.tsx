@@ -112,7 +112,7 @@ export default async function RootLayout({
     alternateName: 'Oles',
     jobTitle: 'Senior Front-End Engineer',
     description:
-      'Senior Front-End Engineer specializing in React, TypeScript, and Next.js with 7+ years of experience building high-performance web applications.',
+      'Senior Front-End Engineer specializing in React, TypeScript, and Next.js with 8+ years of experience building high-performance web applications.',
     url: 'https://olesdidukh.dev',
     image: 'https://olesdidukh.dev/og-image.png',
     sameAs: [

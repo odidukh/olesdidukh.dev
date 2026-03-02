@@ -123,7 +123,7 @@ export const WithHeader: Story = {
             Professional Journey
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Over 7 years of experience building exceptional web applications,
+            Over 8 years of experience building exceptional web applications,
             from junior developer to senior engineer leading teams and
             architecting solutions.
           </p>

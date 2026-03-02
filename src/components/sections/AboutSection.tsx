@@ -68,7 +68,7 @@ interface Timeline {
 const stats: Stat[] = [
   {
     label: 'Years Experience',
-    value: '7+',
+    value: `${new Date().getFullYear() - 2018}+`,
     icon: Calendar,
     color: 'text-navy-500',
   },
@@ -252,9 +252,9 @@ export function AboutSection() {
           </h2>
 
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Senior Front-End Engineer with 7+ years of experience crafting
-            exceptional web experiences that delight users and drive business
-            results
+            Senior Front-End Engineer with {new Date().getFullYear() - 2018}+
+            years of experience crafting exceptional web experiences that
+            delight users and drive business results
           </p>
         </motion.div>
 
@@ -356,10 +356,10 @@ export function AboutSection() {
                       into elegant solutions.
                     </p>
                     <p>
-                      Over 7+ years, I&apos;ve evolved from a curious beginner
-                      to a Senior Front-End Engineer, collaborating with
-                      startups and enterprises to build applications that serve
-                      thousands of users daily.
+                      Over {new Date().getFullYear() - 2018}+ years, I&apos;ve
+                      evolved from a curious beginner to a Senior Front-End
+                      Engineer, collaborating with startups and enterprises to
+                      build applications that serve thousands of users daily.
                     </p>
                     <p>
                       Today, I specialize in React and TypeScript, creating

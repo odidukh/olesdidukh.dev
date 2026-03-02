@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 ## Project Overview
 
-A modern, high-performance personal portfolio website for **Oles Didukh**, Senior Front-End Engineer. Built to showcase 7+ years of front-end expertise, demonstrate mastery of modern web development, and achieve top-tier Core Web Vitals performance.
+A modern, high-performance personal portfolio website for **Oles Didukh**, Senior Front-End Engineer. Built to showcase 8+ years of front-end expertise, demonstrate mastery of modern web development, and achieve top-tier Core Web Vitals performance.
 
 **Live Site:** https://olesdidukh.dev (planned domain)
 

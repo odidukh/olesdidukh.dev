@@ -1,6 +1,6 @@
 # Oles Didukh - Portfolio Website
 
-A modern, high-performance personal portfolio website showcasing 7+ years of front-end expertise. Built with Next.js 16, React 19, and TypeScript to achieve top-tier Core Web Vitals performance.
+A modern, high-performance personal portfolio website showcasing 8+ years of front-end expertise. Built with Next.js 16, React 19, and TypeScript to achieve top-tier Core Web Vitals performance.
 
 **Live Site:** [olesdidukh.dev](https://olesdidukh.dev)
 

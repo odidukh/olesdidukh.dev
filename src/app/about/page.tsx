@@ -7,16 +7,16 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 export const metadata: Metadata = {
   title: 'About Oles Didukh | Senior Front-End Engineer',
   description:
-    'Senior Front-End Engineer with 7+ years of experience in React, TypeScript, and Next.js. Building exceptional web experiences.',
+    'Senior Front-End Engineer with 8+ years of experience in React, TypeScript, and Next.js. Building exceptional web experiences.',
   openGraph: {
     title: 'About Oles Didukh | Senior Front-End Engineer',
     description:
-      'Senior Front-End Engineer with 7+ years of experience building high-performance web applications.',
+      'Senior Front-End Engineer with 8+ years of experience building high-performance web applications.',
     url: 'https://olesdidukh.dev/about',
     type: 'profile',
     images: [
       {
-        url: '/api/og?title=About%20Me&subtitle=Senior%20Front-End%20Engineer&description=7%2B%20years%20building%20exceptional%20web%20experiences',
+        url: '/api/og?title=About%20Me&subtitle=Senior%20Front-End%20Engineer&description=8%2B%20years%20building%20exceptional%20web%20experiences',
         width: 1200,
         height: 630,
         alt: 'About Oles Didukh',

@@ -296,7 +296,7 @@ export function SkillsGrid() {
         <StatCard
           icon={TrendingUp}
           label="Years Experience"
-          value="7+"
+          value={`${new Date().getFullYear() - 2018}+`}
           color="text-navy-600"
         />
         <StatCard

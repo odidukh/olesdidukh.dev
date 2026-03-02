@@ -33,7 +33,12 @@ function useCounter(end: number, duration: number, start: boolean) {
 }
 
 const stats = [
-  { icon: Briefcase, value: 7, suffix: '+', label: 'Years Experience' },
+  {
+    icon: Briefcase,
+    value: new Date().getFullYear() - 2018,
+    suffix: '+',
+    label: 'Years Experience',
+  },
   { icon: Users, value: 60, suffix: 'K+', label: 'Users Impacted' },
   { icon: Building2, value: 4, suffix: '', label: 'Companies' },
   { icon: Code2, value: 25, suffix: '+', label: 'Technologies' },

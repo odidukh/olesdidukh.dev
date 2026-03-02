@@ -195,7 +195,7 @@ export default function CaseStudiesPage() {
 
   const stats = [
     { value: '15+', label: 'Projects Completed' },
-    { value: '7+', label: 'Years Experience' },
+    { value: `${new Date().getFullYear() - 2018}+`, label: 'Years Experience' },
     { value: '10+', label: 'Happy Clients' },
     { value: '99%', label: 'Client Satisfaction' },
   ];
