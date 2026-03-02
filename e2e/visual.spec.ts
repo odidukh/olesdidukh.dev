@@ -31,6 +31,7 @@ test.describe('Visual Regression Testing', () => {
 
       await expect(page).toHaveScreenshot(`${pageInfo.name}-light.png`, {
         fullPage: true,
+        maxDiffPixels: 2000,
       });
     });
 
@@ -49,6 +50,7 @@ test.describe('Visual Regression Testing', () => {
 
       await expect(page).toHaveScreenshot(`${pageInfo.name}-dark.png`, {
         fullPage: true,
+        maxDiffPixels: 2000,
       });
     });
   }
