@@ -224,7 +224,7 @@ export default function ComponentShowcase() {
               {/* Card with Image */}
               <Card padding="none" variant="elevated">
                 <CardImage
-                  src="/images/projects/safebooks.png"
+                  src="/images/projects/safebooks-platform.png"
                   alt="Project thumbnail"
                   aspectRatio="video"
                 />
