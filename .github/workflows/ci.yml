@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate content data
+        run: npx velite
+
       - name: Type check
         run: npm run type-check
 
