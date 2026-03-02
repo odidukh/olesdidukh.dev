@@ -28,7 +28,7 @@ export function AvailabilityStatus() {
   const [availability] = React.useState<AvailabilityData>({
     status: 'available',
     nextAvailable: 'Immediately',
-    currentLoad: 65,
+    currentLoad: 20,
     preferredProjects: ['React Applications', 'SaaS Platforms', 'UI/UX Design'],
     estimatedResponse: '< 24 hours',
     acceptingNew: true,
@@ -132,7 +132,7 @@ export function AvailabilityStatus() {
                 <Users className="h-3 w-3" />
                 <span className="text-xs">Active Projects</span>
               </div>
-              <p className="text-sm font-semibold">3 ongoing</p>
+              <p className="text-sm font-semibold">1 in progress</p>
             </div>
 
             <div className="space-y-1">
