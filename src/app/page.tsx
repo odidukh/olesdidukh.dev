@@ -14,6 +14,7 @@ import { JourneySection } from '@/components/sections/JourneySection';
 import { SkillsPreviewSection } from '@/components/sections/SkillsPreviewSection';
 import { PhilosophySection } from '@/components/sections/PhilosophySection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
+import { SocialProofBar } from '@/components/sections/SocialProofBar';
 
 // Lazy load below-the-fold heavy components (Only needed for Client components, Server components are fine natively)
 // We import Server components directly instead of dynamic because Next.js handles Server Component splitting.
@@ -28,6 +29,7 @@ export default function HomePage() {
         {/* Hero Section Client */}
         <HeroSectionClient />
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <SocialProofBar />
 
         {/* About Section - Using Redesigned Component */}
         <AboutSection />
