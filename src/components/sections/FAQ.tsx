@@ -24,42 +24,17 @@ const faqData: FAQItem[] = [
   {
     question: 'Do you work with international clients?',
     answer:
-      "Yes! I work with clients globally and have experience collaborating across different time zones. I'm fluent in English and can adjust my working hours to overlap with US, EU, or other time zones as needed.All my contracts and communications are conducted professionally in English.",
-  },
-  {
-    question: 'What is your development process?',
-    answer:
-      'I follow an agile development process with regular communication and updates. This includes: 1) Initial consultation and requirements gathering, 2) Project proposal and timeline, 3) Design and prototyping (if needed), 4) Development in sprints with regular demos, 5) Testing and quality assurance, 6) Deployment and handover, 7) Post-launch support.',
-  },
-  {
-    question: 'How do you handle project communication?',
-    answer:
-      "I believe in transparent and frequent communication. I provide regular updates via your preferred channel (Slack, email, Teams, etc.), share progress through staging environments, and schedule weekly or bi-weekly calls for larger projects. You'll always know the status of your project.",
-  },
-  {
-    question: 'Do you provide ongoing support after project completion?',
-    answer:
-      'Yes, I offer various support packages after project delivery. This includes bug fixes, minor updates, performance optimization, and feature additions. I also provide documentation and knowledge transfer to ensure your team can maintain the project independently if preferred.',
+      "Yes! I work with clients globally and have experience collaborating across different time zones. I'm fluent in English and can adjust my working hours to overlap with US, EU, or other time zones as needed. All my contracts and communications are conducted professionally in English.",
   },
   {
     question: 'What technologies do you specialize in?',
     answer:
-      "My primary stack includes React, TypeScript, Next.js, and Node.js. I'm also experienced with state management(Redux, Zustand), styling(Tailwind CSS, Styled Components), testing(Jest, Cypress), and cloud services(AWS, Vercel).I stay current with the latest web technologies and best practices.",
+      "My primary stack includes React, TypeScript, Next.js, and Node.js. I'm also experienced with state management (Redux, Zustand), styling (Tailwind CSS, Styled Components), testing (Jest, Cypress), and cloud services (AWS, Vercel). I stay current with the latest web technologies and best practices.",
   },
   {
     question: 'How do you ensure code quality?',
     answer:
       'I maintain high code standards through comprehensive testing (unit, integration, e2e), code reviews, TypeScript for type safety, ESLint and Prettier for consistency, performance monitoring, and accessibility compliance. All code is well-documented and follows industry best practices.',
-  },
-  {
-    question: 'What are your payment terms?',
-    answer:
-      'I typically work with a 30-50% upfront deposit, with the remainder due upon project completion. For larger projects, I offer milestone-based payments. I accept bank transfers, PayPal, and cryptocurrency. All terms are clearly outlined in the project contract.',
-  },
-  {
-    question: 'Can you work with existing codebases?',
-    answer:
-      'Absolutely! I have extensive experience working with legacy code, refactoring existing applications, and integrating new features into established systems. I can perform code audits, improve performance, update dependencies, and modernize tech stacks while maintaining backward compatibility.',
   },
 ];
 
@@ -82,6 +57,15 @@ export function FAQ() {
           <Card
             className="cursor-pointer hover:shadow-md transition-all duration-300"
             onClick={() => toggleQuestion(index)}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleQuestion(index);
+              }
+            }}
+            role="button"
+            aria-expanded={openIndex === index}
+            tabIndex={0}
           >
             <div className="p-4">
               <div className="flex items-start gap-3">
