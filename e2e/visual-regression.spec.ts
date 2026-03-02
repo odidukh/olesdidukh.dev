@@ -239,10 +239,13 @@ test.describe('Visual Regression - Responsive Breakpoints', () => {
       await page.goto('/');
       await page.waitForTimeout(1000);
 
-      await expect(page).toHaveScreenshot(`homepage-${bp.name}.png`, {
-        maxDiffPixels: 3000, // Increased threshold due to animations
-        mask: [page.locator('[class*="animate"]')],
-      });
+      await expect(page).toHaveScreenshot(
+        `homepage-responsive-${bp.name}.png`,
+        {
+          maxDiffPixels: 3000, // Increased threshold due to animations
+          mask: [page.locator('[class*="animate"]')],
+        }
+      );
     });
   }
 });
