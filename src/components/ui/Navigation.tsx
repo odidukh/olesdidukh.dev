@@ -106,7 +106,7 @@ export function Navigation({ className }: NavigationProps) {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center lg:space-x-4 xl:space-x-8">
             {navItems.map(item => (
               <Link
                 key={item.href}
@@ -129,7 +129,7 @@ export function Navigation({ className }: NavigationProps) {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden xl:flex items-center space-x-2">
               <SocialIconButton
                 icon={Github}
                 href="https://github.com/odidukh"
