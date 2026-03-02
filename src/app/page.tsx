@@ -27,9 +27,11 @@ export default function HomePage() {
       <main id="main-content">
         {/* Hero Section Client */}
         <HeroSectionClient />
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         {/* About Section - Using Redesigned Component */}
         <AboutSection />
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         {/* Featured Journey Teaser */}
         <JourneySection />
@@ -39,6 +41,7 @@ export default function HomePage() {
 
         {/* Philosophy Teaser */}
         <PhilosophySection />
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         {/* Projects Section */}
         <ErrorBoundary
@@ -47,11 +50,13 @@ export default function HomePage() {
         >
           <ProjectsSection />
         </ErrorBoundary>
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         {/* Blog Section */}
         <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>
           <BlogSection />
         </ErrorBoundary>
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         {/* Contact Section */}
         <ErrorBoundary

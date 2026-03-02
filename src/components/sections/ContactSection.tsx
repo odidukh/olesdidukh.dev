@@ -113,7 +113,7 @@ export function ContactSection() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 md:py-28 relative overflow-hidden"
+      className="py-20 md:py-28 relative overflow-hidden bg-muted/30 dark:bg-muted/10"
       id="contact"
     >
       {/* Background Elements */}

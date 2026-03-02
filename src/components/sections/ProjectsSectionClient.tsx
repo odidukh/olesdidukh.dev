@@ -85,7 +85,7 @@ export function ProjectsSectionClient({
     (searchQuery ? 1 : 0);
 
   return (
-    <section className="py-20" id="projects">
+    <section className="py-20 bg-muted/30 dark:bg-muted/10" id="projects">
       <Container size="wide" padding="lg">
         <div className="space-y-8">
           {/* Header */}

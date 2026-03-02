@@ -35,7 +35,7 @@ const skillCloud = [
 
 export const SkillsPreviewSection = React.memo(function SkillsPreviewSection() {
   return (
-    <section className="py-20">
+    <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-background">
       <Container size="lg">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
