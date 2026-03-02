@@ -3,13 +3,13 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-// Load custom fonts
+// Load fonts from Google Fonts CDN to avoid bundling ~600KB of font files
 const interRegular = fetch(
-  new URL('./fonts/Inter-Regular.ttf', import.meta.url)
+  'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2'
 ).then(res => res.arrayBuffer());
 
 const interBold = fetch(
-  new URL('./fonts/Inter-Bold.ttf', import.meta.url)
+  'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2'
 ).then(res => res.arrayBuffer());
 
 export async function GET(request: NextRequest) {
