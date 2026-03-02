@@ -2,6 +2,7 @@ import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import {
+  ProjectsErrorFallback,
   BlogErrorFallback,
   ContactErrorFallback,
 } from '@/components/ui/SectionErrorFallback';
@@ -12,55 +13,49 @@ import { CtaSectionClient } from '@/components/sections/CtaSectionClient';
 import { AboutSection } from '@/components/sections/AboutSection';
 import { JourneySection } from '@/components/sections/JourneySection';
 import { SkillsPreviewSection } from '@/components/sections/SkillsPreviewSection';
-import { PhilosophySection } from '@/components/sections/PhilosophySection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { SocialProofBar } from '@/components/sections/SocialProofBar';
-
-// Lazy load below-the-fold heavy components (Only needed for Client components, Server components are fine natively)
-// We import Server components directly instead of dynamic because Next.js handles Server Component splitting.
 
 export default function HomePage() {
   return (
     <>
-      {/* Main Navigation */}
       <Navigation />
 
       <main id="main-content">
-        {/* Hero Section Client */}
+        {/* Hero — first impression */}
         <HeroSectionClient />
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+        {/* Social proof — immediate credibility */}
         <SocialProofBar />
 
-        {/* About Section - Using Redesigned Component */}
+        {/* About — who you are */}
         <AboutSection />
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
-        {/* Featured Journey Teaser */}
-        <JourneySection />
-
-        {/* Skills & Expertise Teaser */}
-        <SkillsPreviewSection />
-
-        {/* Philosophy Teaser */}
-        <PhilosophySection />
-        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-
-        {/* Projects Section */}
+        {/* Projects — your best work (what recruiters want to see) */}
         <ErrorBoundary
           sectionName="Projects"
-          fallbackRender={BlogErrorFallback}
+          fallbackRender={ProjectsErrorFallback}
         >
           <ProjectsSection />
         </ErrorBoundary>
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
-        {/* Blog Section */}
+        {/* Skills — technical breadth */}
+        <SkillsPreviewSection />
+
+        {/* Journey — career progression */}
+        <JourneySection />
+        <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+        {/* Blog — thought leadership */}
         <ErrorBoundary sectionName="Blog" fallbackRender={BlogErrorFallback}>
           <BlogSection />
         </ErrorBoundary>
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
-        {/* Contact Section */}
+        {/* Contact — call to action */}
         <ErrorBoundary
           sectionName="Contact"
           fallbackRender={ContactErrorFallback}
@@ -68,7 +63,7 @@ export default function HomePage() {
           <ContactSection />
         </ErrorBoundary>
 
-        {/* Final CTA Section */}
+        {/* Final CTA */}
         <CtaSectionClient />
       </main>
 
