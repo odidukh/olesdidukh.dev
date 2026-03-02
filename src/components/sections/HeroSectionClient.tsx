@@ -3,12 +3,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { Mail, MousePointer2, ChevronDown } from 'lucide-react';
+import { ArrowRight, Mail, MousePointer2, ChevronDown } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
 import { HeroBackground } from '@/components/sections/HeroBackground';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -104,11 +103,14 @@ export function HeroSectionClient() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-success-500/10 border border-success-500/20 rounded-full mb-8"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-success-500/15 border border-success-500/30 rounded-full mb-8 shadow-sm shadow-success-500/10"
           >
-            <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-success-500">
-              Available for new opportunities
+            <div className="relative flex items-center justify-center">
+              <div className="w-2.5 h-2.5 bg-success-500 rounded-full" />
+              <div className="absolute w-2.5 h-2.5 bg-success-500 rounded-full animate-ping" />
+            </div>
+            <span className="text-sm font-semibold text-success-500">
+              Open to Work
             </span>
           </motion.div>
 
@@ -119,13 +121,15 @@ export function HeroSectionClient() {
             transition={{ delay: 0.3 }}
           >
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6">
-              <span className="block text-muted-foreground text-2xl md:text-3xl font-normal mb-4">
-                Hi, I&apos;m Oles Didukh
+              <span className="block text-foreground/70 text-2xl md:text-3xl lg:text-4xl font-medium mb-4">
+                Hi, I&apos;m
               </span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary">
-                Senior Front-End
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary via-mocha-400 to-primary mb-2">
+                Oles Didukh
               </span>
-              <span className="block mt-2">Engineer</span>
+              <span className="block text-foreground">
+                Senior Front-End Engineer
+              </span>
             </h1>
 
             <div className="text-xl md:text-2xl text-muted-foreground mb-2">
@@ -170,14 +174,17 @@ export function HeroSectionClient() {
             className="flex flex-wrap gap-4 justify-center mb-12"
           >
             <Button size="lg" variant="gradient" asChild>
+              <Link href="#projects">
+                View My Work
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
               <Link href="/contact">
-                Let&apos;s Talk
+                Get In Touch
                 <Mail className="ml-2 w-4 h-4" />
               </Link>
             </Button>
-            <ResumeDownloadButton size="lg" variant="outline">
-              Resume
-            </ResumeDownloadButton>
           </motion.div>
 
           {/* Scroll Indicator */}
