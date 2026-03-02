@@ -96,12 +96,10 @@ export function Navigation({ className }: NavigationProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="group flex items-center space-x-2 text-xl font-bold"
+            className="group flex items-center text-xl font-bold -ml-2 px-2 py-2"
+            onClick={() => playPop()}
           >
-            <span
-              className="text-foreground transition-colors group-hover:text-primary"
-              onClick={() => playPop()}
-            >
+            <span className="text-foreground transition-colors group-hover:text-primary">
               Oles Didukh
             </span>
           </Link>
