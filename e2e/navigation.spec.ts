@@ -3,9 +3,9 @@ import { test, expect } from '@playwright/test';
 // Helper to wait for hydration
 async function waitForHydration(page: import('@playwright/test').Page) {
   // Wait for the page to be fully loaded and hydrated
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('load');
   // Give React time to hydrate
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1000);
 }
 
 test.describe('Navigation', () => {

@@ -20,10 +20,10 @@ test.describe('Visual Regression Testing', () => {
       // Force light mode (though it's default in config)
       await page.emulateMedia({ colorScheme: 'light' });
 
-      // Wait for everything to settle
-      await page.waitForLoadState('networkidle');
+      // Wait for page resources to load
+      await page.waitForLoadState('load');
 
-      // Additional wait for any dynamic content or subtle animations that might be settling
+      // Additional wait for React hydration and animations to settle
       await page.waitForTimeout(2000);
 
       // Hide specific dynamic elements like view counters if they fluctuate
@@ -41,8 +41,8 @@ test.describe('Visual Regression Testing', () => {
       // Force dark mode
       await page.emulateMedia({ colorScheme: 'dark' });
 
-      // Wait for everything to settle
-      await page.waitForLoadState('networkidle');
+      // Wait for page resources to load
+      await page.waitForLoadState('load');
 
       // Additional wait for theme switch and layout settling
       await page.waitForTimeout(2000);
@@ -58,7 +58,7 @@ test.describe('Visual Regression Testing', () => {
     await page.setViewportSize({ width: 1280, height: 800 });
 
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('load');
     await page.waitForTimeout(1000);
 
     // Trigger command menu using keyboard shortcut (more reliable than finding the button)

@@ -5,8 +5,8 @@ import { test, expect } from '@playwright/test';
 
 // Helper to wait for hydration
 async function waitForHydration(page: import('@playwright/test').Page) {
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(500);
+  await page.waitForLoadState('load');
+  await page.waitForTimeout(1000);
 }
 
 test.describe('Visual Regression - Desktop', () => {
