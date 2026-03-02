@@ -18,7 +18,9 @@ A modern, high-performance personal portfolio website for **Oles Didukh**, Senio
 | Styling       | Tailwind CSS v4 + CSS custom properties |
 | Animation     | Framer Motion                           |
 | UI Primitives | Radix UI                                |
+| Content       | Velite (MDX compilation)                |
 | Forms         | React Hook Form + Zod                   |
+| State         | Zustand (with persist middleware)       |
 | Icons         | Lucide React                            |
 | Analytics     | Vercel Analytics & Speed Insights       |
 
@@ -47,27 +49,29 @@ npm run clean        # Remove build artifacts
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout with Geist fonts
-│   ├── page.tsx            # Homepage
+│   ├── layout.tsx          # Root layout with Geist fonts + FOUC prevention script
+│   ├── page.tsx            # Homepage (recruiter-optimized section flow)
 │   ├── about/              # About + sub-routes (journey, philosophy)
 │   ├── blog/               # Blog listing + [slug] dynamic routes
 │   ├── contact/            # Contact page
 │   ├── experience/         # Professional experience
+│   ├── guestbook/          # Visitor guestbook
 │   ├── projects/           # Projects showcase
-│   └── skills/             # Skills page
+│   ├── skills/             # Skills page
+│   ├── case-studies/       # Case studies
+│   ├── admin/              # Admin panel
+│   └── api/                # API routes (contact, og, etc.)
 ├── components/
-│   ├── sections/           # Large feature sections (HeroSection, BlogSection, etc.)
-│   └── ui/                 # Reusable UI primitives (Button, Card, Input, etc.)
-├── data/
-│   ├── blog.ts             # Blog posts with metadata
-│   └── projects.ts         # Project data with details
-├── lib/
-│   └── utils.ts            # cn() utility for class merging
-├── stores/                 # Zustand state management stores
-│   ├── useThemeStore.ts    # Theme (dark/light mode)
-│   ├── useProjectsFilterStore.ts  # Project filters
-│   ├── useBlogFilterStore.ts      # Blog filters
-│   └── useUIPreferencesStore.ts   # UI preferences
+│   ├── sections/           # Large feature sections (~30 components)
+│   └── ui/                 # Reusable UI primitives (~40 components)
+│       └── backgrounds/    # Decorative background components (9 variants)
+├── content/
+│   ├── blog/               # 9 blog posts (MDX via Velite)
+│   └── projects/           # 7 projects (MDX via Velite)
+├── config/                 # App configuration (animations, filters, UI)
+├── hooks/                  # Custom React hooks (13 hooks)
+├── lib/                    # Utilities (utils, sanitize, csp, env, etc.)
+├── stores/                 # Zustand state management (5 stores)
 └── styles/
     └── design-tokens.css   # CSS custom properties
 ```
@@ -106,7 +110,16 @@ src/
 
 ### Dark Mode
 
-Uses `class` strategy with `dark:` variants. Toggle available in navigation.
+Uses `class` strategy with `dark:` variants. Toggle available in navigation. Inline script in `layout.tsx` prevents FOUC. Theme toggle icon uses a hydration guard (`useThemeHydrated`) to avoid icon flash.
+
+### Section Visual Rhythm
+
+Homepage sections use alternating backgrounds for differentiation:
+
+- Odd sections: transparent (`bg-background`)
+- Even sections: `bg-muted/30 dark:bg-muted/10`
+- Accent sections: gradient backgrounds (`bg-gradient-to-br from-primary/5...`)
+- Thin gradient dividers (`h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent`) between sections
 
 ## Component Patterns
 
@@ -114,31 +127,45 @@ Uses `class` strategy with `dark:` variants. Toggle available in navigation.
 
 Large, page-level feature components:
 
-- `HeroSection` - Landing hero with animations
-- `AboutSection` - Professional overview
-- `ProjectsSection` - Filterable project grid with modal
-- `BlogSection` - Blog preview with filters
-- `ContactSection` - Contact CTA
-- `SkillsGrid` - Skills visualization
-- `Timeline` - Career progression
+- `HeroSectionClient` - Landing hero with typing animation, "Open to Work" badge, magnetic CTAs
+- `SocialProofBar` - Animated counter stats (Years, Users, Companies, Technologies)
+- `AboutSection` - Professional overview with dot grid background
+- `ProjectsSection` / `ProjectsSectionClient` - Filterable project grid with modal
+- `SkillsPreviewSection` - Skills cloud with topographic background
+- `JourneySection` / `Timeline` - Career progression timeline
+- `BlogSection` / `BlogSectionClient` - Blog preview with filters and enhanced empty state
+- `ContactSection` - Contact CTA with availability status
+- `FAQ` - 5 recruiter-relevant FAQs with keyboard accessibility
+- `CtaSectionClient` - Final call-to-action
+- `AvailabilityStatus` - Availability card with load meter and project count
 
 ### UI Components (`components/ui/`)
 
 Atomic, reusable primitives following composition pattern:
 
-- `Button` - 6 variants, multiple sizes, loading states
+- `Button` - 6 variants (including `gradient`), multiple sizes, loading states
 - `Card` - Compound component (Header, Title, Content, Footer)
 - `Badge` - 8 color variants
 - `Input` / `Textarea` - Form inputs with validation states
-- `Navigation` - Responsive header with mobile menu
+- `Navigation` - Responsive header with mobile menu (social icons at xl+)
 - `Footer` - Multi-column layout
+- `MagneticEffect` - Cursor attraction wrapper (respects reduced motion)
+- `CopyCodeBlock` - Code block with copy-to-clipboard button
+- `BackToTop` - Scroll-to-top button
+- `CommandMenu` - Search command palette
+- `StatusIndicator` - Status dot with optional pulse
+
+### Background Components (`components/ui/backgrounds/`)
+
+9 decorative background variants: `GridPattern`, `Topographic`, `SunsetCodeRain`, `WaveAurora`, `GradientMesh`, `NoiseTexture`, `Spotlight`, `GeometricShapes`, `CodeRain`
 
 ### Animation Principles
 
 - Duration: 150ms (micro), 300ms (standard), 500ms (complex)
 - Easing: `cubic-bezier(0.4, 0.0, 0.2, 1)`
-- Respect `prefers-reduced-motion` media query
-- Use Framer Motion `variants` and `layoutId` patterns
+- Respect `prefers-reduced-motion` via `useReducedMotion` hook
+- Use Framer Motion `variants`, `whileInView`, and `layoutId` patterns
+- Decorative animations conditionally rendered (not just `animate={}`)
 
 ## TypeScript Configuration
 
@@ -149,16 +176,36 @@ Strict mode enabled with additional checks:
 - `noPropertyAccessFromIndexSignature` - Force bracket notation
 - `noUnusedLocals` / `noUnusedParameters` - No dead code
 
-## Data Management
+## Content Management
 
-Static content in TypeScript files:
+MDX content via Velite (compiles to `.velite/` JSON):
 
-- `src/data/blog.ts` - 9 blog posts with full metadata
-- `src/data/projects.ts` - 9 projects with challenges, solutions, testimonials
+- `src/content/blog/` - 9 blog posts with full metadata
+- `src/content/projects/` - 7 projects with challenges, solutions, results, testimonials
 
-Helper functions available:
+Data layer in `src/data/`:
 
-- `getFeaturedPosts()`, `getPostsByCategory()`, `searchPosts()`
+- `blog.ts` - Blog post helpers: `getFeaturedPosts()`, `getPostsByCategory()`, `searchPosts()`
+- `projects.ts` - Project helpers: `getFeaturedProjects()`, `getProjectBySlug()`, `getRelatedProjects()`
+
+## Custom Hooks (`src/hooks/`)
+
+- `useReducedMotion` - Detect `prefers-reduced-motion`
+- `useDebounce` - Debounced value
+- `useFocusTrap` - Focus trap for modals
+- `useMediaQuery` / `useIsMobile` - Responsive breakpoints
+- `useLocalStorage` - Persistent localStorage state
+- `useSearch` - Search with debounce
+- `useIntersectionObserver` - Scroll-triggered visibility
+- `usePerformance` / `useWebVitals` - Performance monitoring
+
+## Zustand Stores (`src/stores/`)
+
+- `useThemeStore` - Theme mode (dark/light/system) with `persist` and `useThemeHydrated`
+- `useProjectsFilterStore` - Project category, technology, search filters
+- `useBlogFilterStore` - Blog category, search, sort filters with `resetAll`
+- `useUIPreferencesStore` - UI preferences
+- `useCommandMenuStore` - Command palette state
 
 ## Pre-commit Hooks
 
@@ -166,6 +213,7 @@ Husky runs on every commit:
 
 1. **lint-staged**: Prettier + ESLint on staged files
 2. **type-check**: Full TypeScript compilation
+3. **commit-msg**: Conventional commits validation
 
 All checks must pass before commit succeeds.
 
@@ -179,6 +227,32 @@ All checks must pass before commit succeeds.
 | CLS                    | < 0.05  |
 | Bundle Size (initial)  | < 200KB |
 
+## Testing
+
+- **Unit tests**: Vitest + React Testing Library (494 tests across 32 files)
+- **E2E tests**: Playwright (visual regression, contact form, navigation, performance)
+- **Visual snapshots**: Chromium-based screenshot comparison
+
+```bash
+npm test                    # Run unit tests
+npx playwright test         # Run E2E tests
+npx playwright test --update-snapshots  # Update visual snapshots
+```
+
+## Homepage Section Flow
+
+Optimized for recruiter scanning (30-60 second evaluation):
+
+1. Hero (Open to Work badge, dual CTAs with MagneticEffect)
+2. Social Proof Bar (animated counters)
+3. About (professional overview)
+4. Projects (featured work with glassmorphism hover)
+5. Skills Preview (tech stack cloud)
+6. Journey (career timeline)
+7. Blog (latest articles)
+8. Contact (availability status + form)
+9. CTA (final call-to-action)
+
 ## Content Guidelines
 
 ### Voice & Tone
@@ -189,34 +263,14 @@ All checks must pass before commit succeeds.
 
 ### Project Documentation
 
-Each project should include:
-
-- Challenge (problem statement)
-- Solution (technical approach)
-- Technologies used
-- Metrics/results
-- Key learnings
+Each project includes: Challenge, Solution, Technologies, Metrics/Results, Testimonial
 
 ## Key Implementation Notes
 
 1. **React 19 Features** - Components use latest React patterns
 2. **Server Components** - Use where appropriate for performance
 3. **Image Optimization** - Always use Next.js `<Image>` with proper sizing
-4. **Accessibility** - Semantic HTML, ARIA labels, keyboard navigation
+4. **Accessibility** - Semantic HTML, ARIA labels, keyboard navigation, reduced motion support
 5. **Form Validation** - React Hook Form + Zod schemas
 6. **Animations** - Framer Motion with scroll-based triggers
-
-## Current Implementation Status
-
-**Completed (~90%):**
-
-- All major pages (Home, About, Experience, Projects, Skills, Blog, Contact)
-- 16 UI components + 23 section components
-- Design system with tokens
-- Dark mode
-- Responsive design
-- Form validation
-- Project/blog filtering and search
-- Scroll animations
-
-**See NEXT_STEPS.md for remaining work and improvements.**
+7. **Hydration Safety** - Theme toggle uses hydration guard to prevent icon flash
