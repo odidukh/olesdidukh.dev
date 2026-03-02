@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LinkCard, type IconBoxGradient } from '@/components/ui/LinkCard';
 import { ResumeDownloadButton } from '@/components/ui/ResumeDownloadButton';
-import { ObfuscatedEmailLink } from '@/components/ObfuscatedEmail';
 import {
   decodeEmail,
   decodeString,
@@ -275,29 +274,6 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
-
-          {/* Final CTA */}
-          <motion.div
-            variants={itemVariants}
-            className="text-center space-y-4 pt-8"
-          >
-            <h3 className="text-2xl font-semibold">
-              Ready to Start Your Project?
-            </h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              I&apos;m excited to learn about your vision and explore how we can
-              work together to create something exceptional. Every great project
-              starts with a conversation.
-            </p>
-            <div className="flex justify-center gap-4">
-              <Button size="lg" asChild>
-                <ObfuscatedEmailLink ariaLabel="Start the Conversation">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Start the Conversation
-                </ObfuscatedEmailLink>
-              </Button>
-            </div>
           </motion.div>
         </motion.div>
       </Container>

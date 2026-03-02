@@ -85,7 +85,7 @@ export function Navigation({ className }: NavigationProps) {
     <header
       className={cn(
         'fixed top-0 z-50 w-full transition-all duration-300',
-        isScrolled
+        isScrolled || isOpen
           ? 'bg-background/80 backdrop-blur-lg shadow-sm'
           : 'bg-transparent',
         className
