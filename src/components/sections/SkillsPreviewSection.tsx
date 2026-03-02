@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const skillCategories = [
   { name: 'Frontend', count: '15+', icon: Monitor },
@@ -34,6 +35,8 @@ const skillCloud = [
 ];
 
 export const SkillsPreviewSection = React.memo(function SkillsPreviewSection() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-background">
       <Container size="lg">
@@ -116,24 +119,28 @@ export const SkillsPreviewSection = React.memo(function SkillsPreviewSection() {
               </div>
 
               {/* Decorative Elements */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-                className="absolute -top-4 -right-4 w-24 h-24 border-2 border-primary/20 rounded-full"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{
-                  duration: 30,
-                  repeat: Infinity,
-                  ease: 'linear',
-                }}
-                className="absolute -bottom-4 -left-4 w-32 h-32 border-2 border-primary/10 rounded-full"
-              />
+              {!prefersReducedMotion && (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                    className="absolute -top-4 -right-4 w-24 h-24 border-2 border-primary/20 rounded-full"
+                  />
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{
+                      duration: 30,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                    className="absolute -bottom-4 -left-4 w-32 h-32 border-2 border-primary/10 rounded-full"
+                  />
+                </>
+              )}
             </motion.div>
           </div>
         </motion.div>
