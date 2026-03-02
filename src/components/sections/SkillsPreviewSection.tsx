@@ -14,6 +14,7 @@ import {
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { TopographicBackground } from '@/components/ui/backgrounds/TopographicBackground';
 
 const skillCategories = [
   { name: 'Frontend', count: '15+', icon: Monitor },
@@ -38,7 +39,11 @@ export const SkillsPreviewSection = React.memo(function SkillsPreviewSection() {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-background">
+    <section className="relative overflow-hidden py-20 bg-gradient-to-br from-primary/5 via-background to-background">
+      <div className="absolute inset-0 opacity-20 dark:opacity-10 pointer-events-none">
+        <TopographicBackground layers={5} animated={false} />
+      </div>
+
       <Container size="lg">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

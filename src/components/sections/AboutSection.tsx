@@ -36,6 +36,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
+import { GridPatternBackground } from '@/components/ui/backgrounds/GridPatternBackground';
 
 interface Stat {
   label: string;
@@ -201,6 +202,14 @@ export function AboutSection() {
         } as React.CSSProperties & import('framer-motion').MotionStyle
       }
     >
+      <div className="absolute inset-0 opacity-30 dark:opacity-15 pointer-events-none">
+        <GridPatternBackground
+          variant="dots"
+          gridSize={50}
+          interactive={false}
+        />
+      </div>
+
       {/* Animated Background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
