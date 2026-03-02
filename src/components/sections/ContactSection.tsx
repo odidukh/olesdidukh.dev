@@ -68,7 +68,7 @@ const itemVariants = {
 
 export function ContactSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.05 });
   const [email, setEmail] = React.useState<string | null>(null);
   const [phone, setPhone] = React.useState<string | null>(null);
   const [phoneDisplay, setPhoneDisplay] = React.useState<string | null>(null);
