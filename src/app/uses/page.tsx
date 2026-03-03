@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
-import { Badge } from '@/components/ui/Badge';
 import { Navigation } from '@/components/ui/Navigation';
 import { Footer } from '@/components/ui/Footer';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -378,19 +377,19 @@ export default function UsesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-16"
+            className="text-center mb-16"
           >
-            <Badge variant="outline" className="mb-4">
-              <Wrench className="mr-2 h-3 w-3" />
-              Developer Setup
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Uses{' '}
-              <span className="bg-gradient-to-r from-accent-mocha to-accent-green bg-clip-text text-transparent">
-                & Stack
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <Wrench className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Uses</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+              My Developer{' '}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-mocha-400">
+                Toolkit
               </span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-3xl">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               A comprehensive look at the tools, technologies, and services I
               use for software development. Inspired by{' '}
               <a

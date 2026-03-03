@@ -244,6 +244,12 @@ export default function ExperiencePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <Briefcase className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">
+                Experience
+              </span>
+            </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Professional <span className="text-primary">Experience</span>
             </h1>
