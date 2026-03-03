@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Mail, MousePointer2, ChevronDown } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
@@ -190,31 +190,6 @@ export function HeroSectionClient() {
                 </Link>
               </Button>
             </MagneticEffect>
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <Link
-              href="#about"
-              className="block rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              aria-label="Scroll to about section"
-            >
-              <motion.div
-                animate={prefersReducedMotion ? {} : { y: [0, 10, 0] }}
-                transition={
-                  prefersReducedMotion ? {} : { duration: 2, repeat: Infinity }
-                }
-                className="text-muted-foreground"
-              >
-                <MousePointer2 className="w-6 h-6 mx-auto mb-2" />
-                <ChevronDown className="w-4 h-4 mx-auto" />
-              </motion.div>
-            </Link>
           </motion.div>
         </motion.div>
       </Container>
