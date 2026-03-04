@@ -111,13 +111,17 @@ class InMemoryRateLimiter {
 const inMemoryFallbacks: Record<string, InMemoryRateLimiter> = {
   contact: new InMemoryRateLimiter(5, 15 * 60 * 1000),
   newsletter: new InMemoryRateLimiter(3, 60 * 60 * 1000),
+  views: new InMemoryRateLimiter(1, 60 * 60 * 1000),
+  reactions: new InMemoryRateLimiter(50, 60 * 60 * 1000),
 };
 
-export type RateLimiterKey = 'contact' | 'newsletter';
+export type RateLimiterKey = 'contact' | 'newsletter' | 'views' | 'reactions';
 
 const limiterMap: Record<RateLimiterKey, Ratelimit | null> = {
   contact: contactRateLimiter,
   newsletter: newsletterRateLimiter,
+  views: viewsRateLimiter,
+  reactions: reactionsRateLimiter,
 };
 
 /**

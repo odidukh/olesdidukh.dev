@@ -1,7 +1,6 @@
 export const runtime = 'edge';
 
 import {
-  viewsRateLimiter,
   checkRateLimit,
   getIdentifier,
   rateLimitExceededResponse,
@@ -54,7 +53,7 @@ export async function POST(
     // Rate limiting to prevent abuse
     const identifier = getIdentifier(request);
     const rateLimitResult = await checkRateLimit(
-      viewsRateLimiter,
+      'views',
       `${identifier}:${slug}`
     );
 
