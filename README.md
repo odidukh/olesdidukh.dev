@@ -110,6 +110,12 @@ src/
 | INP                    | < 100ms |
 | CLS                    | < 0.05  |
 
+## Architecture
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for a comprehensive overview of the system design — rendering model, data flow, state management, security layers, and performance strategies.
+
+For individual technology decisions, see the [Architecture Decision Records](docs/adr/README.md).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, component patterns, and PR requirements.

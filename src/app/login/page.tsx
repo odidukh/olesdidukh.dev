@@ -15,7 +15,11 @@ import { Lock, Mail, ArrowLeft, AlertCircle } from 'lucide-react';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirect') || '/admin';
+  const rawRedirect = searchParams.get('redirect') || '/admin';
+  const redirectTo =
+    rawRedirect.startsWith('/') && !rawRedirect.startsWith('//')
+      ? rawRedirect
+      : '/admin';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
