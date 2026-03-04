@@ -15,6 +15,8 @@ export { usePerformance } from './usePerformance';
 export { useFocusTrap } from './useFocusTrap';
 export { usePageEngagement } from './usePageEngagement';
 export { useSearch } from './useSearch';
+export { useImageLoading } from './useImageLoading';
+export { useNewsletterForm } from './useNewsletterForm';
 
 // Type exports
 export type {
