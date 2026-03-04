@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -14,76 +13,11 @@ import {
   Bell,
   Loader2,
 } from 'lucide-react';
+import { useNewsletterForm } from '@/hooks';
 
 export function NewsletterSignup() {
-  const [email, setEmail] = React.useState('');
-  const [status, setStatus] = React.useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle');
-  const [error, setError] = React.useState('');
-  const statusTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-
-  // Cleanup timeout on unmount
-  React.useEffect(() => {
-    return () => {
-      if (statusTimeoutRef.current) {
-        clearTimeout(statusTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email) {
-      setError('Email is required');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email');
-      return;
-    }
-
-    setStatus('loading');
-    setError('');
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data: { success?: boolean; error?: string } = await response.json();
-
-      if (!response.ok) {
-        setStatus('error');
-        setError(data.error ?? 'Something went wrong. Please try again.');
-        return;
-      }
-
-      setStatus('success');
-      setEmail('');
-
-      // Reset after 5 seconds
-      statusTimeoutRef.current = setTimeout(() => {
-        setStatus('idle');
-      }, 5000);
-    } catch {
-      setStatus('error');
-      setError('Something went wrong. Please try again.');
-    }
-  };
+  const { email, setEmail, status, error, clearError, handleSubmit } =
+    useNewsletterForm();
 
   const benefits = [
     'Weekly insights on React & TypeScript',
@@ -179,7 +113,7 @@ export function NewsletterSignup() {
                         value={email}
                         onChange={e => {
                           setEmail(e.target.value);
-                          setError('');
+                          clearError();
                         }}
                         className={`pl-10 ${error ? 'border-destructive' : ''}`}
                         disabled={status === 'loading'}

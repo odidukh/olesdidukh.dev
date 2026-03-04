@@ -9,7 +9,7 @@ import { captureException } from '@/lib/sentry';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { FormInput, FormTextarea } from '@/components/ui/FormField';
-import { Badge } from '@/components/ui/Badge';
+import { SelectableBadge } from '@/components/ui/Badge';
 import {
   User,
   Mail,
@@ -24,6 +24,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { PROJECT_TYPES, BUDGET_RANGES, TIMELINES } from '@/config/contact-form';
+import { validateEmail, validatePhone } from '@/lib/validation';
 
 const MESSAGE_MAX_LENGTH = 2000;
 
@@ -79,18 +80,6 @@ export function ContactForm() {
       }
     };
   }, []);
-
-  // Validation functions
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePhone = (phone: string): boolean => {
-    if (!phone) return true; // Phone is optional
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
-  };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -339,28 +328,18 @@ export function ContactForm() {
           aria-label="Project type options"
         >
           {PROJECT_TYPES.map(type => (
-            <Badge
+            <SelectableBadge
               key={type}
-              variant={formData.projectType === type ? 'default' : 'outline'}
-              className="cursor-pointer transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              onClick={() =>
+              selected={formData.projectType === type}
+              onSelect={() =>
                 handleInputChange(
                   'projectType',
                   formData.projectType === type ? '' : type
                 )
               }
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleInputChange('projectType', type);
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              aria-pressed={formData.projectType === type}
             >
               {type}
-            </Badge>
+            </SelectableBadge>
           ))}
         </div>
       </div>
@@ -378,28 +357,19 @@ export function ContactForm() {
             aria-label="Budget range options"
           >
             {BUDGET_RANGES.map(range => (
-              <Badge
+              <SelectableBadge
                 key={range}
-                variant={formData.budget === range ? 'default' : 'outline'}
-                className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                onClick={() =>
+                selected={formData.budget === range}
+                onSelect={() =>
                   handleInputChange(
                     'budget',
                     formData.budget === range ? '' : range
                   )
                 }
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleInputChange('budget', range);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-pressed={formData.budget === range}
+                className="justify-center"
               >
                 {range}
-              </Badge>
+              </SelectableBadge>
             ))}
           </div>
         </div>
@@ -415,28 +385,19 @@ export function ContactForm() {
             aria-label="Timeline options"
           >
             {TIMELINES.map(time => (
-              <Badge
+              <SelectableBadge
                 key={time}
-                variant={formData.timeline === time ? 'default' : 'outline'}
-                className="cursor-pointer transition-all hover:scale-105 justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                onClick={() =>
+                selected={formData.timeline === time}
+                onSelect={() =>
                   handleInputChange(
                     'timeline',
                     formData.timeline === time ? '' : time
                   )
                 }
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleInputChange('timeline', time);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-pressed={formData.timeline === time}
+                className="justify-center"
               >
                 {time}
-              </Badge>
+              </SelectableBadge>
             ))}
           </div>
         </div>

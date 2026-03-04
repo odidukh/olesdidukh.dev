@@ -30,6 +30,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import Link from 'next/link';
+import { sectionFadeIn, fadeInUp } from '@/config/animations';
 
 /**
  * Contact method configuration for the LinkCard components
@@ -42,29 +43,6 @@ interface ContactMethod {
   href: string;
   gradient: IconBoxGradient;
 }
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
 
 export function ContactSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
@@ -122,13 +100,13 @@ export function ContactSection() {
 
       <Container size="lg" padding="lg">
         <motion.div
-          variants={sectionVariants}
+          variants={sectionFadeIn}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
           className="space-y-16"
         >
           {/* Header */}
-          <motion.div variants={itemVariants} className="text-center space-y-4">
+          <motion.div variants={fadeInUp} className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
               <Mail className="w-4 h-4 text-primary" />
               <span className="text-sm font-semibold text-primary">
@@ -149,17 +127,14 @@ export function ContactSection() {
           </motion.div>
 
           {/* Availability Status */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={fadeInUp}>
             <AvailabilityStatus />
           </motion.div>
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {/* Contact Form - Left Side */}
-            <motion.div
-              variants={itemVariants}
-              className="lg:col-span-3 space-y-6"
-            >
+            <motion.div variants={fadeInUp} className="lg:col-span-3 space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -191,10 +166,7 @@ export function ContactSection() {
             </motion.div>
 
             {/* Contact Info & Social - Right Side */}
-            <motion.div
-              variants={itemVariants}
-              className="lg:col-span-2 space-y-6"
-            >
+            <motion.div variants={fadeInUp} className="lg:col-span-2 space-y-6">
               {/* Contact Information */}
               <ContactInfo />
 
@@ -243,7 +215,7 @@ export function ContactSection() {
           </div>
 
           {/* FAQ Section */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={fadeInUp}>
             <h3 className="text-2xl font-bold text-center mb-8">
               Frequently Asked Questions
             </h3>
@@ -251,7 +223,7 @@ export function ContactSection() {
           </motion.div>
 
           {/* Response Time Card */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={fadeInUp}>
             <Card className="bg-gradient-to-r from-success-50 to-success-100 dark:from-success-900/20 dark:to-success-800/20 border-success-200 dark:border-success-800">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
@@ -274,6 +246,29 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
+
+          {/* Final CTA */}
+          <motion.div
+            variants={fadeInUp}
+            className="text-center space-y-4 pt-8"
+          >
+            <h3 className="text-2xl font-semibold">
+              Ready to Start Your Project?
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              I&apos;m excited to learn about your vision and explore how we can
+              work together to create something exceptional. Every great project
+              starts with a conversation.
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button size="lg" asChild>
+                <a href="mailto:oles.didukh@gmail.com">
+                  <Mail className="mr-2 h-4 w-4" />
+                  Start the Conversation
+                </a>
+              </Button>
+            </div>
           </motion.div>
         </motion.div>
       </Container>

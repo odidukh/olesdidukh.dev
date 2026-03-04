@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import { useAnalytics } from '@/hooks';
+import { useNewsletterForm } from '@/hooks';
 import { trackNewsletterConversion } from '@/lib/conversions';
 import { Button } from './Button';
 import { Input } from './Input';
@@ -9,83 +9,18 @@ import { Mail, Send, CheckCircle, Loader2 } from 'lucide-react';
 
 export function NewsletterForm() {
   const { trackFormSubmission } = useAnalytics();
-  const [email, setEmail] = React.useState('');
-  const [status, setStatus] = React.useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle');
-  const [error, setError] = React.useState('');
-  const statusTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
 
-  // Cleanup timeout on unmount
-  React.useEffect(() => {
-    return () => {
-      if (statusTimeoutRef.current) {
-        clearTimeout(statusTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email) {
-      setError('Email is required');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email');
-      return;
-    }
-
-    setStatus('loading');
-    setError('');
-
-    try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data: { success?: boolean; error?: string } = await response.json();
-
-      if (!response.ok) {
-        setStatus('error');
-        setError(data.error ?? 'Something went wrong.');
-        return;
-      }
-
-      setStatus('success');
-      setEmail('');
-
-      // Track successful newsletter signup
-      trackFormSubmission('newsletter', 'success', {
-        location: window.location.pathname,
-      });
-
-      // Track conversion across all analytics platforms
-      trackNewsletterConversion({
-        location: window.location.pathname,
-      });
-
-      statusTimeoutRef.current = setTimeout(() => {
-        setStatus('idle');
-      }, 5000);
-    } catch {
-      setStatus('error');
-      setError('Something went wrong.');
-    }
-  };
+  const { email, setEmail, status, error, clearError, handleSubmit } =
+    useNewsletterForm({
+      onSuccess: () => {
+        trackFormSubmission('newsletter', 'success', {
+          location: window.location.pathname,
+        });
+        trackNewsletterConversion({
+          location: window.location.pathname,
+        });
+      },
+    });
 
   if (status === 'success') {
     return (
@@ -107,7 +42,7 @@ export function NewsletterForm() {
             value={email}
             onChange={e => {
               setEmail(e.target.value);
-              setError('');
+              clearError();
             }}
             className={`pl-10 ${error ? 'border-destructive' : ''}`}
             disabled={status === 'loading'}

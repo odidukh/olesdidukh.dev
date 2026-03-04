@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -9,19 +8,18 @@ import type { BlogPostMeta } from '@/lib/mdx';
 import { Clock, ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useImageLoading } from '@/hooks';
+import { formatDate } from '@/lib/date';
+import { DISPLAY_LIMITS } from '@/config/animations';
 
 interface FeaturedPostProps {
   post: BlogPostMeta;
 }
 
 export function FeaturedPost({ post }: FeaturedPostProps) {
-  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const { imageLoaded, handleLoad } = useImageLoading();
 
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = formatDate(post.publishedAt, 'long');
 
   return (
     <motion.div
@@ -48,7 +46,7 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
                 className={`object-cover transition-all duration-700 group-hover:scale-110 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
-                onLoad={() => setImageLoaded(true)}
+                onLoad={handleLoad}
               />
 
               {/* Overlay */}
@@ -92,11 +90,13 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2">
-                  {post.tags.slice(0, 4).map(tag => (
-                    <Badge key={tag} variant="secondary" size="sm">
-                      {tag}
-                    </Badge>
-                  ))}
+                  {post.tags
+                    .slice(0, DISPLAY_LIMITS.featuredPostTags)
+                    .map(tag => (
+                      <Badge key={tag} variant="secondary" size="sm">
+                        {tag}
+                      </Badge>
+                    ))}
                 </div>
               </div>
 

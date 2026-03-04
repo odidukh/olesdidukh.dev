@@ -9,6 +9,9 @@ import { Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { MetaItem } from '@/components/ui/MetaItem';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useImageLoading } from '@/hooks';
+import { formatDate } from '@/lib/date';
+import { DISPLAY_LIMITS } from '@/config/animations';
 
 interface BlogCardProps {
   post: BlogPostMeta;
@@ -21,14 +24,10 @@ export const BlogCard = React.memo(function BlogCard({
   index,
   featured = false,
 }: BlogCardProps) {
-  const [imageLoaded, setImageLoaded] = React.useState(false);
-  const [imageError, setImageError] = React.useState(false);
+  const { imageLoaded, imageError, handleLoad, handleError } =
+    useImageLoading();
 
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = formatDate(post.publishedAt);
 
   return (
     <motion.div
@@ -63,8 +62,8 @@ export const BlogCard = React.memo(function BlogCard({
                   className={`object-cover transition-all duration-500 group-hover:scale-110 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
-                  onLoad={() => setImageLoaded(true)}
-                  onError={() => setImageError(true)}
+                  onLoad={handleLoad}
+                  onError={handleError}
                 />
               </>
             ) : (
@@ -119,14 +118,14 @@ export const BlogCard = React.memo(function BlogCard({
 
             {/* Tags */}
             <div className="flex flex-wrap gap-1">
-              {post.tags.slice(0, 3).map(tag => (
+              {post.tags.slice(0, DISPLAY_LIMITS.blogCardTags).map(tag => (
                 <Badge key={tag} variant="outline" size="sm">
                   {tag}
                 </Badge>
               ))}
-              {post.tags.length > 3 && (
+              {post.tags.length > DISPLAY_LIMITS.blogCardTags && (
                 <Badge variant="outline" size="sm">
-                  +{post.tags.length - 3}
+                  +{post.tags.length - DISPLAY_LIMITS.blogCardTags}
                 </Badge>
               )}
             </div>

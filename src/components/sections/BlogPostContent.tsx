@@ -27,6 +27,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePageEngagement } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { formatDate } from '@/lib/date';
 
 // Support both legacy BlogPost and new BlogPostMeta
 type PostData =
@@ -162,11 +163,7 @@ export function BlogPostContent({
     return () => document.removeEventListener('mousedown', handler);
   }, [showShareMenu]);
 
-  const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = formatDate(post.publishedAt, 'long');
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {

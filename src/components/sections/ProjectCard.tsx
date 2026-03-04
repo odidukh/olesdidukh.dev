@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { MetaItem } from '@/components/ui/MetaItem';
 import Image from 'next/image';
+import { useImageLoading } from '@/hooks';
+import { DISPLAY_LIMITS } from '@/config/animations';
 
 interface ProjectCardProps {
   project: Project;
@@ -30,8 +32,8 @@ export const ProjectCard = React.memo(function ProjectCard({
   index,
   viewMode,
 }: ProjectCardProps) {
-  const [imageLoaded, setImageLoaded] = React.useState(false);
-  const [imageError, setImageError] = React.useState(false);
+  const { imageLoaded, imageError, handleLoad, handleError } =
+    useImageLoading();
 
   if (viewMode === 'list') {
     return (
@@ -64,8 +66,8 @@ export const ProjectCard = React.memo(function ProjectCard({
                       className={`object-cover transition-opacity duration-300 ${
                         imageLoaded ? 'opacity-100' : 'opacity-0'
                       }`}
-                      onLoad={() => setImageLoaded(true)}
-                      onError={() => setImageError(true)}
+                      onLoad={handleLoad}
+                      onError={handleError}
                     />
                   </>
                 ) : (
@@ -100,14 +102,19 @@ export const ProjectCard = React.memo(function ProjectCard({
 
                 {/* Technologies */}
                 <div className="flex flex-wrap gap-1.5">
-                  {project.technologies.slice(0, 5).map(tech => (
-                    <Badge key={tech} variant="secondary" size="sm">
-                      {tech}
-                    </Badge>
-                  ))}
-                  {project.technologies.length > 5 && (
+                  {project.technologies
+                    .slice(0, DISPLAY_LIMITS.projectCardTechnologies.list)
+                    .map(tech => (
+                      <Badge key={tech} variant="secondary" size="sm">
+                        {tech}
+                      </Badge>
+                    ))}
+                  {project.technologies.length >
+                    DISPLAY_LIMITS.projectCardTechnologies.list && (
                     <Badge variant="secondary" size="sm">
-                      +{project.technologies.length - 5}
+                      +
+                      {project.technologies.length -
+                        DISPLAY_LIMITS.projectCardTechnologies.list}
                     </Badge>
                   )}
                 </div>
@@ -124,17 +131,19 @@ export const ProjectCard = React.memo(function ProjectCard({
                 {/* Results Preview */}
                 {project.results && project.results.length > 0 && (
                   <div className="flex gap-4 text-sm">
-                    {project.results.slice(0, 2).map((result, idx) => (
-                      <div
-                        key={idx}
-                        className="text-success-600 dark:text-success-400"
-                      >
-                        <span className="font-semibold">{result.value}</span>
-                        <span className="text-muted-foreground ml-1">
-                          {result.metric}
-                        </span>
-                      </div>
-                    ))}
+                    {project.results
+                      .slice(0, DISPLAY_LIMITS.projectResultsPreview)
+                      .map((result, idx) => (
+                        <div
+                          key={idx}
+                          className="text-success-600 dark:text-success-400"
+                        >
+                          <span className="font-semibold">{result.value}</span>
+                          <span className="text-muted-foreground ml-1">
+                            {result.metric}
+                          </span>
+                        </div>
+                      ))}
                   </div>
                 )}
               </div>
@@ -206,8 +215,8 @@ export const ProjectCard = React.memo(function ProjectCard({
                   className={`object-cover transition-all duration-500 group-hover:scale-110 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
-                  onLoad={() => setImageLoaded(true)}
-                  onError={() => setImageError(true)}
+                  onLoad={handleLoad}
+                  onError={handleError}
                 />
               </>
             ) : (
@@ -284,14 +293,19 @@ export const ProjectCard = React.memo(function ProjectCard({
 
               {/* Technologies */}
               <div className="flex flex-wrap gap-1 pt-2">
-                {project.technologies.slice(0, 3).map(tech => (
-                  <Badge key={tech} variant="secondary" size="sm">
-                    {tech}
-                  </Badge>
-                ))}
-                {project.technologies.length > 3 && (
+                {project.technologies
+                  .slice(0, DISPLAY_LIMITS.projectCardTechnologies.grid)
+                  .map(tech => (
+                    <Badge key={tech} variant="secondary" size="sm">
+                      {tech}
+                    </Badge>
+                  ))}
+                {project.technologies.length >
+                  DISPLAY_LIMITS.projectCardTechnologies.grid && (
                   <Badge variant="secondary" size="sm">
-                    +{project.technologies.length - 3}
+                    +
+                    {project.technologies.length -
+                      DISPLAY_LIMITS.projectCardTechnologies.grid}
                   </Badge>
                 )}
               </div>
