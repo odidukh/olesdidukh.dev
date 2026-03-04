@@ -11,13 +11,11 @@ interface Position {
 }
 
 export class SpatialHash {
-  private readonly cellSize: number;
   private readonly inverseCellSize: number;
   private grid: Map<string, number[]>;
   private positions: Map<number, Position>;
 
   constructor(cellSize: number) {
-    this.cellSize = cellSize;
     this.inverseCellSize = 1 / cellSize;
     this.grid = new Map();
     this.positions = new Map();
