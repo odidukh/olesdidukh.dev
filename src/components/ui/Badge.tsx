@@ -142,4 +142,50 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
 
 Badge.displayName = 'Badge';
 
-export { Badge, badgeVariants };
+// ─── SelectableBadge ────────────────────────────────────────────────────────
+
+interface SelectableBadgeProps extends Omit<
+  BadgeProps,
+  'variant' | 'role' | 'tabIndex' | 'onClick'
+> {
+  /** Whether this badge is currently selected */
+  selected: boolean;
+  /** Called when the badge is selected via click or keyboard */
+  onSelect: () => void;
+}
+
+/**
+ * A badge that acts as a toggle button with proper keyboard and a11y support.
+ * Used for selectable option groups (project type, budget, timeline, etc.).
+ */
+const SelectableBadge = React.forwardRef<HTMLDivElement, SelectableBadgeProps>(
+  ({ selected, onSelect, className, children, ...props }, ref) => {
+    return (
+      <Badge
+        ref={ref}
+        variant={selected ? 'default' : 'outline'}
+        className={cn(
+          'cursor-pointer transition-all hover:scale-105',
+          className
+        )}
+        onClick={onSelect}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSelect();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-pressed={selected}
+        {...props}
+      >
+        {children}
+      </Badge>
+    );
+  }
+);
+
+SelectableBadge.displayName = 'SelectableBadge';
+
+export { Badge, badgeVariants, SelectableBadge };

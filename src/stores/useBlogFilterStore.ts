@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, devtools } from 'zustand/middleware';
-import { captureException } from '@/lib/sentry';
+import { persist, devtools } from 'zustand/middleware';
+import { createSSRSafeStorage, createRehydrateHandler } from '@/lib/storage';
 import { ALL_FILTER } from '@/constants';
 import { blogCategories } from '@/data/blog';
 
@@ -139,30 +139,15 @@ export const useBlogFilterStore = create<BlogFilterState>()(
       }),
       {
         name: 'blog-filter-storage',
-        storage: createJSONStorage(() => {
-          if (typeof window === 'undefined') {
-            return {
-              getItem: () => null,
-              setItem: () => {},
-              removeItem: () => {},
-            };
-          }
-          return localStorage;
-        }),
+        storage: createSSRSafeStorage(),
         // Only persist filter values and sort, not UI state like showFilters
         partialize: state => ({
           selectedCategory: state.selectedCategory,
           searchQuery: state.searchQuery,
           sortBy: state.sortBy,
         }),
-        onRehydrateStorage: () => (_state, error) => {
-          if (error) {
-            captureException(error, {
-              store: 'useBlogFilterStore',
-              action: 'rehydrate',
-            });
-          }
-        },
+        onRehydrateStorage:
+          createRehydrateHandler<BlogFilterState>('useBlogFilterStore'),
       }
     ),
     { name: 'BlogFilter', enabled: process.env.NODE_ENV === 'development' }

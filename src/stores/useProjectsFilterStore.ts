@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, devtools } from 'zustand/middleware';
-import { captureException } from '@/lib/sentry';
+import { persist, devtools } from 'zustand/middleware';
+import { createSSRSafeStorage, createRehydrateHandler } from '@/lib/storage';
 import { ALL_FILTER } from '@/constants';
 import {
   PROJECT_CATEGORIES,
@@ -161,16 +161,7 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
       }),
       {
         name: 'projects-filter-storage',
-        storage: createJSONStorage(() => {
-          if (typeof window === 'undefined') {
-            return {
-              getItem: () => null,
-              setItem: () => {},
-              removeItem: () => {},
-            };
-          }
-          return localStorage;
-        }),
+        storage: createSSRSafeStorage(),
         // Only persist filter values and view mode, not UI state like showFilters
         partialize: state => ({
           selectedCategory: state.selectedCategory,
@@ -178,14 +169,9 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
           searchQuery: state.searchQuery,
           viewMode: state.viewMode,
         }),
-        onRehydrateStorage: () => (_state, error) => {
-          if (error) {
-            captureException(error, {
-              store: 'useProjectsFilterStore',
-              action: 'rehydrate',
-            });
-          }
-        },
+        onRehydrateStorage: createRehydrateHandler<ProjectsFilterState>(
+          'useProjectsFilterStore'
+        ),
       }
     ),
     { name: 'ProjectsFilter', enabled: process.env.NODE_ENV === 'development' }

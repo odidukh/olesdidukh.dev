@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { captureException } from '@/lib/sentry';
+import { createSSRSafeStorage } from '@/lib/storage';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeAccent = 'mocha' | 'navy' | 'emerald' | 'rose' | 'amber';
@@ -144,17 +145,7 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: 'theme-storage',
-      storage: createJSONStorage(() => {
-        // Handle SSR
-        if (typeof window === 'undefined') {
-          return {
-            getItem: () => null,
-            setItem: () => {},
-            removeItem: () => {},
-          };
-        }
-        return localStorage;
-      }),
+      storage: createSSRSafeStorage(),
       partialize: state => ({ mode: state.mode, accent: state.accent }),
       onRehydrateStorage: () => (state, error) => {
         if (error) {
