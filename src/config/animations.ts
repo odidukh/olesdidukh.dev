@@ -1,8 +1,86 @@
+import type { Variants } from 'framer-motion';
+
 /**
  * Animation and visual effect configuration
  *
- * Centralized configuration for animations, particle effects, and video player settings.
+ * Centralized configuration for animations, particle effects, video player settings,
+ * and shared Framer Motion variants.
  */
+
+// ─── Shared Framer Motion Variants ──────────────────────────────────────────
+
+/** Container variant that staggers children with fade-in */
+export const staggerContainer = (
+  staggerChildren = 0.1,
+  delayChildren = 0
+): Variants => ({
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren, delayChildren },
+  },
+});
+
+/** Fade up from below — the most common item animation */
+export const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
+};
+
+/** Fade up with spring physics (for hero-style elements) */
+export const fadeInUpSpring: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100, damping: 10 },
+  },
+};
+
+/** Slide in from the left */
+export const fadeInLeft: Variants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5 },
+  },
+};
+
+/** Section-level fade up (larger y offset for more dramatic entrance) */
+export const sectionFadeIn: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, staggerChildren: 0.1 },
+  },
+};
+
+/** Standard card hover — lift up slightly */
+export const cardHover = { y: -5 };
+
+/** Standard list item hover — nudge right */
+export const listItemHover = { x: 5 };
+
+// ─── Display Limits ─────────────────────────────────────────────────────────
+
+/** Maximum number of tags/technologies shown on cards before "+X more" */
+export const DISPLAY_LIMITS = {
+  blogCardTags: 3,
+  featuredPostTags: 4,
+  projectCardTechnologies: {
+    grid: 3,
+    list: 5,
+  },
+  projectResultsPreview: 2,
+} as const;
+
+// ─── Particle & Video Configuration ─────────────────────────────────────────
 
 /**
  * Particle field configuration for the background effect
