@@ -29,7 +29,6 @@ vi.mock('@/lib/sentry', () => ({
 
 // Mock rate limiting (not configured in tests)
 vi.mock('@/lib/ratelimit', () => ({
-  contactRateLimiter: null,
   checkRateLimit: vi.fn().mockResolvedValue(null),
   rateLimitExceededResponse: vi.fn(),
   getIdentifier: vi.fn().mockReturnValue('test-ip'),

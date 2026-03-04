@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { captureException, addBreadcrumb } from '@/lib/sentry';
 import {
-  newsletterRateLimiter,
   checkRateLimit,
   rateLimitExceededResponse,
   getIdentifier,
@@ -23,17 +22,14 @@ export async function POST(request: Request) {
 
     // Check rate limit
     const identifier = getIdentifier(request);
-    const rateLimitResult = await checkRateLimit(
-      newsletterRateLimiter,
-      identifier
-    );
+    const rateLimitResult = await checkRateLimit('newsletter', identifier);
 
     if (rateLimitResult && !rateLimitResult.success) {
       addBreadcrumb({
         message: 'Newsletter rate limit exceeded',
         category: 'ratelimit',
         level: 'warning',
-        data: { identifier, remaining: rateLimitResult.remaining },
+        data: { remaining: rateLimitResult.remaining },
       });
 
       return rateLimitExceededResponse(
@@ -60,7 +56,6 @@ export async function POST(request: Request) {
       message: 'Processing newsletter subscription',
       category: 'newsletter',
       level: 'info',
-      data: { email },
     });
 
     // Buttondown API integration
@@ -110,7 +105,6 @@ export async function POST(request: Request) {
         api_route: '/api/newsletter',
         status_code: response.status,
         error_data: errorData,
-        email,
       });
 
       return Response.json(
@@ -123,7 +117,6 @@ export async function POST(request: Request) {
       message: 'Newsletter subscription successful',
       category: 'newsletter',
       level: 'info',
-      data: { email },
     });
 
     // Don't expose rate limit headers on success responses

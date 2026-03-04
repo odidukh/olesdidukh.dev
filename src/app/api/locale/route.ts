@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import { locales, type Locale } from '@/i18n';
+import { validateCsrf } from '@/lib/csrf';
 
 export async function POST(request: Request) {
   try {
+    // CSRF protection
+    const csrfError = validateCsrf(request);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const { locale } = (await request.json()) as { locale: string };
 
     // Validate locale
@@ -18,6 +25,7 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24 * 365,
       path: '/',
       sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
     });
 
     return response;

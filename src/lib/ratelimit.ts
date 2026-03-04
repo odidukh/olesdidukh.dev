@@ -12,7 +12,7 @@ export const redis =
     : null;
 
 // Rate limiter for contact form: 5 requests per 15 minutes
-export const contactRateLimiter = redis
+const contactRateLimiter = redis
   ? new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(5, '15 m'),
@@ -42,7 +42,7 @@ export const reactionsRateLimiter = redis
   : null;
 
 // Rate limiter for newsletter: 3 requests per hour
-export const newsletterRateLimiter = redis
+const newsletterRateLimiter = redis
   ? new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(3, '1 h'),
@@ -59,14 +59,83 @@ export interface RateLimitResult {
 }
 
 /**
- * Check rate limit for a given identifier
- * Returns null if rate limiting is not configured
+ * In-memory rate limiter fallback when Redis is not configured.
+ * Tracks requests per identifier with automatic cleanup.
+ */
+class InMemoryRateLimiter {
+  private requests = new Map<string, number[]>();
+  private readonly maxRequests: number;
+  private readonly windowMs: number;
+
+  constructor(maxRequests: number, windowMs: number) {
+    this.maxRequests = maxRequests;
+    this.windowMs = windowMs;
+  }
+
+  limit(identifier: string): RateLimitResult {
+    const now = Date.now();
+    const windowStart = now - this.windowMs;
+
+    // Get existing requests and filter to current window
+    const existing = this.requests.get(identifier) ?? [];
+    const recent = existing.filter(ts => ts > windowStart);
+
+    const success = recent.length < this.maxRequests;
+    if (success) {
+      recent.push(now);
+    }
+    this.requests.set(identifier, recent);
+
+    // Periodic cleanup: remove stale entries
+    if (this.requests.size > 1000) {
+      for (const [key, timestamps] of this.requests) {
+        const active = timestamps.filter(ts => ts > windowStart);
+        if (active.length === 0) {
+          this.requests.delete(key);
+        } else {
+          this.requests.set(key, active);
+        }
+      }
+    }
+
+    return {
+      success,
+      limit: this.maxRequests,
+      remaining: Math.max(0, this.maxRequests - recent.length),
+      reset: now + this.windowMs,
+    };
+  }
+}
+
+// In-memory fallbacks keyed by name when Redis is unavailable
+const inMemoryFallbacks: Record<string, InMemoryRateLimiter> = {
+  contact: new InMemoryRateLimiter(5, 15 * 60 * 1000),
+  newsletter: new InMemoryRateLimiter(3, 60 * 60 * 1000),
+};
+
+export type RateLimiterKey = 'contact' | 'newsletter';
+
+const limiterMap: Record<RateLimiterKey, Ratelimit | null> = {
+  contact: contactRateLimiter,
+  newsletter: newsletterRateLimiter,
+};
+
+/**
+ * Check rate limit for a given identifier.
+ * Uses a key-based lookup to avoid identity comparison bugs when Redis is absent.
+ * Falls back to in-memory rate limiting when Redis is not configured.
  */
 export async function checkRateLimit(
-  limiter: Ratelimit | null,
+  key: RateLimiterKey,
   identifier: string
 ): Promise<RateLimitResult | null> {
+  const limiter = limiterMap[key];
+
   if (!limiter) {
+    const fallback = inMemoryFallbacks[key];
+    if (fallback) {
+      return fallback.limit(identifier);
+    }
     return null;
   }
 
@@ -107,14 +176,17 @@ export function rateLimitExceededResponse(
 }
 
 /**
- * Get identifier from request (IP address or forwarded IP)
+ * Get identifier from request (IP address or forwarded IP).
+ * On Vercel/reverse proxies, the last IP in X-Forwarded-For is appended by
+ * the infrastructure and cannot be spoofed by the client.
  */
 export function getIdentifier(request: Request): string {
   // Check for forwarded IP (when behind proxy/load balancer)
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
-    // Get the first IP in the chain (original client)
-    return forwarded.split(',')[0]?.trim() ?? 'anonymous';
+    const ips = forwarded.split(',').map(s => s.trim());
+    // Last IP is appended by infrastructure and is trustworthy
+    return ips[ips.length - 1] ?? 'anonymous';
   }
 
   // Check for real IP header (Cloudflare, Vercel, etc.)

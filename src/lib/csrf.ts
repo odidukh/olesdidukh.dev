@@ -10,8 +10,8 @@ const ALLOWED_ORIGINS = [
   // Production domain
   'https://olesdidukh.dev',
   'https://www.olesdidukh.dev',
-  // Vercel preview deployments
-  /^https:\/\/.*\.vercel\.app$/,
+  // Vercel preview deployments (restricted to project slug)
+  /^https:\/\/pws(-[a-z0-9-]+)?\.vercel\.app$/,
   // Local development
   'http://localhost:3000',
   'http://127.0.0.1:3000',
@@ -92,10 +92,16 @@ export function validateCsrf(request: Request): Response | null {
     }
   }
 
-  // Neither Origin nor Referer present - could be a direct API call
-  // In strict mode, we could reject this, but for flexibility we allow it
-  // since same-site cookies and other protections are in place
-  return null;
+  // Neither Origin nor Referer present - reject in production to prevent CSRF bypass
+  return Response.json(
+    { error: 'Missing origin information' },
+    {
+      status: 403,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 }
 
 /**

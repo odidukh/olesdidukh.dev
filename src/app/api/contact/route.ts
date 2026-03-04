@@ -4,13 +4,21 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';
 import {
-  contactRateLimiter,
   checkRateLimit,
   rateLimitExceededResponse,
   getIdentifier,
 } from '@/lib/ratelimit';
 import { validateCsrf } from '@/lib/csrf';
 import { env } from '@/lib/env';
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 // Lazy initialization to avoid build-time errors when env vars are missing
 let resendClient: Resend | null = null;
@@ -45,17 +53,14 @@ export async function POST(request: Request) {
 
     // Check rate limit
     const identifier = getIdentifier(request);
-    const rateLimitResult = await checkRateLimit(
-      contactRateLimiter,
-      identifier
-    );
+    const rateLimitResult = await checkRateLimit('contact', identifier);
 
     if (rateLimitResult && !rateLimitResult.success) {
       addBreadcrumb({
         message: 'Contact form rate limit exceeded',
         category: 'ratelimit',
         level: 'warning',
-        data: { identifier, remaining: rateLimitResult.remaining },
+        data: { remaining: rateLimitResult.remaining },
       });
 
       return rateLimitExceededResponse(
@@ -91,19 +96,16 @@ export async function POST(request: Request) {
       message,
     } = result.data;
 
-    // Add breadcrumb for debugging
+    // Add breadcrumb for debugging (no PII)
     addBreadcrumb({
       message: 'Processing contact form submission',
       category: 'contact',
       level: 'info',
-      data: { from: email, company },
+      data: { hasCompany: !!company, projectType },
     });
 
-    // Set context for this request
+    // Set context for this request (no PII)
     setContext('contact_submission', {
-      name,
-      email,
-      company,
       projectType,
       hasPhone: !!phone,
       hasBudget: !!budget,
@@ -152,29 +154,29 @@ ${message}
     <div class="content">
       <div class="field">
         <div class="label">From</div>
-        <div class="value">${name}</div>
+        <div class="value">${escapeHtml(name)}</div>
       </div>
       <div class="field">
         <div class="label">Email</div>
-        <div class="value"><a href="mailto:${email}">${email}</a></div>
+        <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
       </div>
-      ${phone ? `<div class="field"><div class="label">Phone</div><div class="value">${phone}</div></div>` : ''}
-      ${company ? `<div class="field"><div class="label">Company</div><div class="value">${company}</div></div>` : ''}
+      ${phone ? `<div class="field"><div class="label">Phone</div><div class="value">${escapeHtml(phone)}</div></div>` : ''}
+      ${company ? `<div class="field"><div class="label">Company</div><div class="value">${escapeHtml(company)}</div></div>` : ''}
 
       ${
         projectType || budget || timeline
           ? `
         <div class="section-title">Project Details</div>
-        ${projectType ? `<div class="field"><div class="label">Type</div><div class="value">${projectType}</div></div>` : ''}
-        ${budget ? `<div class="field"><div class="label">Budget</div><div class="value">${budget}</div></div>` : ''}
-        ${timeline ? `<div class="field"><div class="label">Timeline</div><div class="value">${timeline}</div></div>` : ''}
+        ${projectType ? `<div class="field"><div class="label">Type</div><div class="value">${escapeHtml(projectType)}</div></div>` : ''}
+        ${budget ? `<div class="field"><div class="label">Budget</div><div class="value">${escapeHtml(budget)}</div></div>` : ''}
+        ${timeline ? `<div class="field"><div class="label">Timeline</div><div class="value">${escapeHtml(timeline)}</div></div>` : ''}
       `
           : ''
       }
 
       <div class="section-title">Message</div>
       <div class="message-box">
-        ${message.replace(/\n/g, '<br>')}
+        ${escapeHtml(message).replace(/\n/g, '<br>')}
       </div>
     </div>
   </div>
@@ -198,7 +200,6 @@ ${message}
       message: 'Email sent successfully',
       category: 'email',
       level: 'info',
-      data: { to: contactEmail, from: email },
     });
 
     // Don't expose rate limit headers on success responses
