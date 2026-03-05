@@ -143,7 +143,6 @@ export const useBlogFilterStore = create<BlogFilterState>()(
         // Only persist filter values and sort, not UI state like showFilters
         partialize: state => ({
           selectedCategory: state.selectedCategory,
-          searchQuery: state.searchQuery,
           sortBy: state.sortBy,
         }),
         onRehydrateStorage:

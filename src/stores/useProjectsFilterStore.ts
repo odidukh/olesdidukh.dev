@@ -166,7 +166,6 @@ export const useProjectsFilterStore = create<ProjectsFilterState>()(
         partialize: state => ({
           selectedCategory: state.selectedCategory,
           selectedTechnologies: state.selectedTechnologies,
-          searchQuery: state.searchQuery,
           viewMode: state.viewMode,
         }),
         onRehydrateStorage: createRehydrateHandler<ProjectsFilterState>(

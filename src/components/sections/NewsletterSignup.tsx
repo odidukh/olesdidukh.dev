@@ -20,10 +20,10 @@ export function NewsletterSignup() {
     useNewsletterForm();
 
   const benefits = [
-    'Weekly insights on React & TypeScript',
-    'Exclusive tutorials and code examples',
-    'Career advice and industry trends',
-    'Early access to new content',
+    'Get notified when I publish new articles',
+    'Deep dives on React, TypeScript & architecture',
+    'Real-world case studies from production apps',
+    'No spam — unsubscribe anytime',
   ];
 
   return (
@@ -37,7 +37,7 @@ export function NewsletterSignup() {
                 <Bell className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold">Stay Updated</h3>
+                <h3 className="text-2xl font-bold">Never Miss a Post</h3>
                 <p className="text-sm text-muted-foreground">
                   Join 500+ developers
                 </p>

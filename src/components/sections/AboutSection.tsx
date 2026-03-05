@@ -86,25 +86,25 @@ const skillCategories: SkillCategory[] = [
     name: 'Frontend',
     skills: ['React', 'TypeScript', 'Next.js', 'Tailwind'],
     icon: Monitor,
-    color: 'from-blue-500/20 to-cyan-500/20',
+    color: 'from-navy-400/20 to-navy-300/20',
   },
   {
     name: 'Backend',
     skills: ['Node.js', 'GraphQL', 'PostgreSQL', 'Redis'],
     icon: Database,
-    color: 'from-green-500/20 to-emerald-500/20',
+    color: 'from-success-400/20 to-success-300/20',
   },
   {
     name: 'Mobile',
     skills: ['React Native', 'Expo', 'PWA'],
     icon: Smartphone,
-    color: 'from-purple-500/20 to-pink-500/20',
+    color: 'from-mocha-400/20 to-mocha-300/20',
   },
   {
     name: 'Tools',
     skills: ['Git', 'Docker', 'AWS', 'Figma'],
     icon: Cloud,
-    color: 'from-orange-500/20 to-red-500/20',
+    color: 'from-warning-400/20 to-warning-300/20',
   },
 ];
 

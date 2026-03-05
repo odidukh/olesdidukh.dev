@@ -295,13 +295,6 @@ const proficiencyColors: Record<ProficiencyLevel, string> = {
   Learning: 'text-purple-500 border-purple-500/20 bg-purple-500/10',
 };
 
-const proficiencyPercentages: Record<ProficiencyLevel, number> = {
-  Expert: 90,
-  Advanced: 75,
-  Intermediate: 50,
-  Learning: 25,
-};
-
 // Pre-compute particle data at module level (same on server and client)
 const particleData = generateParticleData(ANIMATION.PARTICLE_COUNT);
 
@@ -548,25 +541,20 @@ export default function SkillsPage() {
                             </div>
                           </div>
 
-                          {/* Progress Bar */}
+                          {/* Proficiency Level */}
                           <div className="mb-4">
-                            <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                              <span>Proficiency</span>
-                              <span>
-                                {proficiencyPercentages[skill.level]}%
-                              </span>
-                            </div>
-                            <div className="h-2 bg-muted rounded-full overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                whileInView={{
-                                  width: `${proficiencyPercentages[skill.level]}%`,
-                                }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 1, delay: 0.2 }}
-                                className="h-full bg-gradient-to-r from-primary to-primary/50"
-                              />
-                            </div>
+                            <Badge
+                              variant={
+                                skill.level === 'Expert'
+                                  ? 'default'
+                                  : skill.level === 'Advanced'
+                                    ? 'secondary'
+                                    : 'outline'
+                              }
+                              className="text-xs"
+                            >
+                              {skill.level}
+                            </Badge>
                           </div>
 
                           {/* Quick Stats */}
@@ -643,19 +631,20 @@ export default function SkillsPage() {
                                 </span>
                               </div>
 
-                              {/* Progress Bar */}
+                              {/* Proficiency Level */}
                               <div className="flex-1 max-w-md">
-                                <div className="h-3 bg-muted rounded-full overflow-hidden">
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    whileInView={{
-                                      width: `${proficiencyPercentages[skill.level]}%`,
-                                    }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 1 }}
-                                    className="h-full bg-gradient-to-r from-primary to-primary/50"
-                                  />
-                                </div>
+                                <Badge
+                                  variant={
+                                    skill.level === 'Expert'
+                                      ? 'default'
+                                      : skill.level === 'Advanced'
+                                        ? 'secondary'
+                                        : 'outline'
+                                  }
+                                  className="text-xs"
+                                >
+                                  {skill.level}
+                                </Badge>
                               </div>
 
                               {/* Stats */}
