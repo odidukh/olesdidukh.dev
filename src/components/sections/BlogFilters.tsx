@@ -113,7 +113,11 @@ export const BlogFilters = React.memo(function BlogFilters({
                 key={year}
                 variant={searchQuery === `year:${year}` ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => onSearchChange(searchQuery === `year:${year}` ? '' : `year:${year}`)}
+                onClick={() =>
+                  onSearchChange(
+                    searchQuery === `year:${year}` ? '' : `year:${year}`
+                  )
+                }
               >
                 {year}
               </Button>
