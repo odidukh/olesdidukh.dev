@@ -194,7 +194,7 @@ export function AboutSection() {
   return (
     <motion.section
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden bg-muted/30 dark:bg-muted/10"
+      className="relative pt-8 pb-24 md:pt-12 md:pb-32 overflow-hidden bg-muted/30 dark:bg-muted/10"
       id="about"
       style={
         {

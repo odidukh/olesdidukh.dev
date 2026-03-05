@@ -41,7 +41,7 @@ export function ObfuscatedPhone({
     return (
       <span className={className}>
         {showIcon && <Phone className={iconClassName} />}
-        <span className="opacity-50">Loading...</span>
+        <span className="inline-block w-32 h-4 bg-muted animate-pulse rounded align-middle" />
       </span>
     );
   }

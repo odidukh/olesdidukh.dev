@@ -163,6 +163,7 @@ export function HeroSectionClient() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6 + index * 0.05 }}
                 whileHover={{ scale: 1.1, y: -2 }}
+                className={index >= 5 ? 'hidden sm:block' : undefined}
               >
                 <Badge variant="outline" className="px-3 py-1">
                   {skill}

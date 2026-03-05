@@ -35,7 +35,7 @@ export function ObfuscatedEmail({
     return (
       <span className={className}>
         {showIcon && <Mail className={iconClassName} />}
-        <span className="opacity-50">Loading...</span>
+        <span className="inline-block w-36 h-4 bg-muted animate-pulse rounded align-middle" />
       </span>
     );
   }
