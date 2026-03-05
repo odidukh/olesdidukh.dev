@@ -481,7 +481,7 @@ export default function JourneyPage() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background overflow-hidden">
+      <section className="relative min-h-[50vh] flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background overflow-hidden pt-20">
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 opacity-5">
