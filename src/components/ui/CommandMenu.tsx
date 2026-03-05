@@ -22,6 +22,7 @@ import { useThemeStore, ThemeAccent } from '@/stores/useThemeStore';
 import { useCommandMenuStore } from '@/stores/useCommandMenuStore';
 import { useSoundPreference } from '@/stores/useUIPreferencesStore';
 import { useAppSounds } from '@/hooks/useAppSounds';
+import { useSearch } from '@/hooks/useSearch';
 import { Volume2, VolumeX, Wrench, Zap } from 'lucide-react';
 
 const cmdItemClass =
@@ -33,6 +34,9 @@ export function CommandMenu() {
   const { mode, setMode, accent, setAccent } = useThemeStore();
   const { soundEnabled, setSoundEnabled } = useSoundPreference();
   const { playPop, playSwoosh } = useAppSounds();
+  const { query, setQuery, groupedResults, hasResults } = useSearch({
+    limit: 8,
+  });
 
   // Toggle the menu when ⌘K is pressed
   React.useEffect(() => {
@@ -61,7 +65,10 @@ export function CommandMenu() {
     <Command.Dialog
       open={isOpen}
       onOpenChange={open => {
-        if (!open) close();
+        if (!open) {
+          close();
+          setQuery('');
+        }
       }}
       label="Global Command Menu"
       className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] sm:pt-[15vh]"
@@ -75,13 +82,15 @@ export function CommandMenu() {
       <div className="relative z-50 w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-95 direction-alternate duration-200 p-2 mx-4 sm:mx-0">
         <Command
           className="flex h-full w-full flex-col overflow-hidden bg-transparent"
-          shouldFilter={true}
+          shouldFilter={!query}
         >
           <div className="flex items-center border-b border-border px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <Command.Input
               placeholder="Type a command or search..."
               className="flex h-12 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              value={query}
+              onValueChange={setQuery}
             />
           </div>
           <Command.List className="max-h-[300px] overflow-y-auto overflow-x-hidden p-2">
@@ -166,6 +175,63 @@ export function CommandMenu() {
                 <span>Contact</span>
               </Command.Item>
             </Command.Group>
+
+            {query && hasResults && (
+              <>
+                <Command.Separator className="-mx-1 h-px bg-border my-1" />
+                {groupedResults.blog && groupedResults.blog.length > 0 && (
+                  <Command.Group
+                    heading="Blog Posts"
+                    className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground mt-4"
+                  >
+                    {groupedResults.blog.map(result => (
+                      <Command.Item
+                        key={result.id}
+                        onSelect={() =>
+                          runCommand(() => router.push(result.url))
+                        }
+                        className={cmdItemClass}
+                        value={`${result.title} ${result.description}`}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        <div className="flex flex-col">
+                          <span>{result.title}</span>
+                          <span className="text-xs text-muted-foreground line-clamp-1">
+                            {result.description}
+                          </span>
+                        </div>
+                      </Command.Item>
+                    ))}
+                  </Command.Group>
+                )}
+                {groupedResults.project &&
+                  groupedResults.project.length > 0 && (
+                    <Command.Group
+                      heading="Projects"
+                      className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground mt-4"
+                    >
+                      {groupedResults.project.map(result => (
+                        <Command.Item
+                          key={result.id}
+                          onSelect={() =>
+                            runCommand(() => router.push(result.url))
+                          }
+                          className={cmdItemClass}
+                          value={`${result.title} ${result.description}`}
+                        >
+                          <Briefcase className="mr-2 h-4 w-4" />
+                          <div className="flex flex-col">
+                            <span>{result.title}</span>
+                            <span className="text-xs text-muted-foreground line-clamp-1">
+                              {result.description}
+                            </span>
+                          </div>
+                        </Command.Item>
+                      ))}
+                    </Command.Group>
+                  )}
+              </>
+            )}
 
             <Command.Separator className="-mx-1 h-px bg-border my-1" />
 
