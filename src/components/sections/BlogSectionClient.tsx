@@ -69,6 +69,12 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
     resetAll,
   } = useBlogFilterStore();
 
+  const [visibleCount, setVisibleCount] = React.useState(6);
+
+  React.useEffect(() => {
+    setVisibleCount(6);
+  }, [selectedCategory, searchQuery, sortBy]);
+
   // Get featured posts
   const featuredPosts = getFeaturedPosts();
 
@@ -250,29 +256,33 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
           {/* Blog Grid */}
           <motion.div variants={itemVariants}>
             {filteredPosts.length > 0 ? (
-              filteredPosts.length >= 3 ? (
+              filteredPosts.slice(0, visibleCount).length >= 3 ? (
                 /* Bento layout: first post spans 2 columns */
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPosts.map((post: BlogPost, index: number) =>
-                    index === 0 ? (
-                      /* Featured wide card */
-                      <div
-                        key={post.slug}
-                        className="md:col-span-2 lg:col-span-2"
-                      >
-                        <BlogCard post={post} index={0} featured />
-                      </div>
-                    ) : (
-                      <BlogCard key={post.slug} post={post} index={index} />
-                    )
-                  )}
+                  {filteredPosts
+                    .slice(0, visibleCount)
+                    .map((post: BlogPost, index: number) =>
+                      index === 0 ? (
+                        /* Featured wide card */
+                        <div
+                          key={post.slug}
+                          className="md:col-span-2 lg:col-span-2"
+                        >
+                          <BlogCard post={post} index={0} featured />
+                        </div>
+                      ) : (
+                        <BlogCard key={post.slug} post={post} index={index} />
+                      )
+                    )}
                 </div>
               ) : (
                 /* Uniform grid for < 3 results */
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPosts.map((post: BlogPost, index: number) => (
-                    <BlogCard key={post.slug} post={post} index={index} />
-                  ))}
+                  {filteredPosts
+                    .slice(0, visibleCount)
+                    .map((post: BlogPost, index: number) => (
+                      <BlogCard key={post.slug} post={post} index={index} />
+                    ))}
                 </div>
               )
             ) : (
@@ -306,10 +316,15 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
           </motion.div>
 
           {/* Load More */}
-          {filteredPosts.length > 6 && (
+          {filteredPosts.length > visibleCount && (
             <motion.div variants={itemVariants} className="text-center">
-              <Button variant="outline" size="lg">
-                Load More Articles
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setVisibleCount(prev => prev + 6)}
+              >
+                Load More Articles ({filteredPosts.length - visibleCount}{' '}
+                remaining)
               </Button>
             </motion.div>
           )}
