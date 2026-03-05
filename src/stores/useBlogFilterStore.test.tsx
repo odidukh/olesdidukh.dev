@@ -235,7 +235,7 @@ describe('useBlogFilterStore', () => {
     const stored = JSON.parse(mockStorage['blog-filter-storage'] ?? '{}');
 
     expect(stored.state?.selectedCategory).toBe('React');
-    expect(stored.state?.searchQuery).toBe('test');
+    expect(stored.state?.searchQuery).toBeUndefined();
     expect(stored.state?.sortBy).toBe('popular');
   });
 

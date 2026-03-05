@@ -278,7 +278,7 @@ describe('useProjectsFilterStore', () => {
 
     expect(stored.state?.selectedCategory).toBe('Web Application');
     expect(stored.state?.selectedTechnologies).toEqual(['React']);
-    expect(stored.state?.searchQuery).toBe('test');
+    expect(stored.state?.searchQuery).toBeUndefined();
     expect(stored.state?.viewMode).toBe('list');
   });
 
