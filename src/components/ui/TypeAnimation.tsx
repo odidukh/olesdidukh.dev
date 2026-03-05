@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
 
@@ -15,92 +15,112 @@ interface TypeAnimationProps {
   cursorClassName?: string;
 }
 
+type Phase = 'typing' | 'pausing' | 'deleting';
+
 export function TypeAnimation({
   sequence,
   wrapper = 'span',
   speed = 50,
   deletionSpeed = 30,
-
+  repeat = false,
   className = '',
   cursor = true,
   cursorClassName = '',
 }: TypeAnimationProps) {
-  // Using 'any' for dynamic component is standard pattern for polymorphic components
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Wrapper: any = wrapper;
-  const [displayText, setDisplayText] = React.useState('');
-  const [currentIndex, setCurrentIndex] = React.useState(0);
-  const [isDeleting, setIsDeleting] = React.useState(false);
-  const [isPaused, setIsPaused] = React.useState(false);
+  const [displayText, setDisplayText] = useState('');
 
-  React.useEffect(() => {
-    if (isPaused) return undefined;
+  // All mutable animation state lives in a single ref to avoid
+  // cascading re-renders from multiple interdependent useState calls.
+  const state = useRef({
+    seqIndex: 0, // position in the sequence array
+    charIndex: 0, // characters revealed so far
+    phase: 'typing' as Phase,
+    cycles: 0, // how many full loops completed
+    activeText: '', // phrase currently being typed or deleted
+  });
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-    const currentItem = sequence[currentIndex];
+  const tick = useCallback(() => {
+    const s = state.current;
+    const item = sequence[s.seqIndex];
 
-    // If current item is a number, it's a pause duration
-    if (typeof currentItem === 'number') {
-      const timeout = setTimeout(() => {
-        setIsPaused(false);
-        setCurrentIndex(prev => {
-          const next = (prev + 1) % sequence.length;
-          // Skip to next string
-          if (typeof sequence[next] === 'string') {
-            setIsDeleting(true);
-          }
-          return next;
-        });
-      }, currentItem);
+    if (item === undefined) return;
 
-      setIsPaused(true);
-      return () => clearTimeout(timeout);
+    // ── Number → pause, then move to next item ──
+    if (typeof item === 'number') {
+      s.phase = 'pausing';
+      timerRef.current = setTimeout(() => {
+        s.seqIndex = (s.seqIndex + 1) % sequence.length;
+
+        // After a pause the next item is a string to type.
+        // But first we need to delete the current text.
+        if (s.charIndex > 0) {
+          s.phase = 'deleting';
+        } else {
+          s.phase = 'typing';
+        }
+        tick();
+      }, item);
+      return;
     }
 
-    // If we're at a string, type or delete it
-    if (typeof currentItem === 'string') {
-      if (!isDeleting) {
-        // Typing
-        if (displayText.length < currentItem.length) {
-          const timeout = setTimeout(() => {
-            setDisplayText(currentItem.slice(0, displayText.length + 1));
-          }, speed);
-          return () => clearTimeout(timeout);
-        } else {
-          // Finished typing, move to next item (should be a pause)
-          setCurrentIndex(prev => (prev + 1) % sequence.length);
-        }
+    // ── String → type or delete character by character ──
+    if (s.phase === 'typing') {
+      s.activeText = item; // remember what we're typing
+      if (s.charIndex < item.length) {
+        s.charIndex++;
+        setDisplayText(item.slice(0, s.charIndex));
+        timerRef.current = setTimeout(tick, speed);
       } else {
-        // Deleting
-        if (displayText.length > 0) {
-          const timeout = setTimeout(() => {
-            setDisplayText(displayText.slice(0, -1));
-          }, deletionSpeed);
-          return () => clearTimeout(timeout);
-        } else {
-          // Finished deleting, move to next string
-          setIsDeleting(false);
-          let nextIndex = (currentIndex + 1) % sequence.length;
-          // Find next string in sequence
-          while (
-            typeof sequence[nextIndex] !== 'string' &&
-            nextIndex !== currentIndex
-          ) {
-            nextIndex = (nextIndex + 1) % sequence.length;
-          }
-          setCurrentIndex(nextIndex);
+        // Finished typing this phrase → advance to next item (a pause)
+        s.seqIndex = (s.seqIndex + 1) % sequence.length;
+        tick();
+      }
+      return;
+    }
+
+    if (s.phase === 'deleting') {
+      // Always delete from activeText — seqIndex may have already
+      // advanced past the phrase we displayed.
+      if (s.charIndex > 0) {
+        s.charIndex--;
+        setDisplayText(s.activeText.slice(0, s.charIndex));
+        timerRef.current = setTimeout(tick, deletionSpeed);
+      } else {
+        // Finished deleting → check if we should repeat
+        s.cycles++;
+        const maxCycles =
+          typeof repeat === 'number' ? repeat : repeat ? Infinity : 1;
+
+        if (s.cycles >= maxCycles) return; // done
+
+        // seqIndex already points at the next phrase (set by the pause handler).
+        // If it landed on a number, skip forward to the next string.
+        while (typeof sequence[s.seqIndex] === 'number') {
+          s.seqIndex = (s.seqIndex + 1) % sequence.length;
         }
+        s.phase = 'typing';
+        tick();
       }
     }
-    return undefined;
-  }, [
-    displayText,
-    currentIndex,
-    sequence,
-    speed,
-    deletionSpeed,
-    isDeleting,
-    isPaused,
-  ]);
+  }, [sequence, speed, deletionSpeed, repeat]);
+
+  useEffect(() => {
+    // Reset and start
+    state.current = {
+      seqIndex: 0,
+      charIndex: 0,
+      phase: 'typing',
+      cycles: 0,
+      activeText: '',
+    };
+    setDisplayText('');
+    tick();
+
+    return () => clearTimeout(timerRef.current);
+  }, [tick]);
 
   return (
     <Wrapper
@@ -114,9 +134,7 @@ export function TypeAnimation({
         <motion.span
           aria-hidden="true"
           className={`inline-block w-0.5 h-[1.1em] bg-current ml-1 ${cursorClassName}`}
-          animate={{
-            opacity: [1, 1, 0, 0],
-          }}
+          animate={{ opacity: [1, 1, 0, 0] }}
           transition={{
             duration: 1,
             repeat: Infinity,

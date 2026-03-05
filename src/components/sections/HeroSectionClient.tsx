@@ -9,6 +9,7 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { MagneticEffect } from '@/components/ui/MagneticEffect';
+import { TypeAnimation } from '@/components/ui/TypeAnimation';
 import { HeroBackground } from '@/components/sections/HeroBackground';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -26,8 +27,20 @@ const featuredSkills = [
   'React Native',
 ];
 
+// Rotating hero phrases (string, pause ms, string, pause ms, …)
+const heroSequence: (string | number)[] = [
+  'Building Digital Excellence',
+  2000,
+  'Crafting Scalable UIs',
+  2000,
+  'Shipping Pixel-Perfect Code',
+  2000,
+  'Engineering for Performance',
+  2000,
+];
+
 export function HeroSectionClient() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const heroRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
   const prefersReducedMotion = useReducedMotion();
@@ -49,36 +62,15 @@ export function HeroSectionClient() {
     prefersReducedMotion ? [1, 1] : [1, 0.95]
   );
 
-  // Typing animation text
-  const [displayText, setDisplayText] = useState('');
-  const fullText = 'Building Digital Excellence';
-
-  useEffect(() => {
-    // Skip typing animation if reduced motion preferred
-    if (prefersReducedMotion) {
-      setDisplayText(fullText);
-      return;
-    }
-
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index <= fullText.length) {
-        setDisplayText(fullText.slice(0, index));
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [prefersReducedMotion]);
-
   // Mouse tracking for hero effects — skip if reduced motion preferred
   useEffect(() => {
     if (prefersReducedMotion) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      setMousePosition({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -134,8 +126,20 @@ export function HeroSectionClient() {
             </h1>
 
             <div className="text-xl md:text-2xl text-muted-foreground mb-2">
-              <span className="font-mono text-primary">{displayText}</span>
-              <span className="animate-pulse">|</span>
+              {prefersReducedMotion ? (
+                <span className="font-mono text-primary">
+                  Building Digital Excellence
+                </span>
+              ) : (
+                <TypeAnimation
+                  sequence={heroSequence}
+                  speed={80}
+                  deletionSpeed={40}
+                  repeat={true}
+                  cursor={true}
+                  className="font-mono text-primary"
+                />
+              )}
             </div>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
