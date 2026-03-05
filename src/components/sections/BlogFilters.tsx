@@ -12,6 +12,8 @@ interface BlogFiltersProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
   categories: readonly string[];
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
 /**
@@ -22,6 +24,8 @@ export const BlogFilters = React.memo(function BlogFilters({
   selectedCategory,
   onCategoryChange,
   categories,
+  searchQuery,
+  onSearchChange,
 }: BlogFiltersProps) {
   // Get all unique tags with counts
   const tagCounts = React.useMemo(() => {
@@ -87,8 +91,9 @@ export const BlogFilters = React.memo(function BlogFilters({
             {popularTags.map(([tag, count]) => (
               <Badge
                 key={tag}
-                variant="secondary"
+                variant={searchQuery === tag ? 'default' : 'secondary'}
                 className="cursor-pointer transition-all hover:scale-105"
+                onClick={() => onSearchChange(searchQuery === tag ? '' : tag)}
               >
                 {tag}
                 <span className="ml-1 text-xs opacity-60">({count})</span>
@@ -103,13 +108,21 @@ export const BlogFilters = React.memo(function BlogFilters({
             Archive
           </h3>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              2024
-            </Button>
-            <Button variant="outline" size="sm">
-              2023
-            </Button>
-            <Button variant="outline" size="sm">
+            {['2024', '2023'].map(year => (
+              <Button
+                key={year}
+                variant={searchQuery === `year:${year}` ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => onSearchChange(searchQuery === `year:${year}` ? '' : `year:${year}`)}
+              >
+                {year}
+              </Button>
+            ))}
+            <Button
+              variant={!searchQuery.startsWith('year:') ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => onSearchChange('')}
+            >
               All Time
             </Button>
           </div>

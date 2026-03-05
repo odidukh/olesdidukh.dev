@@ -80,9 +80,19 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
 
   // Filter and sort posts
   const filteredPosts = React.useMemo(() => {
-    let posts = searchQuery
-      ? searchPosts(searchQuery)
-      : getPostsByCategory(selectedCategory);
+    const yearMatch = searchQuery.match(/^year:(\d{4})$/);
+    let posts: BlogPost[];
+
+    if (yearMatch) {
+      const year = yearMatch[1];
+      posts = getPostsByCategory(selectedCategory).filter(
+        p => new Date(p.publishedAt).getFullYear().toString() === year
+      );
+    } else if (searchQuery) {
+      posts = searchPosts(searchQuery);
+    } else {
+      posts = getPostsByCategory(selectedCategory);
+    }
 
     // Sort posts
     switch (sortBy) {
@@ -248,6 +258,8 @@ export function BlogSectionClient({ initialPosts }: BlogSectionClientProps) {
                   selectedCategory={selectedCategory}
                   onCategoryChange={setSelectedCategory}
                   categories={blogCategories}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
                 />
               )}
             </AnimatePresence>
