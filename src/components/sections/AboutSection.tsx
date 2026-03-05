@@ -15,8 +15,6 @@ import {
   ArrowRight,
   Code2,
   User,
-  Users,
-  Calendar,
   MapPin,
   GraduationCap,
   Briefcase,
@@ -38,13 +36,6 @@ import {
 import { StatusIndicator } from '@/components/ui/StatusIndicator';
 import { GridPatternBackground } from '@/components/ui/backgrounds/GridPatternBackground';
 
-interface Stat {
-  label: string;
-  value: string;
-  icon: LucideIcon;
-  color: string;
-}
-
 interface Value {
   title: string;
   description: string;
@@ -64,33 +55,6 @@ interface Timeline {
   description: string;
   type: 'work' | 'education' | 'milestone';
 }
-
-const stats: Stat[] = [
-  {
-    label: 'Years Experience',
-    value: `${new Date().getFullYear() - 2018}+`,
-    icon: Calendar,
-    color: 'text-navy-500',
-  },
-  {
-    label: 'Users Impacted',
-    value: '60K+',
-    icon: Users,
-    color: 'text-success-500',
-  },
-  {
-    label: 'Companies',
-    value: '4',
-    icon: Briefcase,
-    color: 'text-mocha-500',
-  },
-  {
-    label: 'Technologies',
-    value: '25+',
-    icon: Code2,
-    color: 'text-warning-500',
-  },
-];
 
 const values: Value[] = [
   {
@@ -256,34 +220,6 @@ export function AboutSection() {
             years of experience crafting exceptional web experiences that
             delight users and drive business results
           </p>
-        </motion.div>
-
-        {/* Stats Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative bg-card border border-border rounded-2xl p-6 text-center">
-                <stat.icon className={`w-8 h-8 mx-auto mb-3 ${stat.color}`} />
-                <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
-            </motion.div>
-          ))}
         </motion.div>
 
         {/* Tab Navigation */}

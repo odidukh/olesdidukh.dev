@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Briefcase, Users, Building2, Code2 } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { Container } from '@/components/ui/Container';
 
 function useCounter(end: number, duration: number, start: boolean) {
   const [count, setCount] = useState(0);
@@ -91,7 +92,7 @@ export function SocialProofBar() {
       ref={ref}
       className="py-12 border-y border-border/50 bg-muted/20 dark:bg-muted/5"
     >
-      <div className="max-w-5xl mx-auto px-4">
+      <Container size="lg">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <StatItem
@@ -103,7 +104,7 @@ export function SocialProofBar() {
             />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

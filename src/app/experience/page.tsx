@@ -308,7 +308,7 @@ export default function ExperiencePage() {
       </section>
 
       {/* Experience Timeline */}
-      <section className="py-20">
+      <section className="py-16">
         <Container size="lg">
           {viewMode === 'timeline' ? (
             <motion.div
@@ -487,7 +487,7 @@ export default function ExperiencePage() {
                   <motion.div
                     key={exp.id}
                     variants={itemVariants}
-                    className="relative mb-16"
+                    className="relative mb-10"
                   >
                     {/* Mobile Layout */}
                     <div className="md:hidden pl-20">{CardContent}</div>

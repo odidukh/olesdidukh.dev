@@ -431,9 +431,9 @@ export default function SkillsPage() {
       {/* Filters and View Mode */}
       <section className="py-8 border-b sticky top-0 bg-background/95 backdrop-blur z-40">
         <Container size="lg">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             {/* Category Filter */}
-            <div className="flex gap-2 flex-wrap justify-center">
+            <div className="flex gap-2 flex-wrap">
               <Button
                 size="sm"
                 variant={selectedCategory === 'all' ? 'default' : 'outline'}

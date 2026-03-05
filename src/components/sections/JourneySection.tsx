@@ -51,8 +51,8 @@ export const JourneySection = React.memo(function JourneySection() {
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            From <span className="text-primary">Atoms</span> to{' '}
-            <span className="text-primary">Pixels</span>
+            The <span className="text-primary">Road</span> So{' '}
+            <span className="text-primary">Far</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             A journey of continuous growth, learning, and innovation
