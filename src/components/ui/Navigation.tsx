@@ -92,7 +92,7 @@ export function Navigation({ className }: NavigationProps) {
       )}
     >
       <Container size="wide" padding="md">
-        <nav className="flex items-center justify-between">
+        <nav className="flex items-center justify-between gap-x-6">
           {/* Logo */}
           <Link
             href="/"
@@ -128,7 +128,7 @@ export function Navigation({ className }: NavigationProps) {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            <div className="hidden xl:flex items-center space-x-2">
+            <div className="hidden xl:flex items-center space-x-2 border-l border-border/50 pl-4">
               <SocialIconButton
                 icon={Github}
                 href="https://github.com/odidukh"
@@ -152,8 +152,11 @@ export function Navigation({ className }: NavigationProps) {
               <span className="inline-flex lg:hidden">
                 <Search className="h-4 w-4" />
               </span>
-              <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium opacity-100 sm:flex">
-                ⌘K
+              <kbd className="pointer-events-none absolute right-[0.3rem] top-1/2 -translate-y-1/2 hidden h-6 select-none items-center justify-center rounded border bg-muted px-1.5 font-mono text-[11px] leading-none font-semibold opacity-100 sm:flex">
+                <span className="inline-block text-[13px] translate-y-[0.5px] mr-[1px]">
+                  ⌘
+                </span>
+                K
               </kbd>
             </Button>
 
