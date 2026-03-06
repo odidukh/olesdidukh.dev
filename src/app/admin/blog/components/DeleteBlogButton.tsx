@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import { deleteBlogPost } from '@/app/admin/blog/actions';
 import { Trash2 } from 'lucide-react';
 
 interface DeleteBlogButtonProps {
@@ -19,35 +18,16 @@ export function DeleteBlogButton({ postId, postTitle }: DeleteBlogButtonProps) {
 
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('blog_posts')
-        .delete()
-        .eq('id', postId);
+    const result = await deleteBlogPost(postId);
 
-      if (error) {
-        captureException(error, {
-          component: 'DeleteBlogButton',
-          action: 'delete_post',
-          postId,
-        });
-        alert('Failed to delete post');
-        return;
-      }
-
+    if ('error' in result) {
+      alert(result.error);
+    } else {
       router.refresh();
-    } catch (error) {
-      captureException(error, {
-        component: 'DeleteBlogButton',
-        action: 'delete_post',
-        postId,
-      });
-      alert('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-      setShowConfirm(false);
     }
+
+    setLoading(false);
+    setShowConfirm(false);
   };
 
   return (
