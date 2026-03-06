@@ -7,3 +7,4 @@ export { CodeRainBackground } from './CodeRainBackground';
 export { TopographicBackground } from './TopographicBackground';
 export { SpotlightBackground } from './SpotlightBackground';
 export { SunsetCodeRainBackground } from './SunsetCodeRainBackground';
+export { FluidBackground } from './FluidBackground';
