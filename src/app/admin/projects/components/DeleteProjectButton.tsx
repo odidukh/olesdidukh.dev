@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import { deleteProject } from '@/app/admin/projects/actions';
 import { Trash2 } from 'lucide-react';
 
 interface DeleteProjectButtonProps {
@@ -22,35 +21,16 @@ export function DeleteProjectButton({
 
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('projects')
-        .delete()
-        .eq('id', projectId);
+    const result = await deleteProject(projectId);
 
-      if (error) {
-        captureException(error, {
-          component: 'DeleteProjectButton',
-          action: 'delete_project',
-          projectId,
-        });
-        alert('Failed to delete project');
-        return;
-      }
-
+    if ('error' in result) {
+      alert(result.error);
+    } else {
       router.refresh();
-    } catch (error) {
-      captureException(error, {
-        component: 'DeleteProjectButton',
-        action: 'delete_project',
-        projectId,
-      });
-      alert('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-      setShowConfirm(false);
     }
+
+    setLoading(false);
+    setShowConfirm(false);
   };
 
   return (
