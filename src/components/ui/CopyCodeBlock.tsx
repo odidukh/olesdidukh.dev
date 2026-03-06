@@ -3,6 +3,9 @@
 import * as React from 'react';
 import { Check, Copy } from 'lucide-react';
 
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
+
 export function CopyCodeBlock({
   children,
   ...props
@@ -39,15 +42,17 @@ export function CopyCodeBlock({
       >
         {children}
       </pre>
-      <button
+      <Button
         type="button"
+        variant="code"
+        size="sm"
         onClick={handleCopy}
         aria-label={copied ? 'Copied!' : 'Copy code'}
-        className={`absolute top-3 right-3 flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-all duration-200 opacity-0 group-hover/codeblock:opacity-100 focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 ${
-          copied
-            ? 'border-green-500/50 bg-green-500/20 text-green-400'
-            : 'border-gray-600 bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-        }`}
+        className={cn(
+          'absolute top-3 right-3 gap-1.5 opacity-0 group-hover/codeblock:opacity-100 focus:opacity-100',
+          copied &&
+            'border-green-500/50 bg-green-500/20 text-green-400 hover:bg-green-500/20 hover:text-green-400'
+        )}
       >
         <span className="sr-only" aria-live="polite">
           {copied ? 'Code copied to clipboard' : ''}
@@ -63,7 +68,7 @@ export function CopyCodeBlock({
             Copy
           </>
         )}
-      </button>
+      </Button>
     </div>
   );
 }
