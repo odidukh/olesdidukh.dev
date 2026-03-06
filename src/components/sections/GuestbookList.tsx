@@ -11,7 +11,8 @@ async function getEntries(): Promise<GuestbookEntry[]> {
     const { data, error } = await supabase
       .from('guestbook_entries')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .returns<GuestbookEntry[]>();
 
     if (error) throw error;
     return data ?? [];
