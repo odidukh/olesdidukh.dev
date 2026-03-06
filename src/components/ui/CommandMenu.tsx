@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/Card';
 import {
   FileText,
   Home,
@@ -79,7 +80,10 @@ export function CommandMenu() {
         onClick={close}
         aria-hidden="true"
       />
-      <div className="relative z-50 w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-95 direction-alternate duration-200 p-2 mx-4 sm:mx-0">
+      <Card
+        padding="none"
+        className="relative z-50 w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 direction-alternate duration-200 p-2 mx-4 sm:mx-0"
+      >
         <Command
           className="flex h-full w-full flex-col overflow-hidden bg-transparent"
           shouldFilter={!query}
@@ -333,7 +337,7 @@ export function CommandMenu() {
             </Command.Group>
           </Command.List>
         </Command>
-      </div>
+      </Card>
     </Command.Dialog>
   );
 }
