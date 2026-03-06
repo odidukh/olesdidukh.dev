@@ -6,6 +6,18 @@ vi.mock('@/i18n', () => ({
   locales: ['en', 'uk'],
 }));
 
+// Helper to create requests with required Origin header for CSRF validation
+function createLocaleRequest(body: string | null) {
+  return new Request('http://localhost/api/locale', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: 'http://localhost:3000',
+    },
+    ...(body !== null ? { body } : {}),
+  });
+}
+
 describe('/api/locale', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -13,13 +25,7 @@ describe('/api/locale', () => {
 
   describe('POST', () => {
     it('sets locale cookie for valid locale', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        body: JSON.stringify({ locale: 'en' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest(JSON.stringify({ locale: 'en' }));
 
       const response = await POST(request);
       const data = await response.json();
@@ -35,13 +41,7 @@ describe('/api/locale', () => {
     });
 
     it('sets locale cookie for uk locale', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        body: JSON.stringify({ locale: 'uk' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest(JSON.stringify({ locale: 'uk' }));
 
       const response = await POST(request);
       const data = await response.json();
@@ -52,13 +52,9 @@ describe('/api/locale', () => {
     });
 
     it('returns 400 for invalid locale', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        body: JSON.stringify({ locale: 'invalid' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest(
+        JSON.stringify({ locale: 'invalid' })
+      );
 
       const response = await POST(request);
       const data = await response.json();
@@ -68,13 +64,7 @@ describe('/api/locale', () => {
     });
 
     it('returns 400 for empty locale', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        body: JSON.stringify({ locale: '' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest(JSON.stringify({ locale: '' }));
 
       const response = await POST(request);
       const data = await response.json();
@@ -84,13 +74,7 @@ describe('/api/locale', () => {
     });
 
     it('returns 500 for invalid JSON', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        body: 'not valid json',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest('not valid json');
 
       const response = await POST(request);
       const data = await response.json();
@@ -100,12 +84,7 @@ describe('/api/locale', () => {
     });
 
     it('returns 500 for missing body', async () => {
-      const request = new Request('http://localhost/api/locale', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const request = createLocaleRequest(null);
 
       const response = await POST(request);
       const data = await response.json();
