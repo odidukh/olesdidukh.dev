@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 /**
  * Card variant styles using class-variance-authority.
  *
- * @property {'default' | 'elevated' | 'ghost' | 'bordered' | 'interactive'} variant - Visual style variant.
+ * @property {'default' | 'elevated' | 'ghost' | 'bordered' | 'interactive' | 'dashed'} variant - Visual style variant.
  * @property {'none' | 'sm' | 'md' | 'lg' | 'xl'} padding - Internal padding size.
  */
 const cardVariants = cva('rounded-xl border bg-card text-card-foreground', {
@@ -18,6 +18,7 @@ const cardVariants = cva('rounded-xl border bg-card text-card-foreground', {
       bordered: 'shadow-none',
       interactive:
         'shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer',
+      dashed: 'border-dashed shadow-none',
     },
     padding: {
       none: 'p-0',

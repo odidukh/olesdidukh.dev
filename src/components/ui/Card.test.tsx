@@ -63,6 +63,16 @@ describe('Card', () => {
       expect(card).toHaveClass('cursor-pointer');
     });
 
+    it('applies dashed variant', () => {
+      render(
+        <Card variant="dashed" data-testid="card">
+          Content
+        </Card>
+      );
+      const card = screen.getByTestId('card');
+      expect(card).toHaveClass('border-dashed', 'shadow-none');
+    });
+
     it('applies padding none', () => {
       render(
         <Card padding="none" data-testid="card">
