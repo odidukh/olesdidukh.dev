@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 import { captureException, addBreadcrumb, setContext } from '@/lib/sentry';
 
 interface ErrorBoundaryProps {
@@ -143,12 +144,7 @@ function DefaultErrorFallback({
         </pre>
       )}
 
-      <button
-        onClick={resetErrorBoundary}
-        className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition-colors"
-      >
-        Try Again
-      </button>
+      <Button onClick={resetErrorBoundary}>Try Again</Button>
     </div>
   );
 }
