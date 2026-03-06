@@ -2,26 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Save, ArrowLeft, Loader2 } from 'lucide-react';
+import { createSkill, updateSkill } from '@/app/admin/skills/actions';
+import { skillSchema } from '@/app/admin/skills/schema';
 import type { Skill, SkillCategory, SkillInsert } from '@/lib/supabase/types';
-
-const skillSchema = z.object({
-  name: z.string().min(1, 'Skill name is required').max(100),
-  category_id: z.string().min(1, 'Category is required'),
-  level: z.enum(['Expert', 'Advanced', 'Intermediate', 'Learning']),
-  years_of_experience: z.number().int().min(0).max(30),
-  description: z.string().nullable(),
-  last_used: z.string().nullable(),
-  projects_count: z.number().int().min(0),
-  sort_order: z.number().int().min(0),
-});
 
 interface SkillFormProps {
   skill?: Skill;
@@ -77,34 +65,19 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
       return;
     }
 
-    try {
-      const supabase = createClient();
+    const result =
+      mode === 'create'
+        ? await createSkill(skillData)
+        : await updateSkill(skill!.id, skillData);
 
-      if (mode === 'create') {
-        const { error } = await supabase.from('skills').insert([skillData]);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('skills')
-          .update(skillData)
-          .eq('id', skill!.id);
-        if (error) throw error;
-      }
-
-      router.push('/admin/skills');
-      router.refresh();
-    } catch (err) {
-      captureException(err, {
-        component: 'SkillForm',
-        action: mode === 'create' ? 'create_skill' : 'update_skill',
-        skillId: skill?.id,
-      });
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      );
-    } finally {
+    if ('error' in result) {
+      setError(result.error);
       setLoading(false);
+      return;
     }
+
+    router.push('/admin/skills');
+    router.refresh();
   };
 
   return (

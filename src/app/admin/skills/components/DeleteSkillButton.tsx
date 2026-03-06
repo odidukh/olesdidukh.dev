@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import { deleteSkill } from '@/app/admin/skills/actions';
 import { Trash2 } from 'lucide-react';
 
 interface DeleteSkillButtonProps {
@@ -22,35 +21,16 @@ export function DeleteSkillButton({
 
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('skills')
-        .delete()
-        .eq('id', skillId);
+    const result = await deleteSkill(skillId);
 
-      if (error) {
-        captureException(error, {
-          component: 'DeleteSkillButton',
-          action: 'delete_skill',
-          skillId,
-        });
-        alert('Failed to delete skill');
-        return;
-      }
-
+    if ('error' in result) {
+      alert(result.error);
+    } else {
       router.refresh();
-    } catch (error) {
-      captureException(error, {
-        component: 'DeleteSkillButton',
-        action: 'delete_skill',
-        skillId,
-      });
-      alert('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-      setShowConfirm(false);
     }
+
+    setLoading(false);
+    setShowConfirm(false);
   };
 
   return (

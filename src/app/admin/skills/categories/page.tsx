@@ -17,6 +17,11 @@ import {
   GripVertical,
 } from 'lucide-react';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import {
+  createSkillCategory,
+  updateSkillCategory,
+  deleteSkillCategory,
+} from '@/app/admin/skills/actions';
 import type { SkillCategory, SkillCategoryInsert } from '@/lib/supabase/types';
 
 export default function SkillCategoriesPage() {
@@ -81,8 +86,6 @@ export default function SkillCategoriesPage() {
   };
 
   const handleSave = async () => {
-    const supabase = createClient();
-
     const categoryData: SkillCategoryInsert = {
       title,
       slug,
@@ -92,25 +95,13 @@ export default function SkillCategoriesPage() {
       sort_order: sortOrder,
     };
 
-    if (editingId) {
-      const { error } = await supabase
-        .from('skill_categories')
-        .update(categoryData)
-        .eq('id', editingId);
+    const result = editingId
+      ? await updateSkillCategory(editingId, categoryData)
+      : await createSkillCategory(categoryData);
 
-      if (error) {
-        alert('Failed to update category');
-        return;
-      }
-    } else {
-      const { error } = await supabase
-        .from('skill_categories')
-        .insert([categoryData]);
-
-      if (error) {
-        alert('Failed to create category');
-        return;
-      }
+    if ('error' in result) {
+      alert(result.error);
+      return;
     }
 
     resetForm();
@@ -119,14 +110,10 @@ export default function SkillCategoriesPage() {
 
   const handleDelete = async (id: string) => {
     setDeleteLoading(true);
-    const supabase = createClient();
-    const { error } = await supabase
-      .from('skill_categories')
-      .delete()
-      .eq('id', id);
+    const result = await deleteSkillCategory(id);
 
-    if (error) {
-      alert('Failed to delete category');
+    if ('error' in result) {
+      alert(result.error);
       setDeleteLoading(false);
       setDeleteTarget(null);
       return;
