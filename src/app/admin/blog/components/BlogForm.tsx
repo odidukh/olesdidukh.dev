@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
-import type { BlogPost } from '@/lib/supabase/types';
+import type { BlogPost, BlogPostInsert } from '@/lib/supabase/types';
 
 const blogPostSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
@@ -137,7 +137,7 @@ export function BlogForm({ post, mode }: BlogFormProps) {
     setLoading(true);
     setError(null);
 
-    const postData = {
+    const postData: BlogPostInsert = {
       title,
       slug,
       excerpt,
@@ -167,14 +167,12 @@ export function BlogForm({ post, mode }: BlogFormProps) {
       const supabase = createClient();
 
       if (mode === 'create') {
-        const { error } = await supabase
-          .from('blog_posts')
-          .insert([postData] as never);
+        const { error } = await supabase.from('blog_posts').insert([postData]);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('blog_posts')
-          .update(postData as never)
+          .update(postData)
           .eq('id', post!.id);
         if (error) throw error;
       }

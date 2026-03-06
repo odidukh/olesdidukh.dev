@@ -43,7 +43,7 @@ export default function MessagesPage() {
     const supabase = createClient();
     await supabase
       .from('contact_submissions')
-      .update({ read: true } as never)
+      .update({ read: true })
       .eq('id', id);
 
     setMessages(messages.map(m => (m.id === id ? { ...m, read: true } : m)));
@@ -53,7 +53,7 @@ export default function MessagesPage() {
     const supabase = createClient();
     await supabase
       .from('contact_submissions')
-      .update({ replied: true } as never)
+      .update({ replied: true })
       .eq('id', id);
 
     setMessages(messages.map(m => (m.id === id ? { ...m, replied: true } : m)));

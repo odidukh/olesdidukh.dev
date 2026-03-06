@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
-import type { Project } from '@/lib/supabase/types';
+import type { Project, ProjectInsert } from '@/lib/supabase/types';
 
 const projectSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
@@ -162,7 +162,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
     setLoading(true);
     setError(null);
 
-    const projectData = {
+    const projectData: ProjectInsert = {
       title,
       slug,
       description,
@@ -197,14 +197,12 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       const supabase = createClient();
 
       if (mode === 'create') {
-        const { error } = await supabase
-          .from('projects')
-          .insert([projectData] as never);
+        const { error } = await supabase.from('projects').insert([projectData]);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('projects')
-          .update(projectData as never)
+          .update(projectData)
           .eq('id', project!.id);
         if (error) throw error;
       }

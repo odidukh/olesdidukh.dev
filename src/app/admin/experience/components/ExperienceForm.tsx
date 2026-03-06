@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
-import type { Experience } from '@/lib/supabase/types';
+import type { Experience, ExperienceInsert } from '@/lib/supabase/types';
 
 const experienceSchema = z.object({
   company: z.string().min(1, 'Company is required').max(200),
@@ -84,7 +84,7 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
     setLoading(true);
     setError(null);
 
-    const expData = {
+    const expData: ExperienceInsert = {
       company,
       position,
       location,
@@ -112,14 +112,12 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
       const supabase = createClient();
 
       if (mode === 'create') {
-        const { error } = await supabase
-          .from('experiences')
-          .insert([expData] as never);
+        const { error } = await supabase.from('experiences').insert([expData]);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('experiences')
-          .update(expData as never)
+          .update(expData)
           .eq('id', experience!.id);
         if (error) throw error;
       }

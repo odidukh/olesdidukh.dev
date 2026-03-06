@@ -17,7 +17,7 @@ import {
   GripVertical,
 } from 'lucide-react';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
-import type { SkillCategory } from '@/lib/supabase/types';
+import type { SkillCategory, SkillCategoryInsert } from '@/lib/supabase/types';
 
 export default function SkillCategoriesPage() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function SkillCategoriesPage() {
       .select('*')
       .order('sort_order', { ascending: true });
 
-    setCategories(data || []);
+    setCategories((data as SkillCategory[]) || []);
     setLoading(false);
   };
 
@@ -83,7 +83,7 @@ export default function SkillCategoriesPage() {
   const handleSave = async () => {
     const supabase = createClient();
 
-    const categoryData = {
+    const categoryData: SkillCategoryInsert = {
       title,
       slug,
       description,
@@ -95,7 +95,7 @@ export default function SkillCategoriesPage() {
     if (editingId) {
       const { error } = await supabase
         .from('skill_categories')
-        .update(categoryData as never)
+        .update(categoryData)
         .eq('id', editingId);
 
       if (error) {
@@ -105,7 +105,7 @@ export default function SkillCategoriesPage() {
     } else {
       const { error } = await supabase
         .from('skill_categories')
-        .insert([categoryData] as never);
+        .insert([categoryData]);
 
       if (error) {
         alert('Failed to create category');

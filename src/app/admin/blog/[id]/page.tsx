@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { BlogForm } from '@/app/admin/blog/components/BlogForm';
+import type { BlogPost } from '@/lib/supabase/types';
 
 export const metadata = {
   title: 'Edit Blog Post | Admin Dashboard',
@@ -14,15 +15,17 @@ export default async function EditBlogPage({ params }: EditBlogPageProps) {
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: post, error } = await supabase
+  const { data, error } = await supabase
     .from('blog_posts')
     .select('*')
     .eq('id', id)
     .single();
 
-  if (error || !post) {
+  if (error || !data) {
     notFound();
   }
+
+  const post = data as BlogPost;
 
   return <BlogForm post={post} mode="edit" />;
 }

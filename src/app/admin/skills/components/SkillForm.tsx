@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Save, ArrowLeft, Loader2 } from 'lucide-react';
-import type { Skill, SkillCategory } from '@/lib/supabase/types';
+import type { Skill, SkillCategory, SkillInsert } from '@/lib/supabase/types';
 
 const skillSchema = z.object({
   name: z.string().min(1, 'Skill name is required').max(100),
@@ -59,7 +59,7 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
     setLoading(true);
     setError(null);
 
-    const skillData = {
+    const skillData: SkillInsert = {
       name,
       category_id: categoryId,
       level,
@@ -81,14 +81,12 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
       const supabase = createClient();
 
       if (mode === 'create') {
-        const { error } = await supabase
-          .from('skills')
-          .insert([skillData] as never);
+        const { error } = await supabase.from('skills').insert([skillData]);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from('skills')
-          .update(skillData as never)
+          .update(skillData)
           .eq('id', skill!.id);
         if (error) throw error;
       }
