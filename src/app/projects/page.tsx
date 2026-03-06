@@ -5,7 +5,10 @@ import { ProjectsSection } from '@/components/sections/ProjectsSection';
 
 export default function ProjectsPage() {
   return (
-    <main id="main-content" className="min-h-screen bg-background pt-20">
+    <main
+      id="main-content"
+      className="min-h-screen bg-background pt-20 md:pt-28"
+    >
       <BreadcrumbSchema page="projects" />
       <Navigation />
       <ProjectsSection />

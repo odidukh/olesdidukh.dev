@@ -370,7 +370,7 @@ export default function UsesPage() {
     <>
       <BreadcrumbSchema page="uses" />
       <Navigation />
-      <main id="main-content" className="min-h-screen pt-20 pb-16">
+      <main id="main-content" className="min-h-screen pt-40 md:pt-48 pb-16">
         <Container size="wide" padding="lg">
           {/* Header */}
           <motion.div

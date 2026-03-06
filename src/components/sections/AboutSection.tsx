@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { cn } from '@/lib/utils';
 import {
   motion,
   AnimatePresence,
@@ -141,7 +142,7 @@ const timeline: Timeline[] = [
   },
 ];
 
-export function AboutSection() {
+export function AboutSection({ className }: { className?: string }) {
   const [activeTab, setActiveTab] = useState<'story' | 'skills' | 'values'>(
     'story'
   );
@@ -158,7 +159,10 @@ export function AboutSection() {
   return (
     <motion.section
       ref={sectionRef}
-      className="relative pt-8 pb-24 md:pt-12 md:pb-32 overflow-hidden bg-muted/30 dark:bg-muted/10"
+      className={cn(
+        'relative pt-8 pb-24 md:pt-12 md:pb-32 overflow-hidden bg-muted/30 dark:bg-muted/10',
+        className
+      )}
       id="about"
       style={
         {

@@ -75,7 +75,7 @@ export default function GuestbookPage() {
     <>
       <BreadcrumbSchema page="guestbook" />
       <Navigation />
-      <main id="main-content" className="min-h-screen pt-20">
+      <main id="main-content" className="min-h-screen pt-20 md:pt-28">
         {/* Hero Section */}
         <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-muted/40 to-background py-20">
           {/* Decorative background blobs */}

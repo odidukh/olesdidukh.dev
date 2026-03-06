@@ -41,7 +41,7 @@ export default function AboutPage() {
       <BreadcrumbSchema page="about" />
       <Navigation />
       <main id="main-content" className="pt-20">
-        <AboutSection />
+        <AboutSection className="pt-20 md:pt-28" />
       </main>
       <Footer />
     </>
