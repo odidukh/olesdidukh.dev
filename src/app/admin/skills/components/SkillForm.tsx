@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 import { createClient } from '@/lib/supabase/client';
 import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +11,17 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Save, ArrowLeft, Loader2 } from 'lucide-react';
 import type { Skill, SkillCategory } from '@/lib/supabase/types';
+
+const skillSchema = z.object({
+  name: z.string().min(1, 'Skill name is required').max(100),
+  category_id: z.string().min(1, 'Category is required'),
+  level: z.enum(['Expert', 'Advanced', 'Intermediate', 'Learning']),
+  years_of_experience: z.number().int().min(0).max(30),
+  description: z.string().nullable(),
+  last_used: z.string().nullable(),
+  projects_count: z.number().int().min(0),
+  sort_order: z.number().int().min(0),
+});
 
 interface SkillFormProps {
   skill?: Skill;
@@ -57,6 +69,13 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
       projects_count: projectsCount,
       sort_order: sortOrder,
     };
+
+    const validation = skillSchema.safeParse(skillData);
+    if (!validation.success) {
+      setError(validation.error.issues.map(e => e.message).join(', '));
+      setLoading(false);
+      return;
+    }
 
     try {
       const supabase = createClient();
