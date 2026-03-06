@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createBrowserClient } from '@supabase/ssr';
 import { clientEnv } from '@/lib/env';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
+import { cardVariants } from '@/components/ui/Card';
+import { Textarea } from '@/components/ui/Textarea';
 import { Github, Send, LogOut, AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import Image from 'next/image';
@@ -109,7 +112,7 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-border bg-card p-8 text-center shadow-sm"
+        className={cn(cardVariants({ padding: 'lg' }), 'text-center')}
       >
         <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-muted">
           <Github className="h-7 w-7 text-muted-foreground" />
@@ -152,7 +155,7 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-border bg-card p-6 shadow-sm"
+      className={cn(cardVariants())}
     >
       {/* User info header */}
       <div className="mb-4 flex items-center justify-between">
@@ -177,26 +180,29 @@ export function GuestbookForm({ user }: GuestbookFormProps) {
             </p>
           </div>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handleSignOut}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-foreground gap-1.5"
           aria-label="Sign out"
         >
           <LogOut className="h-3.5 w-3.5" />
           Sign out
-        </button>
+        </Button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="relative">
-          <textarea
+          <Textarea
             id="guestbook-message"
             value={message}
             onChange={e => setMessage(e.target.value)}
             placeholder="Share a thought, kind word, or just say hi…"
             maxLength={500}
             rows={3}
-            className="w-full resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
+            size="sm"
+            className="resize-none px-4 py-3"
             disabled={submitting || success}
             required
           />
