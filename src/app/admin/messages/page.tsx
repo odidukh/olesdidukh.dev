@@ -14,6 +14,11 @@ import {
   CheckCheck,
 } from 'lucide-react';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import {
+  markMessageAsRead,
+  markMessageAsReplied,
+  deleteMessageAction,
+} from '@/app/admin/messages/actions';
 import type { ContactSubmission } from '@/lib/supabase/types';
 
 export default function MessagesPage() {
@@ -40,29 +45,27 @@ export default function MessagesPage() {
   };
 
   const markAsRead = async (id: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('contact_submissions')
-      .update({ read: true })
-      .eq('id', id);
-
+    const result = await markMessageAsRead(id);
+    if ('error' in result) return;
     setMessages(messages.map(m => (m.id === id ? { ...m, read: true } : m)));
   };
 
   const markAsReplied = async (id: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('contact_submissions')
-      .update({ replied: true })
-      .eq('id', id);
-
+    const result = await markMessageAsReplied(id);
+    if ('error' in result) return;
     setMessages(messages.map(m => (m.id === id ? { ...m, replied: true } : m)));
   };
 
   const deleteMessage = async (id: string) => {
     setDeleteLoading(true);
-    const supabase = createClient();
-    await supabase.from('contact_submissions').delete().eq('id', id);
+    const result = await deleteMessageAction(id);
+
+    if ('error' in result) {
+      alert(result.error);
+      setDeleteLoading(false);
+      setDeleteTarget(null);
+      return;
+    }
 
     setMessages(messages.filter(m => m.id !== id));
     if (selectedMessage?.id === id) {
