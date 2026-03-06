@@ -2,33 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
+import {
+  createExperience,
+  updateExperience,
+} from '@/app/admin/experience/actions';
+import { experienceSchema } from '@/app/admin/experience/schema';
 import type { Experience, ExperienceInsert } from '@/lib/supabase/types';
-
-const experienceSchema = z.object({
-  company: z.string().min(1, 'Company is required').max(200),
-  position: z.string().min(1, 'Position is required').max(200),
-  location: z.string().min(1, 'Location is required').max(200),
-  duration: z.string().min(1, 'Duration is required'),
-  start_date: z.string().min(1, 'Start date is required'),
-  end_date: z.string().nullable(),
-  type: z.enum(['Full-time', 'Contract', 'Part-time']),
-  company_url: z.string().url('Must be a valid URL').nullable(),
-  description: z.string().min(1, 'Description is required'),
-  achievements: z.array(z.string()),
-  technologies: z.array(z.string()),
-  team_size: z.string().nullable(),
-  highlights: z.array(z.unknown()),
-  sort_order: z.number().int().min(0),
-});
 
 interface ExperienceFormProps {
   experience?: Experience;
@@ -108,34 +93,19 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
       return;
     }
 
-    try {
-      const supabase = createClient();
+    const result =
+      mode === 'create'
+        ? await createExperience(expData)
+        : await updateExperience(experience!.id, expData);
 
-      if (mode === 'create') {
-        const { error } = await supabase.from('experiences').insert([expData]);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('experiences')
-          .update(expData)
-          .eq('id', experience!.id);
-        if (error) throw error;
-      }
-
-      router.push('/admin/experience');
-      router.refresh();
-    } catch (err) {
-      captureException(err, {
-        component: 'ExperienceForm',
-        action: mode === 'create' ? 'create_experience' : 'update_experience',
-        experienceId: experience?.id,
-      });
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      );
-    } finally {
+    if ('error' in result) {
+      setError(result.error);
       setLoading(false);
+      return;
     }
+
+    router.push('/admin/experience');
+    router.refresh();
   };
 
   return (

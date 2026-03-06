@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import { deleteExperience } from '@/app/admin/experience/actions';
 import { Trash2 } from 'lucide-react';
 
 interface DeleteExperienceButtonProps {
@@ -22,35 +21,16 @@ export function DeleteExperienceButton({
 
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('experiences')
-        .delete()
-        .eq('id', experienceId);
+    const result = await deleteExperience(experienceId);
 
-      if (error) {
-        captureException(error, {
-          component: 'DeleteExperienceButton',
-          action: 'delete_experience',
-          experienceId,
-        });
-        alert('Failed to delete experience');
-        return;
-      }
-
+    if ('error' in result) {
+      alert(result.error);
+    } else {
       router.refresh();
-    } catch (error) {
-      captureException(error, {
-        component: 'DeleteExperienceButton',
-        action: 'delete_experience',
-        experienceId,
-      });
-      alert('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-      setShowConfirm(false);
     }
+
+    setLoading(false);
+    setShowConfirm(false);
   };
 
   return (
