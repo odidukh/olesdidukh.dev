@@ -3,6 +3,7 @@ import type { GuestbookEntry } from '@/lib/supabase/types';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageSquare } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 async function getEntries(): Promise<GuestbookEntry[]> {
   try {
@@ -25,7 +26,10 @@ function EntryCard({ entry }: { entry: GuestbookEntry }) {
   });
 
   return (
-    <div className="group rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md">
+    <Card
+      padding="none"
+      className="group p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md"
+    >
       <div className="flex items-start gap-4">
         {entry.avatar_url ? (
           <Image
@@ -52,7 +56,7 @@ function EntryCard({ entry }: { entry: GuestbookEntry }) {
           </p>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -61,7 +65,11 @@ export async function GuestbookList() {
 
   if (entries.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border px-6 py-16 text-center">
+      <Card
+        variant="dashed"
+        padding="none"
+        className="flex flex-col items-center justify-center rounded-2xl px-6 py-16 text-center"
+      >
         <MessageSquare className="mb-3 h-10 w-10 text-muted-foreground/40" />
         <p className="text-base font-medium text-muted-foreground">
           No messages yet
@@ -69,7 +77,7 @@ export async function GuestbookList() {
         <p className="mt-1 text-sm text-muted-foreground/70">
           Be the first to leave a message!
         </p>
-      </div>
+      </Card>
     );
   }
 
