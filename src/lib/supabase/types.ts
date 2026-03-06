@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 
 // Project types
-export interface Project {
+export type Project = {
   id: string;
   slug: string;
   title: string;
@@ -35,9 +35,9 @@ export interface Project {
   published: boolean;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface ProjectInsert {
+export type ProjectInsert = {
   id?: string;
   slug: string;
   title: string;
@@ -63,10 +63,10 @@ export interface ProjectInsert {
   video?: Json | null;
   sort_order?: number;
   published?: boolean;
-}
+};
 
 // Blog Post types
-export interface BlogPost {
+export type BlogPost = {
   id: string;
   slug: string;
   title: string;
@@ -90,9 +90,9 @@ export interface BlogPost {
   related_posts: string[];
   published: boolean;
   created_at: string;
-}
+};
 
-export interface BlogPostInsert {
+export type BlogPostInsert = {
   slug: string;
   title: string;
   excerpt: string;
@@ -110,10 +110,10 @@ export interface BlogPostInsert {
   series_part?: number | null;
   series_total?: number | null;
   published?: boolean;
-}
+};
 
 // Skill Category types
-export interface SkillCategory {
+export type SkillCategory = {
   id: string;
   slug: string;
   title: string;
@@ -123,19 +123,19 @@ export interface SkillCategory {
   sort_order: number;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface SkillCategoryInsert {
+export type SkillCategoryInsert = {
   slug: string;
   title: string;
   description: string;
   icon: string;
   color: string;
   sort_order?: number;
-}
+};
 
 // Skill types
-export interface Skill {
+export type Skill = {
   id: string;
   category_id: string;
   name: string;
@@ -149,9 +149,9 @@ export interface Skill {
   sort_order: number;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface SkillInsert {
+export type SkillInsert = {
   category_id: string;
   name: string;
   level: 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
@@ -162,10 +162,10 @@ export interface SkillInsert {
   projects_count?: number;
   certifications?: string[];
   sort_order?: number;
-}
+};
 
 // Experience types
-export interface Experience {
+export type Experience = {
   id: string;
   company: string;
   position: string;
@@ -184,9 +184,9 @@ export interface Experience {
   sort_order: number;
   created_at: string;
   updated_at: string;
-}
+};
 
-export interface ExperienceInsert {
+export type ExperienceInsert = {
   company: string;
   position: string;
   location: string;
@@ -202,10 +202,10 @@ export interface ExperienceInsert {
   team_size?: string | null;
   highlights?: Json;
   sort_order?: number;
-}
+};
 
 // Contact Submission types
-export interface ContactSubmission {
+export type ContactSubmission = {
   id: string;
   name: string;
   email: string;
@@ -213,73 +213,80 @@ export interface ContactSubmission {
   read: boolean;
   replied: boolean;
   created_at: string;
-}
+};
 
-export interface ContactSubmissionInsert {
+export type ContactSubmissionInsert = {
   name: string;
   email: string;
   message: string;
   read?: boolean;
   replied?: boolean;
-}
+};
 
 // Guestbook Entry types
-export interface GuestbookEntry {
+export type GuestbookEntry = {
   id: string;
   created_at: string;
   user_id: string;
   full_name: string;
   avatar_url: string;
   message: string;
-}
+};
 
-export interface GuestbookEntryInsert {
+export type GuestbookEntryInsert = {
   id?: string;
   created_at?: string;
   user_id: string;
   full_name: string;
   avatar_url: string;
   message: string;
-}
+};
 
 // Database type for Supabase client
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       projects: {
         Row: Project;
         Insert: ProjectInsert;
         Update: Partial<ProjectInsert>;
+        Relationships: [];
       };
       blog_posts: {
         Row: BlogPost;
         Insert: BlogPostInsert;
         Update: Partial<BlogPostInsert>;
+        Relationships: [];
       };
       skill_categories: {
         Row: SkillCategory;
         Insert: SkillCategoryInsert;
         Update: Partial<SkillCategoryInsert>;
+        Relationships: [];
       };
       skills: {
         Row: Skill;
         Insert: SkillInsert;
         Update: Partial<SkillInsert>;
+        Relationships: [];
       };
       experiences: {
         Row: Experience;
         Insert: ExperienceInsert;
         Update: Partial<ExperienceInsert>;
+        Relationships: [];
       };
       contact_submissions: {
         Row: ContactSubmission;
         Insert: ContactSubmissionInsert;
         Update: Partial<ContactSubmissionInsert>;
+        Relationships: [];
       };
       guestbook_entries: {
         Row: GuestbookEntry;
         Insert: GuestbookEntryInsert;
         Update: Partial<GuestbookEntryInsert>;
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
@@ -289,4 +296,4 @@ export interface Database {
       employment_type: 'Full-time' | 'Contract' | 'Part-time';
     };
   };
-}
+};

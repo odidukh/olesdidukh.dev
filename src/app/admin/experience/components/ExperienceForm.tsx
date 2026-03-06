@@ -2,15 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
-import type { Experience } from '@/lib/supabase/types';
+import {
+  createExperience,
+  updateExperience,
+} from '@/app/admin/experience/actions';
+import { experienceSchema } from '@/app/admin/experience/schema';
+import type { Experience, ExperienceInsert } from '@/lib/supabase/types';
 
 interface ExperienceFormProps {
   experience?: Experience;
@@ -66,7 +69,7 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
     setLoading(true);
     setError(null);
 
-    const expData = {
+    const expData: ExperienceInsert = {
       company,
       position,
       location,
@@ -83,36 +86,26 @@ export function ExperienceForm({ experience, mode }: ExperienceFormProps) {
       sort_order: sortOrder,
     };
 
-    try {
-      const supabase = createClient();
-
-      if (mode === 'create') {
-        const { error } = await supabase
-          .from('experiences')
-          .insert([expData] as never);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('experiences')
-          .update(expData as never)
-          .eq('id', experience!.id);
-        if (error) throw error;
-      }
-
-      router.push('/admin/experience');
-      router.refresh();
-    } catch (err) {
-      captureException(err, {
-        component: 'ExperienceForm',
-        action: mode === 'create' ? 'create_experience' : 'update_experience',
-        experienceId: experience?.id,
-      });
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      );
-    } finally {
+    const validation = experienceSchema.safeParse(expData);
+    if (!validation.success) {
+      setError(validation.error.issues.map(e => e.message).join(', '));
       setLoading(false);
+      return;
     }
+
+    const result =
+      mode === 'create'
+        ? await createExperience(expData)
+        : await updateExperience(experience!.id, expData);
+
+    if ('error' in result) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    router.push('/admin/experience');
+    router.refresh();
   };
 
   return (

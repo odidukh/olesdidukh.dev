@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
-import { Button } from '@/components/ui/Button';
-import { Trash2, AlertTriangle } from 'lucide-react';
+import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import { deleteSkill } from '@/app/admin/skills/actions';
+import { Trash2 } from 'lucide-react';
 
 interface DeleteSkillButtonProps {
   skillId: string;
@@ -22,86 +21,37 @@ export function DeleteSkillButton({
 
   const handleDelete = async () => {
     setLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase
-        .from('skills')
-        .delete()
-        .eq('id', skillId);
+    const result = await deleteSkill(skillId);
 
-      if (error) {
-        captureException(error, {
-          component: 'DeleteSkillButton',
-          action: 'delete_skill',
-          skillId,
-        });
-        alert('Failed to delete skill');
-        return;
-      }
-
+    if ('error' in result) {
+      alert(result.error);
+    } else {
       router.refresh();
-    } catch (error) {
-      captureException(error, {
-        component: 'DeleteSkillButton',
-        action: 'delete_skill',
-        skillId,
-      });
-      alert('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-      setShowConfirm(false);
     }
+
+    setLoading(false);
+    setShowConfirm(false);
   };
 
-  if (showConfirm) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-card border border-border rounded-xl p-6 max-w-md mx-4 shadow-xl">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-error/10 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-error" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">
-                Delete Skill
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                This action cannot be undone
-              </p>
-            </div>
-          </div>
-          <p className="text-muted-foreground mb-6">
-            Are you sure you want to delete{' '}
-            <span className="font-medium text-foreground">{skillName}</span>?
-          </p>
-          <div className="flex justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setShowConfirm(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={loading}
-            >
-              {loading ? 'Deleting...' : 'Delete'}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <button
-      onClick={() => setShowConfirm(true)}
-      className="p-2 rounded-lg hover:bg-error/10 transition-colors text-muted-foreground hover:text-error"
-      title="Delete"
-    >
-      <Trash2 className="w-4 h-4" />
-    </button>
+    <>
+      {showConfirm && (
+        <DeleteConfirmDialog
+          title="Delete Skill"
+          description="This action cannot be undone"
+          itemName={skillName}
+          onConfirm={handleDelete}
+          onCancel={() => setShowConfirm(false)}
+          loading={loading}
+        />
+      )}
+      <button
+        onClick={() => setShowConfirm(true)}
+        className="p-2 rounded-lg hover:bg-error/10 transition-colors text-muted-foreground hover:text-error"
+        title="Delete"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </>
   );
 }

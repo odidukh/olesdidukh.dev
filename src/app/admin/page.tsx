@@ -10,6 +10,7 @@ import {
   Eye,
   Clock,
 } from 'lucide-react';
+import { ExportButton } from '@/app/admin/components/ExportButton';
 import type { ContactSubmission } from '@/lib/supabase/types';
 
 interface ProjectStats {
@@ -201,6 +202,9 @@ export default async function AdminDashboard() {
               <Code2 className="w-5 h-5 text-primary" />
               <span className="text-sm font-medium">Add Skill</span>
             </Link>
+          </div>
+          <div className="mt-4 pt-4 border-t border-border">
+            <ExportButton type="all" label="Export All to Site" />
           </div>
         </div>
 

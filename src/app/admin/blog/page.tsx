@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { DeleteBlogButton } from './components/DeleteBlogButton';
+import { ExportButton } from '@/app/admin/components/ExportButton';
 import type { BlogPost } from '@/lib/supabase/types';
 
 export const metadata = {
@@ -51,12 +52,15 @@ export default async function BlogPage() {
             Manage your blog articles
           </p>
         </div>
-        <Link href="/admin/blog/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            New Post
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <ExportButton type="blog" label="Export to Site" />
+          <Link href="/admin/blog/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              New Post
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Posts Grid */}

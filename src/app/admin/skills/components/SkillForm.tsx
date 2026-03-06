@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Save, ArrowLeft, Loader2 } from 'lucide-react';
-import type { Skill, SkillCategory } from '@/lib/supabase/types';
+import { createSkill, updateSkill } from '@/app/admin/skills/actions';
+import { skillSchema } from '@/app/admin/skills/schema';
+import type { Skill, SkillCategory, SkillInsert } from '@/lib/supabase/types';
 
 interface SkillFormProps {
   skill?: Skill;
@@ -47,7 +47,7 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
     setLoading(true);
     setError(null);
 
-    const skillData = {
+    const skillData: SkillInsert = {
       name,
       category_id: categoryId,
       level,
@@ -58,36 +58,26 @@ export function SkillForm({ skill, categories, mode }: SkillFormProps) {
       sort_order: sortOrder,
     };
 
-    try {
-      const supabase = createClient();
-
-      if (mode === 'create') {
-        const { error } = await supabase
-          .from('skills')
-          .insert([skillData] as never);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('skills')
-          .update(skillData as never)
-          .eq('id', skill!.id);
-        if (error) throw error;
-      }
-
-      router.push('/admin/skills');
-      router.refresh();
-    } catch (err) {
-      captureException(err, {
-        component: 'SkillForm',
-        action: mode === 'create' ? 'create_skill' : 'update_skill',
-        skillId: skill?.id,
-      });
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      );
-    } finally {
+    const validation = skillSchema.safeParse(skillData);
+    if (!validation.success) {
+      setError(validation.error.issues.map(e => e.message).join(', '));
       setLoading(false);
+      return;
     }
+
+    const result =
+      mode === 'create'
+        ? await createSkill(skillData)
+        : await updateSkill(skill!.id, skillData);
+
+    if ('error' in result) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    router.push('/admin/skills');
+    router.refresh();
   };
 
   return (

@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { captureException } from '@/lib/sentry';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge';
 import { Save, ArrowLeft, Plus, X, Loader2 } from 'lucide-react';
-import type { Project } from '@/lib/supabase/types';
+import { createProject, updateProject } from '@/app/admin/projects/actions';
+import { projectSchema } from '@/app/admin/projects/schema';
+import type { Project, ProjectInsert } from '@/lib/supabase/types';
 
 interface ProjectFormProps {
   project?: Project;
@@ -125,7 +125,7 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
     setLoading(true);
     setError(null);
 
-    const projectData = {
+    const projectData: ProjectInsert = {
       title,
       slug,
       description,
@@ -149,36 +149,26 @@ export function ProjectForm({ project, mode }: ProjectFormProps) {
       published,
     };
 
-    try {
-      const supabase = createClient();
-
-      if (mode === 'create') {
-        const { error } = await supabase
-          .from('projects')
-          .insert([projectData] as never);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('projects')
-          .update(projectData as never)
-          .eq('id', project!.id);
-        if (error) throw error;
-      }
-
-      router.push('/admin/projects');
-      router.refresh();
-    } catch (err) {
-      captureException(err, {
-        component: 'ProjectForm',
-        action: mode === 'create' ? 'create_project' : 'update_project',
-        projectId: project?.id,
-      });
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred'
-      );
-    } finally {
+    const validation = projectSchema.safeParse(projectData);
+    if (!validation.success) {
+      setError(validation.error.issues.map(e => e.message).join(', '));
       setLoading(false);
+      return;
     }
+
+    const result =
+      mode === 'create'
+        ? await createProject(projectData)
+        : await updateProject(project!.id, projectData);
+
+    if ('error' in result) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
+
+    router.push('/admin/projects');
+    router.refresh();
   };
 
   return (

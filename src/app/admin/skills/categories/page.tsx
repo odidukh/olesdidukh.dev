@@ -16,7 +16,13 @@ import {
   Loader2,
   GripVertical,
 } from 'lucide-react';
-import type { SkillCategory } from '@/lib/supabase/types';
+import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import {
+  createSkillCategory,
+  updateSkillCategory,
+  deleteSkillCategory,
+} from '@/app/admin/skills/actions';
+import type { SkillCategory, SkillCategoryInsert } from '@/lib/supabase/types';
 
 export default function SkillCategoriesPage() {
   const router = useRouter();
@@ -24,6 +30,8 @@ export default function SkillCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showNewForm, setShowNewForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -44,7 +52,7 @@ export default function SkillCategoriesPage() {
       .select('*')
       .order('sort_order', { ascending: true });
 
-    setCategories(data || []);
+    setCategories((data as SkillCategory[]) || []);
     setLoading(false);
   };
 
@@ -78,9 +86,7 @@ export default function SkillCategoriesPage() {
   };
 
   const handleSave = async () => {
-    const supabase = createClient();
-
-    const categoryData = {
+    const categoryData: SkillCategoryInsert = {
       title,
       slug,
       description,
@@ -89,25 +95,13 @@ export default function SkillCategoriesPage() {
       sort_order: sortOrder,
     };
 
-    if (editingId) {
-      const { error } = await supabase
-        .from('skill_categories')
-        .update(categoryData as never)
-        .eq('id', editingId);
+    const result = editingId
+      ? await updateSkillCategory(editingId, categoryData)
+      : await createSkillCategory(categoryData);
 
-      if (error) {
-        alert('Failed to update category');
-        return;
-      }
-    } else {
-      const { error } = await supabase
-        .from('skill_categories')
-        .insert([categoryData] as never);
-
-      if (error) {
-        alert('Failed to create category');
-        return;
-      }
+    if ('error' in result) {
+      alert(result.error);
+      return;
     }
 
     resetForm();
@@ -115,25 +109,18 @@ export default function SkillCategoriesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (
-      !confirm(
-        'Are you sure? This will also delete all skills in this category.'
-      )
-    ) {
+    setDeleteLoading(true);
+    const result = await deleteSkillCategory(id);
+
+    if ('error' in result) {
+      alert(result.error);
+      setDeleteLoading(false);
+      setDeleteTarget(null);
       return;
     }
 
-    const supabase = createClient();
-    const { error } = await supabase
-      .from('skill_categories')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      alert('Failed to delete category');
-      return;
-    }
-
+    setDeleteTarget(null);
+    setDeleteLoading(false);
     loadCategories();
   };
 
@@ -325,7 +312,7 @@ export default function SkillCategoriesPage() {
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(category.id)}
+                    onClick={() => setDeleteTarget(category.id)}
                     className="p-2 rounded-lg hover:bg-error/10 transition-colors text-muted-foreground hover:text-error"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -341,6 +328,19 @@ export default function SkillCategoriesPage() {
           </div>
         )}
       </div>
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          title="Delete Category"
+          description="This will also delete all skills in this category"
+          itemName={
+            categories.find(c => c.id === deleteTarget)?.title ||
+            'this category'
+          }
+          onConfirm={() => handleDelete(deleteTarget)}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleteLoading}
+        />
+      )}
     </div>
   );
 }

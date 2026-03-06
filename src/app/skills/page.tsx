@@ -13,280 +13,68 @@ import { ANIMATION } from '@/constants';
 import { generateParticleData } from '@/lib/random';
 import {
   Code2,
-  Palette,
-  Settings,
   Star,
-  TrendingUp,
-  Award,
-  BookOpen,
-  Zap,
   Activity,
   BarChart3,
   Layers,
+  BookOpen,
+  Zap,
+  Award,
   Terminal,
   Users,
+  Settings,
   Package,
   Clock,
+  TrendingUp,
   type LucideIcon,
 } from 'lucide-react';
+import {
+  skillCategories as rawCategories,
+  skills as rawSkills,
+} from '@/data/generated/skills';
+import { resolveIcon } from '@/lib/icon-resolver';
 
 type ProficiencyLevel = 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
 type ViewMode = 'grid' | 'list' | 'radar';
 
-interface Skill {
+interface SkillView {
   name: string;
   level: ProficiencyLevel;
   yearsOfExperience: number;
-  icon?: LucideIcon;
-  description?: string;
-  lastUsed?: string;
-  projects?: number;
-  certifications?: string[];
+  description?: string | null | undefined;
+  lastUsed?: string | null | undefined;
+  projects?: number | undefined;
+  certifications?: string[] | undefined;
 }
 
-interface SkillCategory {
+interface SkillCategoryView {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
   color: string;
-  skills: Skill[];
+  skills: SkillView[];
 }
 
-const skillCategories: SkillCategory[] = [
-  {
-    id: 'languages',
-    title: 'Languages',
-    description: 'Core programming languages and markup',
-    icon: Code2,
-    color: 'from-blue-500/20 to-cyan-500/20',
-    skills: [
-      {
-        name: 'JavaScript',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description:
-          'ES6+, async/await, functional programming, DOM manipulation',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'TypeScript',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description:
-          'Type-safe development, generics, utility types, strict mode',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'HTML5',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description: 'Semantic markup, accessibility, SEO best practices',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'CSS3',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description: 'Flexbox, Grid, animations, custom properties',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'SASS/SCSS',
-        level: 'Expert',
-        yearsOfExperience: 6,
-        description: 'Mixins, variables, nesting, modular architecture',
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'frameworks',
-    title: 'Frameworks & Libraries',
-    description: 'Modern front-end frameworks and state management',
-    icon: Layers,
-    color: 'from-purple-500/20 to-pink-500/20',
-    skills: [
-      {
-        name: 'React.js',
-        level: 'Expert',
-        yearsOfExperience: 6,
-        description:
-          'Hooks, context, performance optimization, component architecture',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Next.js',
-        level: 'Advanced',
-        yearsOfExperience: 3,
-        description: 'App Router, SSR/SSG, API routes, middleware',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Redux',
-        level: 'Advanced',
-        yearsOfExperience: 5,
-        description: 'Redux Toolkit, middleware, selectors, normalization',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Zustand',
-        level: 'Advanced',
-        yearsOfExperience: 2,
-        description: 'Lightweight state management, middleware, devtools',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'React Native',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'Cross-platform mobile apps, native modules, MVP delivery',
-        lastUsed: '2021',
-      },
-    ],
-  },
-  {
-    id: 'ui-ux',
-    title: 'UI/UX',
-    description: 'Design systems and user interface development',
-    icon: Palette,
-    color: 'from-indigo-500/20 to-violet-500/20',
-    skills: [
-      {
-        name: 'Material-UI',
-        level: 'Advanced',
-        yearsOfExperience: 3,
-        description: 'Component customization, theming, responsive layouts',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Tailwind CSS',
-        level: 'Advanced',
-        yearsOfExperience: 2,
-        description: 'Utility-first CSS, custom configurations, design systems',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Storybook',
-        level: 'Advanced',
-        yearsOfExperience: 3,
-        description: 'Component documentation, visual testing, design systems',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Responsive Design',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description:
-          'Mobile-first approach, fluid layouts, breakpoint strategy',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Cross-Browser',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description:
-          'Compatibility testing, polyfills, progressive enhancement',
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'testing',
-    title: 'Testing & Tools',
-    description: 'Quality assurance and development tooling',
-    icon: Settings,
-    color: 'from-green-500/20 to-emerald-500/20',
-    skills: [
-      {
-        name: 'Jest',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description: 'Unit testing, mocking, snapshot testing, coverage',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'React Testing Library',
-        level: 'Advanced',
-        yearsOfExperience: 3,
-        description: 'Component testing, user-centric queries, async testing',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Cypress',
-        level: 'Intermediate',
-        yearsOfExperience: 2,
-        description: 'E2E testing, component testing, visual regression',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Webpack',
-        level: 'Advanced',
-        yearsOfExperience: 5,
-        description: 'Bundle optimization, code splitting, custom loaders',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Vite',
-        level: 'Advanced',
-        yearsOfExperience: 2,
-        description: 'Fast builds, HMR, plugin ecosystem',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'ESLint/Prettier',
-        level: 'Expert',
-        yearsOfExperience: 5,
-        description: 'Code quality, custom rules, CI integration',
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-  {
-    id: 'performance',
-    title: 'Performance & DevOps',
-    description: 'Optimization and deployment workflows',
-    icon: TrendingUp,
-    color: 'from-orange-500/20 to-red-500/20',
-    skills: [
-      {
-        name: 'Web Vitals',
-        level: 'Expert',
-        yearsOfExperience: 4,
-        description: 'LCP, FID, CLS optimization, Core Web Vitals monitoring',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Lighthouse',
-        level: 'Expert',
-        yearsOfExperience: 4,
-        description: 'Performance audits, accessibility, SEO optimization',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Bundle Optimization',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description: 'Code splitting, tree shaking, lazy loading',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'Git',
-        level: 'Expert',
-        yearsOfExperience: 7,
-        description: 'Branching strategies, rebasing, conflict resolution',
-        lastUsed: 'Currently',
-      },
-      {
-        name: 'CI/CD',
-        level: 'Advanced',
-        yearsOfExperience: 4,
-        description: 'GitHub Actions, automated testing, deployment pipelines',
-        lastUsed: 'Currently',
-      },
-    ],
-  },
-];
+// Map generated data (separate categories + skills) to grouped view model
+const skillCategories: SkillCategoryView[] = rawCategories.map(cat => ({
+  id: cat.id,
+  title: cat.title,
+  description: cat.description,
+  icon: resolveIcon(cat.icon) || Code2,
+  color: cat.color,
+  skills: rawSkills
+    .filter(s => s.category_id === cat.id)
+    .map(s => ({
+      name: s.name,
+      level: s.level,
+      yearsOfExperience: s.years_of_experience,
+      description: s.description,
+      lastUsed: s.last_used,
+      projects: s.projects_count || undefined,
+      certifications: s.certifications?.length ? s.certifications : undefined,
+    })),
+}));
 
 const proficiencyColors: Record<ProficiencyLevel, string> = {
   Expert: 'text-green-500 border-green-500/20 bg-green-500/10',

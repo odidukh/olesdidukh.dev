@@ -13,6 +13,12 @@ import {
   Loader2,
   CheckCheck,
 } from 'lucide-react';
+import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
+import {
+  markMessageAsRead,
+  markMessageAsReplied,
+  deleteMessageAction,
+} from '@/app/admin/messages/actions';
 import type { ContactSubmission } from '@/lib/supabase/types';
 
 export default function MessagesPage() {
@@ -20,6 +26,8 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] =
     useState<ContactSubmission | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     loadMessages();
@@ -37,35 +45,34 @@ export default function MessagesPage() {
   };
 
   const markAsRead = async (id: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('contact_submissions')
-      .update({ read: true } as never)
-      .eq('id', id);
-
+    const result = await markMessageAsRead(id);
+    if ('error' in result) return;
     setMessages(messages.map(m => (m.id === id ? { ...m, read: true } : m)));
   };
 
   const markAsReplied = async (id: string) => {
-    const supabase = createClient();
-    await supabase
-      .from('contact_submissions')
-      .update({ replied: true } as never)
-      .eq('id', id);
-
+    const result = await markMessageAsReplied(id);
+    if ('error' in result) return;
     setMessages(messages.map(m => (m.id === id ? { ...m, replied: true } : m)));
   };
 
   const deleteMessage = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this message?')) return;
+    setDeleteLoading(true);
+    const result = await deleteMessageAction(id);
 
-    const supabase = createClient();
-    await supabase.from('contact_submissions').delete().eq('id', id);
+    if ('error' in result) {
+      alert(result.error);
+      setDeleteLoading(false);
+      setDeleteTarget(null);
+      return;
+    }
 
     setMessages(messages.filter(m => m.id !== id));
     if (selectedMessage?.id === id) {
       setSelectedMessage(null);
     }
+    setDeleteTarget(null);
+    setDeleteLoading(false);
   };
 
   const handleSelectMessage = (message: ContactSubmission) => {
@@ -206,7 +213,7 @@ export default function MessagesPage() {
                       size="sm"
                       variant="ghost"
                       className="text-muted-foreground hover:text-error"
-                      onClick={() => deleteMessage(selectedMessage.id)}
+                      onClick={() => setDeleteTarget(selectedMessage.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -258,6 +265,18 @@ export default function MessagesPage() {
           )}
         </div>
       </div>
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          title="Delete Message"
+          description="This action cannot be undone"
+          itemName={
+            messages.find(m => m.id === deleteTarget)?.name || 'this message'
+          }
+          onConfirm={() => deleteMessage(deleteTarget)}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleteLoading}
+        />
+      )}
     </div>
   );
 }
