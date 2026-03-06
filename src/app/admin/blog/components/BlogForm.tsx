@@ -148,7 +148,9 @@ export function BlogForm({ post, mode }: BlogFormProps) {
       reading_time: readingTime,
       featured,
       published,
-      published_at: published ? new Date().toISOString() : null,
+      published_at: published
+        ? post?.published_at || new Date().toISOString()
+        : null,
       series_name: seriesName || null,
       series_part: seriesName ? seriesPart : null,
       series_total: seriesName ? seriesTotal : null,
@@ -156,9 +158,7 @@ export function BlogForm({ post, mode }: BlogFormProps) {
 
     const validation = blogPostSchema.safeParse(postData);
     if (!validation.success) {
-      setError(
-        validation.error.issues.map((e: z.ZodIssue) => e.message).join(', ')
-      );
+      setError(validation.error.issues.map(e => e.message).join(', '));
       setLoading(false);
       return;
     }
