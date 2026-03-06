@@ -12,6 +12,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { DeleteProjectButton } from './components/DeleteProjectButton';
+import { ExportButton } from '@/app/admin/components/ExportButton';
 import type { Project } from '@/lib/supabase/types';
 
 export const metadata = {
@@ -50,12 +51,15 @@ export default async function ProjectsPage() {
             Manage your portfolio projects
           </p>
         </div>
-        <Link href="/admin/projects/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Project
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <ExportButton type="projects" label="Export to Site" />
+          <Link href="/admin/projects/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Project
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Projects Table */}

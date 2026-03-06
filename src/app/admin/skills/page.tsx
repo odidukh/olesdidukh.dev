@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Plus, Pencil, FolderPlus } from 'lucide-react';
 import { DeleteSkillButton } from './components/DeleteSkillButton';
+import { ExportButton } from '@/app/admin/components/ExportButton';
 import type { SkillCategory, Skill } from '@/lib/supabase/types';
 
 export const metadata = {
@@ -60,6 +61,7 @@ export default async function SkillsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <ExportButton type="skills" label="Export to Site" />
           <Link href="/admin/skills/categories">
             <Button variant="outline">
               <FolderPlus className="w-4 h-4 mr-2" />

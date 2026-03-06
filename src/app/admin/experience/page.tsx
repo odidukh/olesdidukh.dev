@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Plus, Pencil, Calendar, MapPin, Building2 } from 'lucide-react';
 import { DeleteExperienceButton } from './components/DeleteExperienceButton';
+import { ExportButton } from '@/app/admin/components/ExportButton';
 import type { Experience } from '@/lib/supabase/types';
 
 export const metadata = {
@@ -43,12 +44,15 @@ export default async function ExperiencePage() {
             Manage your work experience timeline
           </p>
         </div>
-        <Link href="/admin/experience/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Experience
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <ExportButton type="experience" label="Export to Site" />
+          <Link href="/admin/experience/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Experience
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Experience List */}
