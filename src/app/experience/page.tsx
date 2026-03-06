@@ -19,164 +19,55 @@ import {
   ExternalLink,
   Briefcase,
   Code2,
-  Rocket,
-  Target,
-  TrendingUp,
-  Award,
   type LucideIcon,
 } from 'lucide-react';
+import { experiences as rawExperiences } from '@/data/generated/experience';
+import { resolveIcon } from '@/lib/icon-resolver';
 
-interface Experience {
+interface Highlight {
+  metric: string;
+  value: string;
+  icon?: LucideIcon | undefined;
+}
+
+interface ExperienceView {
   id: string;
   company: string;
   position: string;
   location: string;
   duration: string;
-  startDate: string;
-  endDate: string | 'Present';
   type: 'Full-time' | 'Contract' | 'Part-time';
-  logo?: string;
-  companyUrl?: string;
+  companyUrl?: string | null | undefined;
   description: string;
   achievements: string[];
   technologies: string[];
-  teamSize?: string;
-  highlights?: {
-    metric: string;
-    value: string;
-    icon?: LucideIcon;
-  }[];
+  teamSize?: string | null | undefined;
+  highlights?: Highlight[] | undefined;
 }
 
-const experiences: Experience[] = [
-  {
-    id: 'safebooks',
-    company: 'Safebooks AI',
-    position: 'Senior Front-End Engineer',
-    location: 'Remote',
-    duration: 'Apr 2024 - Jul 2025',
-    startDate: '2024-04',
-    endDate: '2025-07',
-    type: 'Full-time',
-    companyUrl: 'https://safebooks.ai',
-    description:
-      'Architected real-time financial dashboards for an AI-powered accounting platform, delivering high-performance React applications with advanced data visualization for enterprise clients.',
-    achievements: [
-      'Architected Next.js/React financial governance platform processing 1M+ daily transactions, reducing manual data reconciliation by 40%.',
-      'Engineered a real-time anomaly detection dashboard visualizing 50,000+ data points with sub-200ms render times.',
-      'Built type-safe data pipelines using advanced TypeScript Generics, reducing runtime errors by 95% and saving ~15 QA hours per sprint.',
-    ],
-    technologies: [
-      'Next.js',
-      'React',
-      'TypeScript',
-      'Zustand',
-      'Material-UI',
-      'Jest',
-      'Webpack',
-    ],
-    teamSize: '10+ people',
-    highlights: [
-      { metric: 'Load Time Reduction', value: '50%', icon: Rocket },
-      { metric: 'Test Coverage', value: '85%', icon: Target },
-      { metric: 'Enterprise Clients', value: '9', icon: Users },
-      { metric: 'Lighthouse Score', value: '95+', icon: TrendingUp },
-    ],
-  },
-  {
-    id: 'emerline',
-    company: 'Emerline',
-    position: 'Senior Front-End Developer',
-    location: 'Remote',
-    duration: 'May 2021 - Jan 2024',
-    startDate: '2021-05',
-    endDate: '2024-01',
-    type: 'Full-time',
-    companyUrl: 'https://emerline.com',
-    description:
-      'Led front-end architecture for enterprise platforms, designing scalable component libraries and mentoring junior developers while delivering high-impact solutions for international clients.',
-    achievements: [
-      'Led front-end architecture for complex enterprise portals, delivering 3 major client apps under budget and increasing retention by 20%.',
-      'Deployed a white-label React/Storybook component library adopted by 5 teams, cutting UI dev time by 30%.',
-      'Streamlined Developer Experience workflows through custom tooling, reducing onboarding time by 50%.',
-    ],
-    technologies: [
-      'React',
-      'TypeScript',
-      'Redux',
-      'JavaScript ES6+',
-      'SASS',
-      'Webpack',
-      'Storybook',
-    ],
-    teamSize: '8-12 people',
-    highlights: [
-      { metric: 'Employees Served', value: '1K+', icon: Users },
-      { metric: 'Dev Time Reduction', value: '40%', icon: TrendingUp },
-      { metric: 'Core Web Vitals', value: '+35%', icon: Award },
-    ],
-  },
-  {
-    id: 'inango',
-    company: 'Inango Systems',
-    position: 'Middle Front-End Developer',
-    location: 'Kyiv, Ukraine',
-    duration: 'Mar 2019 - Apr 2021',
-    startDate: '2019-03',
-    endDate: '2021-04',
-    type: 'Full-time',
-    companyUrl: 'https://inango.com',
-    description:
-      'Enhanced ISP web platforms using React/Redux, delivering significant UX improvements for large customer bases while leading migration initiatives from legacy systems.',
-    achievements: [
-      'Developed real-time ISP network UIs monitoring 10,000+ nodes, improving client incident response by 35%.',
-      'Migrated legacy portals to modern React/Redux architectures, eliminating frame drops and boosting Lighthouse scores to 92.',
-      'Integrated front-end architectures with robust SQL/NoSQL backend systems, cutting client-side parsing overhead by 25%.',
-    ],
-    technologies: [
-      'React.js',
-      'Redux',
-      'React Native',
-      'JavaScript',
-      'HTML5',
-      'CSS3',
-      'jQuery',
-    ],
-    teamSize: '6-8 people',
-    highlights: [
-      { metric: 'Customers Served', value: '50K+', icon: Users },
-      { metric: 'Performance Boost', value: '40%', icon: Rocket },
-      { metric: 'UX Improvement', value: '25%', icon: TrendingUp },
-    ],
-  },
-  {
-    id: 'helios',
-    company: 'Helios Technologies',
-    position: 'Junior Front-End Developer',
-    location: 'Kyiv, Ukraine',
-    duration: 'Jun 2018 - Feb 2019',
-    startDate: '2018-06',
-    endDate: '2019-02',
-    type: 'Full-time',
-    description:
-      'Started professional development career creating responsive interfaces and implementing pixel-perfect designs for client projects, building a strong foundation in modern front-end technologies.',
-    achievements: [
-      'Developed responsive interfaces for 5 client projects, implementing pixel-perfect Figma designs.',
-      'Built interactive components using JavaScript and React',
-      'Collaborated with design team to ensure optimal user experience',
-    ],
-    technologies: [
-      'JavaScript',
-      'React',
-      'HTML5',
-      'CSS3',
-      'Bootstrap',
-      'Figma',
-      'Git',
-    ],
-    teamSize: '5-7 people',
-  },
-];
+// Map generated Supabase data (snake_case) to view model (camelCase + resolved icons)
+const experiences: ExperienceView[] = rawExperiences.map(exp => ({
+  id: exp.id,
+  company: exp.company,
+  position: exp.position,
+  location: exp.location,
+  duration: exp.duration,
+  type: exp.type,
+  companyUrl: exp.company_url,
+  description: exp.description,
+  achievements: exp.achievements,
+  technologies: exp.technologies,
+  teamSize: exp.team_size,
+  highlights: Array.isArray(exp.highlights)
+    ? (
+        exp.highlights as { metric: string; value: string; icon?: string }[]
+      ).map(h => ({
+        metric: h.metric,
+        value: h.value,
+        icon: resolveIcon(h.icon),
+      }))
+    : undefined,
+}));
 
 export default function ExperiencePage() {
   const [selectedExperience, setSelectedExperience] = useState<string | null>(
