@@ -16,6 +16,7 @@ import {
   Loader2,
   GripVertical,
 } from 'lucide-react';
+import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
 import type { SkillCategory } from '@/lib/supabase/types';
 
 export default function SkillCategoriesPage() {
@@ -24,6 +25,8 @@ export default function SkillCategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showNewForm, setShowNewForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -115,14 +118,7 @@ export default function SkillCategoriesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (
-      !confirm(
-        'Are you sure? This will also delete all skills in this category.'
-      )
-    ) {
-      return;
-    }
-
+    setDeleteLoading(true);
     const supabase = createClient();
     const { error } = await supabase
       .from('skill_categories')
@@ -131,9 +127,13 @@ export default function SkillCategoriesPage() {
 
     if (error) {
       alert('Failed to delete category');
+      setDeleteLoading(false);
+      setDeleteTarget(null);
       return;
     }
 
+    setDeleteTarget(null);
+    setDeleteLoading(false);
     loadCategories();
   };
 
@@ -325,7 +325,7 @@ export default function SkillCategoriesPage() {
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(category.id)}
+                    onClick={() => setDeleteTarget(category.id)}
                     className="p-2 rounded-lg hover:bg-error/10 transition-colors text-muted-foreground hover:text-error"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -341,6 +341,19 @@ export default function SkillCategoriesPage() {
           </div>
         )}
       </div>
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          title="Delete Category"
+          description="This will also delete all skills in this category"
+          itemName={
+            categories.find(c => c.id === deleteTarget)?.title ||
+            'this category'
+          }
+          onConfirm={() => handleDelete(deleteTarget)}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleteLoading}
+        />
+      )}
     </div>
   );
 }

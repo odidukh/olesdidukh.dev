@@ -13,6 +13,7 @@ import {
   Loader2,
   CheckCheck,
 } from 'lucide-react';
+import { DeleteConfirmDialog } from '@/app/admin/components/DeleteConfirmDialog';
 import type { ContactSubmission } from '@/lib/supabase/types';
 
 export default function MessagesPage() {
@@ -20,6 +21,8 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] =
     useState<ContactSubmission | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     loadMessages();
@@ -57,8 +60,7 @@ export default function MessagesPage() {
   };
 
   const deleteMessage = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this message?')) return;
-
+    setDeleteLoading(true);
     const supabase = createClient();
     await supabase.from('contact_submissions').delete().eq('id', id);
 
@@ -66,6 +68,8 @@ export default function MessagesPage() {
     if (selectedMessage?.id === id) {
       setSelectedMessage(null);
     }
+    setDeleteTarget(null);
+    setDeleteLoading(false);
   };
 
   const handleSelectMessage = (message: ContactSubmission) => {
@@ -206,7 +210,7 @@ export default function MessagesPage() {
                       size="sm"
                       variant="ghost"
                       className="text-muted-foreground hover:text-error"
-                      onClick={() => deleteMessage(selectedMessage.id)}
+                      onClick={() => setDeleteTarget(selectedMessage.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -258,6 +262,18 @@ export default function MessagesPage() {
           )}
         </div>
       </div>
+      {deleteTarget && (
+        <DeleteConfirmDialog
+          title="Delete Message"
+          description="This action cannot be undone"
+          itemName={
+            messages.find(m => m.id === deleteTarget)?.name || 'this message'
+          }
+          onConfirm={() => deleteMessage(deleteTarget)}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleteLoading}
+        />
+      )}
     </div>
   );
 }
