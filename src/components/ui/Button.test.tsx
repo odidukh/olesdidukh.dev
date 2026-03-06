@@ -129,4 +129,12 @@ describe('Button', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it('applies code variant classes', () => {
+    render(<Button variant="code">Copy</Button>);
+    const button = screen.getByRole('button');
+    expect(button).toHaveClass('bg-gray-700');
+    expect(button).toHaveClass('text-gray-300');
+    expect(button).toHaveClass('border-gray-600');
+  });
 });

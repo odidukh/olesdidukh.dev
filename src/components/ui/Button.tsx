@@ -32,6 +32,7 @@ const buttonVariants = cva(
         gradient:
           'bg-gradient-to-r from-primary via-mocha-400 to-primary text-primary-foreground hover:scale-105 hover:shadow-glow transition-all duration-300 relative overflow-hidden',
         glow: 'bg-primary text-primary-foreground shadow-glow hover:shadow-glow-strong hover:scale-105 transition-all duration-300',
+        code: 'border border-gray-600 bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white transition-all duration-200',
       },
       size: {
         default: 'h-10 px-4 py-2',
@@ -55,7 +56,7 @@ const buttonVariants = cva(
  *   Useful for rendering custom elements or links as buttons.
  * @property {boolean} [loading=false] - Shows a loading spinner and disables the button.
  * @property {string} [loadingText] - Text to display while loading. If not provided, shows original children.
- * @property {'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'gradient' | 'glow'} [variant='default'] - Visual style variant.
+ * @property {'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'gradient' | 'glow' | 'code'} [variant='default'] - Visual style variant.
  * @property {'default' | 'sm' | 'lg' | 'xl' | 'icon'} [size='default'] - Button size.
  */
 interface ButtonProps
