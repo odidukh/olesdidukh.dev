@@ -9,7 +9,7 @@ author:
   avatar: '/images/avatar.png'
   role: 'Senior Front-End Engineer'
 publishedAt: '2026-05-25'
-readingTime: 15
+readingTime: 13
 category: 'Architecture'
 tags:
   - 'Monorepo'
@@ -218,7 +218,7 @@ The pattern across all three: the abstraction looked elegant in isolation and br
 
 ## CI: caching, parallel pipelines, and three release surfaces
 
-CI lives in `.github/workflows/` and the headline rules are: parallel where possible, cached aggressively, and never block on a slow leg. Turbo's remote cache (`remoteCache: { enabled: true }` in `turbo.json`) is the single biggest CI win — a clean `pnpm install && turbo build typecheck lint test` runs in under three minutes when the cache is warm because the only thing that actually executes is whatever changed.
+CI lives in `.github/workflows/`: parallel where possible, cached aggressively, never blocked on a slow leg. Turbo's remote cache is the single biggest CI win — a clean `pnpm install && turbo build typecheck lint test` finishes in under three minutes warm, because only what changed actually executes.
 
 The three release pipelines fan out from the same `main`:
 
@@ -226,7 +226,7 @@ The three release pipelines fan out from the same `main`:
 - **Mobile** ships through EAS Build on a release branch tag. Native binaries take 12–18 minutes regardless of cache, but OTA updates through `expo-updates` push JS-only changes in seconds without an App Store round trip.
 - **Desktop** is a tag-triggered `desktop-release.yml` workflow that runs `build-web.sh` (static export) then `tauri build` on macOS-latest. Notarization adds 4–8 minutes; the resulting `.dmg` is uploaded as a release asset.
 
-Common-path CI (lint + typecheck + unit tests on a PR) clocks in under 8 minutes when the cache hits, closer to 14 cold. Slow legs — EAS, Tauri notarization — stay off the PR critical path. They run on tag, not on push. The cache layer is what makes that work: a typecheck against `packages/shared` is one of the slowest jobs in the matrix because it transitively types the mobile and web apps, and Turbo skipping it on an unchanged input has saved me hundreds of CI minutes I didn't have to think about.
+Common-path CI (lint + typecheck + unit tests on a PR) clocks in under 8 minutes when the cache hits, closer to 14 cold. Slow legs — EAS, Tauri notarization — stay off the PR critical path; they run on tag, not on push.
 
 ## Total LoC saved vs. complexity added — honest scorecard
 
@@ -243,12 +243,12 @@ Let's count. As of the commit this article is based on:
 | `apps/desktop/` (Rust) | 13           |
 | `apps/api/`            | ~15,300      |
 
-Roughly 16,400 lines live in `packages/` and are consumed by every client. Each app on top is in the 16–19k range, but a meaningful chunk of `apps/mobile` is platform-specific component overrides (`*.native.tsx`) — call it 60–70% genuinely shared between web and mobile after you exclude routing, forms, and storage. Desktop reuses the web bundle wholesale, so its _delta_ over web is 13 lines of Rust and a config file. That's where the monorepo math is most absurd in my favor.
+Roughly 16,400 lines live in `packages/`, consumed by every client. Each app sits in the 16–19k range; after excluding routing, forms, and storage, call it 60–70% genuinely shared between web and mobile. Desktop reuses the web bundle wholesale, so its _delta_ is 13 lines of Rust and a config file — where the monorepo math turns most absurd in my favor.
 
-The cons are equally honest. **Setup overhead** is real: pnpm workspaces, Turbo pipelines, Metro plus webpack agreeing on `react-native-web`, and three `tsconfig.json` files inheriting a base — none of it is hard, but cumulatively it's two evenings before a new contributor can run `pnpm dev` end-to-end. **CI complexity** doesn't go away; it migrates to `turbo.json` and the workflow matrix. **Onboarding** is harder than three separate repos because someone reading `apps/web` has to also understand what `@etappi/shared` and `@etappi/ui` impose on them. And **a bug in `packages/shared` is a P0 across all three apps** — the blast radius scales with reuse.
+The cons are equally honest. **Setup overhead** is real: pnpm workspaces, Turbo pipelines, Metro plus webpack agreeing on `react-native-web`, and three `tsconfig.json` files inheriting a base — cumulatively two evenings before a new contributor can run `pnpm dev` end-to-end. **CI complexity** doesn't vanish; it migrates to `turbo.json` and the workflow matrix. **Onboarding** is harder than three separate repos: reading `apps/web` means understanding what `@etappi/shared` and `@etappi/ui` impose on it. And **a bug in `packages/shared` is a P0 across all three apps** — blast radius scales with reuse.
 
-I would still pick this layout again. The tax is paid up front; the dividend is paid every time I rename a Zod field and three apps update with the type checker, not me. The math works for a solo product where drift between apps would cost more than coordinating their builds. For a single-platform team it probably doesn't.
+I'd still pick this layout again — the tax is paid up front, the dividend lands every time I rename a Zod field and three apps update with the type checker. The math works for a solo product where drift would cost more than coordinating builds; for a single-platform team it probably doesn't.
 
-The decision rule I use now, six months in: a piece of code earns a slot in `packages/` only if (a) at least two apps consume it, (b) its behavior doesn't depend on a runtime-specific API, and (c) versioning the contract independently of the apps would create more problems than it solves. Anything that fails one of those three goes in the relevant `apps/` directory. That filter has been right far more often than the "share everything by default" instinct I started with.
+The decision rule I use now, six months in: code earns a slot in `packages/` only if (a) at least two apps consume it, (b) its behavior doesn't depend on a runtime-specific API, and (c) versioning the contract independently wouldn't create more problems than it solves. Anything that fails goes in `apps/`. That filter has been right far more often than my starting "share everything by default" instinct.
 
 [See the full Etappi case study](/blog/inside-etappi-multi-platform-task-manager).
