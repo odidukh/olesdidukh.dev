@@ -9,7 +9,7 @@ author:
   avatar: '/images/avatar.png'
   role: 'Senior Front-End Engineer'
 publishedAt: '2026-06-01'
-readingTime: 10
+readingTime: 9
 category: 'Case Study'
 tags:
   - 'Case Study'
@@ -101,20 +101,20 @@ Friction is the usual managed-auth tax. Clerk's UI components are opinionated, t
 
 ## What's hard about solo cross-platform
 
-Picking the right stack is the easy part. Living with three release surfaces is the actual job, and most of it has nothing to do with code.
+Picking the stack is the easy part. Living with three release surfaces is the actual job, and most of it has nothing to do with code.
 
-1. **Three release pipelines.** Web is `git push` to Vercel and it's live in 90 seconds. Mobile is an EAS build, an OTA channel, or a store submission depending on what changed. Desktop is a tag push that fans out to three GitHub Actions runners (macOS, Windows, Linux) and produces signed installers. Every release decision starts with "which of these three pipelines does this change need?" — and getting that wrong means either a stale client in the wild or a wasted hour rebuilding artifacts you didn't have to.
+1. **Three release pipelines.** Web is `git push` to Vercel, live in 90 seconds. Mobile is an EAS build, an OTA channel, or a store submission depending on what changed. Desktop is a tag push fanning out to three GitHub Actions runners (macOS, Windows, Linux) producing signed installers. Every release starts with "which pipeline does this need?" — getting it wrong means a stale client or an hour rebuilding.
 
-2. **Three review processes.** Apple's App Store is the slowest and the most opinionated. Google Play is faster but has its own metadata gauntlet. Tauri builds need notarization on macOS (a multi-step Apple Developer process that can fail for reasons unrelated to your code) and Windows code signing for SmartScreen reputation. None of these can be automated end-to-end. Each one is a queue with a human at the other end.
+2. **Three review processes.** Apple's App Store is slowest and most opinionated. Google Play is faster but has its own metadata gauntlet. Tauri builds need macOS notarization (a multi-step Apple Developer process that fails for reasons unrelated to your code) and Windows code signing for SmartScreen. None automates end-to-end — each is a queue with a human on the other end.
 
-3. **Keeping shared types stable across versions.** The mobile app I shipped two weeks ago is still running on someone's phone. If I rename a tRPC procedure today, that older client breaks the moment it tries to sync. Server code has to be backward-compatible with every mobile binary still in the wild — which means deprecating fields instead of dropping them, and adding new procedures alongside the old ones rather than reshaping inputs.
+3. **Shared types stable across versions.** The mobile app shipped two weeks ago is still on someone's phone. Rename a tRPC procedure today and that client breaks the next sync. Server code has to be backward-compatible with every binary in the wild — deprecate fields, don't drop them; add new procedures rather than reshape inputs.
 
-4. **Telemetry per platform.** Sentry has SDKs for browser, React Native, and Tauri, but each has its own source-map upload story, release-tagging conventions, and noise profile. A useful "what broke for users in the last 24 hours" view takes deliberate setup per surface — and you only notice the gaps when something actually breaks.
+4. **Telemetry per platform.** Sentry covers browser, React Native, and Tauri, but each SDK has its own source-map upload, release-tagging, and noise profile. A useful "what broke in the last 24 hours" view takes deliberate setup per surface — you only notice the gaps when something breaks.
 
 ## Roadmap and open-sourceable bits
 
-Near-term roadmap: finishing the PowerSync rollout to web (today web is tRPC-only; mobile is local-first), shipping the desktop binary to real users instead of the small group of testers it sits with now, and hardening the per-project collaboration capability matrix that already lives in `apps/api/src/trpc/access/`. After that, full keyboard-first navigation on web — command palette, fuzzy search, the works.
+Near-term: finish the PowerSync rollout to web (today web is tRPC-only, mobile is local-first), ship the desktop binary to real users instead of the testers it sits with now, and harden the per-project capability matrix in `apps/api/src/trpc/access/`. After that, keyboard-first navigation on web — command palette, fuzzy search, the works.
 
-Two pieces inside the monorepo are the kind of thing I would extract to standalone packages first if I had the time. The tRPC + Hono + Clerk wiring (`createContext`, `protectedProcedure`, `withProjectAccess`, the role resolver) is the same boilerplate any solo founder writes from scratch and would save someone an afternoon. The `fractional-indexing` + UUID ordering helpers in `@etappi/shared` would save whoever ships a drag-to-reorder list a week of edge cases — fractional ordering is one of those things that looks trivial until you handle the cases where two users insert in the same gap from different devices.
+Two pieces I'd extract to standalone packages first. The tRPC + Hono + Clerk wiring (`createContext`, `protectedProcedure`, `withProjectAccess`, the role resolver) is boilerplate any solo founder rewrites from scratch. The `fractional-indexing` + UUID ordering helpers in `@etappi/shared` would save anyone shipping a drag-to-reorder list a week of edge cases.
 
-If you want the structural side of how this all fits together, I'm doing [a deep-dive on the monorepo structure](/blog/typescript-monorepo-web-mobile-desktop) next.
+For the structural side, I'm doing [a deep-dive on the monorepo structure](/blog/typescript-monorepo-web-mobile-desktop) next.
