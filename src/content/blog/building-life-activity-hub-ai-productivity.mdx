@@ -1,0 +1,140 @@
+---
+id: 'building-life-activity-hub'
+slug: 'building-life-activity-hub-ai-productivity'
+title: 'Building Life Activity Hub: An AI-Powered Productivity Platform That Plans Your Day'
+excerpt: 'A tour of Life Activity Hub: 16 features, 5 calendar providers, an autonomous AI planner, and an offline-first PWA — built solo with Next.js 16 and Expo.'
+coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2026-06-08'
+readingTime: 12
+category: 'Case Study'
+tags:
+  - 'Case Study'
+  - 'Life Activity Hub'
+  - 'AI'
+  - 'Claude'
+  - 'PWA'
+  - 'Productivity'
+featured: false
+views: 0
+likes: 0
+---
+
+# Building Life Activity Hub
+
+## The problem: energy is not time, calendar is not priorities
+
+Life Activity Hub is a productivity platform with an AI that plans your day. Here's how it's built. The product I actually wanted didn't exist: a system that knows a 90-minute deep-work block at 9am is not interchangeable with a 90-minute block at 4pm, that a wall of green calendar events is not a plan, and that the friction between what I _intend_ to do and what I _can_ do is mostly an energy problem masquerading as a time problem.
+
+So I built it. Sixteen discoverable features, five calendar providers on one bidirectional sync engine, an autonomous Claude planner that produces a morning schedule and adapts at mid-day, energy analytics that feed back into scheduling, and a PWA that works offline on day one — sitting on top of [the offline-first PWA architecture I built it on](/blog/offline-first-pwa-nextjs-mutation-queue). Mobile is a full Expo companion sharing the same domain logic. I ship it solo, every release, and every architectural decision below is one I have to live with on a Tuesday morning when the planner runs.
+
+## Architecture overview
+
+<img
+  src="/images/blog/lah/arch.png"
+  alt="LAH architecture: PWA web app and Expo mobile share packages/shared; service worker queues offline mutations; Claude planner reads context and writes back schedule"
+/>
+
+The repo is a Turborepo monorepo with three workspaces: `apps/web` (Next.js 16, App Router, React 19), `apps/mobile` (Expo 54 / React Native 0.81), and `packages/shared` — types, Zod schemas, RRULE recurrence, energy analysis, habit streaks, and discovery logic. Anything that defines _what a thing is_ lives in `packages/shared`. Anything that defines _how a thing renders or persists_ lives in the app that owns it.
+
+Data flow on the web is local-first: the UI talks to an IndexedDB-backed React Query cache (Dexie tables, six of them), mutations enqueue into a service-worker-managed mutation queue with retry and exponential backoff, and the API layer is Next.js route handlers in `apps/web/app/api/`, which talk to Postgres through Prisma 7 with `pg.Pool` for connection pooling. The service worker boundary is sharper than people usually draw it: static assets are CacheFirst on a 30-day max age, API GETs are NetworkFirst with a 3s timeout and a 5-minute cache, auth endpoints are NetworkOnly, and mutations are never cached — they're queued. That distinction is what makes "offline" mean something other than "shows stale data and crashes on save." The [mutation queue deep-dive](/blog/offline-first-pwa-nextjs-mutation-queue) covers the retry semantics; the short version is max five attempts, exponential backoff, and idempotency keys on the server so a retried POST doesn't double-create.
+
+Mobile shares `@life-activity-hub/shared` for domain logic, with React Query persisted to SQLite for offline reads and Expo push notifications for reminders.
+
+## The autonomous AI planner: confidence levels and replanning triggers
+
+The planner is the feature that justifies the rest. It's opt-in via a `plannerMode` user preference — `'classic'` (suggest a daily schedule on demand) or `'autonomous'` (event-driven planning that produces a morning plan, adapts at mid-day, and replans on calendar change). The autonomous mode is the interesting one because it has to make decisions without a human in the loop, which means it has to know when _not_ to.
+
+<img
+  src="/images/blog/lah/planner.png"
+  alt="LAH AI planner showing today's schedule with confidence indicators"
+/>
+
+Confidence is a three-bucket model — `'low' | 'medium' | 'high'` — derived from how much historical data the predictive layer has for that user, day-of-week, and energy pattern. Under 4 weeks of history is `low` and the planner emits suggestions instead of writing the schedule directly. Between 8 and 11 weeks is `medium`: the planner writes the schedule but flags every block for review. Twelve weeks and up is `high`: it schedules autonomously and only surfaces changes if the user opens the day. The thresholds aren't theoretical — they're in `apps/web/lib/daily-planner/predictive-template.ts` and tested in the same folder.
+
+Replanning fires on three triggers: morning (cron-driven, user-timezone aware), mid-day when the day deviates from plan by a measurable threshold, and on calendar changes — when `sync-orchestrator.ts` sees a new meeting imported from Google or Outlook, it calls `detectMeetingAdded` and the planner reshuffles around it.
+
+A representative prompt sketch, identifiers stripped:
+
+```typescript
+const systemPrompt = `You are a daily planner. Given:
+- Energy pattern by hour (from last 12 weeks)
+- Today's fixed events (meetings, calendar imports)
+- Backlog items with priority and energy requirement
+- User preferences (focus block length, break cadence)
+
+Produce a schedule that matches HIGH-energy work to HIGH-energy hours.
+Never schedule deep work in a known low-energy window.
+Output: ordered blocks with start, duration, activityId, confidence.`;
+```
+
+Graceful degradation is non-negotiable. If `ANTHROPIC_API_KEY` is unset or Claude returns an error, the planner falls back to the deterministic predictive template — same output shape, lower confidence, no AI call. The user sees a schedule either way.
+
+## Multi-calendar sync: five providers, one engine
+
+Five providers, one bidirectional sync engine: Google Calendar (OAuth + Calendar API v3), Apple Calendar (CalDAV with app-specific passwords), Outlook (Microsoft Graph + Azure AD), Nextcloud (CalDAV + basic auth), and Fastmail (CalDAV + basic auth). Three of those are CalDAV variants, which sounds like a free reuse and is mostly a lie — every CalDAV server speaks the protocol with its own dialect, and the tests in `apps/web/lib/calendar/` carry per-provider quirks for each.
+
+<img
+  src="/images/blog/lah/calendar.png"
+  alt="LAH weekly calendar view with events from multiple providers"
+/>
+
+The engine sits on top of RFC 5545. Recurrence is the part that bites: `RRULE:FREQ=MONTHLY;BYDAY=-1FR` ("last Friday of the month") expands one way in Apple Calendar, another in Google around DST boundaries, and `BYSETPOS` interactions with `BYMONTHDAY` are a swamp. I lean on the `rrule` package in `packages/shared/src/recurrence/`, but I had to write a normalization layer above it for the cases where providers _emit_ RRULEs the spec allows but consumers handle differently. I wrote up [the RRULE edge cases I hit](/blog/rrule-rfc-5545-typescript-edge-cases) separately because the list got long enough to be its own post.
+
+Bidirectional sync means the engine has to detect "the user moved this event in Google" and "the user moved this event in LAH" without a fight. The model is per-event ETags plus a last-writer-wins resolver with a conflict log surfaced in the UI when the heuristic isn't confident. Sync runs on a 5-minute cron plus a manual trigger, and when the sync orchestrator imports a meeting it pings the autonomous planner — calendar changes are first-class replanning triggers, not background noise.
+
+## Energy analytics: feedback loop into scheduling
+
+Energy analytics is the feedback loop that closes the system. After most activities, the user logs a 5-point energy impact: did this drain me, recharge me, or leave me flat. That post-activity feedback flows into `EnergyFeedback` records, and `EnergyInsightCache` aggregates by tag, category, time-of-day, and duration to surface patterns the user wouldn't notice unaided.
+
+<img
+  src="/images/blog/lah/analytics.png"
+  alt="LAH energy analytics dashboard with patterns by tag, category, and time of day"
+/>
+
+The patterns are concrete. _"Deep work between 9 and 11 averages +1.4 energy; the same activity after 3pm averages -0.6."_ _"Workouts tagged `cardio` boost the next two hours; workouts tagged `strength` cost the rest of the afternoon."_ _"Long meetings on Mondays drop you to baseline by Tuesday."_ The analytics dashboard renders these with Recharts, but the load-bearing piece is the correlation engine in `packages/shared/src/energy/`, which the planner reads when it decides whether a 90-minute deep-work block belongs at 9am or 4pm.
+
+This is the loop: log activity → 5-point energy feedback → tag/category/time-of-day correlations → predictive recommendations → planner consumes them when scheduling tomorrow. Health data from Google Fit (steps, sleep) overlays on the same dashboard so sleep debt becomes visible alongside energy trends. The feedback loop is what makes the planner feel personalized rather than generic — without it, you have a chatbot with a calendar.
+
+## Habits, focus, geofencing — feature unlocking strategy
+
+Sixteen features is too many for a new user to face on day one. The product surface is gated behind a `UserFeatureProgress` model and a two-mode toggle: `PROGRESSIVE` unlocks features as the user hits milestones, `FULL` shows everything from the start. Most users land in `PROGRESSIVE` and never switch — they get habits after their third logged activity, focus mode after their first scheduled block, geofencing only when they explicitly opt into location.
+
+<img
+  src="/images/blog/lah/habits.png"
+  alt="LAH habit streak tracker with chain calendar and milestone celebrations"
+/>
+
+Habits track streaks per-activity, per-category, overall, or on a custom metric, with a chain calendar (green / gray / blue / yellow for milestones) and celebrations at 7, 14, 30, 50, 100, and 365 days. Frequency is daily, weekly, or custom. Focus mode is a Pomodoro or activity-duration timer with full-screen and floating-widget UIs, audio + browser notifications + haptics, and milestone alerts at 25/50/75%. Geofencing layers on `Location`, `LocationConsent`, `GeofenceTrigger`, and `GeofenceEvent` models — ENTER, EXIT, and DWELL detection with an offline event queue that syncs when the device reconnects.
+
+<img
+  src="/images/blog/lah/focus.png"
+  alt="LAH focus mode with Pomodoro timer in full-screen view"
+/>
+
+The win from progressive unlocking isn't UX-only. **Every feature I gate is a code path I don't have to defend against on day one.** The `FeatureIntroCard` and `FeatureUnlockNotifier` components shrink the bug surface on first run because half the surface isn't rendered. A `/features` page with a dashboard widget tracks progress so users can see what's coming. That's been the highest-ROI UX-and-engineering decision in the entire project.
+
+## Privacy-first AI: what goes to Claude, what stays local
+
+The Claude integration is the feature most likely to scare users, so the privacy model is conservative by default. What goes to Claude when the planner runs: activity titles, durations, energy tags (`LOW` / `MEDIUM` / `HIGH`), category names, and aggregate energy patterns by hour. What stays local: location data, day-note content, journal mood entries, raw health-platform payloads from Google Fit, and any field the user marks private in settings.
+
+The split is enforced in `apps/web/lib/ai/user-pattern-context.ts` — the function that builds the planner context strips identifiers, redacts notes by default, and aggregates raw GPS into "home" / "work" / "elsewhere" buckets before anything leaves the server. Users can opt _into_ richer context per field; the default is the minimum the planner needs to be useful.
+
+Backups close the loop. Cloud backups to AWS S3, Google Drive, or Dropbox are encrypted with **AES-256-GCM** using a per-user key, stored client-side and never round-tripped through Anthropic. Local exports (JSON, CSV, ZIP) skip cloud entirely. The encryption is zero-knowledge by design: the server holds ciphertext; the key never leaves the user's device unless they choose to escrow it. Anthropic sees a planning context. The backup provider sees a blob.
+
+## What I learned shipping a 16-feature PWA solo
+
+Five lessons that survive contact with release day.
+
+**Solo scope discipline is the actual product skill.** Sixteen features sounds like a lot until you realize each one is a database table, a sync path, a settings UI, an empty state, a loading state, a localized string, and a bug class. The features that shipped are the ones I could afford to maintain in month nine, not the ones I was excited about in month one. _Anything I couldn't write a one-paragraph empty-state for, I cut._
+
+**Progressive feature unlocking saved more bugs than any test suite.** Not rendering a feature is the cheapest way to not have bugs in it. Half my surface is hidden from new users by default; half my support load goes away with it.
+
+**Shipping a PWA in 2026 means picking your boundaries deliberately.** Service worker scope, IndexedDB versioning, mutation queue retry, persistent storage requests, quota warnings — none are free, and every one has a desktop-vs-Android-vs-iOS-Safari quirk. The PWA only works because I drew the line at "all writes queue, all reads from cache, sync is a process" and never crossed it.
+
+**Where Claude-as-feature draws the line: tool, not agent.** The planner _proposes_; the user _accepts_. Confidence levels, plannerMode preferences, graceful fallback to a deterministic template — that's the line. An autonomous agent that writes to your calendar without a confidence floor is a liability. A tool that produces a schedule with a confidence label is a feature.
+
+**Monorepos earn their keep when the contract changes.** Renaming a Zod field in `packages/shared` and watching three apps light up in the type-checker is the dividend that pays for the setup cost.
