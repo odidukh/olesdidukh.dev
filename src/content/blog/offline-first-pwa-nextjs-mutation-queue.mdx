@@ -84,9 +84,9 @@ The mutation queue is the load-bearing piece of level 3 offline. Get it wrong an
   alt="Mutation queue lifecycle: optimistic local apply, enqueue, service worker sync, replay, dequeue or backoff"
 />
 
-The lifecycle: a write enters the system → the entity store applies it optimistically to IndexedDB so the UI updates instantly → a `QueuedMutation` row lands in a Dexie object store with `status: 'pending'` → a drain loop replays it against the network when connectivity allows → on `2xx` we delete the row and reconcile any temp IDs with server IDs → on `5xx`/network we increment `retryCount` and leave the row pending → on `4xx` we mark the row `failed` and surface a retry banner. The shape isn't novel; the discipline is.
+The lifecycle: a write enters the system → the entity store applies it optimistically to IndexedDB so the UI updates instantly → a `QueuedMutation` row lands in a Dexie object store with `status: 'pending'` → a drain loop replays it against the network when connectivity allows → on `2xx` we delete the row and reconcile any temp IDs with server IDs → on `5xx`/network we increment `retryCount` and leave the row pending — after five 5xx-or-network failures the row promotes from `pending` to `failed` and surfaces the recovery banner → on `4xx` we mark the row `failed` and surface a retry banner. The shape isn't novel; the discipline is.
 
-Two object stores carry the weight. `mutations` is the active queue plus a soft-deleted tail — rows that lost a conflict or were otherwise dropped stay in the same table with a `discardedAt` timestamp and a `discardReason`, so the audit story and the active-queue story live in one index. `meta` is a small key/value store for cross-cutting state the queue depends on but doesn't own: the current plan version, the sync cursor for incremental pulls, and the `persistentStorageGranted` flag. Both live in a single Dexie database alongside the local entity caches:
+Two object stores carry the weight. `mutations` is the active queue plus a soft-deleted tail — rows that lost a conflict or were otherwise dropped stay in the same table with a `discardedAt` timestamp and a `discardReason`, so the audit story and the active-queue story live in one index. `meta` is a small key/value store for cross-cutting state the queue depends on but doesn't own: the current plan version, the sync cursor for incremental pulls, the `persistentStorageGranted` flag, and a `lastReplayAt` timestamp the orchestrator reads to detect missed periodic drains and trigger a catch-up replay on next foreground. Both live in a single Dexie database alongside the local entity caches:
 
 ```typescript
 // lib/db/offline-tables.ts (representative)
@@ -126,7 +126,8 @@ class OfflineDatabase extends Dexie {
   constructor() {
     super('LifeActivityHubOffline');
     this.version(7).stores({
-      mutations: 'id, userId, status, timestamp, discardedAt',
+      mutations:
+        'id, userId, status, timestamp, discardedAt, [status+timestamp]',
       meta: 'key, updatedAt',
       // ...other stores
     });
@@ -134,7 +135,7 @@ class OfflineDatabase extends Dexie {
 }
 ```
 
-The compound index `id, userId, status, timestamp` is what keeps drains efficient: every drain queries `where('status').equals('pending').sortBy('timestamp')` so mutations replay in the order the user made them, not whatever insertion order Dexie felt like. FIFO ordering matters because a `POST /activity` followed by a `PATCH /activity/:id` only works if they replay in that order.
+The `[status+timestamp]` compound index lets us range-scan pending rows in FIFO order without an in-memory sort: every drain queries `where('[status+timestamp]').between(['pending', Dexie.minKey], ['pending', Dexie.maxKey]).toArray()` so mutations replay in the order the user made them, not whatever insertion order Dexie felt like. FIFO ordering matters because a `POST /activity` followed by a `PATCH /activity/:id` only works if they replay in that order.
 
 Idempotency is the part most tutorials skip. Every queued mutation carries a stable UUID generated at enqueue time, and that UUID rides on the wire as an `Idempotency-Key` header. The server dedups on `(userId, key)` so a retried `POST` doesn't double-create an activity, even if the original request _did_ reach the server but its response never made it back. That's the failure mode that bites real users on flaky networks:
 
