@@ -36,7 +36,7 @@ The "last weekday of the month" rule, in production:
 FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
 ```
 
-Six tokens. Picks the last working day of every month, including the gnarly months — March 31 (a Tuesday), May 30 (a Friday), August 31 (a Sunday-skip to Friday August 30). One line of text encodes a calendar's worth of behavior, and that's exactly why getting it wrong silently is so easy. The rule reads like prose, runs like a state machine, and fails like neither.
+Six tokens. Picks the last working day of every month, including the gnarly months — March 31 (a Tuesday), May 29 (a Friday), August 31 (a Monday). One line of text encodes a calendar's worth of behavior, and that's exactly why getting it wrong silently is so easy. The rule reads like prose, runs like a state machine, and fails like neither.
 
 This is part of how [Life Activity Hub](/blog/building-life-activity-hub-ai-productivity) syncs across five providers. Four edge cases follow — every one of them caused a real production bug for me, and every one of them survived a green CI suite before it got out.
 
@@ -50,7 +50,7 @@ Three honest options exist for parsing and expanding RRULEs in TypeScript, and I
 
 **Roll-your-own** is tempting after you've hit your third edge case and feel personally betrayed. Don't. RFC 5545 §3.3.10 alone is dense, and a faithful expander has to handle leap years, BYWEEKNO with ISO 8601 weeks, BYYEARDAY, and the COUNT-vs-UNTIL exclusivity. I have three abandoned branches that prove the lesson: the spec is bigger than your weekend.
 
-The shape I landed on is a thin domain wrapper over `rrule`. The whole thing fits in `apps/web/lib/recurrence/`:
+The shape I landed on is a thin domain wrapper over `rrule`. The whole thing fits in `packages/shared/src/recurrence/`:
 
 ```typescript
 // rrule-converter.ts
@@ -167,7 +167,7 @@ The lesson: any rule that uses `BYSETPOS` deserves a fixture spanning a full yea
 
 This bites hardest on CalDAV imports, where the source server emitted an EXDATE in UTC ("EXDATE:20261101T020000Z") while the parent VEVENT's RRULE has a TZID ("DTSTART;TZID=America/New_York:..."). The `rrule` library compares the `Date` produced by each side; the offsets don't align; nothing is excluded; ghost event on Halloween.
 
-The fix happens at parse time, in `rrule-converter.ts`. Every EXDATE gets normalized to the parent rule's timezone before it ever enters `RRule.exdate`:
+The fix happens at parse time, in `rrule-converter.ts`. Every EXDATE gets normalized to the parent rule's timezone before it ever enters `RRuleSet.exdate`:
 
 ```typescript
 function normalizeExdates(rawExdates: string[], parentTzid: string): Date[] {
