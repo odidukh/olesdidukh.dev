@@ -86,7 +86,7 @@ The mutation queue is the load-bearing piece of level 3 offline. Get it wrong an
 
 The lifecycle: a write enters the system → the entity store applies it optimistically to IndexedDB so the UI updates instantly → a `QueuedMutation` row lands in a Dexie object store with `status: 'pending'` → a drain loop replays it against the network when connectivity allows → on `2xx` we delete the row and reconcile any temp IDs with server IDs → on `5xx`/network we increment `retryCount` and leave the row pending → on `4xx` we mark the row `failed` and surface a retry banner. The shape isn't novel; the discipline is.
 
-Two object stores carry the weight. `mutations` is the active queue; `discardedMutations` is the audit log for rows we deliberately dropped (schema migrations, plan-version divergence, last-write-wins losers — more on that later). Both live in a single Dexie database alongside the local entity caches:
+Two object stores carry the weight. `mutations` is the active queue plus a soft-deleted tail — rows that lost a conflict or were otherwise dropped stay in the same table with a `discardedAt` timestamp and a `discardReason`, so the audit story and the active-queue story live in one index. `meta` is a small key/value store for cross-cutting state the queue depends on but doesn't own: the current plan version, the sync cursor for incremental pulls, and the `persistentStorageGranted` flag. Both live in a single Dexie database alongside the local entity caches:
 
 ```typescript
 // lib/db/offline-tables.ts (representative)
@@ -105,18 +105,29 @@ export interface QueuedMutation {
   status: 'pending' | 'processing' | 'failed';
   lastError?: string;
   planVersion?: number; // for version-fenced entities
+  discardedAt?: string; // ISO — set when the row is soft-deleted
+  discardReason?:
+    | 'conflict_server_wins'
+    | 'plan_version_stale'
+    | 'schema_migration';
+}
+
+export interface MetaRow {
+  key: string; // 'planVersion' | 'syncCursor' | 'persistentStorageGranted' | 'lastReplayAt'
+  value: unknown;
+  updatedAt: string;
 }
 
 class OfflineDatabase extends Dexie {
   mutations!: Table<QueuedMutation, string>;
-  discardedMutations!: Table<DiscardedMutation, number>;
+  meta!: Table<MetaRow, string>;
   // ...entity tables: activities, scheduledActivities, habits, dayPlans...
 
   constructor() {
     super('LifeActivityHubOffline');
     this.version(7).stores({
-      mutations: 'id, userId, status, timestamp',
-      discardedMutations: '++id, originalMutationId, reason, discardedAt',
+      mutations: 'id, userId, status, timestamp, discardedAt',
+      meta: 'key, updatedAt',
       // ...other stores
     });
   }
@@ -155,6 +166,8 @@ const response = await fetch(mutation.endpoint, {
 });
 ```
 
+A concrete failure that the idempotency contract has to handle: the user taps Save on a new activity, the request reaches the server and the row is committed, the server's `201 Created` response is dropped by the cabin Wi-Fi mid-flight, the client treats the request as failed and re-enqueues. Half an hour later the queue replays the same UUID, the server looks up `(userId, key)` in its idempotency table, finds the prior commit, and returns the original `201` payload — same server ID, same temp-ID reconciliation — instead of inserting a duplicate row. The same dedup table also short-circuits a stale request from a backgrounded tab whose lock expired between attempts.
+
 Two more invariants earned scars. First, leader election across tabs: if a user has the app open in three tabs, only one drains the queue at a time. The Web Locks API (`navigator.locks.request('laha:mutation-queue', { ifAvailable: true })`) gives you that for free; without it, three tabs replay every mutation three times and only the idempotency key saves you. Second, retention: failed mutations get a 30-day grace window before they're pruned, so a user who ignored the retry banner for a week doesn't lose their changes — but a user who ignored it for a year doesn't bloat IndexedDB into quota errors either.
 
 ## Background sync: Chrome Android vs. iOS Safari
@@ -174,7 +187,7 @@ async function registerMutationSync() {
         reg as ServiceWorkerRegistration & {
           sync: { register: (tag: string) => Promise<void> };
         }
-      ).sync.register('sync-mutations');
+      ).sync.register('replay-mutations');
     } catch {
       // Registration can fail if permission is denied or the tag is invalid.
     }
@@ -183,7 +196,7 @@ async function registerMutationSync() {
 
 // In public/sw.js: handle the sync event by waking up the page(s).
 self.addEventListener('sync', event => {
-  if (event.tag === 'sync-mutations') {
+  if (event.tag === 'replay-mutations') {
     event.waitUntil(notifyClientsToSync());
   }
 });
@@ -254,7 +267,7 @@ export function mergeActivity(
 }
 ```
 
-When the merge concludes that the local copy lost a field — title overwritten, notes truncated — the queue captures the discarded local body in the `discardedMutations` audit table with `reason: 'conflict_server_wins'`. The user sees a banner; one tap restores the lost values. That recovery path is the line between "we resolved a conflict" and "we silently destroyed your work."
+When the merge concludes that the local copy lost a field — title overwritten, notes truncated — the queue soft-deletes the losing mutation in place: the row stays in `mutations` with `discardedAt` set and `discardReason: 'conflict_server_wins'`, and its original body is preserved verbatim. The user sees a banner; one tap reads the soft-deleted row, re-enqueues a fresh mutation with the lost values, and clears the banner. That recovery path is the line between "we resolved a conflict" and "we silently destroyed your work."
 
 ## Storage management: quota, eviction, persistent storage prompt
 
@@ -297,7 +310,7 @@ Four metrics carry the weight. **Queue depth** is the size of `mutations` per us
 
 **Mean time-to-replay** is the delta between `timestamp` (enqueue) and row deletion (success). Median is microseconds when online. The interesting tail is offline sessions: did Background Sync fire on reconnect, did the iOS visibility fallback kick in within seconds of return? Watch p95 and p99, not the median.
 
-**Conflict rate** is `discardedMutations` with `reason: 'conflict_server_wins'` over total successful replays. A low single-digit percentage is healthy multi-device usage. A spike is a bug — either your merge function regressed, or a new feature is concurrently mutating the same field on two devices without a per-field rule.
+**Conflict rate** is rows in `mutations` with `discardReason: 'conflict_server_wins'` over total successful replays in the same window. A low single-digit percentage is healthy multi-device usage. A spike is a bug — either your merge function regressed, or a new feature is concurrently mutating the same field on two devices without a per-field rule.
 
 **Persistent storage grant rate** is `navigator.storage.persisted()` true over total active users. Below 30% means your prompt timing is wrong; above 70% means you've earned the right to ask. Track it weekly — it shifts with every prompt-copy change.
 
