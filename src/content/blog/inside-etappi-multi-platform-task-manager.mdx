@@ -29,9 +29,10 @@ likes: 0
 
 Etappi is a fast, offline-first task manager built for speed, sync, and simplicity. One TypeScript monorepo ships the same product to three places: a Next.js web app, an Expo iOS/Android app, and a Tauri desktop shell. Tasks, projects, labels, reminders, and a Pomodoro focus mode all sync through a single Hono + tRPC backend backed by Neon Postgres. Mobile is local-first via PowerSync, so reads and writes work without a network and reconcile when the device comes back online. I built and ship it solo — every architectural call below is one I have to live with on release day.
 
-<img src="/images/blog/etappi/web.png" alt="Etappi web app dashboard" />
-<img src="/images/blog/etappi/mobile.png" alt="Etappi on iOS" />
-<img src="/images/blog/etappi/desktop.png" alt="Etappi on macOS via Tauri" />
+<img
+  src="/images/blog/etappi/web.png"
+  alt="Etappi landing page — calm, offline-first task manager for Mac, iPhone, Android, and the web"
+/>
 
 ## Stack at a glance
 
