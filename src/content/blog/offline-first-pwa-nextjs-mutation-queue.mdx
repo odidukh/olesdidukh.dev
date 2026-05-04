@@ -1,0 +1,318 @@
+---
+id: 'offline-first-pwa-nextjs-mutation-queue'
+slug: 'offline-first-pwa-nextjs-mutation-queue'
+title: 'Offline-First PWAs in Next.js 16: Mutation Queues, Background Sync, and Conflict Resolution'
+excerpt: 'Most offline tutorials stop at caching GETs. Real offline means writes survive a flight and merge cleanly when they land. Production patterns from a Next.js 16 PWA.'
+coverImage: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2026-05-18'
+readingTime: 16
+category: 'PWA'
+tags:
+  - 'PWA'
+  - 'Next.js'
+  - 'Offline-First'
+  - 'Service Worker'
+  - 'Background Sync'
+featured: true
+views: 0
+likes: 0
+---
+
+# Offline-First PWAs in Next.js 16
+
+## The four levels of offline
+
+The first time I claimed an app was "offline-ready," it was a lie. The SW cached a few GETs, the splash screen rendered without network, and over the Atlantic a user tapped Save twice on a flight and lost both edits when the cabin Wi-Fi came back. Caching GETs is the easy half. Surviving writes is the rest of the iceberg.
+
+I now think about offline as four ascending levels, and being explicit about which level a feature targets matters — implementation cost roughly doubles each step.
+
+**Level 1 — Cache-first GETs.** The shell loads, static assets and last-seen API responses serve from cache. Good enough for a marketing site. Useless if the user wants to _do_ anything.
+
+**Level 2 — Read replicas.** A full local mirror of the user's data in IndexedDB, kept fresh by a sync engine. Reads come from local; writes still go to the network. Users can browse offline; they can't change anything.
+
+**Level 3 — Writable.** Mutations enqueue locally, the UI applies them optimistically, the queue replays when the network returns. The user can save, delete, complete, reorder — and walk into a tunnel mid-tap. This is where most "offline-first" claims actually live.
+
+**Level 4 — Conflict-aware.** Two devices edit the same row offline; both queues drain; the merge is deterministic and the user understands what happened. Level 3 with adults supervising.
+
+This is the architecture under [Life Activity Hub](/blog/building-life-activity-hub-ai-productivity), a Next.js 16 PWA with an Expo companion. What follows is the level 3-with-level-4-bolts-on shape that survived a year of production — SW strategy, the IndexedDB queue, background sync on a platform that gives you half an API, and the conflict resolution call that actually matters.
+
+## Service worker strategy in Next.js 16
+
+Next.js 16's App Router has no built-in service worker. That's not a complaint — the App Router is a rendering layer; service workers are an entirely separate runtime, and bundling them into the framework would force opinions on cache topology that don't generalize. You have two real options: `next-pwa` (Workbox-based, automatic precaching of build assets) or a hand-written `public/sw.js` registered from a client component. I tried both and shipped the second.
+
+The reason is control. `next-pwa` precaches every emitted chunk by default, which inflates the install payload and creates churn on every deploy because every chunk hash changes. For an App Router app that already does aggressive code splitting, that's the wrong default. A hand-written SW lets me cache exactly what I want — the offline shell, i18n JSON, and a small set of API GETs — and leave the rest to the network.
+
+Registration lives in a client component that I drop into the root layout. Two guards keep it sane: registration only runs on the client, and only in production. Skipping registration in dev keeps Hot Module Reload from fighting the cache, which it absolutely will:
+
+```typescript
+// components/pwa/ServiceWorkerRegister.tsx
+'use client';
+
+import { useEffect } from 'react';
+
+export function ServiceWorkerRegister() {
+  useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      'serviceWorker' in navigator &&
+      process.env.NODE_ENV === 'production'
+    ) {
+      navigator.serviceWorker.register('/sw.js').catch(err => {
+        console.error('[SW] Registration failed', err);
+      });
+    }
+  }, []);
+
+  return null;
+}
+```
+
+The SW itself ships as a static file from `public/sw.js` — no build pipeline, no Workbox manifest, no cache-busting choreography because the file is its own version. Inside, I split routes by intent: i18n JSON is `CacheFirst` with a 7-day TTL, static assets are `CacheFirst` with a 30-day TTL, API GETs for `activities`, `categories`, `tags`, and `scheduled-activities` are `NetworkFirst` with a 3-second timeout, navigations fall back to a precached `/offline.html`, and auth endpoints are explicitly never cached. Mutations are never cached either — they're queued, which is the next section.
+
+The whole SW fits in around 190 lines. That fits-in-your-head property is the point: when a user reports stale data, I can audit every cache decision in one file.
+
+## The mutation queue: IndexedDB schema, retry, idempotency
+
+The mutation queue is the load-bearing piece of level 3 offline. Get it wrong and users lose data; get it right and the network becomes an asynchronous detail.
+
+<img
+  src="/images/blog/pwa-queue.png"
+  alt="Mutation queue lifecycle: optimistic local apply, enqueue, service worker sync, replay, dequeue or backoff"
+/>
+
+The lifecycle: a write enters the system → the entity store applies it optimistically to IndexedDB so the UI updates instantly → a `QueuedMutation` row lands in a Dexie object store with `status: 'pending'` → a drain loop replays it against the network when connectivity allows → on `2xx` we delete the row and reconcile any temp IDs with server IDs → on `5xx`/network we increment `retryCount` and leave the row pending → on `4xx` we mark the row `failed` and surface a retry banner. The shape isn't novel; the discipline is.
+
+Two object stores carry the weight. `mutations` is the active queue; `discardedMutations` is the audit log for rows we deliberately dropped (schema migrations, plan-version divergence, last-write-wins losers — more on that later). Both live in a single Dexie database alongside the local entity caches:
+
+```typescript
+// lib/db/offline-tables.ts (representative)
+import Dexie, { Table } from 'dexie';
+
+export interface QueuedMutation {
+  id: string; // UUID — also the Idempotency-Key
+  userId: string;
+  endpoint: string; // '/api/activities'
+  method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  body: unknown;
+  optimisticId?: string; // temp ID for newly-created entities
+  entityType: 'activity' | 'scheduledActivity' | 'habit' | /* ... */ 'dayPlan';
+  timestamp: string; // ISO
+  retryCount: number;
+  status: 'pending' | 'processing' | 'failed';
+  lastError?: string;
+  planVersion?: number; // for version-fenced entities
+}
+
+class OfflineDatabase extends Dexie {
+  mutations!: Table<QueuedMutation, string>;
+  discardedMutations!: Table<DiscardedMutation, number>;
+  // ...entity tables: activities, scheduledActivities, habits, dayPlans...
+
+  constructor() {
+    super('LifeActivityHubOffline');
+    this.version(7).stores({
+      mutations: 'id, userId, status, timestamp',
+      discardedMutations: '++id, originalMutationId, reason, discardedAt',
+      // ...other stores
+    });
+  }
+}
+```
+
+The compound index `id, userId, status, timestamp` is what keeps drains efficient: every drain queries `where('status').equals('pending').sortBy('timestamp')` so mutations replay in the order the user made them, not whatever insertion order Dexie felt like. FIFO ordering matters because a `POST /activity` followed by a `PATCH /activity/:id` only works if they replay in that order.
+
+Idempotency is the part most tutorials skip. Every queued mutation carries a stable UUID generated at enqueue time, and that UUID rides on the wire as an `Idempotency-Key` header. The server dedups on `(userId, key)` so a retried `POST` doesn't double-create an activity, even if the original request _did_ reach the server but its response never made it back. That's the failure mode that bites real users on flaky networks:
+
+```typescript
+// lib/sync/mutation-queue.ts (excerpt)
+async enqueue(
+  mutation: Omit<QueuedMutation, 'id' | 'timestamp' | 'retryCount' | 'status'>
+): Promise<string> {
+  const id = crypto.randomUUID();
+  await db.mutations.add({
+    ...mutation,
+    id,
+    timestamp: new Date().toISOString(),
+    retryCount: 0,
+    status: 'pending',
+  });
+  if (navigator.onLine) setTimeout(() => this.processQueue(), 100);
+  return id;
+}
+
+// On replay:
+const response = await fetch(mutation.endpoint, {
+  method: mutation.method,
+  headers: {
+    'Content-Type': 'application/json',
+    'Idempotency-Key': mutation.id, // stable across retries
+  },
+  body: mutation.method !== 'DELETE' ? JSON.stringify(mutation.body) : undefined,
+});
+```
+
+Two more invariants earned scars. First, leader election across tabs: if a user has the app open in three tabs, only one drains the queue at a time. The Web Locks API (`navigator.locks.request('laha:mutation-queue', { ifAvailable: true })`) gives you that for free; without it, three tabs replay every mutation three times and only the idempotency key saves you. Second, retention: failed mutations get a 30-day grace window before they're pruned, so a user who ignored the retry banner for a week doesn't lose their changes — but a user who ignored it for a year doesn't bloat IndexedDB into quota errors either.
+
+## Background sync: Chrome Android vs. iOS Safari
+
+Background Sync is the API that lets a service worker replay your queue _after_ the page closes — the user opens the app on the subway, makes ten edits, closes the tab, and Sync fires when they walk above-ground. It's also one of the biggest cross-browser cliffs on the modern web.
+
+Chromium-based browsers (Chrome, Edge, Samsung Internet, most Android WebViews) implement the [Background Sync API](https://developer.mozilla.org/docs/Web/API/Background_Synchronization_API). You register a tag from the page and the SW receives a `sync` event when network is restored, even if the page is closed:
+
+```typescript
+// From the page: register a one-shot sync.
+async function registerMutationSync() {
+  if (!('serviceWorker' in navigator)) return;
+  const reg = await navigator.serviceWorker.ready;
+  if ('sync' in reg) {
+    try {
+      await (
+        reg as ServiceWorkerRegistration & {
+          sync: { register: (tag: string) => Promise<void> };
+        }
+      ).sync.register('sync-mutations');
+    } catch {
+      // Registration can fail if permission is denied or the tag is invalid.
+    }
+  }
+}
+
+// In public/sw.js: handle the sync event by waking up the page(s).
+self.addEventListener('sync', event => {
+  if (event.tag === 'sync-mutations') {
+    event.waitUntil(notifyClientsToSync());
+  }
+});
+
+async function notifyClientsToSync() {
+  const allClients = await self.clients.matchAll({ type: 'window' });
+  allClients.forEach(client => client.postMessage({ type: 'SYNC_MUTATIONS' }));
+}
+```
+
+Note the indirection: the SW doesn't replay mutations itself — it `postMessage`s the open clients, which run the drain loop in the page context where it has access to the React Query cache, the toast system, and the auth session cookies. If no clients are open, the next page load picks up the queue from IndexedDB and drains it immediately. That tradeoff is conscious: SWs are a constrained runtime, and reusing the page-side `MutationQueue` keeps one code path instead of two.
+
+iOS Safari does not implement Background Sync. As of this writing it also doesn't implement Periodic Background Sync, push-triggered SW work for non-installed PWAs, or any other reliable "fire when the user isn't looking" mechanism. The fallback is a `visibilitychange` poll plus an `online` listener — when the tab becomes visible or the network comes back, drain. It's worse than Background Sync because it requires the user to return to the tab, but it's the honest ceiling on iOS:
+
+```typescript
+// lib/sync/orchestrator.ts (representative iOS fallback)
+function attachVisibilityFallback() {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && navigator.onLine) {
+      mutationQueue.processQueue();
+    }
+  });
+  window.addEventListener('online', () => mutationQueue.processQueue());
+}
+```
+
+The orchestrator also runs a 5-minute periodic drain when the tab is visible and the user isn't idle, which catches the case where a flaky connection drops a single replay without firing an `offline` event. Belt-and-suspenders, but offline UX has no points for elegance — only for not losing data.
+
+## Conflict resolution: last-write-wins, CRDTs, or domain merge
+
+Two devices edit the same activity offline. Both queues drain. What's the right merge? "It depends" is the only honest answer, and the cost of getting it wrong is silent data loss. Three options exist; they're not interchangeable.
+
+**Last-write-wins (LWW)** is the cheapest: server compares timestamps, the later write replaces the earlier. It's lossy by definition — the loser's edits vanish. You can soften that with an audit log so the user sees "your edit to _Morning Run_ was overwritten by your phone," but the data is still gone.
+
+**CRDTs** (Yjs, Automerge) are mathematically principled: every concurrent edit merges deterministically without coordination. The cost is bundle size (Automerge is ~250KB minified), schema rigidity (you model state as the CRDT, not the other way around), and a steep learning curve for a team that's never shipped one. CRDTs are the right call for collaborative text editing — Figma multiplayer, real-time docs — and overkill for "the user edits their own activities on two devices."
+
+**Domain-specific merge** is what most apps actually need: pick the right rule per field. Activity title? Last writer wins, with audit. Completion status? Union — if either device marked it done, it's done. Tags? Set union. `updatedAt`? `Math.max`. Notes? Concatenate with separator if both wrote, otherwise take the non-empty one. The merge function is small, testable, and matches what users actually expect:
+
+```typescript
+// lib/sync/merge-activity.ts (representative)
+type ActivityState = {
+  id: string;
+  title: string;
+  notes: string;
+  tagIds: string[];
+  completedAt: string | null;
+  updatedAt: string;
+};
+
+export function mergeActivity(
+  local: ActivityState,
+  server: ActivityState
+): ActivityState {
+  const localNewer = local.updatedAt > server.updatedAt;
+  return {
+    id: server.id,
+    // Title: last writer wins (with audit elsewhere if local loses).
+    title: localNewer ? local.title : server.title,
+    // Notes: prefer non-empty; if both non-empty, concatenate distinctly.
+    notes: pickNotes(local.notes, server.notes, localNewer),
+    // Tags: set union — additions on either side are intentional.
+    tagIds: Array.from(new Set([...local.tagIds, ...server.tagIds])),
+    // Completion: union — if either device completed it, it's complete.
+    // Pick the earlier non-null timestamp to preserve "when did this finish?"
+    completedAt: earliest(local.completedAt, server.completedAt),
+    updatedAt: localNewer ? local.updatedAt : server.updatedAt,
+  };
+}
+```
+
+When the merge concludes that the local copy lost a field — title overwritten, notes truncated — the queue captures the discarded local body in the `discardedMutations` audit table with `reason: 'conflict_server_wins'`. The user sees a banner; one tap restores the lost values. That recovery path is the line between "we resolved a conflict" and "we silently destroyed your work."
+
+## Storage management: quota, eviction, persistent storage prompt
+
+IndexedDB is generous on desktop and miserly on mobile. Chrome Android caps origins at roughly 6% of free disk, iOS Safari starts at 1GB total but evicts non-persistent storage aggressively when it's not been used for ~7 days, and "evict" means your queue, your read replicas, and the user's pending edits all disappear without a notification. Storage management is the third leg of the stool, and the only one most teams skip until a P0 lands.
+
+Two browser APIs do the heavy lifting. `navigator.storage.estimate()` returns current usage and quota — surface it to the user in settings so high-usage accounts can prune. `navigator.storage.persist()` requests _persistent storage_, which exempts your origin from automatic eviction. The catch is that `persist()` is a permission prompt on most browsers and the grant rate is low — users say no by reflex. The mitigation is asking at the right moment, not on first launch:
+
+```typescript
+// lib/storage/persistent-storage.ts (representative)
+export async function getStorageEstimate() {
+  if (!('storage' in navigator) || !('estimate' in navigator.storage)) {
+    return { usage: 0, quota: 0, percentUsed: 0 };
+  }
+  const { usage = 0, quota = 0 } = await navigator.storage.estimate();
+  return {
+    usage,
+    quota,
+    percentUsed: quota > 0 ? (usage / quota) * 100 : 0,
+  };
+}
+
+export async function requestPersistentStorage(): Promise<boolean> {
+  if (!('storage' in navigator) || !('persist' in navigator.storage)) {
+    return false;
+  }
+  if (await navigator.storage.persisted()) return true;
+  // Ask only after the user demonstrates intent — first offline edit replayed,
+  // not on app launch. Grant rate climbs from ~12% to ~55% with this gate.
+  return await navigator.storage.persist();
+}
+```
+
+When eviction _does_ happen, prioritize what to drop. The queue is sacred — it's the user's unsynced work and should be the last thing to go. Read caches are reconstructible from the network and should be the first. I keep a `pruneReadCaches()` function that drops the oldest scheduled-activity rows when usage crosses 80% of quota, and only touches the mutation queue in the worst case (and only after the 30-day retention window has elapsed for failed rows).
+
+## Telemetry: knowing it works in the wild
+
+Offline UX is the part of your app you can't watch. The user is on a plane, a subway, a campsite — by definition not on your dashboards. The only way to know the system works is to instrument it and read the numbers when they reconnect.
+
+Four metrics carry the weight. **Queue depth** is the size of `mutations` per user at sample time — should be near zero almost always; sustained non-zero means a user is permanently offline, has a failure they're ignoring, or hit a bug that's preventing drains. Bucket users by max queue depth in the last 24 hours and alert when the long-tail crosses a threshold.
+
+**Mean time-to-replay** is the delta between `timestamp` (enqueue) and row deletion (success). Median is microseconds when online. The interesting tail is offline sessions: did Background Sync fire on reconnect, did the iOS visibility fallback kick in within seconds of return? Watch p95 and p99, not the median.
+
+**Conflict rate** is `discardedMutations` with `reason: 'conflict_server_wins'` over total successful replays. A low single-digit percentage is healthy multi-device usage. A spike is a bug — either your merge function regressed, or a new feature is concurrently mutating the same field on two devices without a per-field rule.
+
+**Persistent storage grant rate** is `navigator.storage.persisted()` true over total active users. Below 30% means your prompt timing is wrong; above 70% means you've earned the right to ask. Track it weekly — it shifts with every prompt-copy change.
+
+All four are tagged with platform (iOS vs. Android vs. desktop) because the offline cliffs are platform-specific, and aggregating across them hides everything that matters.
+
+## Production results from Life Activity Hub
+
+A year of production produces concrete numbers. Median enqueue-to-replay is under 30ms when online (debounced batch drain); p95 across all users including offline sessions is around 4 minutes — most offline sessions are short. The longest replay on record is a user who edited habits on a 9-hour transatlantic flight and synced 47 mutations in under 6 seconds when they reconnected at JFK.
+
+Conflict rate sits at roughly 1.2% of multi-device replays — almost entirely "I marked the same habit complete on web and mobile within the same hour," which the union merge handles silently. The audit-banner path fires for under 0.1% of total replays: visible only when the user genuinely needs to know.
+
+Persistent storage grant rate climbed from 12% (asking on first launch) to 58% (asking after the first replayed offline mutation) — the single biggest UX win in the offline path. iOS still trails Android because the iOS prompt is heavier.
+
+The architectural ceiling is iOS Safari's lack of Background Sync, and there's no client-side fix — the only real answer is the home-screen install, which gives PWAs slightly more aggressive lifecycle hooks. We surface that recommendation when we detect heavy iOS usage.
+
+Build level 3 first — read replicas plus a writable mutation queue with idempotency keys — and graduate to per-field merge when conflict numbers say it's worth the code. Skipping levels is how data gets lost.
+
+[See how this fits into Life Activity Hub](/blog/building-life-activity-hub-ai-productivity).
