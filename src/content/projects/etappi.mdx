@@ -1,0 +1,104 @@
+---
+id: 'etappi'
+title: 'Etappi — Cross-Platform Task Manager'
+description: 'Offline-first task management app sharing a single React Native codebase across web, iOS, Android, and desktop, backed by tRPC and PowerSync-replicated Postgres.'
+category: 'Web Application'
+technologies:
+  - 'React Native 0.81'
+  - 'React Native Web'
+  - 'Next.js 15'
+  - 'Expo 54'
+  - 'Tauri 2'
+  - 'Hono'
+  - 'tRPC 11'
+  - 'Drizzle ORM'
+  - 'Neon Postgres'
+  - 'PowerSync'
+  - 'Clerk'
+  - 'Stripe'
+  - 'NativeWind'
+  - 'TypeScript 5.9'
+  - 'Turborepo'
+image: '/images/projects/generic.png'
+images:
+  - '/images/projects/generic.png'
+  - '/images/projects/generic.png'
+  - '/images/projects/generic.png'
+featured: true
+year: 2026
+duration: 'Ongoing (2025–present)'
+role: 'Solo Founder / Full-Stack Engineer'
+challenges:
+  - 'Shipping one product across web, iOS, Android, and desktop without four divergent codebases'
+  - 'Keeping mobile fully usable offline while staying consistent with the server source of truth'
+  - 'Supporting collaborative task data (projects, members, comments, activity log) without relay-server complexity'
+  - 'Containing scope across product, brand, infrastructure, payments, and compliance as a solo build'
+solutions:
+  - 'Adopted React Native + React Native Web as the single UI runtime; web ships through Next.js 15, mobile through Expo 54, desktop through Tauri 2 — all consuming the same `packages/ui` family-primitive system'
+  - 'Made 14 of 21 tables syncable via PowerSync to SQLite on mobile, kept 7 server-only (push subscriptions, audit logs, Stripe events, entitlements)'
+  - 'Built a Hono + tRPC API split into 15 routers with fractional indexing for ordering and Drizzle ORM relations across 14 domain schema files'
+  - 'Standardized on a Notion-driven operating cadence (sprints, milestones, OKRs, Friday digest, decision log) to keep solo execution disciplined'
+results:
+  - metric: 'Web Routes (Production)'
+    value: '17'
+  - metric: 'tRPC Routers'
+    value: '15'
+  - metric: 'Sync Tables (mobile SQLite)'
+    value: '14'
+  - metric: 'Target Platforms'
+    value: 'Web · iOS · Android · Desktop'
+  - metric: 'Web Status'
+    value: 'Production'
+  - metric: 'Mobile Status'
+    value: 'Beta — App Store launch in flight'
+---
+
+Etappi is a modern, offline-first task manager built on a shared React Native codebase that runs on web, mobile, and desktop. Web is in production, mobile is in beta with an App Store launch in flight, and desktop runs on Tauri 2 with a signed updater.
+
+## One UI runtime, four targets
+
+The hard architectural bet is that all clients render the same React Native primitives:
+
+- **Web** — Next.js 15 + React Native Web (17 routes, themes, keyboard shortcuts, command palette)
+- **Mobile** — Expo 54 + Expo Router 6 (Phase 3 redesign live: Inbox, Today, Upcoming, Search, Projects)
+- **Desktop** — Tauri 2 with signed auto-updater and hardened capabilities
+- **Shared UI** — `packages/ui` family-primitive system with bold / glass / native variants
+
+This is what makes "ship one product on four platforms" tractable for a solo build.
+
+## Backend
+
+A Hono + tRPC API on Vercel Serverless, split into 15 domain routers. Persistence is Neon Postgres with Drizzle ORM, schema split across 14 domain files plus a relations file.
+
+| Concern  | Choice                        |
+| -------- | ----------------------------- |
+| API      | Hono + tRPC 11                |
+| Database | Neon Postgres + Drizzle ORM   |
+| Auth     | Clerk                         |
+| Payments | Stripe                        |
+| Storage  | Cloudflare R2 (S3-compatible) |
+| Push     | Web Push (VAPID) + Expo       |
+| Sync     | PowerSync (SQLite ↔ Postgres) |
+| Testing  | Vitest + Playwright           |
+
+## Sync model
+
+Of 21 tables, 14 are replicated to mobile SQLite via PowerSync (`users`, `projects`, `sections`, `tasks`, `labels`, `comments`, `project_members`, `activity_log`, `attachments`, `notifications`, `filters`, `reminders`, `task_dependencies`, `focus_sessions`). 7 stay server-only and never touch a client (`push_subscriptions`, `admin_audit_log`, `stripe_webhook_events`, `moderation_reports`, `user_blocks`, `entitlements`, `entitlement_events`).
+
+All tables use UUID keys, ISO 8601 timestamps, and fractional indexing for user-controlled ordering.
+
+## App status
+
+| App     | Status     | Notes                                                                                                    |
+| ------- | ---------- | -------------------------------------------------------------------------------------------------------- |
+| Web     | Production | 17 routes, tRPC, themes, keyboard shortcuts, command palette                                             |
+| API     | Production | 15 tRPC routers, Stripe, web-push, cron reminders                                                        |
+| Mobile  | Beta       | Phase 3 redesign shipped across Inbox / Today / Upcoming / Search / Projects; App Store launch in flight |
+| Desktop | Beta       | Tauri 2 shell functional with signed updater; OAuth deep-link + auto-update wiring in progress           |
+
+## Active workstreams
+
+- Brand rollout: typography unification (Plus Jakarta Sans + JetBrains Mono), wordmark, press kit
+- Mobile App Store launch: convergence + listing assets
+- Top-10 large-file refactor: PR1–PR10 all merged
+- Security: desktop hardening shipped (signed updater); mobile biometric unlock spec'd

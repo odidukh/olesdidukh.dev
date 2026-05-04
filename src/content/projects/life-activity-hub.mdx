@@ -1,0 +1,86 @@
+---
+id: 'life-activity-hub'
+title: 'Life Activity Hub'
+description: 'Full-stack productivity platform unifying activity tracking, habit formation, and energy optimization across web (PWA) and mobile from a shared TypeScript core.'
+category: 'Web Application'
+technologies:
+  - 'Next.js 16'
+  - 'React 19'
+  - 'TypeScript 5.9'
+  - 'Expo 54'
+  - 'React Native 0.81'
+  - 'NativeWind 4'
+  - 'Prisma 7'
+  - 'PostgreSQL'
+  - 'NextAuth.js'
+  - 'React Query'
+  - 'Turborepo'
+image: '/images/projects/generic.png'
+images:
+  - '/images/projects/generic.png'
+  - '/images/projects/generic.png'
+  - '/images/projects/generic.png'
+liveUrl: 'https://life-activity-hub.vercel.app'
+featured: true
+year: 2026
+duration: 'Ongoing (2025–present)'
+role: 'Solo Full-Stack Engineer'
+challenges:
+  - 'Sharing business logic (scheduling, recurrence, energy modeling, i18n) across Next.js web and Expo mobile without duplication'
+  - 'Designing a 96-model relational schema that stays performant as activity history scales'
+  - 'Maintaining a 1,481-test safety net across web, mobile, and shared packages while shipping weekly'
+  - 'Delivering offline-first mobile UX backed by an online-first web PWA against the same API'
+solutions:
+  - 'Built a Turborepo monorepo with a shared `@life-activity-hub/shared` package — types, validation, contracts, scheduling, habits, recurrence, energy, i18n — consumed by both apps'
+  - 'Modeled the domain in Prisma 7 across 96 models with strict relational constraints and indexed query paths'
+  - 'Adopted React Query on both clients with SQLite cache on mobile for offline reads and optimistic mutations'
+  - 'Localized to 5 languages (en, de, es, fr, uk) from a single message catalog'
+results:
+  - metric: 'API Endpoints'
+    value: '317'
+  - metric: 'Web Components'
+    value: '1,210'
+  - metric: 'Mobile Components'
+    value: '407'
+  - metric: 'Database Models'
+    value: '96'
+  - metric: 'Test Files'
+    value: '1,481'
+  - metric: 'Locales'
+    value: '5'
+---
+
+A comprehensive personal productivity platform for managing activities, tracking habits, optimizing energy levels, and building better routines. The system spans a Next.js 16 PWA on the web and an Expo / React Native app on mobile, both backed by the same Postgres database and a shared TypeScript core that holds all non-trivial business logic.
+
+## Architecture
+
+A Turborepo monorepo with three first-class workspaces:
+
+- `apps/web` — Next.js 16 PWA with React Query, NextAuth.js, and CSS Modules
+- `apps/mobile` — Expo 54 / React Native 0.81 app with Expo Router 6, NativeWind 4, and SQLite-backed offline cache
+- `packages/shared` — types, validation, contracts, scheduling, habits, recurrence, energy modeling, and i18n; the single source of truth for both clients
+
+Persistence is Prisma 7 against PostgreSQL (Supabase), with 317 API endpoints exposing the domain to both clients.
+
+## Why a shared package
+
+Productivity logic — recurrence rules, habit streak calculation, energy/load modeling, scheduling windows — is the kind of code where divergence between platforms quickly turns into bugs the user can feel. Centralizing it in `packages/shared` means every fix and every new rule lands once and ships everywhere.
+
+## Scale
+
+| Surface           | Count |
+| ----------------- | ----- |
+| API endpoints     | 317   |
+| Web components    | 1,210 |
+| Mobile components | 407   |
+| Custom hooks      | 330   |
+| Database models   | 96    |
+| Test files        | 1,481 |
+| Locales           | 5     |
+
+## Deployment
+
+- **Web**: Vercel (preview + production)
+- **Mobile**: EAS Build for iOS and Android
+- **Database**: Supabase (PostgreSQL)
+- **CI/CD**: GitHub Actions pipelines per app
