@@ -2,7 +2,7 @@
 
 - **Date**: 2026-05-04
 - **Author**: Oles Didukh
-- **Status**: Draft pending review
+- **Status**: Approved 2026-05-04
 - **Source projects**: `etappi/` and `life-activity-hub/` (sibling repos under `~/development/`)
 - **Target repo**: `olesdidukh.dev` (this repo)
 - **Output location**: `src/content/blog/*.mdx`
