@@ -1,0 +1,120 @@
+---
+id: 'inside-etappi'
+slug: 'inside-etappi-multi-platform-task-manager'
+title: 'Inside Etappi: Building a Multi-Platform Task Manager Solo with Turborepo, tRPC, and Tauri'
+excerpt: 'A tour of Etappi: stack, architecture, and four decisions I made building a task manager that ships to web, mobile, and desktop from one TypeScript monorepo.'
+coverImage: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&q=80'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2026-06-01'
+readingTime: 10
+category: 'Case Study'
+tags:
+  - 'Case Study'
+  - 'Etappi'
+  - 'Turborepo'
+  - 'tRPC'
+  - 'Tauri'
+  - 'Hono'
+featured: false
+views: 0
+likes: 0
+---
+
+# Inside Etappi: Building a Multi-Platform Task Manager Solo
+
+## The product in 60 seconds
+
+Etappi is a fast, offline-first task manager built for speed, sync, and simplicity. One TypeScript monorepo ships the same product to three places: a Next.js web app, an Expo iOS/Android app, and a Tauri desktop shell. Tasks, projects, labels, reminders, and a Pomodoro focus mode all sync through a single Hono + tRPC backend backed by Neon Postgres. Mobile is local-first via PowerSync, so reads and writes work without a network and reconcile when the device comes back online. I built and ship it solo — every architectural call below is one I have to live with on release day.
+
+<img src="/images/blog/etappi/web.png" alt="Etappi web app dashboard" />
+<img src="/images/blog/etappi/mobile.png" alt="Etappi on iOS" />
+<img src="/images/blog/etappi/desktop.png" alt="Etappi on macOS via Tauri" />
+
+## Stack at a glance
+
+The stack is deliberately small for a project this size. Every layer was picked so a single person can ship a feature end-to-end without wiring three different SDKs together. The constraint I held myself to: TypeScript everywhere, one ORM, one auth provider, and one data-fetching layer that all three clients agree on. Anything that breaks that rule has to earn it.
+
+| Layer    | Technology                              | Version                      |
+| -------- | --------------------------------------- | ---------------------------- |
+| Monorepo | Turborepo + pnpm workspaces             | Turbo 2.5, pnpm 10           |
+| Web      | Next.js (App Router) + React Native Web | Next 15.3, RN Web 0.21       |
+| Mobile   | Expo + React Native                     | Expo 54, RN 0.81             |
+| Desktop  | Tauri                                   | 2.x                          |
+| API      | Hono + tRPC                             | Hono 4.7, tRPC 11.1          |
+| Database | Neon Postgres + Drizzle ORM             | Drizzle 0.44                 |
+| Auth     | Clerk                                   | 6.x                          |
+| Styling  | NativeWind (Tailwind for RN)            | NativeWind 4.1, Tailwind 3.4 |
+| Payments | Stripe                                  | 22.x                         |
+| Storage  | Cloudflare R2                           | S3-compatible                |
+| Push     | Web Push (VAPID) + Expo Push            | web-push 3.6                 |
+| Testing  | Vitest + Playwright + Maestro           | Vitest 3, Playwright 1.59    |
+| Language | TypeScript                              | 5.9 (strict)                 |
+| Runtime  | Node.js                                 | 22.x                         |
+
+<img
+  src="/images/blog/etappi/arch.png"
+  alt="Etappi architecture: shared core feeds web, mobile, and desktop apps; API on Hono + tRPC; Neon Postgres via Drizzle"
+/>
+
+## Decision 1: tRPC over REST/GraphQL
+
+tRPC is the contract between the API and three client apps. I picked it because it solves the one problem I would otherwise be debugging every week: drift between server types and client types. With tRPC, the inferred `AppRouter` type flows from `apps/api/src/trpc/router.ts` straight into `@trpc/react-query` on web and mobile. Rename a procedure, change an input shape, drop a field — every call site lights up red in the IDE before I even hit save. There is no codegen step, no OpenAPI file to keep in sync, no GraphQL schema to maintain alongside resolvers. For a solo project where I am both the API author and the client author, that round-trip is enormous.
+
+A representative procedure:
+
+```typescript
+export const tasksRouter = router({
+  create: protectedProcedure
+    .input(createTaskSchema)
+    .mutation(async ({ ctx, input }) => {
+      const [task] = await ctx.db
+        .insert(tasks)
+        .values({ ...input, userId: ctx.userId })
+        .returning();
+      return task;
+    }),
+});
+```
+
+The friction is real, though. Mobile cold-start is heavier than a hand-written REST call because the typed client pulls in batching, transformer, and react-query glue. The error shape is a tRPC `TRPCClientError`, not a plain HTTP error, so existing error-handling utilities don't quite fit. And there is no native HTTP caching — `Cache-Control` doesn't apply to a JSON-RPC POST. I worked around it with a thin typed wrapper that maps `TRPCClientError` to a domain `AppError`, plus react-query's own cache for the read paths where I'd otherwise want a CDN.
+
+## Decision 2: Drizzle + Neon over Prisma + Postgres
+
+I started this project with Prisma muscle memory. I switched to Drizzle for two concrete reasons. First, Vercel cold starts: Prisma's query engine binary adds startup cost on serverless, and Drizzle is just a TypeScript layer over a node-postgres-compatible driver — no engine, no generate step in the build. Second, I needed the same schema definitions to power both the server (Postgres via `drizzle-orm/pg-core`) and the mobile PowerSync replica (SQLite via `drizzle-orm/sqlite-core`). Drizzle's per-dialect schema modules made that natural; I export `pg-core` definitions from `packages/db/src/server/` and the mirrored `sqlite-core` definitions from `packages/db/src/client/`.
+
+Friction shows up in two places. Migrations are less hand-holdy than Prisma Migrate: drizzle-kit will happily generate a SQL diff that drops a column and you have to read it. And the query API is closer to SQL, which means more lines for joins than Prisma's nested includes. I resolved the migration risk with a "review-then-apply" rule: every `drizzle-kit generate` output gets read top to bottom before I run `push`, and destructive changes go through a manual `ALTER` script instead. For the verbose joins I lean on Drizzle's relational query builder where the shape allows, which gets back most of the ergonomics without giving up the cold-start win.
+
+## Decision 3: Tauri over Electron
+
+Desktop was the last surface I added, and Tauri was the only one I seriously considered. Electron means shipping a Chromium runtime with every release — a ~150 MB download for a task manager is absurd. Tauri uses the OS's WebView (WebKit on macOS, WebView2 on Windows, WebKitGTK on Linux), so the binary is closer to 5–10 MB. The shell is Rust, which is a stack I am happy to keep at arm's length: I did not need to write Rust day-to-day, just the tiny `lib.rs` builder entry and a `tauri.conf.json` that wires my Next.js export into a 1200×800 window.
+
+Friction: WebView differences are real. Safari on macOS lags behind Chrome on a few CSS features, and what works in `next dev` may render slightly differently in the WebKit shell. Code-signing and notarization on macOS are their own multi-day rabbit hole, separate from anything Tauri can automate for you. The build pipeline is also non-trivial — for production I run `next build` with `TAURI_BUILD=true` to flip Next into `output: "export"` mode, then Tauri bundles `apps/web/out`. GitHub Actions handles the per-OS native binaries on tag push. Resolution was mostly process: a WebKit-specific manual QA pass before each release, a `build-web.sh` script that hides the export-mode toggle, and accepting that the desktop binary trails web by a release cycle.
+
+## Decision 4: Clerk over rolling auth
+
+Auth is the single component I was least willing to own. Etappi needs email/password, social sign-in, Apple Sign In on iOS (App Store requirement when you offer any other social provider), session management across web and mobile, and a server-verifiable token for the API. Clerk gives me all of that out of the box: `@clerk/nextjs` on web, `@clerk/clerk-expo` on mobile with a token cache for native storage, and `@hono/clerk-auth` middleware on the API. The tRPC context resolves `userId` once per request via `getAuth(c)`, and a `protectedProcedure` throws `UNAUTHORIZED` for anything missing. Two concrete bypasses live outside Clerk by design: the Stripe webhook (raw body for signature verification) and Vercel Cron routes (`CRON_SECRET` header).
+
+Friction is the usual managed-auth tax. Clerk's UI components are opinionated, the free tier has a hard MAU ceiling, and you are one vendor outage away from nobody being able to log in. Customizing the sign-in flow beyond Clerk's theming hooks gets harder past a certain point. I mitigated the lock-in risk by keeping every reference to a Clerk user behind a stable string `userId` in the database (Clerk's user ID, stored as the PK on `users`), so a future migration touches identity but not the data model. I also keep one synthetic end-to-end auth test in CI as a vendor-down canary. **I would not roll auth solo.** The total time I have spent on Clerk integration over the life of the project is less than what one production session bug would cost me.
+
+## What's hard about solo cross-platform
+
+Picking the right stack is the easy part. Living with three release surfaces is the actual job, and most of it has nothing to do with code.
+
+1. **Three release pipelines.** Web is `git push` to Vercel and it's live in 90 seconds. Mobile is an EAS build, an OTA channel, or a store submission depending on what changed. Desktop is a tag push that fans out to three GitHub Actions runners (macOS, Windows, Linux) and produces signed installers. Every release decision starts with "which of these three pipelines does this change need?" — and getting that wrong means either a stale client in the wild or a wasted hour rebuilding artifacts you didn't have to.
+
+2. **Three review processes.** Apple's App Store is the slowest and the most opinionated. Google Play is faster but has its own metadata gauntlet. Tauri builds need notarization on macOS (a multi-step Apple Developer process that can fail for reasons unrelated to your code) and Windows code signing for SmartScreen reputation. None of these can be automated end-to-end. Each one is a queue with a human at the other end.
+
+3. **Keeping shared types stable across versions.** The mobile app I shipped two weeks ago is still running on someone's phone. If I rename a tRPC procedure today, that older client breaks the moment it tries to sync. Server code has to be backward-compatible with every mobile binary still in the wild — which means deprecating fields instead of dropping them, and adding new procedures alongside the old ones rather than reshaping inputs.
+
+4. **Telemetry per platform.** Sentry has SDKs for browser, React Native, and Tauri, but each has its own source-map upload story, release-tagging conventions, and noise profile. A useful "what broke for users in the last 24 hours" view takes deliberate setup per surface — and you only notice the gaps when something actually breaks.
+
+## Roadmap and open-sourceable bits
+
+Near-term roadmap: finishing the PowerSync rollout to web (today web is tRPC-only; mobile is local-first), shipping the desktop binary to real users instead of the small group of testers it sits with now, and hardening the per-project collaboration capability matrix that already lives in `apps/api/src/trpc/access/`. After that, full keyboard-first navigation on web — command palette, fuzzy search, the works.
+
+Two pieces inside the monorepo are the kind of thing I would extract to standalone packages first if I had the time. The tRPC + Hono + Clerk wiring (`createContext`, `protectedProcedure`, `withProjectAccess`, the role resolver) is the same boilerplate any solo founder writes from scratch and would save someone an afternoon. The `fractional-indexing` + UUID ordering helpers in `@etappi/shared` would save whoever ships a drag-to-reorder list a week of edge cases — fractional ordering is one of those things that looks trivial until you handle the cases where two users insert in the same gap from different devices.
+
+If you want the structural side of how this all fits together, I'm doing [a deep-dive on the monorepo structure](/blog/typescript-monorepo-web-mobile-desktop) next.
