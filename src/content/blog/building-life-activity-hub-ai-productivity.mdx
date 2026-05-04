@@ -53,7 +53,7 @@ The planner is the feature that justifies the rest. It's opt-in via a `plannerMo
   alt="LAH AI planner showing today's schedule with confidence indicators"
 />
 
-Confidence is a three-bucket model — `'low' | 'medium' | 'high'` — derived from how much historical data the predictive layer has for that user, day-of-week, and energy pattern. Under 4 weeks of history is `low` and the planner emits suggestions instead of writing the schedule directly. Between 8 and 11 weeks is `medium`: the planner writes the schedule but flags every block for review. Twelve weeks and up is `high`: it schedules autonomously and only surfaces changes if the user opens the day. The thresholds aren't theoretical — they're in `apps/web/lib/daily-planner/predictive-template.ts` and tested in the same folder.
+Confidence is a three-bucket model — `'low' | 'medium' | 'high'` — derived from how much historical data the predictive layer has for that user, day-of-week, and energy pattern. Under 4 weeks of history is `low` and the planner emits suggestions instead of writing the schedule directly. Between 4 and 11 weeks is `medium`: the planner writes the schedule but flags every block for review. Twelve weeks and up is `high`: it schedules autonomously and only surfaces changes if the user opens the day. The thresholds aren't theoretical — they're in `apps/web/lib/daily-planner/predictive-template.ts` and tested in the same folder.
 
 Replanning fires on three triggers: morning (cron-driven, user-timezone aware), mid-day when the day deviates from plan by a measurable threshold, and on calendar changes — when `sync-orchestrator.ts` sees a new meeting imported from Google or Outlook, it calls `detectMeetingAdded` and the planner reshuffles around it.
 
