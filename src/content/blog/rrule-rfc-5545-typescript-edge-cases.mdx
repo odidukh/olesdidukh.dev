@@ -1,0 +1,281 @@
+---
+id: 'rrule-rfc-5545-typescript-edge-cases'
+slug: 'rrule-rfc-5545-typescript-edge-cases'
+title: 'Implementing RFC 5545 RRULE in TypeScript: Edge Cases Nobody Warns You About'
+excerpt: 'Calendar sync sounds easy until your unit tests pass and production users see ghost events on Halloween. Four RRULE edge cases I hit in production.'
+coverImage: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1200&q=80'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2026-05-11'
+readingTime: 14
+category: 'Architecture'
+tags:
+  - 'RFC 5545'
+  - 'RRULE'
+  - 'Calendar'
+  - 'TypeScript'
+  - 'Edge Cases'
+featured: false
+views: 0
+likes: 0
+---
+
+# Implementing RFC 5545 RRULE in TypeScript
+
+## Why RRULE? The 60-line ICS string that runs your calendar
+
+The first time I shipped a calendar with recurrence support, my unit tests passed and a beta user texted me a screenshot of a "Team standup" event firing twice on the morning the clocks sprang forward — and not at all on Halloween, when the clocks fell back. Ghost events on Halloween. That's the bug class I'm here to talk about.
+
+RFC 5545 — the iCalendar spec — is the lingua franca of calendar interop. Everywhere two systems agree on what "every last weekday of the month" means, they're agreeing in a 60-line ICS payload, and the load-bearing line in that payload is the `RRULE`. It's a compact recurrence DSL: a `FREQ`, an optional `INTERVAL`, optional `BYDAY` / `BYMONTHDAY` / `BYSETPOS` filters, and a termination clause (`COUNT` or `UNTIL`). The spec is small and the surface area is enormous.
+
+The "last weekday of the month" rule, in production:
+
+```text
+FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
+```
+
+Six tokens. Picks the last working day of every month, including the gnarly months — March 31 (a Tuesday), May 30 (a Friday), August 31 (a Sunday-skip to Friday August 30). One line of text encodes a calendar's worth of behavior, and that's exactly why getting it wrong silently is so easy. The rule reads like prose, runs like a state machine, and fails like neither.
+
+This is part of how [Life Activity Hub](/blog/building-life-activity-hub-ai-productivity) syncs across five providers. Four edge cases follow — every one of them caused a real production bug for me, and every one of them survived a green CI suite before it got out.
+
+## The library landscape: rrule.js, ical.js, and roll-your-own
+
+Three honest options exist for parsing and expanding RRULEs in TypeScript, and I've shipped all three at various points before settling.
+
+**`rrule@^2.8.1`** is what Life Activity Hub uses today. It parses RRULE strings, expands them into JavaScript `Date` arrays, supports `between(start, end)` range queries, and ships TypeScript types. It's also the one with the most warts — `Date` is a poor return type for timezone-aware recurrence, and the library defaults to "floating" (timezone-less) datetimes unless you opt in to `tzid`. More on that in edge case 1.
+
+**`ical.js`** (Mozilla's, originally for Thunderbird) parses entire ICS files, including `VEVENT`, `EXDATE`, `RDATE`, and `VTIMEZONE` blocks. If you're consuming whole ICS payloads end-to-end — CalDAV, Apple Calendar, ICS subscription URLs — `ical.js` covers more of the spec. The trade-off is a heavier API and a steeper learning curve for the "I just need to expand this rule between two dates" case.
+
+**Roll-your-own** is tempting after you've hit your third edge case and feel personally betrayed. Don't. RFC 5545 §3.3.10 alone is dense, and a faithful expander has to handle leap years, BYWEEKNO with ISO 8601 weeks, BYYEARDAY, and the COUNT-vs-UNTIL exclusivity. I have three abandoned branches that prove the lesson: the spec is bigger than your weekend.
+
+The shape I landed on is a thin domain wrapper over `rrule`. The whole thing fits in `apps/web/lib/recurrence/`:
+
+```typescript
+// rrule-converter.ts
+import {
+  RRule,
+  Frequency as RRuleFrequency,
+  Weekday as RRuleWeekday,
+} from 'rrule';
+import type {
+  RecurrencePatternInput,
+  RecurrencePatternData,
+} from '@lah/shared/recurrence';
+
+export function patternToRRule(pattern: RecurrencePatternInput): RRule;
+export function dataToRRule(data: RecurrencePatternData): RRule;
+
+// instance-generator.ts
+export function generateOccurrences(
+  pattern: RecurrencePatternInput,
+  options: GenerateOccurrencesOptions
+): GenerateOccurrencesResult;
+
+export function generateOccurrencesFromData(
+  data: RecurrencePatternData,
+  options: GenerateOccurrencesOptions
+): GenerateOccurrencesResult;
+```
+
+The wrapper exists so I unit-test _my_ rules — the four below — instead of re-testing rrule's parser. Every weird case in this article has a test that calls `generateOccurrences` and asserts on the array, and every one of those tests caught something.
+
+## Edge case 1: DST transitions
+
+The Halloween bug was a DST bug. The rule was `FREQ=WEEKLY;BYDAY=SU` for a 2:30 AM Sunday backup job. On the Sunday in November when clocks fell back, 2:30 AM happened twice — once before the rollback and once after. On the Sunday in March when they sprang forward, 2:30 AM didn't exist at all. The `rrule` library, by default, treats a DTSTART without `TZID` as a _floating_ datetime: it computes occurrences as a `Date` whose UTC value preserves the local-time wall clock, not the absolute instant in time. Locally that looks correct. In production — where users are in 200+ timezones and the server is in UTC — it's chaos.
+
+The shape of the problem, before fix:
+
+```typescript
+// Naive: floating datetime, server-local interpretation
+const rule = new RRule({
+  freq: RRule.WEEKLY,
+  byweekday: [RRule.SU],
+  dtstart: new Date('2026-03-08T02:30:00'), // no TZ info
+  count: 4,
+});
+rule.all();
+// Returns Dates whose UTC offsets shift across the DST boundary.
+// On the spring-forward Sunday: occurrence is at 03:30 local, not 02:30.
+// On the fall-back Sunday: occurrence runs once but a second cron tick fires.
+```
+
+The fix is to anchor every recurrence in an explicit IANA timezone — never floating. `rrule` supports this via the `tzid` option, which switches the expansion engine to a timezone-aware mode that asks the host for the correct offset at each occurrence:
+
+```typescript
+// Correct: explicit IANA TZID, expansion is offset-aware
+const rule = new RRule({
+  freq: RRule.WEEKLY,
+  byweekday: [RRule.SU],
+  dtstart: new Date(Date.UTC(2026, 2, 8, 7, 30, 0)), // 02:30 America/New_York
+  tzid: 'America/New_York',
+  count: 4,
+});
+// rule.all() now skips the non-existent 02:30 on spring-forward
+// and produces a single, unambiguous instant on fall-back.
+```
+
+Two upstream invariants make the fix stick. First, every recurrence pattern in Postgres stores its timezone alongside the pattern itself, in a `tzid` column on `recurrence_pattern`. Second, every `scheduledDate` is `timestamptz` — Postgres stores the absolute UTC instant, and the application chooses how to render it. Floating times don't survive the type system. If a CalDAV import ever hands me a DTSTART without a TZID, `rrule-converter.ts` rejects it at parse time rather than guessing UTC.
+
+## Edge case 2: BYSETPOS plus BYDAY (the "last weekday" trap)
+
+`BYSETPOS=-1` looks like English: "the last one." `BYDAY=MO,TU,WE,TH,FR` looks like English: "any weekday." Combined, your brain reads "the last weekday." The spec doesn't agree.
+
+Per RFC 5545 §3.3.10, `BYSETPOS` operates on the _expansion set_ produced by the rest of the rule, _within the period defined by FREQ_. So `FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1` means: expand monthly into all Mon/Tue/Wed/Thu/Fri occurrences, then take the last one. That actually does compute the last working day of the month — but the algorithm is non-obvious, and the moment someone drops the `BYSETPOS` and writes `FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR` they get a completely different (and almost always wrong) result: the last Monday _and_ the last Tuesday _and_ the last Wednesday, etc. — five events per month instead of one.
+
+I caught it with an end-of-quarter test fixture:
+
+```typescript
+// Correct: last working day of the month
+const lastWorkday = new RRule({
+  freq: RRule.MONTHLY,
+  byweekday: [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR],
+  bysetpos: -1,
+  dtstart: new Date(Date.UTC(2026, 0, 1)),
+  count: 12,
+});
+// → Jan 30 (Fri), Feb 27 (Fri), Mar 31 (Tue), Apr 30 (Thu),
+//   May 29 (Fri), Jun 30 (Tue), Jul 31 (Fri), Aug 31 (Mon),
+//   Sep 30 (Wed), Oct 30 (Fri), Nov 30 (Mon), Dec 31 (Thu)
+```
+
+Compare to the wrong shape, which slipped past me once in a code review:
+
+```typescript
+// WRONG: five events per month, not one
+const wrong = new RRule({
+  freq: RRule.MONTHLY,
+  byweekday: [
+    RRule.MO.nth(-1),
+    RRule.TU.nth(-1),
+    RRule.WE.nth(-1),
+    RRule.TH.nth(-1),
+    RRule.FR.nth(-1),
+  ],
+  dtstart: new Date(Date.UTC(2026, 0, 1)),
+  count: 12,
+});
+// → 60 occurrences in 2026, not 12.
+```
+
+The lesson: any rule that uses `BYSETPOS` deserves a fixture spanning a full year, including the four end-of-quarter months and at least one February. End-of-quarter is where finance reports get scheduled, which is where my users notice fastest. The deeper trap is that the "human" reading and the "spec" reading look almost identical, and the spec reading is the one the parser implements — code review will not catch it unless the reviewer has been bitten before.
+
+## Edge case 3: EXDATE with timezone mismatches
+
+`EXDATE` is the iCalendar way to say "this recurrence applies _except_ on these specific dates." It looks innocent and it has a knife behind its back: an `EXDATE` line without a `TZID` parameter is interpreted as a _floating_ date, and floating dates compare to timezone-anchored dates in a way that almost never matches. Result: the EXDATE silently fails to exclude anything, and the user sees the cancelled occurrence anyway.
+
+This bites hardest on CalDAV imports, where the source server emitted an EXDATE in UTC ("EXDATE:20261101T020000Z") while the parent VEVENT's RRULE has a TZID ("DTSTART;TZID=America/New_York:..."). The `rrule` library compares the `Date` produced by each side; the offsets don't align; nothing is excluded; ghost event on Halloween.
+
+The fix happens at parse time, in `rrule-converter.ts`. Every EXDATE gets normalized to the parent rule's timezone before it ever enters `RRule.exdate`:
+
+```typescript
+function normalizeExdates(rawExdates: string[], parentTzid: string): Date[] {
+  return rawExdates.map(raw => {
+    const parsed = parseIcsDate(raw); // returns { value: Date, floating: boolean }
+    if (parsed.floating) {
+      // Re-anchor floating EXDATE to parent rule's TZID
+      return zonedTimeToUtc(parsed.value, parentTzid);
+    }
+    return parsed.value; // already absolute (UTC or with TZID)
+  });
+}
+```
+
+The principle is: a recurrence pattern has _one_ canonical timezone, and every date attached to it — DTSTART, UNTIL, EXDATE, RDATE — must be interpretable in that timezone. Mixed-zone state is a parse-time error, not a runtime guess. After this change, `applyExceptionsToOccurrences` (the function that filters the expanded series against database-stored exceptions) became dramatically simpler: it can compare ISO date strings because it knows both sides agree on the zone. The downstream payoff is that exception handling — `prepareModifiedExceptionData`, `prepareDeletedExceptionData` — never has to second-guess what the user meant by "this date." There's exactly one zone, and it's the parent rule's.
+
+## Edge case 4: COUNT vs UNTIL and floating dates
+
+RFC 5545 §3.3.10 is unambiguous about two things and TypeScript types don't enforce either: `COUNT` and `UNTIL` MUST NOT both appear in the same rule, and when `DTSTART` is specified with a `TZID` (or as UTC), `UNTIL` MUST be a UTC date-time ending in `Z`. The library accepts violations of both quietly and gives you wrong answers.
+
+The way I trip on this is via my own type system. `RecurrencePatternInput` has both `endDate` and `occurrences` fields:
+
+```typescript
+export interface RecurrencePatternInput {
+  frequency: RecurrenceFrequency;
+  interval?: number;
+  byDayOfWeek?: Weekday[];
+  byDayOfMonth?: number[];
+  bySetPos?: number;
+  byMonth?: number[];
+  startDate: Date;
+  endDate?: Date; // → UNTIL
+  occurrences?: number; // → COUNT
+}
+
+// patternToRRule must enforce mutual exclusion at the boundary:
+function pickTermination(
+  p: RecurrencePatternInput
+): Pick<Options, 'until' | 'count'> {
+  if (p.endDate && p.occurrences) {
+    throw new Error(
+      'RecurrencePattern: endDate and occurrences are mutually exclusive'
+    );
+  }
+  if (p.endDate) {
+    // RFC 5545: when DTSTART has a TZID, UNTIL MUST be in UTC
+    return { until: toUtc(p.endDate) };
+  }
+  if (p.occurrences) {
+    if (!Number.isInteger(p.occurrences) || p.occurrences <= 0) {
+      throw new Error('occurrences must be a positive integer');
+    }
+    return { count: p.occurrences };
+  }
+  return {};
+}
+```
+
+The validation is boring on purpose. It's the kind of guard that a Zod schema can also encode (`z.union([...])` for "endDate XOR occurrences"), and Life Activity Hub does that too. But the runtime error inside `patternToRRule` is the safety net for anything bypassing the schema — an admin import script, a database migration, a half-decoded ICS payload. Fail loud at the boundary; never let an ambiguous rule reach the expander.
+
+One subtle bonus: when both fields are absent, the rule is open-ended, and `generateOccurrences` flags `hasMore: true` so the UI renders a "repeats forever" affordance instead of a finite count.
+
+## Testing strategy: 10k recurrences and reference parsers
+
+The pattern that finally gave me confidence in the wrapper isn't unit tests of the four cases above — it's a fuzzer that generates 10,000 random-but-plausible patterns and diffs my output against `rrule` itself plus a fixture file of expected outputs from `ical.js` for the same inputs. Two reference parsers, one differential check, one weekend of CI runs surfacing more bugs than a year of hand-written tests.
+
+The harness, sketched:
+
+```typescript
+import fc from 'fast-check';
+import { RRule } from 'rrule';
+import { generateOccurrences } from './instance-generator';
+import { patternArbitrary, rangeArbitrary } from './test-arbitraries';
+
+describe('generateOccurrences (differential vs rrule)', () => {
+  it('matches rrule.between for 10k random patterns', () => {
+    fc.assert(
+      fc.property(patternArbitrary, rangeArbitrary, (pattern, range) => {
+        const ours = generateOccurrences(pattern, range).occurrences;
+        const reference = patternToRRule(pattern).between(
+          range.rangeStart,
+          range.rangeEnd,
+          true
+        );
+        expect(ours.map(toIso)).toEqual(reference.map(toIso));
+      }),
+      { numRuns: 10_000 }
+    );
+  });
+});
+```
+
+`patternArbitrary` builds a `RecurrencePatternInput` with realistic shapes — every frequency, byweekday subsets, bysetpos values from a small enum, dates inside a 5-year window. `rangeArbitrary` picks a query range that overlaps, contains, or misses the pattern entirely. The bugs that surface here are rarely the edge cases I anticipated; they're the combinatorial ones — DST × BYSETPOS × range straddling year-end. Property-based testing is exactly the right shape for a problem with a small spec and a huge state space.
+
+The final layer is a frozen-fixture suite: I keep ~40 ICS strings that real CalDAV servers (Google, Apple, Fastmail, Nextcloud, Outlook) produced for me, with their expected expansion arrays alongside. Every change to `rrule-converter.ts` runs that fixture set on its way to merge — and any drift means I broke a real-provider compatibility I cared about. Real providers are the truest oracle; they emit the strings my users will hit, and they're the only signal that catches "the spec says X but Outlook does Y" before the bug ticket does.
+
+## What I'd do differently next time
+
+Five RRULE-shaped projects later, here's the short list I'd hand my past self:
+
+1. **Pick one timezone discipline up front.** Either every recurrence has a TZID and you reject floating datetimes at parse time, or the system is documented as wall-clock and never crosses zones. Mixed-mode is the biggest source of compound bugs.
+
+2. **Test BYSETPOS against a 12-month fixture.** Quarterly boundaries, leap years, and February-29 patterns are where users notice. A test that runs only January is a test that passes locally and breaks at quarter-end.
+
+3. **Validate COUNT-vs-UNTIL exclusivity at the type system _and_ at the runtime boundary.** Zod schema is necessary, the runtime guard inside `patternToRRule` is sufficient. Belt and braces.
+
+4. **Differential test against a second parser.** `rrule` and `ical.js` disagree often enough that picking one without the other as a referee leaves bugs in. Two parsers + property-based generation found more bugs in my wrapper than every hand-written test combined.
+
+The throughline is the same across all four: the spec is small, the surface area is enormous, and every silent failure lives in the gap between what the syntax suggests and what the rules compute.
+
+The headline question I get asked: would I write my own RRULE expander? No — wrap a battle-tested library and unit-test the wrapper.
