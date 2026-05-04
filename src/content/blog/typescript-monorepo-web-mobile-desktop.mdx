@@ -1,0 +1,254 @@
+---
+id: 'typescript-monorepo-web-mobile-desktop'
+slug: 'typescript-monorepo-web-mobile-desktop'
+title: 'One TypeScript Monorepo, Three Platforms: Shipping Web, Mobile, and Desktop from a Single Codebase'
+excerpt: 'Six months running web, iOS, Android, and macOS out of one Turborepo. What I share, what I fork, and where the seams hurt — an honest scorecard.'
+coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80'
+author:
+  name: 'Oles Didukh'
+  avatar: '/images/avatar.png'
+  role: 'Senior Front-End Engineer'
+publishedAt: '2026-05-25'
+readingTime: 15
+category: 'Architecture'
+tags:
+  - 'Monorepo'
+  - 'Turborepo'
+  - 'React Native'
+  - 'Tauri'
+  - 'TypeScript'
+featured: true
+views: 0
+likes: 0
+---
+
+# One TypeScript Monorepo, Three Platforms
+
+Six months in, Etappi ships from one repo to four targets: a Next.js web app, an Expo iOS/Android binary, and a Tauri desktop shell on macOS. One language, one ORM, one type system, one CI graph. This is the structural deep-dive that the [Etappi case study](/blog/inside-etappi-multi-platform-task-manager) skipped — what actually lives in `packages/`, where the seams are, and where I tried to share too much and bled for it.
+
+The honest framing up front: a monorepo isn't a value in itself, and I refuse to argue for one in the abstract. What I'm reporting on is a specific shape — Turborepo + pnpm workspaces, three apps, three internal packages, one type system end to end — that has measurably saved me time on a real solo product. Some of that shape would be wrong for a 50-engineer org. Some of it would be wrong for a single-platform side project. The point of this post is to be specific enough that you can decide whether the trade-offs match your situation, not to evangelize.
+
+## The repo layout
+
+The shape is boring on purpose. Five apps, three packages, one `turbo.json`. Boring is the goal: every new contributor (which is just me on a different day) should be able to read the directory tree and know where a feature belongs before opening a single file.
+
+```text
+etappi/
+├── apps/
+│   ├── api/              # Hono + tRPC on Vercel Functions
+│   ├── desktop/          # Tauri 2 shell wrapping apps/web
+│   ├── mobile/           # Expo + React Native (iOS, Android)
+│   ├── storybook-mobile/ # RN component sandbox
+│   └── web/              # Next.js 15 App Router (also serves the desktop bundle)
+├── packages/
+│   ├── db/               # Drizzle schemas (pg-core + sqlite-core)
+│   ├── shared/           # Zod schemas, tRPC types, domain logic, i18n
+│   └── ui/               # Cross-platform primitives + design tokens
+├── turbo.json
+└── package.json          # pnpm@10 workspace root
+```
+
+The pipeline is small enough to fit on a slide:
+
+```json
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "build:theme"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "out/**"]
+    },
+    "@etappi/desktop#build": {
+      "dependsOn": ["^build", "build:theme", "@etappi/web#build"],
+      "outputs": ["src-tauri/target/release/bundle/**"]
+    },
+    "dev": { "persistent": true, "cache": false },
+    "typecheck": { "dependsOn": ["^typecheck"] },
+    "lint": { "dependsOn": ["^lint"] },
+    "test": { "outputs": ["coverage/**"] }
+  }
+}
+```
+
+Two things to note. `^build` makes Turbo walk the dependency graph: `db` builds before `shared`, `shared` before `web`, and a special `@etappi/desktop#build` rule waits for the web export to finish before Tauri bundles. And `dev` is `persistent: true, cache: false` — it has to be, or Turbo would happily hand you a cached dev server.
+
+<img
+  src="/images/blog/monorepo-graph.png"
+  alt="Etappi turbo task graph: db build feeds api and web; web feeds desktop; mobile builds independently"
+/>
+
+## Shared core: types, validation, tRPC contracts
+
+`packages/shared` is the part of the repo that earns its keep every single day. One Zod schema becomes a TypeScript type, a tRPC input validator, a server-side guard, and a client-side form contract — written once, consumed three times. If I had to defend a single design decision, it's this one.
+
+A representative pattern, lifted straight from the focus-mode feature:
+
+```typescript
+// packages/shared/src/focus-schema.ts
+import { z } from 'zod';
+import { taskIdSchema } from './ids';
+
+export const focusOutcomeSchema = z.enum([
+  'completed',
+  'cancelled',
+  'abandoned',
+]);
+export type FocusOutcome = z.infer<typeof focusOutcomeSchema>;
+
+export const focusStartInput = z.object({
+  taskId: taskIdSchema.optional(),
+  intendedDurationSec: z.number().int().min(60).max(7200),
+});
+export type FocusStartInput = z.infer<typeof focusStartInput>;
+
+// apps/api/src/trpc/routers/focus.ts
+import { focusStartInput } from '@etappi/shared';
+
+export const focusRouter = router({
+  start: protectedProcedure
+    .input(focusStartInput)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db
+        .insert(focusSessions)
+        .values({
+          userId: ctx.userId,
+          taskId: input.taskId ?? null,
+          intendedDurationSec: input.intendedDurationSec,
+          startedAt: new Date().toISOString(),
+        })
+        .returning();
+    }),
+});
+```
+
+Three platforms, one source of truth. Web validates a form before submit using `focusStartInput.safeParse`. Mobile reuses the inferred `FocusStartInput` for its native picker. The API rejects malformed input at the procedure boundary with the same code path. Rename a field and three call sites light up red in the IDE before I save the file. There is no codegen, no OpenAPI document to keep in sync, no GraphQL schema living alongside resolvers. With ~4,800 lines of TS in `packages/shared`, this is the highest-leverage code in the entire monorepo.
+
+The package's `exports` map deserves a mention. `@etappi/shared` exposes `.`, `./server`, `./client`, `./utils`, and `./i18n` as separate entry points, with React Native conditions where they matter. That's not cosmetic — it lets the mobile bundler avoid pulling in server-only code (Node-flavored crypto, Drizzle pg-core types) at build time, which keeps the RN bundle smaller and dodges Metro errors that would otherwise fire on the first import.
+
+## Web: Next.js plus React Native Web
+
+`apps/web` is a Next.js 15 App Router app that quietly imports `react-native` and `react-native-web` from the workspace. Most pages render server-first with React Server Components, but anything interactive — task rows, the focus timer, the command palette — uses RN primitives so the same component tree runs on mobile.
+
+```tsx
+// packages/ui/src/primitives/Button.tsx
+import { Pressable, Text } from 'react-native';
+import { useThemeTokens } from '../theme';
+
+type Props = {
+  label: string;
+  onPress: () => void;
+  variant?: 'primary' | 'ghost';
+};
+
+export function Button({ label, onPress, variant = 'primary' }: Props) {
+  const t = useThemeTokens();
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        backgroundColor: variant === 'primary' ? t.accent : 'transparent',
+        opacity: pressed ? 0.85 : 1,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 8,
+      })}
+    >
+      <Text style={{ color: t.foreground, fontWeight: '600' }}>{label}</Text>
+    </Pressable>
+  );
+}
+```
+
+That same `Button` is imported by a Next.js client component and a `react-native` screen. Bundling is wired through Next's `transpilePackages` plus an alias from `react-native` to `react-native-web` — no Metro on the web side, just webpack handling RN primitives like ordinary React components. `apps/web` is the largest surface in the repo at roughly 16,500 lines of TSX.
+
+The caveats are real and you eat them every time. Hover states need `Pressable`'s `hovered` interaction state, not CSS `:hover`. Scroll containers behave differently on the web — RN's `ScrollView` mounts a div that doesn't always honor `overflow: auto` the way you expect, so I keep a thin web override for long lists. And links are the worst seam: web wants `next/link` for prefetch and hard nav, mobile wants `expo-router`'s navigation. There is no clean shared `<Link>`. I gave up and kept two thin wrappers.
+
+## Mobile: Expo and the limits of RN Web
+
+Expo SDK 54 owns `apps/mobile` (~18,800 lines, the largest surface) and PowerSync makes it local-first via SQLite. The shared-component dream holds for the upper 80% of the UI tree. The bottom 20% — anything that touches the native runtime — does not, and pretending otherwise wastes weeks.
+
+The pattern I settled on is platform extensions: when a component or hook needs a real native API, I create `Component.web.tsx` next to `Component.native.tsx`, and Metro/webpack each pick the right one at bundle time. Five places where this is non-negotiable:
+
+1. **Haptics** — `expo-haptics` calls into the native taptic engine on iOS. There is no web equivalent worth faking; the web file is a no-op.
+2. **Push tokens** — `expo-notifications` returns an Expo push token tied to a device. On web I use VAPID + the browser Push API; the token shape and registration flow are unrelated.
+3. **Background tasks** — `expo-task-manager` schedules work that survives app suspension. The browser equivalent is a service worker, and the lifecycle is so different that "shared" code would be a lie.
+4. **Native gestures** — `react-native-gesture-handler` runs on the UI thread for pan/swipe. On web I fall back to pointer events; the velocities and thresholds need separate tuning.
+5. **Secure storage** — `expo-secure-store` writes to Keychain/Keystore. On web, that's `localStorage` plus encryption-at-rest you build yourself, which is a different security model entirely.
+
+The rule I follow: if the _behavior_ differs by more than wording, fork the file. Trying to share through a giant `Platform.OS === 'web'` ladder is how you end up with a 400-line component nobody understands. The dot-notation extension forces the divergence to be visible at the import site.
+
+## Desktop: Tauri, native menus, and the file system
+
+Desktop is the cheapest of the three platforms by a wide margin: `apps/desktop` is **13 lines of Rust** plus a `tauri.conf.json` and a `build-web.sh` that exports `apps/web` to static HTML. Tauri 2 wraps the same Next.js bundle the web app ships, hosted in the OS's native WebView (WebKit on macOS, WebView2 on Windows). The binary is around 7 MB instead of Electron's 150 MB, and cold start is comparable to opening a browser tab.
+
+```rust
+// apps/desktop/src-tauri/src/lib.rs
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .run(tauri::generate_context!())
+        .expect("error while running Etappi desktop app");
+}
+```
+
+That's the entire native shell. Everything else — menus, file system, deep links — is either a Tauri plugin or a Rust command exposed through `invoke`. From the TypeScript side it looks like a typed RPC:
+
+```typescript
+import { invoke } from '@tauri-apps/api/core';
+
+export async function exportTasksToFile(json: string) {
+  return invoke<{ path: string }>('export_tasks', { payload: json });
+}
+```
+
+The hard parts aren't Tauri's fault. Code signing on macOS is a multi-day rabbit hole — Apple Developer ID, hardened runtime, notarization through `notarytool`, stapling — none of which Tauri can paper over. The `desktop-release.yml` workflow handles it on tag push, but the first time you set it up budget two evenings. The other reality: WebKit on macOS lags Chrome on a few CSS features, so the manual QA checklist before each desktop release lives in a separate file. The `@etappi/desktop#build` rule in `turbo.json` enforces one nice property — desktop can't ship without a fresh `@etappi/web#build` finishing first, which kills an entire class of "we shipped a desktop binary against an outdated web bundle" bugs at the graph level rather than at review time.
+
+## Three places I tried to share too much
+
+The honest sequel to "look how much I share" is "here's what I forked after trying not to." Three of these cost me real time before I gave up.
+
+1. **Routing and navigation.** Next App Router uses RSC boundaries, file-based segments, and a layout-driven mental model. React Navigation (and `expo-router` on top of it) is stack-based, gesture-aware, and ships its own back-button semantics. I spent a weekend trying to abstract a `<Link>` and a `useRouter` over both. The result was a leaky API where every consumer needed to know which platform they were on anyway. I deleted it. Web uses `next/link` and `useRouter` from `next/navigation`; mobile uses `expo-router`'s equivalents. The `href` strings happen to match, which is the only honest sharing left.
+
+2. **Form libraries.** React Hook Form is the right answer on web — uncontrolled inputs, fast re-renders, zero-runtime validation via Zod resolvers, the works. On mobile, native form UX is gestural: a date picker is a wheel, a duration is a slider, multiselect is a sheet. RHF works on RN, but you end up wrapping every native input in a `Controller` that fights the gesture model. I now use RHF on web and a small `useField` hook with platform-native pickers on mobile. The Zod schema (from `packages/shared`) is still shared. The form _machinery_ is not.
+
+3. **Persistence.** Web uses IndexedDB (PowerSync rollout in progress) plus `localStorage` for preferences. Mobile uses MMKV for synchronous preferences and SQLite (via Drizzle's `sqlite-core` schemas, mirrored from `pg-core`) for the local-first replica. I tried a `KeyValueStore` interface wrapping all three. It worked until I needed transactions, and then it didn't. Now each platform owns its persistence and `packages/db` keeps the _schema_ shared. Share the schema, fork the storage engine — that's the lesson.
+
+The pattern across all three: the abstraction looked elegant in isolation and broke the moment a platform-specific feature showed up. Shared _contracts_ survive contact with reality. Shared _machinery_ across runtimes doesn't.
+
+## CI: caching, parallel pipelines, and three release surfaces
+
+CI lives in `.github/workflows/` and the headline rules are: parallel where possible, cached aggressively, and never block on a slow leg. Turbo's remote cache (`remoteCache: { enabled: true }` in `turbo.json`) is the single biggest CI win — a clean `pnpm install && turbo build typecheck lint test` runs in under three minutes when the cache is warm because the only thing that actually executes is whatever changed.
+
+The three release pipelines fan out from the same `main`:
+
+- **Web** ships through Vercel on every push to `main`. Preview URLs per PR, prod deploy in ~90 seconds. Vercel runs `turbo build --filter=@etappi/web` and inherits the remote cache from CI.
+- **Mobile** ships through EAS Build on a release branch tag. Native binaries take 12–18 minutes regardless of cache, but OTA updates through `expo-updates` push JS-only changes in seconds without an App Store round trip.
+- **Desktop** is a tag-triggered `desktop-release.yml` workflow that runs `build-web.sh` (static export) then `tauri build` on macOS-latest. Notarization adds 4–8 minutes; the resulting `.dmg` is uploaded as a release asset.
+
+Common-path CI (lint + typecheck + unit tests on a PR) clocks in under 8 minutes when the cache hits, closer to 14 cold. Slow legs — EAS, Tauri notarization — stay off the PR critical path. They run on tag, not on push. The cache layer is what makes that work: a typecheck against `packages/shared` is one of the slowest jobs in the matrix because it transitively types the mobile and web apps, and Turbo skipping it on an unchanged input has saved me hundreds of CI minutes I didn't have to think about.
+
+## Total LoC saved vs. complexity added — honest scorecard
+
+Let's count. As of the commit this article is based on:
+
+| Surface                | LoC (approx) |
+| ---------------------- | ------------ |
+| `packages/shared/`     | ~4,800       |
+| `packages/db/`         | ~1,400       |
+| `packages/ui/`         | ~10,200      |
+| `apps/web/`            | ~16,500      |
+| `apps/mobile/`         | ~18,800      |
+| `apps/desktop/` (TS)   | ~0           |
+| `apps/desktop/` (Rust) | 13           |
+| `apps/api/`            | ~15,300      |
+
+Roughly 16,400 lines live in `packages/` and are consumed by every client. Each app on top is in the 16–19k range, but a meaningful chunk of `apps/mobile` is platform-specific component overrides (`*.native.tsx`) — call it 60–70% genuinely shared between web and mobile after you exclude routing, forms, and storage. Desktop reuses the web bundle wholesale, so its _delta_ over web is 13 lines of Rust and a config file. That's where the monorepo math is most absurd in my favor.
+
+The cons are equally honest. **Setup overhead** is real: pnpm workspaces, Turbo pipelines, Metro plus webpack agreeing on `react-native-web`, and three `tsconfig.json` files inheriting a base — none of it is hard, but cumulatively it's two evenings before a new contributor can run `pnpm dev` end-to-end. **CI complexity** doesn't go away; it migrates to `turbo.json` and the workflow matrix. **Onboarding** is harder than three separate repos because someone reading `apps/web` has to also understand what `@etappi/shared` and `@etappi/ui` impose on them. And **a bug in `packages/shared` is a P0 across all three apps** — the blast radius scales with reuse.
+
+I would still pick this layout again. The tax is paid up front; the dividend is paid every time I rename a Zod field and three apps update with the type checker, not me. The math works for a solo product where drift between apps would cost more than coordinating their builds. For a single-platform team it probably doesn't.
+
+The decision rule I use now, six months in: a piece of code earns a slot in `packages/` only if (a) at least two apps consume it, (b) its behavior doesn't depend on a runtime-specific API, and (c) versioning the contract independently of the apps would create more problems than it solves. Anything that fails one of those three goes in the relevant `apps/` directory. That filter has been right far more often than the "share everything by default" instinct I started with.
+
+[See the full Etappi case study](/blog/inside-etappi-multi-platform-task-manager).
