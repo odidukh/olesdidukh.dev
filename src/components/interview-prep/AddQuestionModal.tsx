@@ -77,6 +77,10 @@ export function AddQuestionModal({ categories }: AddQuestionModalProps) {
               </button>
             </Dialog.Close>
           </div>
+          <Dialog.Description className="sr-only">
+            Fill in the details to add a custom interview question to this
+            session.
+          </Dialog.Description>
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1">
               <Label htmlFor="question" required>
