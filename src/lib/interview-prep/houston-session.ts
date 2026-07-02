@@ -32,7 +32,7 @@ export const sessionSeedSchema = z.object({
 
 export type SessionSeed = z.infer<typeof sessionSeedSchema>;
 
-// Transcribed from src/app/interview-prep/content.html (Houston briefing block, lines 160-237).
+// Transcribed from src/lib/interview-prep/legacy-content.html (Houston briefing block, lines 160-237).
 // Interviewer facts, "your numbers", stack map, and product summary are copied from that HTML;
 // extended with all rows present in the source.
 export const HOUSTON_SESSION: SessionSeed = {

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { parseInterviewContent, sliceBalanced, slugify } from './parse-content';
 
 const html = readFileSync(
-  join(process.cwd(), 'src', 'app', 'interview-prep', 'content.html'),
+  join(process.cwd(), 'src', 'lib', 'interview-prep', 'legacy-content.html'),
   'utf8'
 );
 const seed = parseInterviewContent(html);

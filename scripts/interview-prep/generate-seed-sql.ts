@@ -6,7 +6,7 @@ import { buildSeedSql } from '../../src/lib/interview-prep/build-seed-sql.ts';
 
 const root = process.cwd();
 const html = readFileSync(
-  join(root, 'src', 'app', 'interview-prep', 'content.html'),
+  join(root, 'src', 'lib', 'interview-prep', 'legacy-content.html'),
   'utf8'
 );
 const seed = parseInterviewContent(html);
