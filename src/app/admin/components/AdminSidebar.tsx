@@ -12,6 +12,7 @@ import {
   Mail,
   Settings,
   ExternalLink,
+  GraduationCap,
 } from 'lucide-react';
 
 const navItems = [
@@ -39,6 +40,11 @@ const navItems = [
     title: 'Skills',
     href: '/admin/skills',
     icon: Code2,
+  },
+  {
+    title: 'Interview Prep',
+    href: '/admin/interview-prep',
+    icon: GraduationCap,
   },
   {
     title: 'Messages',
