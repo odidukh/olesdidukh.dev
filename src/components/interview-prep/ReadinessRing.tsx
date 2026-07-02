@@ -20,7 +20,8 @@ export function ReadinessRing({
   className,
 }: ReadinessRingProps) {
   const reduced = useReducedMotion();
-  const clamped = Math.max(0, Math.min(1, value));
+  const safeValue = Number.isFinite(value) ? value : 0;
+  const clamped = Math.max(0, Math.min(1, safeValue));
   const pct = Math.round(clamped * 100);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
