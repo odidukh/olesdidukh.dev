@@ -45,6 +45,19 @@ describe('QuestionList', () => {
     expect(screen.getByText('Describe SSR streaming')).toBeInTheDocument();
   });
 
+  it('shows the empty state when no question matches the search', async () => {
+    const user = userEvent.setup();
+    render(<QuestionList questions={questions} />);
+    await user.type(screen.getByRole('searchbox'), 'zzz-no-match');
+    expect(screen.queryByText('Explain hydration')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Describe SSR streaming')
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('No questions match your search.')
+    ).toBeInTheDocument();
+  });
+
   it('renders per-question actions via renderActions', () => {
     render(
       <QuestionList
