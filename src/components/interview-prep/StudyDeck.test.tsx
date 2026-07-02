@@ -95,6 +95,25 @@ describe('StudyDeck', () => {
     );
   });
 
+  it('keeps deck order and position when a card is rated mid-review', async () => {
+    const user = userEvent.setup();
+    render(<StudyDeck questions={questions} categories={categories} />);
+    // Move off the first card so a deck rebuild (which resets index to 0)
+    // would be observable.
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('2 / 3')).toBeInTheDocument();
+    expect(screen.getByText('Q q2')).toBeInTheDocument();
+
+    // Rating mutates store.entries. buildDeck reads entries via getState() but
+    // deliberately omits it from its deps, so rating must NOT rebuild the deck:
+    // the position and current card stay put (no mid-review churn). Regression
+    // guard — adding `entries` to buildDeck's deps would reshuffle/reset here.
+    await user.click(screen.getByRole('button', { name: 'Solid' }));
+
+    expect(screen.getByText('2 / 3')).toBeInTheDocument();
+    expect(screen.getByText('Q q2')).toBeInTheDocument();
+  });
+
   it('filters to a category via its chip', async () => {
     const user = userEvent.setup();
     render(<StudyDeck questions={questions} categories={categories} />);
