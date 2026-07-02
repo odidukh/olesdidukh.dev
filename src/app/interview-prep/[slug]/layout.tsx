@@ -5,6 +5,7 @@ import {
 } from '@/lib/interview-prep/data';
 import { SessionTabs } from '@/components/interview-prep/SessionTabs';
 import { InterviewSessionClient } from '@/components/interview-prep/InterviewSessionClient';
+import { ResetProgressButton } from '@/components/interview-prep/ResetProgressButton';
 import { Badge } from '@/components/ui/Badge';
 
 export default async function SessionLayout({
@@ -27,22 +28,25 @@ export default async function SessionLayout({
       initialProgress={initialProgress}
     >
       <div className="space-y-6">
-        <header className="space-y-2">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">
-              {session.company}
-            </h1>
-            <Badge
-              variant={session.status === 'done' ? 'success' : 'mocha'}
-              className="capitalize"
-            >
-              {session.status}
-            </Badge>
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight">
+                {session.company}
+              </h1>
+              <Badge
+                variant={session.status === 'done' ? 'success' : 'mocha'}
+                className="capitalize"
+              >
+                {session.status}
+              </Badge>
+            </div>
+            <p className="text-muted-foreground">
+              {session.role}
+              {session.round ? ` · ${session.round}` : ''}
+            </p>
           </div>
-          <p className="text-muted-foreground">
-            {session.role}
-            {session.round ? ` · ${session.round}` : ''}
-          </p>
+          <ResetProgressButton sessionId={session.id} />
         </header>
         <SessionTabs slug={slug} />
         <div>{children}</div>
