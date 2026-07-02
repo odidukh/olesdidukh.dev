@@ -19,3 +19,7 @@ yarn.lock
 
 # Coverage
 coverage/
+
+# Agent process artifacts (git-ignored SDD scratch + generated plans/specs)
+.superpowers/
+docs/superpowers/
