@@ -65,6 +65,13 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  // The interview-prep tool's HTML is read at runtime by its route handler
+  // (src/app/interview-prep/route.ts) and lives outside `public/`. Ensure the
+  // file is traced into the serverless bundle for that route.
+  outputFileTracingIncludes: {
+    '/interview-prep': ['./src/app/interview-prep/content.html'],
+  },
+
   async headers() {
     // Security headers
     // Note: CSP is now set dynamically in middleware with nonce support

@@ -9,6 +9,9 @@ dist/
 # Generated files
 public/sw.js
 
+# Vendored self-contained tool (inline-script HTML app, served via route handler)
+src/app/interview-prep/content.html
+
 # Package manager lock files
 package-lock.json
 pnpm-lock.yaml
