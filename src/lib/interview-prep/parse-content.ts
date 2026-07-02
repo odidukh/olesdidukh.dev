@@ -65,7 +65,7 @@ export function slugify(input: string): string {
 
 // Slice a balanced `open`/`close` region starting at the first `open`
 // after `anchor`, skipping delimiters that appear inside string literals.
-function sliceBalanced(
+export function sliceBalanced(
   src: string,
   anchor: string,
   open: string,
@@ -82,7 +82,17 @@ function sliceBalanced(
   for (let i = start; i < src.length; i++) {
     const ch = src[i];
     if (inString) {
-      if (ch === inString && src[i - 1] !== '\\') inString = null;
+      if (ch === inString) {
+        // The quote ends the string only when preceded by an even-length
+        // run of backslashes (an escaped backslash does not escape it).
+        let backslashes = 0;
+        let j = i - 1;
+        while (j >= start && src[j] === '\\') {
+          backslashes++;
+          j--;
+        }
+        if (backslashes % 2 === 0) inString = null;
+      }
       continue;
     }
     if (ch === '"' || ch === "'" || ch === '`') {

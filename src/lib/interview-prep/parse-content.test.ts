@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseInterviewContent, slugify } from './parse-content';
+import { parseInterviewContent, sliceBalanced, slugify } from './parse-content';
 
 const html = readFileSync(
   join(process.cwd(), 'src', 'app', 'interview-prep', 'content.html'),
@@ -13,6 +13,26 @@ describe('slugify', () => {
   it('turns a middot category name into a hyphen slug', () => {
     expect(slugify('Houston · Technical')).toBe('houston-technical');
     expect(slugify('Behavioral')).toBe('behavioral');
+  });
+});
+
+describe('sliceBalanced', () => {
+  it('ignores a close delimiter that appears inside a quoted string', () => {
+    expect(sliceBalanced('x = [ "]" ]', 'x =', '[', ']')).toBe('[ "]" ]');
+  });
+
+  it('does not end a string on an escaped quote', () => {
+    // actual source chars: { a: "he said \"hi\"" }
+    const src = 'x = { a: "he said \\"hi\\"" }';
+    expect(sliceBalanced(src, 'x =', '{', '}')).toBe(
+      '{ a: "he said \\"hi\\"" }'
+    );
+  });
+
+  it('ends a string on a trailing escaped backslash (escape parity)', () => {
+    // actual source chars: x = [ "a\\" ]  (the string literal is "a\")
+    const src = 'x = [ "a\\\\" ]';
+    expect(sliceBalanced(src, 'x =', '[', ']')).toBe('[ "a\\\\" ]');
   });
 });
 
