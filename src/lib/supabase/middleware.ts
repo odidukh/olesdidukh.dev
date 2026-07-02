@@ -35,8 +35,11 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
+  // Protect admin routes and the hidden interview-prep tool (same ADMIN_EMAIL gate)
+  if (
+    request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/interview-prep')
+  ) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
