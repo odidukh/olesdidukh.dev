@@ -40,7 +40,7 @@ export const HOUSTON_SESSION: SessionSeed = {
   company: 'Houston Systems',
   role: 'Senior Frontend Engineer',
   round: 'Round 2 · Technical',
-  scheduledAt: '2026-07-03T10:00:00+02:00',
+  scheduledAt: '2026-07-03T07:00:00Z',
   status: 'upcoming' satisfies SessionStatus,
   product:
     'A financial analytics platform for blue-chip companies. It does regression analysis, peer comparison, and rule-based evaluation, served through a fast, data-dense React app on a Python/FastAPI backend. Analysts use it to make real decisions — so correctness, legibility and trust matter as much as speed.',
@@ -94,7 +94,7 @@ export const HOUSTON_SESSION: SessionSeed = {
       value: '−74% (Inango), zero downtime',
     },
   ] satisfies YourNumber[],
-  bottomLine: `Round 1 went well — Harry was "impressed by what you shared." This round goes deeper on the technical side and how you'd approach the work day-to-day.`,
+  bottomLine: `Round 1 (18 June) went well — Harry was "impressed by what you shared." This round goes deeper on the technical side and how you'd approach the work day-to-day.`,
   stackMap: [
     {
       theirTech: 'React 18',
