@@ -15,12 +15,13 @@ export function useInterviewSync(): void {
   const dirty = useInterviewProgressStore(state => state.dirty);
   const [supabase] = useState(() => createClient());
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const failing = useRef(false); // already toasted this failure streak?
 
   useEffect(() => {
     if (dirty.length === 0) return;
     if (timer.current) clearTimeout(timer.current);
 
-    timer.current = setTimeout(async () => {
+    const flush = async () => {
       const state = useInterviewProgressStore.getState();
       if (!state.sessionId) return;
       const ids = [...state.dirty];
@@ -43,12 +44,18 @@ export function useInterviewSync(): void {
         .upsert(rows, { onConflict: 'session_id,question_id' });
 
       if (error) {
-        toast.error('Could not save progress — will retry.');
-        return; // leave ids dirty for the next debounce tick
+        if (!failing.current) {
+          failing.current = true;
+          toast.error('Could not save progress — will retry.');
+        }
+        timer.current = setTimeout(flush, DEBOUNCE_MS); // keep retrying
+        return;
       }
+      failing.current = false;
       state.clearDirty(ids);
-    }, DEBOUNCE_MS);
+    };
 
+    timer.current = setTimeout(flush, DEBOUNCE_MS);
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };

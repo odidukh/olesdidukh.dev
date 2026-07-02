@@ -63,4 +63,27 @@ describe('useInterviewSync', () => {
     expect(toast.error).toHaveBeenCalled();
     expect(useInterviewProgressStore.getState().dirty).toEqual(['q1']);
   });
+
+  it('retries a failed sync on the next tick without further edits, toasting once', async () => {
+    upsert
+      .mockResolvedValueOnce({ error: { message: 'nope' } })
+      .mockResolvedValueOnce({ error: null });
+    renderHook(() => useInterviewSync());
+
+    act(() => {
+      useInterviewProgressStore.getState().setConfidence('q1', 2);
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(800);
+    }); // 1st attempt fails
+    expect(upsert).toHaveBeenCalledTimes(1);
+    expect(useInterviewProgressStore.getState().dirty).toEqual(['q1']);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(800);
+    }); // retry fires + succeeds
+    expect(upsert).toHaveBeenCalledTimes(2);
+    expect(toast.error).toHaveBeenCalledTimes(1); // toasted once, not per retry
+    expect(useInterviewProgressStore.getState().dirty).toEqual([]);
+  });
 });
