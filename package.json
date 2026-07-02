@@ -28,6 +28,7 @@
     "budget": "node scripts/check-bundle-size.js",
     "build:check": "npm run build && npm run budget",
     "ci:local": "bash scripts/ci-local.sh",
+    "seed:interview-prep": "node --experimental-strip-types scripts/interview-prep/generate-seed-sql.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

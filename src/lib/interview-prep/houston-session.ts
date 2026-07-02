@@ -10,7 +10,7 @@ import {
   type YourNumber,
   type StackMapEntry,
   type SessionStatus,
-} from './schemas';
+} from './schemas.ts';
 
 export const sessionSeedSchema = z.object({
   slug: z
