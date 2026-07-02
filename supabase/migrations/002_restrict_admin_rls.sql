@@ -1,6 +1,13 @@
 -- ==========================================
 -- RESTRICT ADMIN RLS POLICIES
 -- ==========================================
+-- SUPERSEDED / NEVER APPLIED to the hosted project. Retained for history only.
+-- The current_setting('app.admin_email') GUC approach below is fragile (the GUC
+-- is null until the ALTER DATABASE runs, and does not survive a project restore).
+-- Migration 005 replaces this with an email-scoped RLS predicate that uses a
+-- literal address (no GUC dependency) and extends the same rule site-wide,
+-- including the interview_* tables. Do not apply this file to the hosted project.
+--
 -- Previously, any authenticated user had full CRUD access.
 -- Now restricted to the specific admin email via JWT claim.
 --
