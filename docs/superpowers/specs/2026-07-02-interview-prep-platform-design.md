@@ -74,44 +74,61 @@ Tabs are nested route segments with a shared tab-bar rendered in
 
 ## 6. Data model (Supabase)
 
-All tables are `interview_`-prefixed and single-user: every row carries
-`user_id`, with RLS `auth.uid() = user_id` for all operations. RLS is enabled
-on every table. Timestamps (`created_at`, `updated_at`) on all tables.
+All tables are `interview_`-prefixed. This is single-admin content, so it
+follows the **codebase's established RLS pattern** (used by `projects`,
+`blog_posts`, `skills`, …): no `user_id` column; RLS is enabled on every table
+with a single admin policy —
+`auth.jwt() ->> 'email' = current_setting('app.admin_email', true)` for `FOR
+ALL` (USING + WITH CHECK). There is no public-read policy (unlike the portfolio
+tables) — the area is admin-only. Timestamps (`created_at`, `updated_at`) on
+all tables, wired to the existing `update_updated_at_column()` trigger. UUID
+pks via `uuid_generate_v4()`. Enum types are `interview_`-prefixed.
+
+> Note: this supersedes the first-draft `user_id`/`auth.uid()` wording. The
+> intent (single-user, RLS-gated) is unchanged; the mechanism now matches the
+> rest of the database.
 
 ### 6.1 `interview_categories`
 
-- `id` uuid pk, `user_id` uuid
-- `name` text, `slug` text, `sort_order` int
+- `id` uuid pk
+- `name` text, `slug` text unique, `sort_order` int
 - `weight` numeric (default 1) — weighting for overall readiness
 
 ### 6.2 `interview_questions`
 
-- `id` uuid pk, `user_id` uuid
-- `category_id` uuid fk -> `interview_categories` (nullable)
-- `question` text, `model_answer` text
-- `tips` text[]
-- `difficulty` enum (`easy` | `medium` | `hard`)
-- `time_estimate_sec` int
-- `tags` text[]
+- `id` uuid pk
+- `category_id` uuid fk -> `interview_categories` (`ON DELETE SET NULL`)
+- `story_id` uuid fk -> `interview_stories` (nullable, `ON DELETE SET NULL`) —
+  behavioral questions whose model answer IS a reused STAR story
+- `question` text, `model_answer` text (nullable — behavioral Qs answer via
+  `story_id` instead)
+- `tips` jsonb (default `'[]'`) — normalized array of
+  `{ point: string, detail: string | null }` (legacy string tips become
+  `{ point, detail: null }`)
+- `difficulty` enum `interview_difficulty` (`easy` | `medium` | `hard`)
+- `time_estimate_sec` int (nullable)
+- `tags` text[] (default `'{}'`)
 - `is_custom` bool default false
 - `source` text (nullable)
-- Index: `(category_id)`
+- Indexes: `(category_id)`, `(story_id)`
 
 ### 6.3 `interview_stories` (STAR)
 
-- `id` uuid pk, `user_id` uuid
-- `title` text
+- `id` uuid pk
+- `slug` text unique — natural key matching the legacy `STORIES` keys
+  (`anomaly`, `perf`, `types`, `library`, `migration`, `mentor`, `pushback`)
+- `title` text, `company` text (nullable)
 - `situation` text, `task` text, `action` text, `result` text
-- `metrics` text (nullable)
-- `tags` text[], `sort_order` int
+- `metrics` text (nullable — legacy metrics live inside `result`, not extracted)
+- `tags` text[] (default `'{}'`), `sort_order` int
 
 ### 6.4 `interview_sessions`
 
-- `id` uuid pk, `user_id` uuid
-- `slug` text — unique per user
+- `id` uuid pk
+- `slug` text unique
 - `company` text, `role` text, `round` text
 - `scheduled_at` timestamptz (nullable)
-- `status` enum (`upcoming` | `done` | `archived`)
+- `status` enum `interview_session_status` (`upcoming` | `done` | `archived`)
 - Briefing fields:
   - `product` text
   - `interviewers` jsonb — `[{ name, role, focus }]`
@@ -120,15 +137,14 @@ on every table. Timestamps (`created_at`, `updated_at`) on all tables.
   - `bottom_line` text
   - `stack_map` jsonb — `[{ their_tech, your_standing }]`
   - `focus_category_ids` uuid[] — categories emphasized for this session
-- Index: `(slug)`
 
 ### 6.5 `interview_progress` (per session × question)
 
-- `id` uuid pk, `user_id` uuid
-- `session_id` uuid fk -> `interview_sessions`
-- `question_id` uuid fk -> `interview_questions`
-- `status` enum (`new` | `learning` | `known`)
-- `confidence` int (0–3)
+- `id` uuid pk
+- `session_id` uuid fk -> `interview_sessions` (`ON DELETE CASCADE`)
+- `question_id` uuid fk -> `interview_questions` (`ON DELETE CASCADE`)
+- `status` enum `interview_progress_status` (`new` | `learning` | `known`)
+- `confidence` int (0–3, default 0)
 - `starred` bool default false
 - `times_seen` int default 0
 - `last_reviewed_at` timestamptz (nullable)
@@ -146,17 +162,27 @@ on every table. Timestamps (`created_at`, `updated_at`) on all tables.
 
 ### 6.7 Seed / migration (Phase 1)
 
-A one-time TypeScript seed parses `content.html` to extract:
+Two distinct sources in `content.html`:
 
-- the ~83 built-in questions (into `interview_questions`, `is_custom = false`),
-- the categories they map to (`interview_categories`),
-- the STAR stories (`interview_stories`),
-- one `interview_sessions` row = **Houston Systems · Round 2** with its briefing
-  content (product, interviewers, likely topics, your numbers, bottom line,
-  stack map) extracted from the HTML.
+- **Automated parse** (deterministic, testable) of the inline JS objects:
+  - **83** built-in questions from `const Q` (into `interview_questions`,
+    `is_custom = false`), with `tips` normalized and `story` refs resolved to
+    `story_id`,
+  - **10** categories derived from the distinct `c` values in `Q`, ordered by
+    first appearance (Behavioral, Frontend, Leadership, System Design, Product,
+    Logistics, Closing, Houston · Technical, Houston · Day-to-Day, Houston ·
+    Ask Them), `weight = 1`,
+  - **7** STAR stories from `const STORIES` (into `interview_stories`, keyed by
+    slug).
+- **Hand-authored** (the briefing is prose HTML, not structured data): one
+  `interview_sessions` row = **Houston Systems · Round 2**, its briefing fields
+  transcribed from the HTML (lines ~160–354), with `focus_category_ids`
+  pointing at the three `Houston · *` categories.
 
-Run against a local/branch Supabase only (never production) per DB safety
-rules. Delivered as SQL migration(s) + a seed script.
+Delivered as: a Node parser script that emits a checked-in typed seed fixture
+(asserting the 83/10/7 counts), plus SQL — a schema migration and a seed
+migration — applied against a **Supabase branch** first (never production) per
+DB safety rules.
 
 ## 7. Component design
 
