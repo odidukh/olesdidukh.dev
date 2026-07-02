@@ -1,7 +1,8 @@
 -- supabase/migrations/003_interview_prep_schema.sql
 -- Interview Prep Platform schema
 -- Version: 3.0.0
--- Single-admin content: admin-email RLS, no user_id (matches migration 001/002).
+-- Single-admin content, no user_id. RLS matches the live convention of the
+-- existing tables (projects/blog_posts/skills): authenticated admin + public read.
 
 -- Enum types
 CREATE TYPE interview_difficulty AS ENUM ('easy', 'medium', 'hard');
@@ -122,7 +123,12 @@ CREATE TRIGGER update_interview_progress_updated_at
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================
--- ROW LEVEL SECURITY (admin-email pattern, matches migration 002)
+-- ROW LEVEL SECURITY
+-- Mirrors the live convention of the existing tables (projects/blog_posts/skills):
+--   * admin write = any authenticated session   (auth.role() = 'authenticated')
+--   * public read = anon SELECT                  (USING true)
+-- interview_progress additionally allows anon INSERT/UPDATE, because the public
+-- platform syncs per-session progress from the browser (see useInterviewSync).
 -- ==========================================
 ALTER TABLE interview_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interview_stories ENABLE ROW LEVEL SECURITY;
@@ -130,23 +136,32 @@ ALTER TABLE interview_questions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interview_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interview_progress ENABLE ROW LEVEL SECURITY;
 
+-- Admin: full CRUD for any authenticated user (only the site owner ever logs in)
 CREATE POLICY "Admin full access to interview categories" ON interview_categories
-  FOR ALL
-  USING (auth.jwt() ->> 'email' = current_setting('app.admin_email', true))
-  WITH CHECK (auth.jwt() ->> 'email' = current_setting('app.admin_email', true));
+  FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin full access to interview stories" ON interview_stories
-  FOR ALL
-  USING (auth.jwt() ->> 'email' = current_setting('app.admin_email', true))
-  WITH CHECK (auth.jwt() ->> 'email' = current_setting('app.admin_email', true));
+  FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin full access to interview questions" ON interview_questions
-  FOR ALL
-  USING (auth.jwt() ->> 'email' = current_setting('app.admin_email', true))
-  WITH CHECK (auth.jwt() ->> 'email' = current_setting('app.admin_email', true));
+  FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin full access to interview sessions" ON interview_sessions
-  FOR ALL
-  USING (auth.jwt() ->> 'email' = current_setting('app.admin_email', true))
-  WITH CHECK (auth.jwt() ->> 'email' = current_setting('app.admin_email', true));
+  FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Admin full access to interview progress" ON interview_progress
-  FOR ALL
-  USING (auth.jwt() ->> 'email' = current_setting('app.admin_email', true))
-  WITH CHECK (auth.jwt() ->> 'email' = current_setting('app.admin_email', true));
+  FOR ALL USING (auth.role() = 'authenticated') WITH CHECK (auth.role() = 'authenticated');
+
+-- Public read: the interview-prep platform is publicly viewable
+CREATE POLICY "Public can read interview categories" ON interview_categories
+  FOR SELECT USING (true);
+CREATE POLICY "Public can read interview stories" ON interview_stories
+  FOR SELECT USING (true);
+CREATE POLICY "Public can read interview questions" ON interview_questions
+  FOR SELECT USING (true);
+CREATE POLICY "Public can read interview sessions" ON interview_sessions
+  FOR SELECT USING (true);
+CREATE POLICY "Public can read interview progress" ON interview_progress
+  FOR SELECT USING (true);
+
+-- Public progress writes: browser sync upserts progress as the anon role
+CREATE POLICY "Public can insert interview progress" ON interview_progress
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can update interview progress" ON interview_progress
+  FOR UPDATE USING (true) WITH CHECK (true);
