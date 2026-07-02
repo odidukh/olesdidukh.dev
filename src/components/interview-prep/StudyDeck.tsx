@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { SelectableBadge } from '@/components/ui/Badge';
 import { Flashcard } from './Flashcard';
 import { useInterviewProgressStore } from '@/stores/useInterviewProgressStore';
+import { shuffle } from '@/lib/interview-prep/deck';
 import type {
   InterviewCategory,
   InterviewQuestion,
@@ -12,17 +13,6 @@ import type {
 
 // Confidence 0–3 (schema scale).
 const CONFIDENCE_LABELS = ['Blank', 'Shaky', 'OK', 'Solid'] as const;
-
-function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const a = copy[i] as T;
-    copy[i] = copy[j] as T;
-    copy[j] = a;
-  }
-  return copy;
-}
 
 export interface StudyDeckProps {
   questions: InterviewQuestion[];
