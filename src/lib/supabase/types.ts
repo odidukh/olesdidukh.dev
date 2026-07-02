@@ -242,6 +242,113 @@ export type GuestbookEntryInsert = {
   message: string;
 };
 
+// Interview Prep types
+export type InterviewCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  sort_order: number;
+  weight: number;
+  created_at: string;
+  updated_at: string;
+};
+export type InterviewCategoryInsert = Omit<
+  InterviewCategory,
+  'id' | 'created_at' | 'updated_at'
+> & { id?: string };
+
+export type InterviewStory = {
+  id: string;
+  slug: string;
+  title: string;
+  company: string | null;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
+  metrics: string | null;
+  tags: string[];
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+export type InterviewStoryInsert = Omit<
+  InterviewStory,
+  'id' | 'created_at' | 'updated_at'
+> & { id?: string };
+
+export type InterviewTip = { point: string; detail: string | null };
+export type InterviewQuestion = {
+  id: string;
+  category_id: string | null;
+  story_id: string | null;
+  question: string;
+  model_answer: string | null;
+  tips: InterviewTip[];
+  difficulty: 'easy' | 'medium' | 'hard';
+  time_estimate_sec: number | null;
+  tags: string[];
+  is_custom: boolean;
+  source: string | null;
+  created_at: string;
+  updated_at: string;
+};
+export type InterviewQuestionInsert = Omit<
+  InterviewQuestion,
+  'id' | 'created_at' | 'updated_at'
+> & { id?: string };
+
+export type InterviewInterviewer = {
+  name: string;
+  role: string;
+  focus: string;
+};
+export type InterviewLikelyTopic = { topic: string; whereToDrill: string };
+export type InterviewYourNumber = { label: string; value: string };
+export type InterviewStackMapEntry = {
+  theirTech: string;
+  yourStanding: string;
+};
+export type InterviewSession = {
+  id: string;
+  slug: string;
+  company: string;
+  role: string;
+  round: string;
+  scheduled_at: string | null;
+  status: 'upcoming' | 'done' | 'archived';
+  product: string | null;
+  interviewers: InterviewInterviewer[];
+  likely_topics: InterviewLikelyTopic[];
+  your_numbers: InterviewYourNumber[];
+  bottom_line: string | null;
+  stack_map: InterviewStackMapEntry[];
+  focus_category_ids: string[];
+  created_at: string;
+  updated_at: string;
+};
+export type InterviewSessionInsert = Omit<
+  InterviewSession,
+  'id' | 'created_at' | 'updated_at'
+> & { id?: string };
+
+export type InterviewProgress = {
+  id: string;
+  session_id: string;
+  question_id: string;
+  status: 'new' | 'learning' | 'known';
+  confidence: number;
+  starred: boolean;
+  times_seen: number;
+  last_reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+export type InterviewProgressInsert = Omit<
+  InterviewProgress,
+  'id' | 'created_at' | 'updated_at'
+> & { id?: string };
+
 // Database type for Supabase client
 export type Database = {
   public: {
@@ -288,12 +395,45 @@ export type Database = {
         Update: Partial<GuestbookEntryInsert>;
         Relationships: [];
       };
+      interview_categories: {
+        Row: InterviewCategory;
+        Insert: InterviewCategoryInsert;
+        Update: Partial<InterviewCategoryInsert>;
+        Relationships: [];
+      };
+      interview_stories: {
+        Row: InterviewStory;
+        Insert: InterviewStoryInsert;
+        Update: Partial<InterviewStoryInsert>;
+        Relationships: [];
+      };
+      interview_questions: {
+        Row: InterviewQuestion;
+        Insert: InterviewQuestionInsert;
+        Update: Partial<InterviewQuestionInsert>;
+        Relationships: [];
+      };
+      interview_sessions: {
+        Row: InterviewSession;
+        Insert: InterviewSessionInsert;
+        Update: Partial<InterviewSessionInsert>;
+        Relationships: [];
+      };
+      interview_progress: {
+        Row: InterviewProgress;
+        Insert: InterviewProgressInsert;
+        Update: Partial<InterviewProgressInsert>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: {
       skill_level: 'Expert' | 'Advanced' | 'Intermediate' | 'Learning';
       employment_type: 'Full-time' | 'Contract' | 'Part-time';
+      interview_difficulty: 'easy' | 'medium' | 'hard';
+      interview_session_status: 'upcoming' | 'done' | 'archived';
+      interview_progress_status: 'new' | 'learning' | 'known';
     };
   };
 };
