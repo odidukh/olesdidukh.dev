@@ -33,6 +33,7 @@ const categories: InterviewCategory[] = [
     updated_at: 'x',
   },
 ];
+
 const question = (
   id: string,
   category_id: string,
@@ -53,6 +54,7 @@ const question = (
   updated_at: 'x',
   ...over,
 });
+
 const questions = [
   question('q1', 'c1'),
   question('q2', 'c1'),
@@ -67,11 +69,23 @@ beforeEach(() =>
   })
 );
 
-describe('StudyDeck', () => {
-  it('flips the current card to reveal the model answer and marks it seen', async () => {
+describe('StudyDeck flow', () => {
+  it('starts a smart session from the setup screen', async () => {
     const user = userEvent.setup();
     render(<StudyDeck questions={questions} categories={categories} />);
+    expect(
+      screen.getByRole('button', { name: /Start studying/i })
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
+    // All entries unseen -> original order -> q1 first.
     expect(screen.getByText('Q q1')).toBeInTheDocument();
+    expect(screen.getByText('1 / 3')).toBeInTheDocument();
+  });
+
+  it('flips the card to reveal the answer and marks it seen', async () => {
+    const user = userEvent.setup();
+    render(<StudyDeck questions={questions} categories={categories} />);
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
     await user.click(screen.getByRole('button', { name: /Q q1/ }));
     expect(screen.getByText('A q1')).toBeInTheDocument();
     expect(useInterviewProgressStore.getState().entries['q1']?.timesSeen).toBe(
@@ -79,50 +93,33 @@ describe('StudyDeck', () => {
     );
   });
 
-  it('advances to the next card with Next', async () => {
+  it('rates the current card with a digit key and advances to the next', async () => {
     const user = userEvent.setup();
     render(<StudyDeck questions={questions} categories={categories} />);
-    await user.click(screen.getByRole('button', { name: 'Next' }));
-    expect(screen.getByText('Q q2')).toBeInTheDocument();
-  });
-
-  it('rates the current card, writing confidence to the store', async () => {
-    const user = userEvent.setup();
-    render(<StudyDeck questions={questions} categories={categories} />);
-    await user.click(screen.getByRole('button', { name: 'Solid' }));
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
+    await user.keyboard('[Space]'); // flip to reveal
+    expect(screen.getByText('A q1')).toBeInTheDocument();
+    await user.keyboard('3'); // rate Solid + advance
     expect(useInterviewProgressStore.getState().entries['q1']?.confidence).toBe(
       3
     );
+    expect(screen.getByText('Q q2')).toBeInTheDocument();
+    expect(screen.getByText('2 / 3')).toBeInTheDocument();
   });
 
-  it('keeps deck order and position when a card is rated mid-review', async () => {
+  it('rating the last card ends the session at the summary', async () => {
     const user = userEvent.setup();
     render(<StudyDeck questions={questions} categories={categories} />);
-    // Move off the first card so a deck rebuild (which resets index to 0)
-    // would be observable.
-    await user.click(screen.getByRole('button', { name: 'Next' }));
-    expect(screen.getByText('2 / 3')).toBeInTheDocument();
-    expect(screen.getByText('Q q2')).toBeInTheDocument();
-
-    // Rating mutates store.entries. buildDeck reads entries via getState() but
-    // deliberately omits it from its deps, so rating must NOT rebuild the deck:
-    // the position and current card stay put (no mid-review churn). Regression
-    // guard — adding `entries` to buildDeck's deps would reshuffle/reset here.
-    await user.click(screen.getByRole('button', { name: 'Solid' }));
-
-    expect(screen.getByText('2 / 3')).toBeInTheDocument();
-    expect(screen.getByText('Q q2')).toBeInTheDocument();
-  });
-
-  it('filters to a category via its chip', async () => {
-    const user = userEvent.setup();
-    render(<StudyDeck questions={questions} categories={categories} />);
+    // Behavioral has a single question (q3) -> one card to the summary.
     await user.click(screen.getByRole('button', { name: 'Behavioral' }));
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
     expect(screen.getByText('Q q3')).toBeInTheDocument();
-    expect(screen.getByText('1 / 1')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Q q3/ })); // flip
+    await user.click(screen.getByRole('button', { name: 'Solid' })); // rate + advance
+    expect(screen.getByText(/Session complete/i)).toBeInTheDocument();
   });
 
-  it('restricts the deck to unsure cards when "Only unsure" is on', async () => {
+  it('builds a weak-only deck from the Weak spots preset', async () => {
     useInterviewProgressStore
       .getState()
       .hydrate('s1', [
@@ -130,8 +127,8 @@ describe('StudyDeck', () => {
       ]);
     const user = userEvent.setup();
     render(<StudyDeck questions={questions} categories={categories} />);
-    await user.click(screen.getByRole('button', { name: 'Only unsure' }));
-    // q1 (confidence 3) drops out; q2 becomes the first card.
+    await user.click(screen.getByRole('button', { name: /Weak spots/i }));
+    // q1 (confidence 3) is excluded; q2 (unseen) leads.
     expect(screen.getByText('Q q2')).toBeInTheDocument();
     expect(screen.queryByText('Q q1')).not.toBeInTheDocument();
   });
