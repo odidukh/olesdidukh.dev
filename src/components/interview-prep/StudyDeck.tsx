@@ -51,12 +51,22 @@ export function StudyDeck({ questions, categories }: StudyDeckProps) {
       weakOnly?: boolean;
       categoryId?: string | null;
       size?: SizeOption;
+      only?: string[]; // explicit id allowlist (e.g. "Study those")
     }) => {
-      const cat = opts?.categoryId !== undefined ? opts.categoryId : categoryId;
+      const only = opts?.only;
+      // An explicit id set is self-contained: ignore the category filter.
+      const cat = only
+        ? null
+        : opts?.categoryId !== undefined
+          ? opts.categoryId
+          : categoryId;
+      const source = only
+        ? questions.filter(q => only.includes(q.id))
+        : questions;
       const sizeOpt = opts?.size ?? size;
-      const numericSize = sizeOpt === 'All' ? questions.length : sizeOpt;
+      const numericSize = sizeOpt === 'All' ? source.length : sizeOpt;
       const current = useInterviewProgressStore.getState().entries;
-      const built = buildSmartSession(questions, current, {
+      const built = buildSmartSession(source, current, {
         size: numericSize,
         categoryId: cat,
         weakOnly: opts?.weakOnly ?? false,
@@ -218,7 +228,7 @@ export function StudyDeck({ questions, categories }: StudyDeckProps) {
           {summary.stillShaky.length > 0 && (
             <Button
               variant="gradient"
-              onClick={() => start({ weakOnly: true, size: 'All' })}
+              onClick={() => start({ only: summary.stillShaky, size: 'All' })}
             >
               Study those ({summary.stillShaky.length} shaky)
             </Button>
