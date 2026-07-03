@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { shuffle, pickRandom, buildSmartSession } from './deck';
+import {
+  shuffle,
+  pickRandom,
+  buildSmartSession,
+  summarizeSession,
+} from './deck';
 import {
   defaultEntry,
   type ProgressEntry,
@@ -118,5 +123,33 @@ describe('buildSmartSession', () => {
   it('returns [] for an empty pool or size 0', () => {
     expect(buildSmartSession([], {}, { size: 10 })).toEqual([]);
     expect(buildSmartSession([q('a')], {}, { size: 0 })).toEqual([]);
+  });
+});
+
+describe('summarizeSession', () => {
+  it('buckets improved / unchanged / dropped and lists still-shaky ids', () => {
+    const start = { a: 0, b: 2, c: 1, d: 3 };
+    const entries = asEntries([
+      entry('a', { confidence: 2 }), // 0 -> 2 improved
+      entry('b', { confidence: 2 }), // 2 -> 2 unchanged
+      entry('c', { confidence: 0 }), // 1 -> 0 dropped, shaky
+      entry('d', { confidence: 1 }), // 3 -> 1 dropped, shaky
+    ]);
+    expect(summarizeSession(start, entries)).toEqual({
+      improved: 1,
+      unchanged: 1,
+      dropped: 2,
+      stillShaky: ['c', 'd'],
+    });
+  });
+
+  it('treats a missing entry as confidence 0', () => {
+    const start = { a: 2 };
+    expect(summarizeSession(start, {})).toEqual({
+      improved: 0,
+      unchanged: 0,
+      dropped: 1,
+      stillShaky: ['a'],
+    });
   });
 });

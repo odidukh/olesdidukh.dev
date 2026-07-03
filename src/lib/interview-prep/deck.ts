@@ -62,3 +62,30 @@ export function shuffle<T>(items: T[]): T[] {
 export function pickRandom<T>(items: T[], count: number): T[] {
   return shuffle(items).slice(0, Math.max(0, count));
 }
+
+export interface SessionSummary {
+  improved: number;
+  unchanged: number;
+  dropped: number;
+  stillShaky: string[];
+}
+
+export function summarizeSession(
+  startConfidences: Record<string, number>,
+  entries: Record<string, ProgressEntry>
+): SessionSummary {
+  let improved = 0;
+  let unchanged = 0;
+  let dropped = 0;
+  const stillShaky: string[] = [];
+
+  for (const [id, start] of Object.entries(startConfidences)) {
+    const now = entries[id]?.confidence ?? 0;
+    if (now > start) improved += 1;
+    else if (now < start) dropped += 1;
+    else unchanged += 1;
+    if (now <= WEAK_THRESHOLD) stillShaky.push(id);
+  }
+
+  return { improved, unchanged, dropped, stillShaky };
+}
