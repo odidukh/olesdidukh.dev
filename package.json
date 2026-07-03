@@ -80,7 +80,7 @@
     "react-hook-form": "^7.67.0",
     "rehype-pretty-code": "^0.14.1",
     "resend": "^6.5.2",
-    "shiki": "^3.17.0",
+    "shiki": "^4.0.2",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "three": "^0.181.2",
