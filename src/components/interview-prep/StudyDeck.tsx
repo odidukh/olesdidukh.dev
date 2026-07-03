@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { SelectableBadge } from '@/components/ui/Badge';
 import { Flashcard } from './Flashcard';
 import { useInterviewProgressStore } from '@/stores/useInterviewProgressStore';
-import { buildSmartSession } from '@/lib/interview-prep/deck';
+import { buildSmartSession, summarizeSession } from '@/lib/interview-prep/deck';
 import type {
   InterviewCategory,
   InterviewQuestion,
@@ -36,6 +36,9 @@ export function StudyDeck({ questions, categories }: StudyDeckProps) {
   const [order, setOrder] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [startConfidences, setStartConfidences] = useState<
+    Record<string, number>
+  >({});
   const seenThisCard = useRef(false);
 
   const byId = useMemo(
@@ -59,7 +62,10 @@ export function StudyDeck({ questions, categories }: StudyDeckProps) {
         weakOnly: opts?.weakOnly ?? false,
       });
       if (built.length === 0) return; // nothing matches; stay in setup
+      const snapshot: Record<string, number> = {};
+      for (const id of built) snapshot[id] = current[id]?.confidence ?? 0;
       setOrder(built);
+      setStartConfidences(snapshot);
       setIndex(0);
       setFlipped(false);
       seenThisCard.current = false;
@@ -189,17 +195,38 @@ export function StudyDeck({ questions, categories }: StudyDeckProps) {
   }
 
   if (phase === 'summary') {
+    // Terminal snapshot — read once via getState() rather than subscribing,
+    // since the summary need not re-render on later store writes.
+    const finalEntries = useInterviewProgressStore.getState().entries;
+    const summary = summarizeSession(startConfidences, finalEntries);
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Session complete</h2>
         <p className="text-muted-foreground">
           Reviewed {order.length} card{order.length === 1 ? '' : 's'}.
         </p>
+        <p className="text-sm tabular-nums">
+          <span className="text-success">▲ {summary.improved} improved</span>
+          {' · '}
+          <span className="text-muted-foreground">
+            ▬ {summary.unchanged} held
+          </span>
+          {' · '}
+          <span className="text-error">▼ {summary.dropped} dropped</span>
+        </p>
         <div className="flex flex-wrap gap-2">
-          <Button variant="gradient" onClick={() => start()}>
+          {summary.stillShaky.length > 0 && (
+            <Button
+              variant="gradient"
+              onClick={() => start({ weakOnly: true, size: 'All' })}
+            >
+              Study those ({summary.stillShaky.length} shaky)
+            </Button>
+          )}
+          <Button variant="outline" onClick={() => start()}>
             Go again
           </Button>
-          <Button variant="outline" onClick={() => setPhase('setup')}>
+          <Button variant="ghost" onClick={() => setPhase('setup')}>
             Done
           </Button>
         </div>

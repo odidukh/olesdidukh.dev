@@ -132,4 +132,27 @@ describe('StudyDeck flow', () => {
     expect(screen.getByText('Q q2')).toBeInTheDocument();
     expect(screen.queryByText('Q q1')).not.toBeInTheDocument();
   });
+
+  it('shows progress deltas on the summary after a session', async () => {
+    const user = userEvent.setup();
+    render(<StudyDeck questions={questions} categories={categories} />);
+    await user.click(screen.getByRole('button', { name: 'Behavioral' }));
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
+    await user.click(screen.getByRole('button', { name: /Q q3/ })); // flip
+    await user.click(screen.getByRole('button', { name: 'OK' })); // 0 -> 2 improved
+    expect(screen.getByText(/1 improved/i)).toBeInTheDocument();
+  });
+
+  it('reseeds a session from the still-shaky cards via "Study those"', async () => {
+    const user = userEvent.setup();
+    render(<StudyDeck questions={questions} categories={categories} />);
+    await user.click(screen.getByRole('button', { name: 'Behavioral' }));
+    await user.click(screen.getByRole('button', { name: /Start studying/i }));
+    await user.click(screen.getByRole('button', { name: /Q q3/ })); // flip
+    await user.click(screen.getByRole('button', { name: 'Shaky' })); // 0 -> 1, still shaky
+    await user.click(screen.getByRole('button', { name: /Study those/i }));
+    // Back in a running session on the shaky card.
+    expect(screen.getByText('Q q3')).toBeInTheDocument();
+    expect(screen.getByText('1 / 1')).toBeInTheDocument();
+  });
 });
